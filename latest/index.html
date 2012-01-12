@@ -181,6 +181,7 @@ typedef int           CLint;
 typedef unsigned int  CLuint;
 typedef long          CLlong;
 typedef unsigned long CLulong;
+typedef boolean       CLboolean;
 typedef unsigned long CLenum;
 typedef unsigned long CLtype;
 </pre>
@@ -321,13 +322,13 @@ var image = ctx.createImage2D(cl.MEM_READ_ONLY, imageFormat, width, height);
 
 <pre class="idl">
 dictionary <dfn id="WebCLImageRegion">WebCLRegion</dfn> {
-  int offset = 0;                  // applies for 1D buffers only
-  int origin[1..3] = [ 0, 0, 0 ];  // does not apply for 1D buffers
-  int width = 1;
-  int height = 1;                  // does not apply for 1D buffers
-  int depth = 1;                   // applies for 3D buffers and images only
-  int rowPitch = 0;                // does not apply for 1D buffers
-  int slicePitch = 0;              // applies for 3D buffers and images only
+  CLulong offset = 0;                  // applies for 1D buffers only
+  CLulong origin[1..3] = [ 0, 0, 0 ];  // does not apply for 1D buffers
+  CLulong width = 1;
+  CLulong height = 1;                  // does not apply for 1D buffers
+  CLulong depth = 1;                   // applies for 3D buffers and images only
+  CLulong rowPitch = 0;                // does not apply for 1D buffers
+  CLulong slicePitch = 0;              // applies for 3D buffers and images only
 }
 </pre>
 
@@ -959,23 +960,23 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
 
     WebCLCommandQueue createCommandQueue(WebCLDevice device, CLenum properties);
 
-    WebCLBuffer createBuffer(CLenum memFlags, long sizeInBytes);
+    WebCLBuffer createBuffer(CLenum memFlags, CLulong sizeInBytes);
 
     WebCLImage createImage2D(CLenum memFlags,
                              WebCLImageFormat imageFormat,
-                             long width,
-                             long height,
-                             optional long rowPitch);
+                             CLulong width,
+                             CLulong height,
+                             optional CLulong rowPitch);
 
     WebCLImage createImage3D(CLenum memFlags,
                              WebCLImageFormat imageFormat,
-                             long width,
-                             long height,
-                             long depth,
-                             optional long rowPitch,
-                             optional long slicePitch);
+                             CLulong width,
+                             CLulong height,
+                             CLulong depth,
+                             optional CLulong rowPitch,
+                             optional CLulong slicePitch);
 
-    WebCLSampler createSampler(boolean normalizedCoords,
+    WebCLSampler createSampler(CLboolean normalizedCoords,
                                CLenum addressingMode,
                                CLenum filterMode);
 
@@ -1019,34 +1020,34 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
         <dt class="idl-code">WebCLCommandQueue createCommandQueue(WebCLDevice device, CLenum properties[])</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLMemory createBuffer(int flags, int size)</dt>
+        <dt class="idl-code">WebCLMemory createBuffer(CLenum flags, CLulong size)</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLMemory createImage2D(int flags, ImageFormat format, int width, int height, int row_pitch)</dt>
+        <dt class="idl-code">WebCLMemory createImage2D(CLenum flags, WebCLImageFormat format, CLulong width, CLulong height, CLulong row_pitch)</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLMemory createImage3D(int flags, ImageFormat format, int width, int height, int depth, int row_pitch, int slice_pitch)</dt>
+        <dt class="idl-code">WebCLMemory createImage3D(CLenum flags, WebCLImageFormat format, CLulong width, CLulong height, CLulong depth, CLulong rowPitch, CLulong slicePitch)</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLSampler createSampler(boolean normalized_coords, int addressing_mode, int filer_mode)</dt>
+        <dt class="idl-code">WebCLSampler createSampler(CLboolean normalized_coords, CLenum addressing_mode, CLenum filter_mode)</dt>
             <dd>
             </dd>
-        <dt class="idl-code">ImageFormat[] getSupportedImageFormats(int flags, int image_type)</dt>
+        <dt class="idl-code">WebCLImageFormat[] getSupportedImageFormats(CLenum flags, CLenum imageType)</dt>
             <dd>
             </dd>
         <dt class="idl-code">WebCLEvent createUserEvent()</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLMemory createFromGLBuffer(int flags, WebGLBuffer buf)</dt>
+        <dt class="idl-code">WebCLMemory createFromGLBuffer(CLenum flags, WebGLBuffer buf)</dt>
             <dd>
             Creates a CL Buffer from a WebGLBuffer. This function is only available if the context was created from a OpenGL context.
             </dd>
-        <dt class="idl-code">WebCLMemory createFromGLTexture(int flags, int miplevel, WebGLTexture texture)</dt>
+        <dt class="idl-code">WebCLMemory createFromGLTexture(CLenum flags, CLulong miplevel, WebGLTexture texture)</dt>
             <dd>
             Creates a CL Buffer from a WebGLTexture. This function is only available if the context was created from a OpenGL context. A 2D or 3D texture could be used
             even though WebGL 1.0 specification only allows for 2D textures currently.
             </dd>
-        <dt class="idl-code">WebCLMemory createFromGLRenderBuffer(int flags, WebGLRenderBuffer buf)</dt>
+        <dt class="idl-code">WebCLMemory createFromGLRenderBuffer(CLenum flags, WebGLRenderBuffer buf)</dt>
             <dd>
             Creates a CL Buffer from a WebGLRenderBuffer. This function is only available if the context was created from a OpenGL context.
             </dd>
@@ -1069,7 +1070,7 @@ interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
 </pre>
 
     <dl class="methods">
-        <dt class="idl-code">any getProgramInfo(int name)</dt>
+        <dt class="idl-code">any getProgramInfo(CLenum name)</dt>
             <dd>
             Return the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
@@ -1085,12 +1086,12 @@ interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
             </table><br>
             </dd>
         </dt>
-        <dt class="idl-code">any getBuildInfo(WebCLDevice device, int name)</dt>
+        <dt class="idl-code">any getBuildInfo(WebCLDevice device, CLenum name)</dt>
             <dd>
             return Integer or DOMString depending on name queried.
             </dd>
         </dt>
-        <dt class="idl-code">void build(WebCLDevice devices[], DOMString options = NULL)</dt>
+        <dt class="idl-code">void build(WebCLDevice devices[], optional DOMString options = null)</dt>
             <dd>
             </dd>
         </dt>
@@ -1114,26 +1115,26 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
     any getCommandQueueInfo(CLenum name);
 
     WebCLEvent enqueueNDRangeKernel(WebCLKernel kernel,
-                                    unsigned long workDim,
-                                    unsigned long[] globalWorkOffset,
-                                    unsigned long[] globalWorkSize,
-                                    unsigned long[] localWorkSize,
+                                    CLulong workDim,
+                                    CLulong[] globalWorkOffset,
+                                    CLulong[] globalWorkSize,
+                                    CLulong[] localWorkSize,
                                     optional WebCLEvent[] eventWaitList);
 
     WebCLEvent enqueueTask(WebCLKernel kernel,
                            optional WebCLEvent[] eventWaitList);
 
     WebCLEvent enqueueWriteBuffer(WebCLMemoryObject buffer,
-                                  boolean blockingWrite,
-                                  unsigned long offset,
-                                  unsigned long byteLength,
+                                  CLboolean blockingWrite,
+                                  CLulong offset,
+                                  CLulong byteLength,
                                   ArrayBuffer src,
                                   optional WebCLEvent[] eventWaitList);
 
     WebCLEvent enqueueReadBuffer(WebCLMemoryObject buffer,
-                                 boolean blockingRead,
-                                 unsigned long offset,
-                                 unsigned long size,
+                                 CLboolean blockingRead,
+                                 CLulong offset,
+                                 CLulong size,
                                  ArrayBuffer dst,
                                  optional WebCLEvent[] eventWaitList);
 
@@ -1159,11 +1160,11 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
     // The following functions are available only if this WebCLCommandQueue
     // was created from a WebCLContext that turn was created from a WebGLRenderingContext
 
-    WebCLEvent enqueueAcquireGLObjects(unsigned long numObjects, 
+    WebCLEvent enqueueAcquireGLObjects(CLulong numObjects, 
                                        WebCLMemoryObject[] memObjects,
                                        optional WebCLEvent[] eventWaitList);
 
-    WebCLEvent enqueueReleaseGLObjects(unsigned long numObjects,
+    WebCLEvent enqueueReleaseGLObjects(CLulong numObjects,
                                        WebCLMemoryObject[] memObjects,
                                        optional WebCLEvent[] eventWaitList);
 }
@@ -1189,8 +1190,8 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
                 <tr><td>QUEUE_PROPERTIES</td><td>CLenum</td></tr>
             </table><br>
             </dd>
-        <dt class="idl-code">WebCLEvent enqueueNDRangeKernel(WebCLKernel kernel[], int offsets[1..3], int globals[1..3], 
-                                                            int locals[1..3], WebCLEvent event_wait_list[]=NULL)</dt>
+        <dt class="idl-code">WebCLEvent enqueueNDRangeKernel(WebCLKernel kernel[], CLulong offsets[1..3], CLulong globals[1..3], 
+                                                            CLulong locals[1..3], WebCLEvent event_wait_list[]=NULL)</dt>
             <dd>     
             returns WebCLEvent
             Offsets, globals, locals contain 1, 2, or 3 NDRange values according to OpenCL C++ specification. However, OpenCL 1.1
@@ -1199,16 +1200,16 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
         <dt class="idl-code">WebCLEvent enqueueTask(WebCLKernel kernel, WebCLEvent event_wait_list[] = NULL)</dt>
             <dd>     
             </dd>
-        <dt class="idl-code">WebCLEvent enqueueWriteBuffer(WebCLMemory buffer, boolean blocking_write, 
+        <dt class="idl-code">WebCLEvent enqueueWriteBuffer(WebCLMemory buffer, CLboolean blocking_write, 
         WebCLRegion array, WebCLEvent event_wait_list[]=NULL)</dt>
             <dd>
               The WebCLRegion object contains the Array and offset in bytes being written.
             </dd>
-        <dt class="idl-code">WebCLEvent enqueueReadBuffer(WebCLMemory buffer, boolean blocking_read, 
+        <dt class="idl-code">WebCLEvent enqueueReadBuffer(WebCLMemory buffer, CLboolean blocking_read, 
         WebCLRegion array, WebCLEvent event_wait_list[]=NULL)</dt>
             <dd>     
             </dd>
-        <dt class="idl-code">WebCLEvent enqueueCopyBuffer(WebCLRegion src, WebCLRegion dst, int size, 
+        <dt class="idl-code">WebCLEvent enqueueCopyBuffer(WebCLRegion src, WebCLRegion dst, CLulong size, 
         WebCLEvent event_wait_list[]=NULL)</dt>
             <dd>     
             </dd>
@@ -1220,8 +1221,8 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
         WebCLEvent event_wait_list[]=NULL)</dt>
             <dd>     
             </dd>
-        <dt class="idl-code">WebCLMappedRegion enqueueMapBuffer(WebCLRegion buffer, boolean blocking_map, 
-        int map_flags, WebCLEvent event_wait_list[]=NULL)</dt>
+        <dt class="idl-code">WebCLMappedRegion enqueueMapBuffer(WebCLRegion buffer, CLboolean blocking_map, 
+        CLenum map_flags, WebCLEvent event_wait_list[]=NULL)</dt>
             <dd>     
             </dd>
         <dt class="idl-code">WebCLEvent enqueueUnmapMemObject(WebCLMemory memory, WebCLMappedRegion mapped_region, 
@@ -1261,7 +1262,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
     <pre class="idl">interface <dfn id="WebCLMemoryObject">WebCLMemoryObject</dfn> {
     any getMemoryObjectInfo(CLenum name);
 
-    WebCLMemory createSubBuffer(CLenum flags, CLenum type, Object region);
+    WebCLMemory createSubBuffer(CLenum flags, CLenum type, WebCLRegion region);
 	
     // WebGL interop
     // The following function is available only if this WebCLMemoryObject
@@ -1289,9 +1290,9 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
                 <tr><td>MEM_OFFSET</td><td>Integer</td></tr>
             </table><br>
             </dd>
-        <dt class="idl-code">WebCLMemory createSubBuffer(CLenum flags, CLenum type, Object region)</dt>
+        <dt class="idl-code">WebCLMemory createSubBuffer(CLenum flags, CLenum type, optional WebCLRegion region)</dt>
             <dd>
-            The region object is an associative array { origin: int, size: int } and is only valid for BUFFER_CREATE_TYPE_REGION type.
+            The region object is ignored unless type == BUFFER_CREATE_TYPE_REGION.
             </dd>
         <dt class="idl-code">WebGLObject getGLObjectInfo()</dt>
             <dd>
