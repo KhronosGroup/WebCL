@@ -25,7 +25,7 @@
     <!--end-logo-->
     
     <h1>WebCL Specification</h1>
-    <h2 class="no-toc">Working Group Internal Draft 05 January 2012</h2>
+    <h2 class="no-toc">Working Group Internal Draft 12 January 2012</h2>
     <dl>
         <dt>This version:
             </dt><dd>
@@ -95,80 +95,243 @@
     <div id="toc"><ul class="toc">
     </ul></div>
 
-    <h2 id="1"><span class="secno"></span>Introduction</h2>
-    <div>        
-    </div>
+<!-- ======================================================================================================= -->
+
+    <h2><span class="secno"></span>Introduction</h2>
+
+    <p>
+      TODO
+    </p>
+
+<!-- ======================================================================================================= -->
+
+    <h2><span class="secno"></span>WebCL Resources</h2>
+
+    <p> 
+      TODO
+    </p>
+
+<!-- ======================================================================================================= -->
+
+    <h2><span class="secno"></span>Security</h2>
+
+    <p>
+      TODO
+    </p>
+
+<!-- ======================================================================================================= -->
+
+    <h3><span class="secno"></span> Resource Restrictions</h3>
+
+    <p>
+        When WebCL resources are accessed by kernels, the WebCL
+        implementation must ensure that the kernel cannot access
+        either out of bounds or uninitialized data.
+    </p>
+
+<!-- ======================================================================================================= -->
+
+    <h3><span class="secno"></span> <a name="ORIGIN_RESTRICTIONS">Origin Restrictions</a></h3>
+
+    <p>
+      WebCL imposes the same restrictions as WebGL on cross-origin content [insert link to WebGL spec].
+    <p>
+
+<!-- ======================================================================================================= -->
+
+    <h3><span class="secno"></span> <a name="KERNEL_RESTRICTIONS">Kernel Restrictions</a></h3>
+
+    <p>
+      TODO
+    </p>
+
+<!-- ======================================================================================================= -->
+
+    <h3><span class="secno"></span>Defense Against Denial of Service</h3>
+
+    <p>
+      TODO
+    </p>
+
+<!-- ======================================================================================================= -->
+
+    <h3><span class="secno"></span> <a name="OUT_OF_RANGE_ARRAY_ACCESSES">Out-of-Range Array Accesses</a></h3>
+
+    <p>
+        Kernels must not be allowed to read or write array elements that lie outside the bounds of
+        the array. This includes any variable of array type, as well as vector or matrix types such
+        as <code>float3</code> or <code>uint4</code> when accessed using array subscripting syntax. If
+        detected during compilation, such accesses must generate an error and prevent the kernel
+        from compiling. Otherwise, at runtime they may return a constant value (such as 0), or the
+        value at any valid index of the same array.
+    </p>
 
 <!-- ======================================================================================================= -->
 
     <h2><span class="secno"></span>DOM Interfaces</h2>
 
-<!-- ======================================================================================================= -->
-
     <h3><span class="secno"></span>Types</h3>
 
-    <h4><span class="secno"></span>WebCLException</h4>
+    <h4><span class="secno"></span>Basic types</h4>
 
-    <p>WebCL uses exceptions instead of returning error codes from functions.</p>
+    <p>The following basic types are used in specification.</p>
 
-    <pre class="idl">
-exception <dfn id="WebCLRegion">WebCLException</dfn> : DOMException {
-    DOMString type;         // A string representation of the numeric error code, e.g. "CL_INVALID_VALUE"
-    DOMString message;      // An implementation-specific description of what caused the exception
+<pre class="idl">
+typedef int           CLint;
+typedef unsigned int  CLuint;
+typedef long          CLlong;
+typedef unsigned long CLulong;
+typedef unsigned long CLenum;
+typedef unsigned long CLtype;
+</pre>
+
+    <h4><span class="secno"></span>Scalar and vector types</h4>
+
+    <p>
+      TODO: make the numeric values match the corresponding enums in cl.h?
+    </p>
+
+<pre class="idl">
+interface <dfn id="WebCLTypes">WebCLTypes</dfn> {
+  const CLtype CHAR = 0;
+  const CLtype UCHAR = 1;
+  const CLtype SHORT = 2;
+  const CLtype USHORT = 3;
+  const CLtype INT = 4;
+  const CLtype UINT = 5;
+  const CLtype LONG = 6;
+  const CLtype ULONG = 7;
+  const CLtype FLOAT = 8;
+  const CLtype HALF = 9;
+  const CLtype DOUBLE = 10;
+
+  const CLtype VEC2 = (1 << 8);
+  const CLtype VEC3 = (1 << 9);
+  const CLtype VEC4 = (1 << 10);
+  const CLtype VEC8 = (1 << 11);
+  const CLtype VEC16 = (1 << 12);
 }
 </pre>
 
-    <pre class="example">
+<pre class="example">
+myKernel.setKernelArg(0, 3.14159, WebCLTypes.FLOAT);
+myKernel.setKernelArg(1, [10, 20, 30, 40], WebCLTypes.UINT | WebCLTypes.VEC4);
+myKernel.setKernelArg(2, [pi, -pi/2], WebCLTypes.DOUBLE | WebCLTypes.VEC2);
+</pre>
+
+    <h4><span class="secno"></span><a name="WebCLException">WebCLException</a></h4>
+
+    <p>
+      WebCL uses exceptions instead of returning error codes from
+      functions. Both the type and message fields are present in any
+      WebCLException thrown by the implementation, but the message may
+      be null.
+    </p>
+
+<pre class="idl">
+exception <dfn id="WebCLRegion">WebCLException</dfn> : DOMException {
+  DOMString type;             // A string representation of the numeric error code, e.g. "INVALID_VALUE"
+  DOMString message;          // An implementation-specific description of what caused the exception
+}
+</pre>
+
+    <h4><span class="secno"></span><a name="WebCLContextProperties">WebCLContextProperties</a></h4>
+
+    <p>
+      WebCLContextProperties specifies the required attributes for a
+      WebCLContext. A WebCLContextProperties object, or any arbitrary
+      object with the same fields, is passed to createContext. If a
+      context with the given properties cannot be created,
+      createContext will throw a WebCLException. If any of the fields
+      are missing, they will assume the default values specified
+      below.
+    </p>
+
+<pre class="idl">
+dictionary <dfn id="WebCLContextAttributes">WebCLContextProperties</dfn> {
+  WebCLPlatform platform = null;                 // Default: let the implementation decide
+  WebCLDevice devices = null;                    // Default: let the implementation decide
+  CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT; // Default: let the implementation decide
+  WebGLRenderingContext gl = null;               // Default: no resource sharing with WebGL
+}
+</pre>
+
+<pre class="example">
+// This example creates two WebCL contexts: one for a CPU, the other
+// for a GPU.  We let the implementation pick a suitable platform for
+// each context. The GPU context is required to interoperate with our
+// WebGL context. An exception will be thrown if, for example, there
+// is no CPU or GPU support in the system, or if the GPU context cannot
+// share resources with the given WebGL context. Proper error handling
+// is omitted for clarity.
+
 try {
-  var platforms = WebCL.getPlatforms();
-  var context = WebCL.createContextFromPlatform(platforms[0], WebCL.CL_DEVICE_TYPE_DEFAULT);
+  var cpuProps = { deviceType : WebCL.DEVICE_TYPE_CPU };
+  var gpuProps = { deviceType : WebCL.DEVICE_TYPE_GPU, gl : glCtx };
+  var cpuCtx = WebCL.createContext(cpuProps);
+  var gpuCtx = WebCL.createContext(gpuProps);
 } catch (e) {
-  console.log("Error creating WebCL context: " + e);
+  if (e.type == "DEVICE_NOT_FOUND") { ... }
+  if (e.type == "DEVICE_NOT_AVAILABLE") { ... }
+  if (e.type == "INCOMPATIBLE_WEBGL_CONTEXT") { ... }
 }
 </pre>
 
     <h4><span class="secno"></span>WebCLImageFormat</h4>
 
-    <pre class="idl">
+    <p>
+      WebCLImageFormat specifies the number of channels and the
+      channel layout for a WebCLImage. A WebCLImageFormat object, or
+      any arbitrary object with the same fields, is passed to
+      createImage*. If an image with the given format cannot be
+      created, createImage* will throw a WebCLException.  If any of
+      the fields are missing, they will assume the default values
+      specified below.
+    </p>
+
+<pre class="idl">
 dictionary <dfn id="WebCLImageFormat">WebCLImageFormat</dfn> {
-    CLenum channelOrder;
-    CLEnum channelDataType;
+  CLenum channelOrder = WebCL.RGBA;           // Default: RGB colors + alpha
+  CLenum channelDataType = WebCL.UNORM_INT8;  // Default: 8-bit unsigned colors normalized to [0, 1]
 }
 </pre>
 
-    <pre class="example">
-var imageFormat = { channelOrder : cl.RGB, channelDataType : cl.UNORM_INT8 };
+<pre class="example">
+// This code fragment creates a 2D read-only image with RGB565 colors,
+// i.e. 5 bits of red, 6 bits of green, and 5 bits of blue packed into
+// a 16-bit unsigned integer.
+
+var imageFormat = { channelOrder : cl.RGB, channelDataType : cl.UNORM_SHORT_565 };
 var image = ctx.createImage2D(cl.MEM_READ_ONLY, imageFormat, width, height);
 </pre>
 
     <h4><span class="secno"></span>WebCLRegion</h4>
 
-<p>WebCLRegion specifies a rectangular region of an image or buffer
-object. It is a JavaScript object that packages together a large
-number of parameters that are required by the various functions in
-WebCLCommandQueue. As such, it does not provide any functionality,
-but merely convenience.</p>
+    <p>
+      WebCLRegion specifies a rectangular region of an image or buffer
+      object. A WebCLRegion object, or any arbitrary object with the
+      same fields, is passed to the functions in WebCLCommandQueue.
+      When referring to images, all values are given in pixels; when
+      referring to buffers, they are given in bytes.  Note that some
+      of the attributes are only applicable for one-dimensional
+      buffers, others only for 2D or 3D images.  If any of the fields
+      required by a particular function are missing, they will assume
+      the default values specified below.
+    </p>
 
-    <pre class="strawman">
-// Strawman spec. Need to figure out if this works with all permutations of 
-// enqueue{Read,Write,Copy}{Buffer,Image}{ToBuffer,ToImage}[Rect]. Until then,
-// keep the direct mapping to native OpenCL.
-
-// IMPORTANT:
-// When used as an Image region, all attributes are given in PIXELS.
-// When used as a Buffer region, all attributes are given in BYTES.
-
+<pre class="idl">
 dictionary <dfn id="WebCLImageRegion">WebCLRegion</dfn> {
-    int origin[1..3] = [ 0, 0, 0 ];
-    int width = 1;
-    int height = 1;
-    int depth = 1;
-    int rowPitch = 0;
-    int slicePitch = 0;
+  int offset = 0;                  // applies for 1D buffers only
+  int origin[1..3] = [ 0, 0, 0 ];  // does not apply for 1D buffers
+  int width = 1;
+  int height = 1;                  // does not apply for 1D buffers
+  int depth = 1;                   // applies for 3D buffers and images only
+  int rowPitch = 0;                // does not apply for 1D buffers
+  int slicePitch = 0;              // applies for 3D buffers and images only
 }
 </pre>
 
-    <pre class="example">
+<pre class="example">
 // This example reads the entire contents of a WebCL buffer object
 // into a newly created ArrayBuffer in host memory.
 
@@ -177,7 +340,7 @@ function readBufferToHost(srcBuffer) {
  // Query the number of bytes in the source buffer, and create a new
  // ArrayBuffer of that size.
 
- var numBytes = srcBuffer.getMemObjectInfo(WebCL.CL_MEM_SIZE);
+ var numBytes = srcBuffer.getMemObjectInfo(WebCL.MEM_SIZE);
  var dstBuffer = new ArrayBuffer(numBytes);
 
  // For reading the contents of a buffer object from CL to the host,
@@ -196,18 +359,18 @@ function readBufferToHost(srcBuffer) {
 }
 </pre>
 
-    <pre class="example">
+<pre class="example">
 // This example fills a WebCL image with pixels from a WebCL buffer.
 
 function copyBufferToImage(srcBuffer, dstImage) {
 
   // Extract the dimensions of the image.
 
-  var imgWidth = dstImage.getImageInfo(WebCL.CL_IMAGE_WIDTH);
-  var imgHeight = dstImage.getImageInfo(WebCL.CL_IMAGE_HEIGHT);
+  var imgWidth = dstImage.getImageInfo(WebCL.IMAGE_WIDTH);
+  var imgHeight = dstImage.getImageInfo(WebCL.IMAGE_HEIGHT);
 
   // The source buffer region can be specified with an empty object,
-  // because only the 'origin' field is needed, and we are fine with
+  // because only the 'offset' field is needed, and we are fine with
   // its default value (zero). For the destination region, we must
   // give the width and height.
 
@@ -220,7 +383,7 @@ function copyBufferToImage(srcBuffer, dstImage) {
 }
 </pre>
 
-    <pre class="example">
+<pre class="example">
 // This example copies a rectangular region of memory from a
 // buffer object to another.  The buffer objects are assumed
 // to be the same size. The origin, width, height, and pitch
@@ -261,25 +424,50 @@ function copyBufferRect(srcBuffer, dstBuffer, srcOriginX, srcOriginY, dstOriginX
       The <code>WebCL</code> object also declares all enumerated types used in the API.
     </p>
     
-    <pre class="idl">
+    <dl class="methods">
+
+      <dt class="idl-code">WebCLPlatform[] getPlatforms()
+        <span class="gl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-4.1">OpenCL 1.1 §4.1</a>, 
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetPlatformIDs.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Retrieves the WebCL platforms that are available in this system.
+      </dd>
+
+      <dt class="idl-code">WebCLContext createContext(optional WebCLContextProperties properties)
+        <span class="gl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-4.3">OpenCL 1.1 §4.3</a>, 
+        combines <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">clCreateContext</a>
+        and <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContextFromType.html">clCreateContextFromType</a>)</span>
+      </dt>
+      <dd>
+        Creates a new WebCL context with the given properties. The
+        parameter can be omitted, in which case the implementation
+        will decide which platform and device to use. See 
+        <a href="#WebCLContextProperties">WebCLContextProperties</a>
+        for more information and example code.
+      </dd>
+
+      <dt class="idl-code">void waitForEvents(WebCLEvent events[])</dt>
+      <dd>
+      </dd>
+
+      <dt class="idl-code">void unloadCompiler()</dt>
+      <dd>
+      </dd>
+
+    </dl>
+
+<pre class="idl">
 interface <dfn id="WebCL">WebCL</dfn> {
 
-    WebCLPlatform[] getPlatforms();
-    WebCLContext createContext(WebCLDevice devices[], optional CLenum properties[]);
-    WebCLContext createContextFromType(CLenum deviceType, optional CLenum properties[]);
-    void waitForEvents(WebCLEvent[] eventList);
-    void unloadCompiler();
+  // Functions
 
-    // Simplified context creation (other possibilities exist)
+  WebCLPlatform[] getPlatforms();
+  WebCLContext createContext(WebCLContextProperties);
+  void waitForEvents(WebCLEvent[] eventList);
+  void unloadCompiler();
 
-    WebCLContext createContext(); // use default platform, default device
-    WebCLContext createContextFromPlatform(WebCLPlatform platform, optional CLenum deviceType);
-
-    // Creates a WebCL context that can share resources with the given WebGL context.
-
-    WebCLContext createContextFromGL(WebGLRenderingContext gl, optional WebCLPlatform platform, optional CLenum deviceType);
-
-    // Enums
+  // Enums
 
   /* Error Codes */
   const CLenum SUCCESS                                  =0;
@@ -628,68 +816,40 @@ interface <dfn id="WebCL">WebCL</dfn> {
 }
 </pre>
  
-    <h4>Semantic</h4>
-
-    <p>
-        The following list describes each method in the WebCL object and its
-        use. For each parameter the default value is shown. 
-    </p>
-    <dl class="methods">
-        <dt class="idl-code">WebCLPlatform[] getPlatforms()</dt>
-            <dd>                
-            </dd>
-        <dt class="idl-code">WebCLContext createContext(WebCLDevice devices[], optional CLenum properties[])</dt>
-            <dd>
-            properties are defined as in OpenCL specification but there is no need to terminate the list by 0.
-            This is an array of values in the form { &lt;parameter name&gt;, &lt;parameter value&gt; }.
-            For example:
-            <code>[ WebCL.CONTEXT_PLATFORM, my_WebCLPlatform_object ]</code>
-            The list of <code>properties</code> can be <code>null</code> in which case the platform that is selected is 
-implementation-defined.
-            </dd>
-        <dt class="idl-code">WebCLContext createContext(CLenum device_type, optional CLenum properties[])</dt>
-            <dd>                
-            </dd>
-        <dt class="idl-code">void waitForEvents(WebCLEvent events[])</dt>
-            <dd>                
-            </dd>
-        <dt class="idl-code">void unloadCompiler()</dt>
-            <dd>                
-            </dd>
-    </dl>
-   
 <!-- ======================================================================================================= -->
 
     <h3 id="2.2"><span class="secno"></span>WebCLPlatform</h3>
 
     <p>
     </p>
-    <pre class="idl">
+
+<pre class="idl">
 interface <dfn id="WebCLPlatform">WebCLPlatform</dfn> {
     any getPlatformInfo(CLenum name);
     WebCLDevice[] getDevices(CLenum deviceType);
 }
 </pre>
-    <h4>Semantic</h4>
-    <p>
-    </p>
+
     <dl class="methods">
-        <dt class="idl-code">any getPlatformInfo(int name)</dt>
-            <dd>
-            Return the value for the passed name. The type returned is the natural type for the
-            requested name, as given in the following table:
-            <table class="foo">
-                <tr><th>name</th><th>ECMAScript returned type</th></tr>
-                <tr><td>PLATFORM_PROFILE</td><td>String</td></tr>
-                <tr><td>PLATFORM_VERSION</td><td>String</td></tr>
-                <tr><td>PLATFORM_NAME</td><td>String</td></tr>
-                <tr><td>PLATFORM_VENDOR</td><td>String</td></tr>
-                <tr><td>PLATFORM_EXTENSIONS</td><td>String</td></tr>
-            </table><br>
-            </dd>
-        <dt class="idl-code">WebCLDevice[] getDevices(Clenum device_type)</dt>
-            <dd>
-            </dd>
+      <dt class="idl-code">any getPlatformInfo(CLenum name)
+        <span class="gl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-4.1">OpenCL 1.1 §4.1</a>, 
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetPlatformInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Return the value for the passed name. The type returned is the natural type for the
+        requested name, as given in the following table:
+        <table class="foo">
+          <tr><th>name</th><th>ECMAScript returned type</th></tr>
+          <tr><td>PLATFORM_PROFILE</td><td>DOMString</td></tr>
+          <tr><td>PLATFORM_VERSION</td><td>DOMString</td></tr>
+          <tr><td>PLATFORM_NAME</td><td>DOMString</td></tr>
+          <tr><td>PLATFORM_VENDOR</td><td>DOMString</td></tr>
+          <tr><td>PLATFORM_EXTENSIONS</td><td>DOMString</td></tr>
+        </table><br>
+      </dd>
+      <dt class="idl-code">WebCLDevice[] getDevices(CLenum deviceType)</dt>
+      <dd>
+      </dd>
     </dl>
     
 <!-- ======================================================================================================= -->
@@ -698,17 +858,16 @@ interface <dfn id="WebCLPlatform">WebCLPlatform</dfn> {
 
     <p>
     </p>
-    <pre class="idl">
+
+<pre class="idl">
 interface <dfn id="WebCLDevice">WebCLDevice</dfn> {
     any getDeviceInfo(CLenum name);
     any getExtension(CLenum name);
 }
 </pre>
-     <h4>Semantic</h4>
-    <p>
-    </p>
+
     <dl class="methods">
-        <dt class="idl-code">any getDeviceInfo(int name)</dt>
+        <dt class="idl-code">any getDeviceInfo(CLenum name)</dt>
             <dd>
             Return the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
@@ -772,7 +931,7 @@ interface <dfn id="WebCLDevice">WebCLDevice</dfn> {
                 DEVICE_VENDOR<br>
                 DRIVER_VERSION<br>
                 DEVICE_PROFILE
-                </td><td>String</td></tr>
+                </td><td>DOMString</td></tr>
             </table><br>
             </dd>
         <dt class="idl-code">any getExtension(CLenum name)</dt>
@@ -825,21 +984,17 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
 
     WebCLEvent createUserEvent();
 
-    // The following functions are available only if this WebCLContext
-    // was created from a WebGLRenderingContext
+    // The following functions are available only if this WebCLContext 
+    // is sharing resources with a WebGLRenderingContext. Furthermore,
+    // the functions only accept GL objects from that particular WebGL
+    // context.
 
     WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
-    WebCLImage createFromGLTexture2D(CLenum memFlags, GLenum textureTarget, GLint miplevel, WebGLTexture texture);  // GL_TEXTURE_RECTANGLE not allowed as textureTarget
-    WebCLImage createFromGLTexture3D(...);
+    WebCLImage createFromGLTexture2D(CLenum memFlags, GLenum textureTarget, GLint miplevel, WebGLTexture texture);
     WebCLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer);
 }
 </pre>
-    <h4>Semantic</h4>
 
-    <p>
-        The following list describes various methods in the WebCLContext object and its
-        use. Default values for different parameters are shown below. 
-    </p>
     <dl class="methods">
         <dt class="idl-code">any getContextInfo(CLenum name)</dt>
             <dd>
@@ -853,7 +1008,7 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
                 <tr><td>CONTEXT_PROPERTIES</td><td>Integer[]</td></tr>
             </table><br>
             </dd>
-        <dt class="idl-code">WebCLProgram createProgram(String source)</dt>
+        <dt class="idl-code">WebCLProgram createProgram(DOMString source)</dt>
             <dd>
             create a WebCLProgram from a UTF-8 string.
             </dd>
@@ -912,9 +1067,7 @@ interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
     WebCLKernel[] createKernelsInProgram();
 }
 </pre>
-    <h4>Semantic</h4>
-    <p>
-    </p>
+
     <dl class="methods">
         <dt class="idl-code">any getProgramInfo(int name)</dt>
             <dd>
@@ -926,7 +1079,7 @@ interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
                 <tr><td>PROGRAM_CONTEXT</td><td>WebCLContext</td></tr>
                 <tr><td>PROGRAM_NUM_DEVICES</td><td>Integer</td></tr>
                 <tr><td>PROGRAM_DEVICES</td><td>WebCLDevice</td></tr>
-                <tr><td>PROGRAM_SOURCE</td><td>String</td></tr>
+                <tr><td>PROGRAM_SOURCE</td><td>DOMString</td></tr>
                 <tr><td>PROGRAM_BINARY_SIZES</td><td>Integer[]</td></tr>
                 <tr><td>PROGRAM_BINARIES</td><td>ArrayBuffer[]</td></tr>
             </table><br>
@@ -934,14 +1087,14 @@ interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
         </dt>
         <dt class="idl-code">any getBuildInfo(WebCLDevice device, int name)</dt>
             <dd>
-            return Integer or String depending on name queried.
+            return Integer or DOMString depending on name queried.
             </dd>
         </dt>
-        <dt class="idl-code">void build(WebCLDevice devices[], String options = NULL)</dt>
+        <dt class="idl-code">void build(WebCLDevice devices[], DOMString options = NULL)</dt>
             <dd>
             </dd>
         </dt>
-        <dt class="idl-code">WebCLKernel createKernel(String name)</dt>
+        <dt class="idl-code">WebCLKernel createKernel(DOMString name)</dt>
             <dd>
             </dd>
         </dt>
@@ -1015,17 +1168,14 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
                                        optional WebCLEvent[] eventWaitList);
 }
 </pre>
-    <h4>Semantic</h4>
 
     <p>
-        The following list describes each method in the WebCLCommandQueue object and its
-        use. For each parameter the default value is shown.<br>
-        <br>
-        In the methods below, WebCLRegion is used to specify the memory region to be used. This allows to simplify the number
-        of methods in WebCLCommandQueue object. Note also that for copy operations, source and host WebCLRegion must have the 
-        same size field's values.
-        
+        In the functions below, WebCLRegion is used to specify the
+        image or buffer region to be used. Note that for copy
+        operations, the source and destination WebCLRegion must have
+        the same width and height.
     </p>
+
     <dl class="methods">
         <dt class="idl-code">any getCommandQueueInfo(CLenum name)</dt>
             <dd>     
@@ -1036,7 +1186,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
                 <tr><td>QUEUE_CONTEXT</td><td>WebCLContext</td></tr>
                 <tr><td>QUEUE_DEVICE</td><td>WebCLDevice</td></tr>
                 <tr><td>QUEUE_REFERENCE_COUNT</td><td>Integer</td></tr>
-                <tr><td>QUEUE_PROPERTIES</td><td>Integer</td></tr>
+                <tr><td>QUEUE_PROPERTIES</td><td>CLenum</td></tr>
             </table><br>
             </dd>
         <dt class="idl-code">WebCLEvent enqueueNDRangeKernel(WebCLKernel kernel[], int offsets[1..3], int globals[1..3], 
@@ -1108,10 +1258,6 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 
     <h3><span class="secno"></span>WebCLMemoryObject</h3>
 
-    <p>
-      <b>Q: Should WebCLMemoryObject be derived from ArrayBuffer?</b>
-    </p>
-
     <pre class="idl">interface <dfn id="WebCLMemoryObject">WebCLMemoryObject</dfn> {
     any getMemoryObjectInfo(CLenum name);
 
@@ -1125,9 +1271,6 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 }
 </pre>
 
-    <h4>Semantic</h4>
-    <p>
-    </p>
     <dl class="methods">
         <dt class="idl-code">any getMemoryObjectInfo(CLenum name)</dt>
             <dd>
@@ -1135,14 +1278,14 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             requested name, as given in the following table:
             <table class="foo">
                 <tr><th>name</th><th>ECMAScript returned type</th></tr>
-                <tr><td>MEM_TYPE</td><td>Integer</td></tr>
-                <tr><td>MEM_FLAGS</td><td>Integer</td></tr>
+                <tr><td>MEM_TYPE</td><td>CLenum</td></tr>
+                <tr><td>MEM_FLAGS</td><td>CLenum</td></tr>
                 <tr><td>MEM_SIZE</td><td>Integer</td></tr>
                 <tr><td>MEM_HOST_PTR</td><td>ArrayBuffer</td></tr>
                 <tr><td>MEM_MAP_COUNT</td><td>Integer</td></tr>
                 <tr><td>MEM_REFERENCE_COUNT</td><td>Integer</td></tr>
                 <tr><td>MEM_CONTEXT</td><td>WebCLContext</td></tr>
-                <tr><td>MEM_ASSOCIATED_MEMOBJECT</td><td>WebCLMemory</td></tr>
+                <tr><td>MEM_ASSOCIATED_MEMOBJECT</td><td>WebCLMemoryObject</td></tr>
                 <tr><td>MEM_OFFSET</td><td>Integer</td></tr>
             </table><br>
             </dd>
@@ -1173,13 +1316,10 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
     </p>
     <pre class="idl">interface <dfn id="WebCLImage">WebCLImage</dfn> : WebCLMemoryObject {
     any getImageInfo(CLenum name);
-    any getGLTextureInfo(CLenum name);  // name = CL_GL_TEXTURE_TARGET or CL_GL_MIPMAP_LEVEL, returns a GLenum or GLint
+    any getGLTextureInfo(CLenum name);  // name = GL_TEXTURE_TARGET or GL_MIPMAP_LEVEL, returns a GLenum or GLint
 }
 </pre>
 
-    <h4>Semantic</h4>
-    <p>
-    </p>
     <dl class="methods">
         <dt class="idl-code">any getImageInfo(CLenum name)</dt>
             <dd>
@@ -1191,8 +1331,8 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             requested name, as given in the following table:
             <table class="foo">
                 <tr><th>name</th><th>ECMAScript returned type</th></tr>
-                <tr><td>WebGL.TEXTURE_TARGET</td><td>Integer</td></tr>
-                <tr><td>WebGL.MIPMAP_LEVEL</td><td>Integer</td></tr>
+                <tr><td>GL_TEXTURE_TARGET</td><td>GLenum</td></tr>
+                <tr><td>GL_MIPMAP_LEVEL</td><td>GLint</td></tr>
             </table><br>
             </dd>
     </dl>
@@ -1208,9 +1348,7 @@ interface <dfn id="WebCLSampler">WebCLSampler</dfn> {
     any getSamplerInfo(CLenum name);
 }
 </pre>
-    <h4>Semantic</h4>
-    <p>
-    </p>
+
     <dl class="methods">
         <dt class="idl-code">any getSamplerInfo(CLenum name)</dt>
             <dd>
@@ -1221,8 +1359,8 @@ interface <dfn id="WebCLSampler">WebCLSampler</dfn> {
                 <tr><td>SAMPLER_REFERENCE_COUNT</td><td>Integer</td></tr>
                 <tr><td>SAMPLER_CONTEXT</td><td>WebCLContext</td></tr>
                 <tr><td>SAMPLER_NORMALIZED_COORDS</td><td>Boolean</td></tr>
-                <tr><td>SAMPLER_ADDRESSING_MODE</td><td>Integer</td></tr>
-                <tr><td>SAMPLER_FILTER_MODE</td><td>Integer</td></tr>
+                <tr><td>SAMPLER_ADDRESSING_MODE</td><td>CLenum</td></tr>
+                <tr><td>SAMPLER_FILTER_MODE</td><td>CLenum</td></tr>
             </table><br>
             </dd>
         </dt>
@@ -1233,7 +1371,9 @@ interface <dfn id="WebCLSampler">WebCLSampler</dfn> {
     <h3 id="2.9"><span class="secno"></span>WebCLEvent</h3>
 
     <p>
+      OpenCL's Event and UserEvent are merged into this WebCLEvent class.
     </p>
+
     <pre class="idl">
 interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
     any getEventInfo(CLenum name);
@@ -1241,10 +1381,7 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
     void setUserEventStatus(CLenum executionStatus);
 }
 </pre>
-    <h4>Semantic</h4>
-    <p>
-    Note: OpenCL's Event and UserEvent are merged into this WebCLEvent class.
-    </p>
+
     <dl class="methods">
         <dt class="idl-code">any getEventInfo(CLenum name)</dt>
             <dd>
@@ -1254,8 +1391,8 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
                 <tr><th>name</th><th>ECMAScript returned type</th></tr>
                 <tr><td>EVENT_COMMAND_QUEUE</td><td>WebCLCommandQueue</td></tr>
                 <tr><td>EVENT_CONTEXT</td><td>WebCLContext</td></tr>
-                <tr><td>EVENT_COMMAND_TYPE</td><td>Integer</td></tr>
-                <tr><td>EVENT_COMMAND_EXECUTION_STATUS</td><td>Integer</td></tr>
+                <tr><td>EVENT_COMMAND_TYPE</td><td>CLenum</td></tr>
+                <tr><td>EVENT_COMMAND_EXECUTION_STATUS</td><td>CLenum</td></tr>
                 <tr><td>EVENT_REFERENCE_COUNT</td><td>Integer</td></tr>
             </table><br>
             </dd>
@@ -1288,13 +1425,11 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
 interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
     any getKernelInfo(CLenum name);
     any getKernelWorkGroupInfo(WebCLDevice device, CLenum name);
-    void setKernelArg(long index, Object value, CLtype type);
-    void setKernelArgLocal(long index, unsigned long size);
+    void setKernelArg(CLuint index, any value, CLtype type);
+    void setKernelArgLocal(CLuint index, CLulong size);
 }
 </pre>
-    <h4>Semantic</h4>
-    <p>
-    </p>
+
     <dl class="methods">
         <dt class="idl-code">any getKernelInfo(CLenum name)</dt>
             <dd>
@@ -1302,7 +1437,7 @@ interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
             requested name, as given in the following table:
             <table class="foo">
                 <tr><th>name</th><th>ECMAScript returned type</th></tr>
-                <tr><td>KERNEL_FUNCTION_NAME</td><td>String</td></tr>
+                <tr><td>KERNEL_FUNCTION_NAME</td><td>DOMString</td></tr>
                 <tr><td>KERNEL_NUM_ARGS</td><td>Integer</td></tr>
                 <tr><td>KERNEL_REFERENCE_COUNT</td><td>Integer</td></tr>
                 <tr><td>KERNEL_CONTEXT</td><td>WebCLContext</td></tr>
@@ -1313,7 +1448,7 @@ interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
             <dd>
             return an Integer or Integer[1..3] depending on the name queried.
             </dd>
-        <dt class="idl-code">void setArg(int index, Object value, CLtype type)</dt>
+        <dt class="idl-code">void setKernelArg(CLuint index, any value, CLtype type)</dt>
             <dd>
             Depending on the argument being set, the exact native data type of value cannot be infered from JavaScript. Likewise, it is not possible to know
             if an argument is __global or __local, without introspection of kernel method's code. To simplify programming, we propose a bitfield value called type
@@ -1354,80 +1489,19 @@ interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
 
 <!-- ======================================================================================================= -->
 
-    <h2 id="3"><span class="secno"></span>WebCL Resources</h2>
-
-    <p> 
-    </p>
-
-<!-- ======================================================================================================= -->
-
-    <h2 id="4"><span class="secno"></span>Security</h2>
-
-    <p> 
-    </p>
-
-<!-- ======================================================================================================= -->
-
-    <h3 id="4.1"><span class="secno"></span> Resource Restrictions</h3>
-
-    <p>
-        When WebCL resources are accessed by kernels, the WebCL
-        implementation must ensure that the kernel cannot access
-        either out of bounds or uninitialized data.
-    </p>
-
-<!-- ======================================================================================================= -->
-
-    <h3 id="4.2"><span class="secno"></span> <a name="ORIGIN_RESTRICTIONS">Origin Restrictions</a></h3>
-
-    <p>
-      WebCL imposes the same restrictions as WebGL on cross-origin content [insert link to WebGL spec].
-    <p>
-
-<!-- ======================================================================================================= -->
-
-    <h3 id="4.3"><span class="secno"></span> <a name="KERNEL_RESTRICTIONS">Kernel Restrictions</a></h3>
-
-    <p>
-    </p>
-
-<!-- ======================================================================================================= -->
-
-    <h3 id="4.4"><span class="secno"></span> Defense Against Denial of Service</h3>
-
-    <p>
-    </p>
-
-<!-- ======================================================================================================= -->
-
-    <h3 id="4.5"><span class="secno"></span> <a name="OUT_OF_RANGE_ARRAY_ACCESSES">Out-of-Range Array Accesses</a></h3>
-
-    <p>
-        Kernels must not be allowed to read or write array elements that lie outside the bounds of
-        the array. This includes any variable of array type, as well as vector or matrix types such
-        as <code>float3</code> or <code>uint4</code> when accessed using array subscripting syntax. If
-        detected during compilation, such accesses must generate an error and prevent the kernel
-        from compiling. Otherwise, at runtime they may return a constant value (such as 0), or the
-        value at any valid index of the same array.
-    </p>
-
-<!-- ======================================================================================================= -->
-
-    <h2 id="6"><span class="secno"></span> <a name="webcl_opencl_differences">Differences Between WebCL and OpenCL 1.1</a></h2>
+    <h2><span class="secno"></span> <a name="webcl_opencl_differences">Differences Between WebCL and OpenCL 1.1</a></h2>
     
-<p>
-
-This section describes changes made to the WebCL API relative to the
-OpenCL 1.1 (Embedded Profile) API to improve portability across
-various operating systems and devices.
-
-</p>
+    <p>
+      This section describes changes made to the WebCL API relative to the
+      OpenCL 1.1 (Embedded Profile) API to improve portability across
+      various operating systems and devices.
+    </p>
 
 <!-- ======================================================================================================= -->
 
-    <h2 id="7"><span class="secno"></span> References</h2>
+    <h2><span class="secno"></span> References</h2>
     
-    <h3 id="7.1"><span class="secno"></span> Normative references</h3>
+    <h3><span class="secno"></span> Normative references</h3>
     <dl>
     
         <dt id="refsWEBGL">[WEBGL]</dt>
@@ -1489,11 +1563,11 @@ various operating systems and devices.
         </dd>
     </dl>
 
-    <h3 id="7.2"><span class="secno"></span> Other references</h3>
+    <h3><span class="secno"></span>Other references</h3>
 
 <!-- ======================================================================================================= -->
     
-    <h2 id="8"><span class="secno"></span> Acknowledgments</h2>
+    <h2><span class="secno"></span> Acknowledgments</h2>
     <p>This specification is produced by the Khronos WebCL Working Group.</p>
     
     <p>
