@@ -147,7 +147,8 @@ div.illegal-xml, pre.example, pre.illegal-example, pre.html,
 pre.illegal-html, pre.xml, pre.illegal-xml {
     background: #FFF8DD;
     padding: 0.5em;
-    margin: 1em 0;
+    margin-top: 1em;
+    margin-bottom: 1em;
     border: thin solid #999;
     position: relative;
 }
