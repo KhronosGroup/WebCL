@@ -1020,13 +1020,13 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
         <dt class="idl-code">WebCLCommandQueue createCommandQueue(WebCLDevice device, CLenum properties[])</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLMemory createBuffer(CLenum flags, CLulong size)</dt>
+        <dt class="idl-code">WebCLBuffer createBuffer(CLenum flags, CLulong size)</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLMemory createImage2D(CLenum flags, WebCLImageFormat format, CLulong width, CLulong height, CLulong row_pitch)</dt>
+        <dt class="idl-code">WebCLImage createImage2D(CLenum flags, WebCLImageFormat format, CLulong width, CLulong height, CLulong row_pitch)</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLMemory createImage3D(CLenum flags, WebCLImageFormat format, CLulong width, CLulong height, CLulong depth, CLulong rowPitch, CLulong slicePitch)</dt>
+        <dt class="idl-code">WebCLImage createImage3D(CLenum flags, WebCLImageFormat format, CLulong width, CLulong height, CLulong depth, CLulong rowPitch, CLulong slicePitch)</dt>
             <dd>
             </dd>
         <dt class="idl-code">WebCLSampler createSampler(CLboolean normalized_coords, CLenum addressing_mode, CLenum filter_mode)</dt>
@@ -1038,16 +1038,16 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
         <dt class="idl-code">WebCLEvent createUserEvent()</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLMemory createFromGLBuffer(CLenum flags, WebGLBuffer buf)</dt>
+        <dt class="idl-code">WebCLBuffer createFromGLBuffer(CLenum flags, WebGLBuffer buf)</dt>
             <dd>
             Creates a CL Buffer from a WebGLBuffer. This function is only available if the context was created from a OpenGL context.
             </dd>
-        <dt class="idl-code">WebCLMemory createFromGLTexture(CLenum flags, CLulong miplevel, WebGLTexture texture)</dt>
+        <dt class="idl-code">WebCLBuffer createFromGLTexture(CLenum flags, CLulong miplevel, WebGLTexture texture)</dt>
             <dd>
             Creates a CL Buffer from a WebGLTexture. This function is only available if the context was created from a OpenGL context. A 2D or 3D texture could be used
             even though WebGL 1.0 specification only allows for 2D textures currently.
             </dd>
-        <dt class="idl-code">WebCLMemory createFromGLRenderBuffer(CLenum flags, WebGLRenderBuffer buf)</dt>
+        <dt class="idl-code">WebCLBuffer createFromGLRenderBuffer(CLenum flags, WebGLRenderBuffer buf)</dt>
             <dd>
             Creates a CL Buffer from a WebGLRenderBuffer. This function is only available if the context was created from a OpenGL context.
             </dd>
@@ -1200,32 +1200,27 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
         <dt class="idl-code">WebCLEvent enqueueTask(WebCLKernel kernel, WebCLEvent event_wait_list[] = NULL)</dt>
             <dd>     
             </dd>
-        <dt class="idl-code">WebCLEvent enqueueWriteBuffer(WebCLMemory buffer, CLboolean blocking_write, 
-        WebCLRegion array, WebCLEvent event_wait_list[]=NULL)</dt>
+        <dt class="idl-code">WebCLEvent enqueueWriteBuffer(...)</dt>
             <dd>
-              The WebCLRegion object contains the Array and offset in bytes being written.
             </dd>
-        <dt class="idl-code">WebCLEvent enqueueReadBuffer(WebCLMemory buffer, CLboolean blocking_read, 
-        WebCLRegion array, WebCLEvent event_wait_list[]=NULL)</dt>
+        <dt class="idl-code">WebCLEvent enqueueReadBuffer(...)</dt>
             <dd>     
             </dd>
-        <dt class="idl-code">WebCLEvent enqueueCopyBuffer(WebCLRegion src, WebCLRegion dst, CLulong size, 
-        WebCLEvent event_wait_list[]=NULL)</dt>
+        <dt class="idl-code">WebCLEvent enqueueCopyBuffer(...)</dt>
             <dd>     
             </dd>
-        <dt class="idl-code">WebCLEvent enqueueCopyImageToBuffer(WebCLRegion src_image, WebCLMemory dst_buffer, 
-        WebCLEvent event_wait_list[]=NULL)</dt>
+        <dt class="idl-code">WebCLEvent enqueueCopyImageToBuffer(WebCLImage src, WebCLBuffer dst,
+          WebCLRegion srcRegion, WebCLRegion dstRegion, WebCLEvent[] event_wait_list = null)</dt>
             <dd>     
             </dd>
-        <dt class="idl-code">WebCLEvent enqueueCopyBufferToImage(WebCLMemory src_buffer, WebCLRegion dst_image, 
-        WebCLEvent event_wait_list[]=NULL)</dt>
+        <dt class="idl-code">WebCLEvent enqueueCopyBufferToImage(...)</dt>
             <dd>     
             </dd>
         <dt class="idl-code">WebCLMappedRegion enqueueMapBuffer(WebCLRegion buffer, CLboolean blocking_map, 
         CLenum map_flags, WebCLEvent event_wait_list[]=NULL)</dt>
             <dd>     
             </dd>
-        <dt class="idl-code">WebCLEvent enqueueUnmapMemObject(WebCLMemory memory, WebCLMappedRegion mapped_region, 
+        <dt class="idl-code">WebCLEvent enqueueUnmapMemObject(WebCLMemoryObject memory, WebCLMappedRegion mapped_region, 
         WebCLEvent event_wait_list[]=NULL)</dt>
             <dd>
             mapped_region must be a WebCLMappedRegion returned by enqueueMapBuffer() or enqueueMapImage().
@@ -1245,13 +1240,15 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
         <dt class="idl-code">void flush()</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLEvent enqueueAcquireGLObjects(WebCLMemory objects[], WebCLEvent event_wait_list[]=NULL)</dt>
+        <dt class="idl-code">WebCLEvent enqueueAcquireGLObjects(WebCLMemoryObject[] objects, WebCLEvent event_wait_list[]=NULL)</dt>
             <dd>
             acquire OpenCL memory objects that have been created from WebGL objects.
             </dd>
-        <dt class="idl-code">WebCLEvent enqueueReleaseGLObjects(WebCLMemory objects[], WebCLEvent event_wait_list[]=NULL)</dt>
+        <dt class="idl-code">WebCLEvent enqueueReleaseGLObjects(WebCLMemoryObject[] objects, WebCLEvent event_wait_list[]=NULL)</dt>
             <dd>
-            release OpenCL memory objects that have been created from WebGL objects. These objects must be released before they can be used by OpenGL.
+            release OpenCL memory objects that have been created from
+            WebGL objects. These objects must be released before they
+            can be used by OpenGL.
             </dd>
     </dl>
 
@@ -1262,7 +1259,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
     <pre class="idl">interface <dfn id="WebCLMemoryObject">WebCLMemoryObject</dfn> {
     any getMemoryObjectInfo(CLenum name);
 
-    WebCLMemory createSubBuffer(CLenum flags, CLenum type, WebCLRegion region);
+    WebCLBuffer createSubBuffer(CLenum flags, CLenum type, WebCLRegion region);
 	
     // WebGL interop
     // The following function is available only if this WebCLMemoryObject
@@ -1290,9 +1287,9 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
                 <tr><td>MEM_OFFSET</td><td>Integer</td></tr>
             </table><br>
             </dd>
-        <dt class="idl-code">WebCLMemory createSubBuffer(CLenum flags, CLenum type, optional WebCLRegion region)</dt>
+        <dt class="idl-code">WebCLBuffer createSubBuffer(CLenum flags, CLenum type, WebCLRegion region)</dt>
             <dd>
-            The region object is ignored unless type == BUFFER_CREATE_TYPE_REGION.
+            The only allowed value for type is BUFFER_CREATE_TYPE_REGION.
             </dd>
         <dt class="idl-code">WebGLObject getGLObjectInfo()</dt>
             <dd>
@@ -1454,7 +1451,7 @@ interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
             Depending on the argument being set, the exact native data type of value cannot be infered from JavaScript. Likewise, it is not possible to know
             if an argument is __global or __local, without introspection of kernel method's code. To simplify programming, we propose a bitfield value called type
             that allows developers to specifity the data type of the argument. These types are defined in OpenCL 1.1 Specification, Table 6.1 (scalar types), 
-            Table 6.2 (vector/array types), and Table 6.4 (reserved data types). Table 6.3 defines WebCLObjects data types such as image2D, image3D, sampler and event, which are all WebCLMemory objects or WebCLSampler
+            Table 6.2 (vector/array types), and Table 6.4 (reserved data types). Table 6.3 defines WebCLObjects data types such as image2D, image3D, sampler and event, which are all WebCLMemoryObject or WebCLSampler
             or WebCLEvent respectively in this specification.<br><br>
             <table class="foo">
                 <tr><th>CLtype</th>       <th>Value</th>       <th>Description</th></tr>
