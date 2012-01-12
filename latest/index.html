@@ -1259,8 +1259,6 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
     <pre class="idl">interface <dfn id="WebCLMemoryObject">WebCLMemoryObject</dfn> {
     any getMemoryObjectInfo(CLenum name);
 
-    WebCLBuffer createSubBuffer(CLenum flags, CLenum type, WebCLRegion region);
-	
     // WebGL interop
     // The following function is available only if this WebCLMemoryObject
     // was created using one of the createFromGL* functions in WebCLContext
@@ -1287,10 +1285,6 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
                 <tr><td>MEM_OFFSET</td><td>Integer</td></tr>
             </table><br>
             </dd>
-        <dt class="idl-code">WebCLBuffer createSubBuffer(CLenum flags, CLenum type, WebCLRegion region)</dt>
-            <dd>
-            The only allowed value for type is BUFFER_CREATE_TYPE_REGION.
-            </dd>
         <dt class="idl-code">WebGLObject getGLObjectInfo()</dt>
             <dd>
             Returns the WebGLObject that was used to create this OpenCL memory object.
@@ -1303,8 +1297,19 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 
      <p>
      </p>
-    <pre class="idl">interface <dfn id="WebCLBuffer">WebCLBuffer</dfn> : WebCLMemoryObject {
+
+<pre class="idl">interface <dfn id="WebCLBuffer">WebCLBuffer</dfn> : WebCLMemoryObject {
+  WebCLBuffer createSubBuffer(CLenum flags, CLenum type, WebCLRegion region);
 }
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">WebCLBuffer createSubBuffer(CLenum flags, CLenum type, WebCLRegion region)</dt>
+      <dd>
+        The only allowed value for type is BUFFER_CREATE_TYPE_REGION.
+      </dd>
+    </dl>
+
 </pre>
  <!-- ======================================================================================================= -->
  
