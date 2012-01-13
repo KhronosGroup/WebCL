@@ -198,16 +198,13 @@
 
     <h4>Basic types</h4>
 
-    <p>The following basic types are used in specification.</p>
+    <p>The following basic types are used in this specification.</p>
 
 <pre class="idl">
-typedef int           CLint;
-typedef unsigned int  CLuint;
-typedef long          CLlong;
-typedef unsigned long CLulong;
 typedef boolean       CLboolean;
-typedef unsigned long CLenum;
-typedef unsigned long CLtype;
+typedef unsigned int  CLuint;
+typedef unsigned long CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
+typedef unsigned long CLtype;     // Used for kernel argument types, such as WebCLTypes.UINT
 </pre>
 
     <h4><a name="WEBCLTYPES"/>Scalar and vector types</h4>
@@ -346,13 +343,13 @@ var image = ctx.createImage2D(cl.MEM_READ_ONLY, imageFormat, width, height);
 
 <pre class="idl">
 dictionary <dfn id="WebCLRegion">WebCLRegion</dfn> {
-  CLulong offset = 0;                  // applies for 1D buffers only
-  CLulong origin[1..3] = [ 0, 0, 0 ];  // does not apply for 1D buffers
-  CLulong width = 1;
-  CLulong height = 1;                  // does not apply for 1D buffers
-  CLulong depth = 1;                   // applies for 3D buffers and images only
-  CLulong rowPitch = 0;                // does not apply for 1D buffers
-  CLulong slicePitch = 0;              // applies for 3D buffers and images only
+  CLuint offset = 0;                  // applies for 1D buffers only
+  CLuint origin[1..3] = [ 0, 0, 0 ];  // does not apply for 1D buffers
+  CLuint width = 1;
+  CLuint height = 1;                  // does not apply for 1D buffers
+  CLuint depth = 1;                   // applies for 3D buffers and images only
+  CLuint rowPitch = 0;                // does not apply for 1D buffers
+  CLuint slicePitch = 0;              // applies for 3D buffers and images only
 }
 </pre>
 
@@ -984,21 +981,21 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
 
     WebCLCommandQueue createCommandQueue(WebCLDevice device, CLenum properties);
 
-    WebCLBuffer createBuffer(CLenum memFlags, CLulong sizeInBytes);
+    WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes);
 
     WebCLImage createImage2D(CLenum memFlags,
                              WebCLImageFormat imageFormat,
-                             CLulong width,
-                             CLulong height,
-                             optional CLulong rowPitch);
+                             CLuint width,
+                             CLuint height,
+                             optional CLuint rowPitch);
 
     WebCLImage createImage3D(CLenum memFlags,
                              WebCLImageFormat imageFormat,
-                             CLulong width,
-                             CLulong height,
-                             CLulong depth,
-                             optional CLulong rowPitch,
-                             optional CLulong slicePitch);
+                             CLuint width,
+                             CLuint height,
+                             CLuint depth,
+                             optional CLuint rowPitch,
+                             optional CLuint slicePitch);
 
     WebCLSampler createSampler(CLboolean normalizedCoords,
                                CLenum addressingMode,
@@ -1044,13 +1041,13 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
         <dt class="idl-code">WebCLCommandQueue createCommandQueue(WebCLDevice device, CLenum properties[])</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLBuffer createBuffer(CLenum flags, CLulong size)</dt>
+        <dt class="idl-code">WebCLBuffer createBuffer(CLenum flags, CLuint size)</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLImage createImage2D(CLenum flags, WebCLImageFormat format, CLulong width, CLulong height, CLulong row_pitch)</dt>
+        <dt class="idl-code">WebCLImage createImage2D(CLenum flags, WebCLImageFormat format, CLuint width, CLuint height, CLuint row_pitch)</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLImage createImage3D(CLenum flags, WebCLImageFormat format, CLulong width, CLulong height, CLulong depth, CLulong rowPitch, CLulong slicePitch)</dt>
+        <dt class="idl-code">WebCLImage createImage3D(CLenum flags, WebCLImageFormat format, CLuint width, CLuint height, CLuint depth, CLuint rowPitch, CLuint slicePitch)</dt>
             <dd>
             </dd>
         <dt class="idl-code">WebCLSampler createSampler(CLboolean normalized_coords, CLenum addressing_mode, CLenum filter_mode)</dt>
@@ -1066,7 +1063,7 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
             <dd>
             Creates a CL Buffer from a WebGLBuffer. This function is only available if the context was created from a OpenGL context.
             </dd>
-        <dt class="idl-code">WebCLBuffer createFromGLTexture(CLenum flags, CLulong miplevel, WebGLTexture texture)</dt>
+        <dt class="idl-code">WebCLBuffer createFromGLTexture(CLenum flags, CLuint miplevel, WebGLTexture texture)</dt>
             <dd>
             Creates a CL Buffer from a WebGLTexture. This function is only available if the context was created from a OpenGL context. A 2D or 3D texture could be used
             even though WebGL 1.0 specification only allows for 2D textures currently.
@@ -1139,10 +1136,10 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
     any getCommandQueueInfo(CLenum name);
 
     WebCLEvent enqueueNDRangeKernel(WebCLKernel kernel,
-                                    CLulong workDim,
-                                    CLulong [] globalWorkOffset,
-                                    CLulong [] globalWorkSize,
-                                    CLulong [] localWorkSize,
+                                    CLuint workDim,
+                                    CLuint [] globalWorkOffset,
+                                    CLuint [] globalWorkSize,
+                                    CLuint [] localWorkSize,
                                     optional WebCLEvent [] eventWaitList);
 
     WebCLEvent enqueueTask(WebCLKernel kernel,
@@ -1150,15 +1147,15 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 
     WebCLEvent enqueueWriteBuffer(WebCLMemoryObject buffer,
                                   CLboolean blockingWrite,
-                                  CLulong offset,
-                                  CLulong byteLength,
+                                  CLuint offset,
+                                  CLuint byteLength,
                                   ArrayBuffer src,
                                   optional WebCLEvent [] eventWaitList);
 
     WebCLEvent enqueueReadBuffer(WebCLMemoryObject buffer,
                                  CLboolean blockingRead,
-                                 CLulong offset,
-                                 CLulong size,
+                                 CLuint offset,
+                                 CLuint size,
                                  ArrayBuffer dst,
                                  optional WebCLEvent [] eventWaitList);
 
@@ -1184,11 +1181,11 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
     // The following functions are available only if this WebCLCommandQueue
     // was created from a WebCLContext that turn was created from a WebGLRenderingContext
 
-    WebCLEvent enqueueAcquireGLObjects(CLulong numObjects, 
+    WebCLEvent enqueueAcquireGLObjects(CLuint numObjects, 
                                        WebCLMemoryObject [] memObjects,
                                        optional WebCLEvent [] eventWaitList);
 
-    WebCLEvent enqueueReleaseGLObjects(CLulong numObjects,
+    WebCLEvent enqueueReleaseGLObjects(CLuint numObjects,
                                        WebCLMemoryObject [] memObjects,
                                        optional WebCLEvent [] eventWaitList);
 }
@@ -1214,8 +1211,8 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
                 <tr><td>QUEUE_PROPERTIES</td><td>CLenum</td></tr>
             </table><br>
             </dd>
-        <dt class="idl-code">WebCLEvent enqueueNDRangeKernel(WebCLKernel kernel, CLulong offsets[1..3], CLulong globals[1..3], 
-                                                            CLulong locals[1..3], WebCLEvent event_wait_list[]=NULL)</dt>
+        <dt class="idl-code">WebCLEvent enqueueNDRangeKernel(WebCLKernel kernel, CLuint offsets[1..3], CLuint globals[1..3], 
+                                                            CLuint locals[1..3], WebCLEvent event_wait_list[]=NULL)</dt>
             <dd>     
             Offsets, globals, locals contain 1, 2, or 3 NDRange values according to OpenCL C++ specification. However, OpenCL 1.1
             specification allows for up to DEVICE_MAX_WORK_ITEM_DIMENSIONS items.
@@ -1452,7 +1449,7 @@ interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
     any getKernelInfo(CLenum name);
     any getKernelWorkGroupInfo(WebCLDevice device, CLenum name);
     void setKernelArg(CLuint index, any value, CLtype type);
-    void setKernelArgLocal(CLuint index, CLulong size);
+    void setKernelArgLocal(CLuint index, CLuint size);
 }
 </pre>
 
