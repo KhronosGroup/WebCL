@@ -201,10 +201,10 @@
     <p>The following basic types are used in this specification.</p>
 
 <pre class="idl">
-typedef boolean       CLboolean;
-typedef unsigned int  CLuint;
-typedef unsigned int  CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
-typedef unsigned int  CLtype;     // Used for kernel argument types, such as WebCLTypes.UINT
+typedef boolean      CLboolean;
+typedef unsigned int CLuint;
+typedef unsigned int CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
+typedef unsigned int CLtype;     // Used for kernel argument types, such as WebCLTypes.UINT
 </pre>
 
     <h4><a name="WEBCLTYPES"/>Scalar and vector types</h4>
@@ -323,8 +323,8 @@ dictionary <dfn id="WebCLImageFormat">WebCLImageFormat</dfn> {
 // i.e. 5 bits of red, 6 bits of green, and 5 bits of blue packed into
 // a 16-bit unsigned integer.
 
-var imageFormat = { channelOrder : cl.RGB, channelDataType : cl.UNORM_SHORT_565 };
-var image = ctx.createImage2D(cl.MEM_READ_ONLY, imageFormat, width, height);
+var imageFormat = { channelOrder : WebCL.RGB, channelDataType : WebCL.UNORM_SHORT_565 };
+var image = ctx.createImage2D(WebCL.MEM_READ_ONLY, imageFormat, width, height);
 </pre>
 
     <h4><a name="WEBCLREGION"/>WebCLRegion</h4>
@@ -1012,7 +1012,7 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
     // context.
 
     WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
-    WebCLImage createFromGLTexture2D(CLenum memFlags, GLenum textureTarget, GLint miplevel, WebGLTexture texture);
+    WebCLImage createFromGLTexture2D(CLenum memFlags, GLenum textureTarget, CLuint miplevel, WebGLTexture texture);
     WebCLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer);
 }
 </pre>
@@ -1059,18 +1059,24 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
         <dt class="idl-code">WebCLEvent createUserEvent()</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLBuffer createFromGLBuffer(CLenum flags, WebGLBuffer buf)</dt>
+        <dt class="idl-code">WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer)</dt>
             <dd>
-            Creates a CL Buffer from a WebGLBuffer. This function is only available if the context was created from a OpenGL context.
+            Creates a WebCLBuffer from a WebGLBuffer.  This function
+            is only available if this context was created with WebGL
+            resource sharing enabled.
             </dd>
-        <dt class="idl-code">WebCLBuffer createFromGLTexture(CLenum flags, CLuint miplevel, WebGLTexture texture)</dt>
+        <dt class="idl-code">WebCLImage createFromGLTexture2D(CLenum memFlags, GLenum textureTarget, CLuint miplevel, WebGLTexture texture)</dt>
             <dd>
-            Creates a CL Buffer from a WebGLTexture. This function is only available if the context was created from a OpenGL context. A 2D or 3D texture could be used
-            even though WebGL 1.0 specification only allows for 2D textures currently.
+            Creates a 2D WebCLImage from a WebGLTexture. Note that
+            WebGL 1.0 does not support 3D textures. This function is
+            only available if this context was created with WebGL
+            resource sharing enabled.
             </dd>
-        <dt class="idl-code">WebCLBuffer createFromGLRenderBuffer(CLenum flags, WebGLRenderBuffer buf)</dt>
+        <dt class="idl-code">WebCLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer)</dt>
             <dd>
-            Creates a CL Buffer from a WebGLRenderBuffer. This function is only available if the context was created from a OpenGL context.
+            Creates a 2D WebCLImage from a WebGLRenderbuffer. This
+            function is only available if this context was created
+            with WebGL resource sharing enabled.
             </dd>
     </dl>
 
@@ -1260,17 +1266,66 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
         <dt class="idl-code">void flush()</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLEvent enqueueAcquireGLObjects(WebCLMemoryObject [] objects, WebCLEvent event_wait_list[]=NULL)</dt>
+        <dt class="idl-code">WebCLEvent enqueueAcquireGLObjects(WebCLMemoryObject[] objects, WebCLEvent event_wait_list[]=NULL)</dt>
             <dd>
-            acquire OpenCL memory objects that have been created from WebGL objects.
+            Acquires the given WebCLBuffer and WebCLImage objects that
+            have been previously created from WebGL objects. The
+            objects must be acquired from WebGL before they can be
+            used by WebCL.
             </dd>
-        <dt class="idl-code">WebCLEvent enqueueReleaseGLObjects(WebCLMemoryObject [] objects, WebCLEvent event_wait_list[]=NULL)</dt>
+        <dt class="idl-code">WebCLEvent enqueueReleaseGLObjects(WebCLMemoryObject[] objects, WebCLEvent event_wait_list[]=NULL)</dt>
             <dd>
-            release OpenCL memory objects that have been created from
-            WebGL objects. These objects must be released before they
-            can be used by OpenGL.
+            Releases the given WebCLBuffer and WebCLImage objects that
+            have been previously created from WebGL objects. The
+            objects must be released from WebCL before they can be
+            used by WebGL.
             </dd>
     </dl>
+
+<pre class="example">
+// This example illustrates resource sharing with WebGL, as per
+// the Nokia proposal. A WebGL texture is used as a source buffer
+// for a CL kernel.
+
+var clCtx = WebCL.createContext({ gl : glCtx }); // Use any CL device that can interoperate with WebGL
+var clImage1 = clCtx.createFromGLTexture2D(WebCL.MEM_READ_ONLY, glCtx.TEXTURE_2D, 0, texture);
+var clImage2 = clgl.createImage2D(WebCL.MEM_READ_ONLY, {}, w, h);
+var clQueue = clCtx.createCommandQueue(...);
+clQueue.enqueueAcquireGLObjects([clImage]);
+clQueue.enqueueWriteImage(clImage2, true, { width:w, height:h });
+clQueue.enqueueNDRangeKernel(...);
+clQueue.enqueueReleaseGLObjects([clImage]);
+clQueue.finish();
+
+// This example illustrates the same operation if the CLGL
+// functions are not part of the core spec, but reside in a
+// separate extension object that must be queried for each
+// device individually (as proposed by Motorola).
+
+var clgl = null;
+var clCtx = null;
+var devices = [];
+var platforms = WebCL.getPlatforms();
+for (var i=0, found=false; i < platforms.length && !found; i++) {
+  devices = platforms[i].getDevices(WebCL.DEVICE_TYPE_ALL);
+  for (var j=0; j < devices.length; j++) {
+    clgl = devices[j].getExtension("cl_gl_sharing");
+    if (clgl) {
+      found = true;
+      clCtx = WebCL.createContext({ platform : platforms[i], device = devices[j] });
+    }
+  }
+}
+
+var clImage1 = clgl.createFromGLTexture2D(WebCL.MEM_READ_ONLY, glCtx.TEXTURE_2D, 0, texture);
+var clImage2 = clgl.createImage2D(WebCL.MEM_READ_ONLY, {}, w, h);
+var clQueue = clCtx.createCommandQueue();
+clgl.enqueueAcquireGLObjects(clQueue, [ clImage1 ]);
+clQueue.enqueueWriteImage(clImage2, true, { width:w, height:h });
+clQueue.enqueueNDRangeKernel(...);
+clgl.enqueueReleaseGLObjects(clQueue, [ clImage1 ]);
+clQueue.finish();
+</pre>
 
 <!-- ======================================================================================================= -->
 
