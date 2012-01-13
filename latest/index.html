@@ -19,7 +19,7 @@
         var className = targets[i].id;
         var classRegExp = new RegExp(className+" ", "g");
         var classArrayRegExp = new RegExp(className+"\\[", "g");
-        var classLink = "<a href='#" + className + "'>" + className + "</a>";
+        var classLink = "<a href='#" + className.toUpperCase() + "'>" + className + "</a>";
         hrefs.each(function() {
           this.innerHTML = this.innerHTML.replace(classRegExp, classLink+" ");
           this.innerHTML = this.innerHTML.replace(classArrayRegExp, classLink+"[");
@@ -121,7 +121,7 @@
 
 <!-- ======================================================================================================= -->
 
-    <h2><span class="secno"></span>Introduction</h2>
+    <h2>Introduction</h2>
 
     <p>
       TODO
@@ -129,7 +129,7 @@
 
 <!-- ======================================================================================================= -->
 
-    <h2><span class="secno"></span>WebCL Resources</h2>
+    <h2>WebCL Resources</h2>
 
     <p> 
       TODO
@@ -137,7 +137,7 @@
 
 <!-- ======================================================================================================= -->
 
-    <h2><span class="secno"></span>Security</h2>
+    <h2>Security</h2>
 
     <p>
       TODO
@@ -145,7 +145,7 @@
 
 <!-- ======================================================================================================= -->
 
-    <h3><span class="secno"></span> Resource Restrictions</h3>
+    <h3>Resource Restrictions</h3>
 
     <p>
         When WebCL resources are accessed by kernels, the WebCL
@@ -155,7 +155,7 @@
 
 <!-- ======================================================================================================= -->
 
-    <h3><span class="secno"></span> <a name="ORIGIN_RESTRICTIONS">Origin Restrictions</a></h3>
+    <h3><a name="ORIGIN_RESTRICTIONS">Origin Restrictions</a></h3>
 
     <p>
       WebCL imposes the same restrictions as WebGL on cross-origin content [insert link to WebGL spec].
@@ -163,7 +163,7 @@
 
 <!-- ======================================================================================================= -->
 
-    <h3><span class="secno"></span> <a name="KERNEL_RESTRICTIONS">Kernel Restrictions</a></h3>
+    <h3><a name="KERNEL_RESTRICTIONS">Kernel Restrictions</a></h3>
 
     <p>
       TODO
@@ -171,7 +171,7 @@
 
 <!-- ======================================================================================================= -->
 
-    <h3><span class="secno"></span>Defense Against Denial of Service</h3>
+    <h3>Defense Against Denial of Service</h3>
 
     <p>
       TODO
@@ -179,7 +179,7 @@
 
 <!-- ======================================================================================================= -->
 
-    <h3><span class="secno"></span> <a name="OUT_OF_RANGE_ARRAY_ACCESSES">Out-of-Range Array Accesses</a></h3>
+    <h3><a name="OUT_OF_RANGE_ARRAY_ACCESSES">Out-of-Range Array Accesses</a></h3>
 
     <p>
         Kernels must not be allowed to read or write array elements that lie outside the bounds of
@@ -192,11 +192,11 @@
 
 <!-- ======================================================================================================= -->
 
-    <h2><span class="secno"></span>DOM Interfaces</h2>
+    <h2>DOM Interfaces</h2>
 
-    <h3><span class="secno"></span>Types</h3>
+    <h3>Types</h3>
 
-    <h4><span class="secno"></span>Basic types</h4>
+    <h4>Basic types</h4>
 
     <p>The following basic types are used in specification.</p>
 
@@ -210,7 +210,7 @@ typedef unsigned long CLenum;
 typedef unsigned long CLtype;
 </pre>
 
-    <h4><span class="secno"></span>Scalar and vector types</h4>
+    <h4><a name="WEBCLTYPES"/>Scalar and vector types</h4>
 
     <p>
       TODO: make the numeric values match the corresponding enums in cl.h?
@@ -244,7 +244,7 @@ myKernel.setKernelArg(1, [10, 20, 30, 40], WebCLTypes.UINT | WebCLTypes.VEC4);
 myKernel.setKernelArg(2, [pi, -pi/2], WebCLTypes.DOUBLE | WebCLTypes.VEC2);
 </pre>
 
-    <h4><span class="secno"></span><a name="WebCLException">WebCLException</a></h4>
+    <h4><a name="WEBCLEXCEPTION"/>WebCLException</h4>
 
     <p>
       WebCL uses exceptions instead of returning error codes from
@@ -260,7 +260,7 @@ exception <dfn id="WebCLException">WebCLException</dfn> : DOMException {
 }
 </pre>
 
-    <h4><span class="secno"></span><a name="WebCLContextProperties">WebCLContextProperties</a></h4>
+    <h4><a name="WEBCLCONTEXTPROPERTIES">WebCLContextProperties</a></h4>
 
     <p>
       WebCLContextProperties specifies the required attributes for a
@@ -302,7 +302,7 @@ try {
 }
 </pre>
 
-    <h4><span class="secno"></span>WebCLImageFormat</h4>
+    <h4><a name="WEBCLIMAGEFORMAT"/>WebCLImageFormat</h4>
 
     <p>
       WebCLImageFormat specifies the number of channels and the
@@ -330,7 +330,7 @@ var imageFormat = { channelOrder : cl.RGB, channelDataType : cl.UNORM_SHORT_565 
 var image = ctx.createImage2D(cl.MEM_READ_ONLY, imageFormat, width, height);
 </pre>
 
-    <h4><span class="secno"></span>WebCLRegion</h4>
+    <h4><a name="WEBCLREGION"/>WebCLRegion</h4>
 
     <p>
       WebCLRegion specifies a rectangular region of an image or buffer
@@ -442,7 +442,7 @@ function copyBufferRect(srcBuffer, dstBuffer, srcOriginX, srcOriginY, dstOriginX
 }
 </pre>
 
-    <h3><span class="secno"></span>WebCL</h3>
+    <h3>WebCL</h3>
 
     <p>
       A WebCL computing context can be created through the <code>window.WebCL</code> object.
@@ -482,7 +482,7 @@ function copyBufferRect(srcBuffer, dstBuffer, srcOriginX, srcOriginY, dstOriginX
 
     </dl>
 
-<pre class="idl">
+<pre class="idl"><a name="WEBCL"/>
 interface <dfn id="WebCL">WebCL</dfn> {
 
   // Functions
@@ -843,7 +843,7 @@ interface <dfn id="WebCL">WebCL</dfn> {
  
 <!-- ======================================================================================================= -->
 
-    <h3><span class="secno"></span>WebCLPlatform</h3>
+    <h3><a name="WEBCLPLATFORM"/>WebCLPlatform</h3>
 
     <p>
     </p>
@@ -879,7 +879,7 @@ interface <dfn id="WebCLPlatform">WebCLPlatform</dfn> {
     
 <!-- ======================================================================================================= -->
 
-    <h3><span class="secno"></span>WebCLDevice</h3>
+    <h3><a name="WEBCLDEVICE"/>WebCLDevice</h3>
 
     <p>
     </p>
@@ -971,7 +971,7 @@ interface <dfn id="WebCLDevice">WebCLDevice</dfn> {
    
 <!-- ======================================================================================================= -->
 
-    <h3><span class="secno"></span>WebCLContext</h3>
+    <h3><a name="WEBCLCONTEXT"/>WebCLContext</h3>
 
     <p>
     </p>
@@ -1079,7 +1079,7 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
 
 <!-- ======================================================================================================= -->
 
-    <h3><span class="secno"></span>WebCLProgram</h3>
+    <h3><a name="WEBCLPROGRAM"/>WebCLProgram</h3>
 
     <p>
     </p>
@@ -1127,7 +1127,7 @@ interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
 
 <!-- ======================================================================================================= -->
 
-    <h3><span class="secno"></span>WebCLCommandQueue</h3>
+    <h3><a name="WEBCLCOMMANDQUEUE"/>WebCLCommandQueue</h3>
 
     <p>
     </p>
@@ -1277,7 +1277,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 
 <!-- ======================================================================================================= -->
 
-    <h3><span class="secno"></span>WebCLMemoryObject</h3>
+    <h3><a name="WEBCLMEMORYOBJECT"/>WebCLMemoryObject</h3>
 
     <pre class="idl">interface <dfn id="WebCLMemoryObject">WebCLMemoryObject</dfn> {
     any getMemoryObjectInfo(CLenum name);
@@ -1316,7 +1316,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 
 <!-- ======================================================================================================= -->
 
-    <h3><span class="secno"></span>WebCLBuffer</h3>
+    <h3><a name="WEBCLBUFFER"/>WebCLBuffer</h3>
 
      <p>
      </p>
@@ -1336,7 +1336,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 </pre>
  <!-- ======================================================================================================= -->
  
-    <h3><span class="secno"></span>WebCLImage</h3>
+    <h3><a name="WEBCLIMAGE"/>WebCLImage</h3>
 
     <p>
     </p>
@@ -1365,7 +1365,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 
 <!-- ======================================================================================================= -->
 
-    <h3><span class="secno"></span>WebCLSampler</h3>
+    <h3><a name="WEBCLSAMPLER"/>WebCLSampler</h3>
 
     <p>
     </p>
@@ -1394,7 +1394,7 @@ interface <dfn id="WebCLSampler">WebCLSampler</dfn> {
 
 <!-- ======================================================================================================= -->
 
-    <h3><span class="secno"></span>WebCLEvent</h3>
+    <h3><a name="WEBCLEVENT"/>WebCLEvent</h3>
 
     <p>
       OpenCL's Event and UserEvent are merged into this WebCLEvent class.
@@ -1441,7 +1441,7 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
 
 <!-- ======================================================================================================= -->
 
-    <h3><span class="secno"></span>WebCLKernel</h3>
+    <h3><a name="WEBCLKERNEL"/>WebCLKernel</h3>
 
     <p>
     </p>
@@ -1515,7 +1515,7 @@ interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
 
 <!-- ======================================================================================================= -->
 
-    <h2><span class="secno"></span> <a name="webcl_opencl_differences">Differences Between WebCL and OpenCL 1.1</a></h2>
+    <h2> <a name="webcl_opencl_differences">Differences Between WebCL and OpenCL 1.1</a></h2>
     
     <p>
       This section describes changes made to the WebCL API relative to the
@@ -1525,9 +1525,9 @@ interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
 
 <!-- ======================================================================================================= -->
 
-    <h2><span class="secno"></span> References</h2>
+    <h2> References</h2>
     
-    <h3><span class="secno"></span> Normative references</h3>
+    <h3> Normative references</h3>
     <dl>
     
         <dt id="refsWEBGL">[WEBGL]</dt>
@@ -1589,11 +1589,11 @@ interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
         </dd>
     </dl>
 
-    <h3><span class="secno"></span>Other references</h3>
+    <h3>Other references</h3>
 
 <!-- ======================================================================================================= -->
     
-    <h2><span class="secno"></span> Acknowledgments</h2>
+    <h2>Acknowledgments</h2>
     <p>This specification is produced by the Khronos WebCL Working Group.</p>
     
     <p>
