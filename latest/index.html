@@ -18,7 +18,7 @@
         var className = targets[i].id;
         var classRegExp = new RegExp(className+" ", "g");
         var classArrayRegExp = new RegExp(className+"\\[\\]", "g");
-        var classLink = "<a href='#" + className.toUpperCase() + "'>" + className + "</a>";
+        var classLink = "<a href='#" + className.toUpperCase() + "'>" + className + "<\/a>";
         hrefs.each(function() {
           this.innerHTML = this.innerHTML.replace(classRegExp, classLink+" ");
           this.innerHTML = this.innerHTML.replace(classArrayRegExp, classLink+"[]");
@@ -464,16 +464,28 @@ function copyBufferRect(srcBuffer, dstBuffer, srcOriginX, srcOriginY, dstOriginX
         Creates a new WebCL context with the given properties. The
         parameter can be omitted, in which case the implementation
         will decide which platform and device to use. See 
-        <a href="#WebCLContextProperties">WebCLContextProperties</a>
+        <a href="#WEBCLCONTEXTPROPERTIES">WebCLContextProperties</a>
         for more information and example code.
       </dd>
 
-      <dt class="idl-code">void waitForEvents(WebCLEvent[] events)</dt>
+      <dt class="idl-code">void waitForEvents(WebCLEvent[] eventList)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clWaitForEvents.html">man page</a>)</span>
+      </dt>
       <dd>
+        Waits until the given events have completed. See <a href="#WEBCLEVENT">WebCLEvent</a> for more information.
       </dd>
 
-      <dt class="idl-code">void unloadCompiler()</dt>
+      <dt class="idl-code">void unloadCompiler()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.6.4">OpenCL 1.1 §5.6.4</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clUnloadCompiler.html">man page</a>)</span>
+      </dt>
       <dd>
+        Gives a hint to the implementation that the application does
+        not intend to use the kernel compiler any longer.  This does
+        not cause any commitments, however: The implementation will
+        not necessarily unload the compiler, and the application will
+        not necessarily refrain from using it.
       </dd>
 
     </dl>
@@ -483,9 +495,9 @@ interface <dfn id="WebCL">WebCL</dfn> {
 
   // Functions
 
-  WebCLPlatform [] getPlatforms();
-  WebCLContext createContext(WebCLContextProperties);
-  void waitForEvents(WebCLEvent [] eventList);
+  WebCLPlatform[] getPlatforms();
+  WebCLContext createContext(optional WebCLContextProperties properties);
+  void waitForEvents(WebCLEvent[] eventList);
   void unloadCompiler();
 
   // Enums
@@ -844,35 +856,51 @@ interface <dfn id="WebCL">WebCL</dfn> {
     <p>
     </p>
 
-<pre class="idl">
-interface <dfn id="WebCLPlatform">WebCLPlatform</dfn> {
-    any getPlatformInfo(CLenum name);
-    WebCLDevice [] getDevices(CLenum deviceType);
-}
-</pre>
-
     <dl class="methods">
       <dt class="idl-code">any getPlatformInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-4.1">OpenCL 1.1 §4.1</a>, 
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetPlatformInfo.html">man page</a>)</span>
       </dt>
       <dd>
-        Return the value for the passed name. The type returned is the natural type for the
-        requested name, as given in the following table:
+        Retrieves information about this WebCLPlatform. The available query parameters and their return types are as follows:
         <table class="foo">
-          <tr><th>name</th><th>ECMAScript returned type</th></tr>
+          <tr><th>name</th><th>return type</th></tr>
           <tr><td>PLATFORM_PROFILE</td><td>DOMString</td></tr>
           <tr><td>PLATFORM_VERSION</td><td>DOMString</td></tr>
           <tr><td>PLATFORM_NAME</td><td>DOMString</td></tr>
           <tr><td>PLATFORM_VENDOR</td><td>DOMString</td></tr>
           <tr><td>PLATFORM_EXTENSIONS</td><td>DOMString</td></tr>
-        </table><br>
+        </table>
       </dd>
-      <dt class="idl-code">WebCLDevice [] getDevices(CLenum deviceType)</dt>
+      <dt class="idl-code">WebCLDevice[] getDevices(optional CLenum deviceType)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-4.2">OpenCL 1.1 §4.2</a>, 
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceIDs.html">man page</a>)</span>
+      </dt>
       <dd>
+        Retrieves the WebCLDevices that are available on this
+        WebCLPlatform and match the given device type. The valid
+        device types are listed in the table below, but note that a
+        particular platform does not necessarily support more than one
+        type of device.  Omitting the device type is equivalent to
+        specifying DEVICE_TYPE_DEFAULT.
+        <table class="foo">
+          <tr><th>deviceType</th><th>description</th></tr>
+          <tr><td>DEVICE_TYPE_CPU</td><td>A single-core or multi-core CPU, typically the host processor.</td></tr>
+          <tr><td>DEVICE_TYPE_GPU</td><td>A graphics processing unit, typically also used by WebGL.</td></tr>
+          <tr><td>DEVICE_TYPE_ACCELERATOR</td><td>A dedicated OpenCL accelerator.</td></tr>
+          <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device on this platform.</td></tr>
+          <tr><td>DEVICE_TYPE_ALL</td><td>All devices available on this platform.</td></tr>
+        </table>
       </dd>
     </dl>
     
+<pre class="idl">
+interface <dfn id="WebCLPlatform">WebCLPlatform</dfn> {
+    any getPlatformInfo(CLenum name);
+    WebCLDevice[] getDevices(CLenum deviceType);
+}
+</pre>
+
 <!-- ======================================================================================================= -->
 
     <h3><a id="WEBCLDEVICE">WebCLDevice</a></h3>
@@ -1288,7 +1316,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 
 var clCtx = WebCL.createContext({ gl : glCtx }); // Use any CL device that can interoperate with WebGL
 var clImage1 = clCtx.createFromGLTexture2D(WebCL.MEM_READ_ONLY, glCtx.TEXTURE_2D, 0, texture);
-var clImage2 = clgl.createImage2D(WebCL.MEM_READ_ONLY, {}, w, h);
+var clImage2 = clCtx.createImage2D(WebCL.MEM_READ_ONLY, imageFormat, w, h);
 var clQueue = clCtx.createCommandQueue(...);
 clQueue.enqueueAcquireGLObjects([clImage]);
 clQueue.enqueueWriteImage(clImage2, true, { width:w, height:h });
@@ -1317,7 +1345,7 @@ for (var i=0, found=false; i < platforms.length && !found; i++) {
 }
 
 var clImage1 = clgl.createFromGLTexture2D(WebCL.MEM_READ_ONLY, glCtx.TEXTURE_2D, 0, texture);
-var clImage2 = clgl.createImage2D(WebCL.MEM_READ_ONLY, {}, w, h);
+var clImage2 = clCtx.createImage2D(WebCL.MEM_READ_ONLY, imageFormat, w, h);
 var clQueue = clCtx.createCommandQueue();
 clgl.enqueueAcquireGLObjects(clQueue, [ clImage1 ]);
 clQueue.enqueueWriteImage(clImage2, true, { width:w, height:h });
