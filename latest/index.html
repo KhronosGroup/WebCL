@@ -1501,7 +1501,7 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
                 <tr><td>EVENT_REFERENCE_COUNT</td><td>Integer</td></tr>
             </table><br>
             </dd>
-        <dt class="idl-code">any getProfilingInfo(CLenum name)</dt>
+        <dt class="idl-code">any getEventProfilingInfo(CLenum name)</dt>
             <dd>
             Return the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
@@ -1549,7 +1549,7 @@ interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
                 <tr><td>KERNEL_PROGRAM</td><td>WebCLProgram</td></tr>
             </table><br>
             </dd>
-        <dt class="idl-code">any getKernelWorkgroupInfo(CLenum name)</dt>
+        <dt class="idl-code">any getKernelWorkGroupInfo(CLenum name)</dt>
             <dd>
             return an Integer or Integer[1..3] depending on the name queried.
             </dd>
