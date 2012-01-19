@@ -268,23 +268,48 @@ exception <dfn id="WebCLException">WebCLException</dfn> : DOMException {
       below. 
     </p>
 
-    <p>
-      The 'shareGroup' field is an array of objects that the new
-      WebCLContext must be able to share resources with. The objects
-      may be instances of WebGLRenderingContext, HTMLVideoElement,
-      HTMLCanvasElement, or any other object that the WebCL
-      implementation supports.  If any of the given objects cannot be
-      accommodated, createContext will throw a WebCLException.
-    </p>
-
 <pre class="idl">
 dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
   WebCLPlatform platform = null;                 // Default: let the implementation decide
-  WebCLDevice devices = null;                    // Default: let the implementation decide
+  WebCLDevice[] devices = null;                  // Default: let the implementation decide
   CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT; // Default: let the implementation decide
   any[] shareGroup = null;                       // Default: do not use any shared resources
 }
 </pre>
+
+    <dl class="methods">
+
+      <dt class="idl-code">WebCLPlatform platform</dt>
+      <dd>
+        The platform to create a context for. If this is null, the implementation will decide
+        which platform to use. Note that in typical systems, there is only one WebCLPlatform.
+      </dd>
+
+      <dt class="idl-code">WebCLDevice[] devices</dt>
+      <dd>
+        An array of devices to create the context for. The devices must be on the same platform,
+        and if the 'platform' field is non-null, the devices must be on that particular platform.
+      </dd>
+
+      <dt class="idl-code">CLenum deviceType</dt>
+      <dd>
+        The preferred device type to create a context for. The device type must match the given
+        platform and devices. For example, if deviceType is set to DEVICE_TYPE_GPU and there is
+        no GPU on the given platform, then createContext will throw a WebCLException. If the
+        platform and devices fields are null, the WebCL implementation will select any platform
+        and any (single) device that matches the given type.
+      </dd>
+
+      <dt class="idl-code">any[] shareGroup</dt>
+      <dd>
+        An array of objects that the new WebCLContext must be able to
+        share resources with. The shareGroup objects may be instances
+        of WebGLRenderingContext, HTMLVideoElement, HTMLCanvasElement,
+        or anything else that the WebCL implementation supports.  If
+        the given objects cannot be accommodated, createContext will
+        throw a WebCLException.
+      </dd>
+    </dl>
 
 <pre class="example">
 // This example creates two WebCL contexts: one for a CPU, the other
