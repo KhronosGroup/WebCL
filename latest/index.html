@@ -265,7 +265,16 @@ exception <dfn id="WebCLException">WebCLException</dfn> : DOMException {
       context with the given properties cannot be created,
       createContext will throw a WebCLException. If any of the fields
       are missing, they will assume the default values specified
-      below.
+      below. 
+    </p>
+
+    <p>
+      The 'shareGroup' field is an array of objects that the new
+      WebCLContext must be able to share resources with. The objects
+      may be instances of WebGLRenderingContext, HTMLVideoElement,
+      HTMLCanvasElement, or any other object that the WebCL
+      implementation supports.  If any of the given objects cannot be
+      accommodated, createContext will throw a WebCLException.
     </p>
 
 <pre class="idl">
@@ -273,7 +282,7 @@ dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
   WebCLPlatform platform = null;                 // Default: let the implementation decide
   WebCLDevice devices = null;                    // Default: let the implementation decide
   CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT; // Default: let the implementation decide
-  WebGLRenderingContext gl = null;               // Default: no resource sharing with WebGL
+  any[] shareGroup = null;                       // Default: do not use any shared resources
 }
 </pre>
 
@@ -283,12 +292,11 @@ dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
 // each context. The GPU context is required to interoperate with our
 // WebGL context. An exception will be thrown if, for example, there
 // is no CPU or GPU support in the system, or if the GPU context cannot
-// share resources with the given WebGL context. Proper error handling
-// is omitted for clarity.
+// share resources with the given WebGL context.
 
 try {
   var cpuProps = { deviceType : WebCL.DEVICE_TYPE_CPU };
-  var gpuProps = { deviceType : WebCL.DEVICE_TYPE_GPU, gl : glCtx };
+  var gpuProps = { deviceType : WebCL.DEVICE_TYPE_GPU, shareGroup : [glCtx] };
   var cpuCtx = WebCL.createContext(cpuProps);
   var gpuCtx = WebCL.createContext(gpuProps);
 } catch (e) {
@@ -296,6 +304,50 @@ try {
   if (e.type == "DEVICE_NOT_AVAILABLE") { ... }
   if (e.type == "INCOMPATIBLE_WEBGL_CONTEXT") { ... }
 }
+</pre>
+
+    <h4><a id="WEBCLEXTERNALOBJECT">WebCLExternalObject</a></h4>
+
+    <p>
+    </p>
+
+<pre class="idl">
+dictionary <dfn id="WebCLExternalObject">WebCLExternalObject</dfn> {
+  any externalObject;                 // the external object to share, e.g. a WebGLTexture
+}
+</pre>
+
+<pre class="example">
+// STEP 1: Create a WebCL context that can interoperate with both
+// WebGL and HTMLVideoElement (or more precisely, the particular
+// instances that we provide).
+
+var ctxProps = { shareGroup : [ myGLContext, myVideo] };
+var clCtx = WebCL.createContext(ctxProps);
+if (!clCtx) alert("WebGL and/or video interoperability not supported");
+
+// STEP 2: Create WebCL memory objects that are mapped to external objects
+// owned by the particular instances of WebGL and HTMLVideoElement that we
+// declared above.
+
+var dstImage = ctx.createImage2D(WebCL.MEM_WRITE_ONLY, { externalObject: myTexture });
+
+// Some types of external objects, such as videos and cube map textures, may
+// require or allow additional fields in order to be optimally mapped to WebCL.
+// In this example, an image object of 1920x1080 pixels is created, and video
+// frames automatically scaled to that resolution. If width and height are not
+// given explicitly, they will be queried from the video element.
+
+var srcImage = ctx.createImage2D(WebCL.MEM_READ_ONLY, { externalObject: myVideo, width:1920, height:1080 });
+
+// STEP 3: Synchronize WebCL memory objects with their external counterparts, as
+// required for each command queue. A shared object must be acquired before using
+// it in a kernel or otherwise accessing it, and released afterwards.
+
+queue.enqueueAcquireSharedObjects([srcImage, dstImage]);
+queue.enqueueNDRangeKernel(processVideoAndWriteToTexture, ...);
+queue.enqueueReleaseSharedObjects([srcImage, dstImage]);
+queue.finish();
 </pre>
 
     <h4><a id="WEBCLIMAGEFORMAT">WebCLImageFormat</a></h4>
@@ -333,21 +385,20 @@ var image = ctx.createImage2D(WebCL.MEM_READ_ONLY, imageFormat, width, height);
       object. A WebCLRegion object, or any arbitrary object with the
       same fields, is passed to the functions in WebCLCommandQueue.
       When referring to images, all values are given in pixels; when
-      referring to buffers, they are given in bytes.  Note that some
-      of the attributes are only applicable for one-dimensional
-      buffers, others only for 2D or 3D images.  If any of the fields
-      required by a particular function are missing, they will assume
-      the default values specified below.
+      referring to buffers, they are given in bytes.  If any of the
+      fields required by a particular function are missing, they will
+      assume the default values specified below.
     </p>
 
 <pre class="idl">
 dictionary <dfn id="WebCLRegion">WebCLRegion</dfn> {
-  CLuint offset = 0;                  // applies for 1D buffers only
-  CLuint origin[1..3] = [ 0, 0, 0 ];  // does not apply for 1D buffers
+  CLuint originX = 0;                 
+  CLuint originY = 0;                 // applies for 2D/3D buffers and images only
+  CLuint originZ = 0;                 // applies for 3D buffers and images only
   CLuint width = 1;
-  CLuint height = 1;                  // does not apply for 1D buffers
+  CLuint height = 1;                  // applies for 2D/3D buffers and images only
   CLuint depth = 1;                   // applies for 3D buffers and images only
-  CLuint rowPitch = 0;                // does not apply for 1D buffers
+  CLuint rowPitch = 0;                // applies for 2D/3D buffers and images only
   CLuint slicePitch = 0;              // applies for 3D buffers and images only
 }
 </pre>
@@ -362,19 +413,19 @@ function readBufferToHost(srcBuffer) {
  // ArrayBuffer of that size.
 
  var numBytes = srcBuffer.getMemObjectInfo(WebCL.MEM_SIZE);
- var dstBuffer = new ArrayBuffer(numBytes);
+ var dstArray = new ArrayBuffer(numBytes);
 
  // For reading the contents of a buffer object from CL to the host,
  // we must specify the number of bytes to read. Optionally, we could
- // also specify the starting offset.
+ // also specify the starting offset (originX).
 
- queue.enqueueReadBuffer(srcBuffer, true, {width:numBytes}, dstBuffer);
+ queue.enqueueReadBuffer(srcBuffer, true, { width:numBytes }, dstArray);
 
  // For comparison, here's the same operation with a raw parameter
  // list, as in native OpenCL. In this simple case, the raw form is
  // equally concise and readable as the JavaScript object notation.
 
- queue.enqueueReadBuffer(srcBuffer, true, 0, numBytes, dstBuffer);
+ queue.enqueueReadBuffer(srcBuffer, true, 0, numBytes, dstArray);
 
  return dstBuffer;
 }
@@ -391,14 +442,14 @@ function copyBufferToImage(srcBuffer, dstImage) {
   var imgHeight = dstImage.getImageInfo(WebCL.IMAGE_HEIGHT);
 
   // The source buffer region can be specified with an empty object,
-  // because only the 'offset' field is needed, and we are fine with
-  // its default value (zero). For the destination region, we must
-  // give the width and height.
+  // because only the 'originX' field is needed, and we are fine with
+  // its default value (zero). For the destination region, we use the
+  // default origin (0, 0), but must specify the width and height.
 
-  queue.enqueueCopyBufferToImage(srcBuffer, dstImage, {}, {width:imgWidth, height:imgHeight});
+  queue.enqueueCopyBufferToImage(srcBuffer, dstImage, {}, { width:imgWidth, height:imgHeight });
 
   // For comparison, here's the same operation with a raw parameter
-  // list, as in native OpenCL. It's shorter, but less descriptive.
+  // list, as in native OpenCL.
   
    queue.enqueueCopyBufferToImage(srcBuffer, dstImage, 0, [0, 0, 0], [imgWidth, imgHeight, 1]);
 }
@@ -411,16 +462,15 @@ function copyBufferToImage(srcBuffer, dstImage) {
 // (a.k.a. row stride) are given in bytes (not pixels, because
 // these are buffers rather than images).
 
-function copyBufferRect(srcBuffer, dstBuffer, srcOriginX, srcOriginY, dstOriginX, dstOriginY, w, h, pitch) {
+function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitch) {
 
   // The source and destination regions must have the same width
   // and height (as required by the underlying OpenCL function).
   // The row pitch could be different for source and destination,
   // but is assumed to be the same in this example.
 
-  dstRegion = srcRegion = { width:w, height:h, rowPitch:pitch };
-  srcRegion.origin = [ srcOriginX, srcOriginY ];
-  dstRegion.origin = [ dstOriginX, dstOriginY ];
+  var srcRegion = { width : w, height : h, rowPitch : pitch, originX : srcX, originY : srcY };
+  var dstRegion = { width : w, height : h, rowPitch : pitch, originX : dstX, originY : dstY };
   queue.enqueueCopyBufferRect(srcBuffer, dstBuffer, srcRegion, dstRegion);
 
   // For comparison, here's the same operation with a raw parameter
