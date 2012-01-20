@@ -109,7 +109,6 @@ ul.indexlist li li { margin-left: 1em }
     counter-increment: exampleno;
 }
 div.example:before {
-    content: "Example";
     content: "Example " counter(exampleno, upper-roman);
     font: bold small sans-serif;
     /*float: left;*/
@@ -126,7 +125,6 @@ div.example:before {
     /*margin: -1.3em 0 0.3em -2.5em;*/
 }
 pre.example:before {
-    content: "Example";
     content: "Example " counter(exampleno, upper-roman);
     font: bold small sans-serif;
     /*float: left;*/
