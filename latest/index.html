@@ -80,12 +80,12 @@
                 <a href="http://webcl.nokiaresearch.com/">(Nokia Research)</a>
             </dd>
             <dd>
-                <a href="mailto:msevenier@motorola.com">Mikael Bourges-Sevenier</a>
+                <a href="mailto:msevenier@motorola.com">Mika&euml;l Bourges-S&eacute;venier</a>
                 <a href="http://www.motorola.com/">(Motorola Mobility, Inc.)</a>
             </dd>
     </dl>
     
-    <span style="font-size: x-small; font-style: oblique">Copyright © 2011 Khronos Group</span>
+    <span style="font-size: x-small; font-style: oblique">Copyright © 2012 Khronos Group</span>
 
     <hr>
     
@@ -418,9 +418,9 @@ queue.finish();
     </p>
 
 <pre class="idl">
-dictionary <dfn id="WebCLImageFormat">WebCLImageFormat</dfn> {
-  CLenum channelOrder = WebCL.RGBA;           // Default: RGB colors + alpha
-  CLenum channelDataType = WebCL.UNORM_INT8;  // Default: 8-bit unsigned colors normalized to [0, 1]
+dictionary <dfn id="WebCLImageChannelFormat">WebCLImageChannelFormat</dfn> {
+  CLenum order = WebCL.RGBA;           // Default: RGB colors + alpha
+  CLenum dataType = WebCL.UNORM_INT8;  // Default: 8-bit unsigned colors normalized to [0, 1]
 }
 </pre>
 
@@ -429,7 +429,7 @@ dictionary <dfn id="WebCLImageFormat">WebCLImageFormat</dfn> {
 // i.e. 5 bits of red, 6 bits of green, and 5 bits of blue packed into
 // a 16-bit unsigned integer.
 
-var imageFormat = { channelOrder : WebCL.RGB, channelDataType : WebCL.UNORM_SHORT_565 };
+var imageFormat = { order : WebCL.RGB, dataType : WebCL.UNORM_SHORT_565 };
 var image = ctx.createImage2D(WebCL.MEM_READ_ONLY, imageFormat, width, height);
 </pre>
 
