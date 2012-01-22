@@ -1138,13 +1138,14 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
 
     WebCLCommandQueue createCommandQueue(WebCLDevice device, CLenum properties);
 
-    WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes);
+    WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer host_buffer);
 
     WebCLImage createImage2D(CLenum memFlags,
                              WebCLImageFormat imageFormat,
                              CLuint width,
                              CLuint height,
-                             optional CLuint rowPitch);
+                             optional CLuint rowPitch,
+                             optional ArrayBuffer host_buffer);
 
     WebCLImage createImage3D(CLenum memFlags,
                              WebCLImageFormat imageFormat,
@@ -1152,7 +1153,8 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
                              CLuint height,
                              CLuint depth,
                              optional CLuint rowPitch,
-                             optional CLuint slicePitch);
+                             optional CLuint slicePitch,
+                             optional ArrayBuffer host_buffer);
 
     WebCLSampler createSampler(CLboolean normalizedCoords,
                                CLenum addressingMode,
@@ -1202,14 +1204,17 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
         <dt class="idl-code">WebCLCommandQueue createCommandQueue(WebCLDevice device, CLenum properties[])</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLBuffer createBuffer(CLenum flags, CLuint size)</dt>
+        <dt class="idl-code">WebCLBuffer createBuffer(CLenum flags, CLuint size, optional ArrayBuffer host_buffer)</dt>
             <dd>
+				If flags contains cl.MEM_USE_HOST_PTR then host_buffer must be provided.
             </dd>
-        <dt class="idl-code">WebCLImage createImage2D(CLenum flags, WebCLImageFormat format, CLuint width, CLuint height, CLuint row_pitch)</dt>
+        <dt class="idl-code">WebCLImage createImage2D(CLenum flags, WebCLImageFormat format, CLuint width, CLuint height, CLuint row_pitch, optional ArrayBuffer host_buffer)</dt>
             <dd>
+				If flags contains cl.MEM_USE_HOST_PTR then host_buffer must be provided.
             </dd>
-        <dt class="idl-code">WebCLImage createImage3D(CLenum flags, WebCLImageFormat format, CLuint width, CLuint height, CLuint depth, CLuint rowPitch, CLuint slicePitch)</dt>
+        <dt class="idl-code">WebCLImage createImage3D(CLenum flags, WebCLImageFormat format, CLuint width, CLuint height, CLuint depth, CLuint rowPitch, CLuint slicePitch, optional ArrayBuffer host_buffer)</dt>
             <dd>
+				If flags contains cl.MEM_USE_HOST_PTR then host_buffer must be provided.
             </dd>
         <dt class="idl-code">WebCLSampler createSampler(CLboolean normalized_coords, CLenum addressing_mode, CLenum filter_mode)</dt>
             <dd>
