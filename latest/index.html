@@ -238,6 +238,7 @@ typedef unsigned int CLenum;     // Used for enumerated types, such as WebCL.DEV
 typedef unsigned int CLtype;     // Used for kernel argument types, such as WebCLTypes.UINT
 </pre>
 
+<div class="issue"><b>These types are not sufficient to cover all scenerios for WebCLKernel.setArg(). Need refinement.</b>
     <h4><a id="WEBCLTYPES">Kernel argument types</a></h4>
 
     <p>
@@ -285,6 +286,7 @@ myKernel.setKernelArg(0, 3.14159, WebCLTypes.FLOAT);                          //
 myKernel.setKernelArg(1, [1.23, 2.34], WebCLTypes.UINT | WebCLTypes.VEC2);    // cast the numbers to UINT, then pass to kernel
 myKernel.setKernelArg(2, 512, WebCLTypes.LOCAL_MEMORY_SIZE);                  // reserve 512 bytes for a kernel local variable
 </pre>
+</div>
 
     <h4><a id="WEBCLEXCEPTION">WebCLException</a></h4>
 
