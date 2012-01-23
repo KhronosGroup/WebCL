@@ -608,6 +608,21 @@ p.nonnormative {
     border: none; 
     background: #EEFFEE;
 }
+/******************************************************************
+ * Mikael Bourges-Sevenier (2012-01-22)
+ * Added explicit "non-normative" text before non-normative section
+ * to avoid confusion with colors only.
+ ******************************************************************/
+.nonnormative::before {
+    content:    "Non-normative";
+    display:    block;
+    width:  120px;
+    margin: -1.5em 0 0.5em 0;
+    font-weight:    bold;
+    border: 1px solid #f00;
+    background: #fff;
+    padding:    3px 1em;
+}
 
 p.copyright { font-size: small }
 p.copyright small { font-size: small }

@@ -438,11 +438,11 @@ queue.enqueueReleaseSharedObjects([srcImage, dstImage]);
 queue.finish();
 </pre>
 </div>
-    <h4><a id="WEBCLIMAGEFORMAT">WebCLImageFormat</a></h4>
+    <h4><a id="WEBCLIMAGECHANNELFORMAT">WebCLImageChannelFormat</a></h4>
 
     <p>
-      WebCLImageFormat specifies the number of channels and the
-      channel layout for a WebCLImage. A WebCLImageFormat object, or
+      WebCLImageChannelFormat specifies the number of channels and the
+      channel layout for a WebCLImage. A WebCLImageChannelFormat object, or
       any arbitrary object with the same fields, is passed to
       createImage*. If an image with the given format cannot be
       created, createImage* will throw a WebCLException.  If any of
