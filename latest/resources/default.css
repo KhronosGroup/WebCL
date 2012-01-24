@@ -613,7 +613,7 @@ p.nonnormative {
  * Added explicit "non-normative" text before non-normative section
  * to avoid confusion with colors only.
  ******************************************************************/
-.nonnormative::before {
+div.nonnormative::before {
     content:    "Non-normative";
     display:    block;
     width:  120px;

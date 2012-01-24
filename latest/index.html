@@ -304,8 +304,6 @@ exception <dfn id="WebCLException">WebCLException</dfn> : DOMException {
 }
 </pre>
 
-<div class="issue">
-WARNING: WebCLContextProperties is under consideration<br>
     <h4><a id="WEBCLCONTEXTPROPERTIES">WebCLContextProperties</a></h4>
 
     <p>
@@ -320,60 +318,25 @@ WARNING: WebCLContextProperties is under consideration<br>
 
 <pre class="idl">
 dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
-  WebCLPlatform platform = null;                 // Default: let the implementation decide
-  WebCLDevice[] devices = null;                  // Default: let the implementation decide
-  CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT; // Default: let the implementation decide
-  object[] shareGroup = null;                    // Default: do not use any shared resources
+  CLenum property = value,
 }
 </pre>
 
     <dl class="methods">
 
-      <dt class="idl-code">WebCLPlatform platform</dt>
+      <dt class="idl-code">property</dt>
       <dd>
-        The platform to create a context for. If this is null, the implementation will decide
-        which platform to use. Note that in typical systems, there is only one WebCLPlatform.
-      </dd>
-
-      <dt class="idl-code">WebCLDevice[] devices</dt>
-      <dd>
-        An array of devices to create the context for. The devices must be on the same platform,
-        and if the 'platform' field is non-null, the devices must be on that particular platform.
-      </dd>
-
-      <dt class="idl-code">CLenum deviceType</dt>
-      <dd>
-        The preferred device type to create a context for. The
-        available device types are specified in the table below.  The
-        device type must match the given platform and devices. For
-        example, if 'deviceType' is set to DEVICE_TYPE_GPU and there
-        is no GPU on the given platform, createContext will throw a
-        WebCLException. If the 'platform' and 'devices' fields are
-        null, the WebCL implementation will select any platform and
-        any (single) device that matches the given type.
-
+        There may be multiple property/value fields defined in the dictionary. An implementation is required to return
+        a context that best matches all properties/values provided but is not required to.<br>
+        List of properties supported by this specification:
         <table class="foo">
-          <tr><th>deviceType</th><th>Description</th></tr>
-          <tr><td>DEVICE_TYPE_CPU</td><td>A single-core or multi-core CPU, typically the host processor.</td></tr>
-          <tr><td>DEVICE_TYPE_GPU</td><td>A graphics processing unit, typically also used by WebGL.</td></tr>
-          <tr><td>DEVICE_TYPE_ACCELERATOR</td><td>A dedicated OpenCL accelerator.</td></tr>
-          <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device on this platform.</td></tr>
-          <tr><td>DEVICE_TYPE_ALL</td><td>All devices available on this platform.</td></tr>
+          <tr><th>property</th><th>value</th><th>Description</th></tr>
+          <tr><td>platform</td><td>WebCLPlatform</td><td>A WebCLPlatform object for which to create a context</td></tr>
         </table>
 
       </dd>
-
-      <dt class="idl-code">object[] shareGroup</dt>
-      <dd>
-        An array of objects that the new WebCLContext must be able to
-        share resources with. The shareGroup objects may be instances
-        of WebGLRenderingContext, HTMLVideoElement, or anything else
-        that the WebCL implementation supports.  If the given objects
-        cannot be accommodated, createContext will throw a
-        WebCLException.
-      </dd>
     </dl>
-
+    
 <pre class="example">
 // This example creates two WebCL contexts: one for a CPU, the other
 // for a GPU.  We let the implementation pick a suitable platform for
@@ -383,17 +346,15 @@ dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
 // share resources with the given WebGL context.
 
 try {
-  var cpuProps = { deviceType : WebCL.DEVICE_TYPE_CPU };
-  var gpuProps = { deviceType : WebCL.DEVICE_TYPE_GPU, shareGroup : [glCtx] };
-  var cpuCtx = WebCL.createContext(cpuProps);
-  var gpuCtx = WebCL.createContext(gpuProps);
+  var cpuProps = { platform : a_platform };
+  var gpuProps = { platform : a_platform };
+  var cpuCtx = WebCL.createContext(WebCL.DEVICE_TYPE_CPU, cpuProps);
+  var gpuCtx = WebCL.createContext(WebCL.DEVICE_TYPE_GPU, gpuProps);
 } catch (e) {
-  if (e.type == "DEVICE_NOT_FOUND") { ... }
-  if (e.type == "DEVICE_NOT_AVAILABLE") { ... }
-  if (e.type == "INCOMPATIBLE_SHAREGROUP") { ... }
-}
+  if (e.type == "INVALID_PLATFORM") { ... }
+  if (e.type == "INVALID_VALUE") { ... }
+  if (e.type == "INVALID_DEVICE") { ... }
 </pre>
-</div>
 
 <div class="issue">
 WARNING: This section is under consideration.<br>
@@ -594,20 +555,31 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
         Retrieves all WebCL platforms that are available in this system.
       </dd>
 
-      <dt class="idl-code">WebCLContext createContext(optional WebCLContextProperties properties)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-4.3">OpenCL 1.1 §4.3</a>, 
-        combines <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">clCreateContext</a>
-        and <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContextFromType.html">clCreateContextFromType</a>)</span>
-      </dt>
+       <dt class="idl-code">WebCLContext createContext(WebCLDevice devices[], optional WebCLContextProperties properties, 
+       optional any userdata, optional callback)
+          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-4.3">OpenCL 1.1 §4.3</a>, 
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
+         </dt>
       <dd>
-		<p class="issue">
-			WARNING: WebCLContextProperties is under consideration
-		</p>
-        Creates a new WebCL context with the given properties. The
-        parameter can be omitted, in which case the implementation
-        will decide which platform and device to use. See 
-        <a href="#WEBCLCONTEXTPROPERTIES">WebCLContextProperties</a>
-        for more information and example code.
+        Creates a new WebCL context with the given properties. <code>properties</code> parameter can be omitted, in which case the implementation
+        will decide which platform and device to use. See <a href="#WEBCLCONTEXTPROPERTIES">WebCLContextProperties</a> for more information and example code.
+        An optional callback method can be provided with optional userdata.<br>
+        The signature of the callback method is: <code>function (string error, optional any userdata)</code>
+      </dd>
+        <dt class="idl-code">WebCLContext createContext(Clenum device_type, optional WebCLContextProperties properties, optional WebCLContextProperties properties, 
+       optional any userdata, optional callback)
+          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-4.3">OpenCL 1.1 §4.3</a>, 
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContextFromType.html">man page</a>)</span>
+        </dt>
+      <dd>                
+        <table class="foo">
+          <tr><th>device_type</th><th>Description</th></tr>
+          <tr><td>DEVICE_TYPE_CPU</td><td>A single-core or multi-core CPU, typically the host processor.</td></tr>
+          <tr><td>DEVICE_TYPE_GPU</td><td>A graphics processing unit, typically also used by WebGL.</td></tr>
+          <tr><td>DEVICE_TYPE_ACCELERATOR</td><td>A dedicated OpenCL accelerator.</td></tr>
+          <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device on this platform.</td></tr>
+          <tr><td>DEVICE_TYPE_ALL</td><td>All devices available on this platform.</td></tr>
+        </table>
       </dd>
 
       <dt class="idl-code">DOMString[] getSupportedExtensions()
@@ -648,7 +620,8 @@ interface <dfn id="WebCL">WebCL</dfn> {
   // Functions
 
   WebCLPlatform[] getPlatforms();
-  WebCLContext createContext(optional WebCLContextProperties properties);
+  WebCLContext createContext(WebCLDevice devices[], optional WebCLContextProperties properties);
+  WebCLContext createContext(CLenum device_type, optional WebCLContextProperties properties);
   DOMString[] getSupportedExtensions();
   void waitForEvents(WebCLEvent[] eventList);
   void unloadCompiler();
@@ -1239,7 +1212,7 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
 interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
     any getProgramInfo(CLenum name);
     any getProgramBuildInfo(WebCLDevice device, CLenum name);
-    void buildProgram(WebCLDevice [] devices, DOMString options);
+    void build(WebCLDevice [] devices, DOMString options, any userdata, function callback);
     WebCLKernel createKernel(DOMString kernelName);
     WebCLKernel [] createKernelsInProgram();
 }
@@ -1267,8 +1240,10 @@ interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
             return Integer or DOMString depending on name queried.
             </dd>
         </dt>
-        <dt class="idl-code">void build(WebCLDevice devices[], optional DOMString options = null)</dt>
+        <dt class="idl-code">void build(WebCLDevice devices[], optional DOMString options, any userdata, function callback)</dt>
             <dd>
+              Compile a program with optional compiler options.<br>
+              An asynchronous callback method may be provided with optional userdata. The signature of the callback method is: <code>function(any userdata)</code>
             </dd>
         </dt>
         <dt class="idl-code">WebCLKernel createKernel(DOMString name)</dt>
