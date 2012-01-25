@@ -1054,7 +1054,7 @@ function readBufferToHost(srcBuffer) {
  // list, as in native OpenCL. In this simple case, the raw form is
  // equally concise and readable as the JavaScript object notation.
 
- queue.enqueueReadBuffer(srcBuffer, true, 0, numBytes, dstArray);
+ // C // queue.enqueueReadBuffer(srcBuffer, true, 0, numBytes, dstArray);
 
  return dstBuffer;
 }
@@ -1080,7 +1080,7 @@ function copyBufferToImage(srcBuffer, dstImage) {
   // For comparison, here's the same operation with a raw parameter
   // list, as in native OpenCL.
   
-   queue.enqueueCopyBufferToImage(srcBuffer, dstImage, 0, [0, 0, 0], [imgWidth, imgHeight, 1]);
+  // C // queue.enqueueCopyBufferToImage(srcBuffer, dstImage, 0, [0, 0, 0], [imgWidth, imgHeight, 1]);
 }
 </pre>
 
@@ -1109,11 +1109,12 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
   // and 1s) must be given explicitly for parameters that are only
   // relevant for 3D buffers.
   
-  queue.enqueueCopyBufferRect(srcBuffer, dstBuffer,
-                              [srcOriginX, srcOriginY, 1],
-                              [dstOriginX, dstOriginY, 1],
-                              [w, h, 1],
-                              pitch, 0, pitch, 0);
+  /*// C // queue.enqueueCopyBufferRect(srcBuffer, dstBuffer,
+                                        [srcOriginX, srcOriginY, 1],
+                                        [dstOriginX, dstOriginY, 1],
+                                        [w, h, 1],
+                                        pitch, 0, pitch, 0);
+  */
 }
 </pre>
     <pre class="idl">
