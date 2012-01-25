@@ -608,6 +608,10 @@ p.nonnormative {
     border: none; 
     background: #EEFFEE;
 }
+a.nonnormative {
+    color: green;
+    border: none; 
+}
 /******************************************************************
  * Mikael Bourges-Sevenier (2012-01-22)
  * Added explicit "non-normative" text before non-normative section
