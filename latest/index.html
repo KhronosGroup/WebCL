@@ -318,7 +318,7 @@ exception <dfn id="WebCLException">WebCLException</dfn> : DOMException {
 
 <pre class="idl">
 dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
-  CLenum property = value,
+  "property" : any value,
 }
 </pre>
 
@@ -332,6 +332,8 @@ dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
         <table class="foo">
           <tr><th>property</th><th>value</th><th>Description</th></tr>
           <tr><td>platform</td><td>WebCLPlatform</td><td>A WebCLPlatform object for which to create a context</td></tr>
+          <tr><td>devices</td><td>WebCLDevice[]</td><td>An array of devices to create a context for</td></tr>
+          <tr><td>device_type</td><td>CLenum</td><td>A device type (e.g. DEVICE_TYPE_DEFAULT) to create a context for</td></tr>
         </table>
 
       </dd>
@@ -346,10 +348,10 @@ dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
 // share resources with the given WebGL context.
 
 try {
-  var cpuProps = { platform : a_platform };
-  var gpuProps = { platform : a_platform };
-  var cpuCtx = WebCL.createContext(WebCL.DEVICE_TYPE_CPU, cpuProps);
-  var gpuCtx = WebCL.createContext(WebCL.DEVICE_TYPE_GPU, gpuProps);
+  var cpuProps = { device_type : WebCL.DEVICE_TYPE_CPU, platform : a_platform };
+  var gpuProps = { device_type : WebCL.DEVICE_TYPE_GPU, platform : a_platform };
+  var cpuCtx = WebCL.createContext(cpuProps);
+  var gpuCtx = WebCL.createContext(gpuProps);
 } catch (e) {
   if (e.type == "INVALID_PLATFORM") { ... }
   if (e.type == "INVALID_VALUE") { ... }
@@ -555,8 +557,7 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
         Retrieves all WebCL platforms that are available in this system.
       </dd>
 
-       <dt class="idl-code">WebCLContext createContext(WebCLDevice devices[], optional WebCLContextProperties properties, 
-       optional any userdata, optional callback)
+       <dt class="idl-code">WebCLContext createContext(optional WebCLContextProperties properties, optional any userdata, optional callback)
           <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-4.3">OpenCL 1.1 §4.3</a>, 
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
          </dt>
