@@ -68,7 +68,7 @@
     <!-- end Work in Progress -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">Working Group Internal Draft 25 January 2012</h2>
+    <h2 class="no-toc">Working Group Internal Draft 26 January 2012</h2>
     <dl>
         <dt>This version:
             </dt><dd>
@@ -688,13 +688,48 @@ interface <dfn id="WebCL">WebCL</dfn> {
         The WebCLContextProperties dictionary is defined as follows:
 <pre class="idl">
 dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
-  WebCLPlatform platform = null;
-  WebCLDevice[] devices = null;
-  CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT;
+  WebCLPlatform platform = null;                  // Default: let the implementation decide
+  WebCLDevice[] devices = null;                   // Default: let the implementation decide
+  CLenum device_type = WebCL.DEVICE_TYPE_DEFAULT;  // Default: let the implementation decide
 }
 </pre>
+    <dl class="methods">
+
+      <dt class="idl-code">WebCLPlatform platform</dt>
+      <dd>
+        The platform to create a context for. If this is null, the implementation will decide
+        which platform to use. Note that in typical systems, there is only one WebCLPlatform.
       </dd>
 
+      <dt class="idl-code">WebCLDevice[] devices</dt>
+      <dd>
+        An array of devices to create the context for. The devices must be on the same platform,
+        and if the 'platform' field is non-null, the devices must be on that particular platform.
+      </dd>
+
+      <dt class="idl-code">CLenum deviceType</dt>
+      <dd>
+        The preferred device type to create a context for. The
+        available device types are specified in the table below.  The
+        device type must match the given platform and devices. For
+        example, if 'deviceType' is set to DEVICE_TYPE_GPU and there
+        is no GPU on the given platform, createContext will throw a
+        WebCLException. If the 'platform' and 'devices' fields are
+        null, the WebCL implementation will select any platform and
+        any (single) device that matches the given type.
+
+        <table class="foo">
+          <tr><th>deviceType</th><th>Description</th></tr>
+          <tr><td>DEVICE_TYPE_CPU</td><td>A single-core or multi-core CPU, typically the host processor.</td></tr>
+          <tr><td>DEVICE_TYPE_GPU</td><td>A graphics processing unit, typically also used by WebGL.</td></tr>
+          <tr><td>DEVICE_TYPE_ACCELERATOR</td><td>A dedicated OpenCL accelerator.</td></tr>
+          <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device on this platform.</td></tr>
+          <tr><td>DEVICE_TYPE_ALL</td><td>All devices available on this platform.</td></tr>
+        </table>
+
+      </dd>
+      </dl>
+      
       <dt class="idl-code">DOMString[] getSupportedExtensions()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9">OpenCL 1.1 §9</a>)</span>
       </dt>
@@ -736,7 +771,7 @@ dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
 
 <pre class="idl">
 interface <dfn id="WebCLPlatform">WebCLPlatform</dfn> {
-    object getPlatformInfo(CLenum name);
+    object getInfo(CLenum name);
     WebCLDevice[] getDevices(CLenum deviceType);
 }
 </pre>
@@ -762,7 +797,7 @@ interface <dfn id="WebCLPlatform">WebCLPlatform</dfn> {
         </table>
       </dd>
 
-      <dt class="idl-code">any getPlatformInfo(CLenum name)
+      <dt class="idl-code">any getInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-4.1">OpenCL 1.1 §4.1</a>, 
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetPlatformInfo.html">man page</a>)</span>
       </dt>
@@ -800,14 +835,14 @@ interface <dfn id="WebCLPlatform">WebCLPlatform</dfn> {
 
 <pre class="idl">
 interface <dfn id="WebCLDevice">WebCLDevice</dfn> {
-    any getDeviceInfo(CLenum name);
+    any getInfo(CLenum name);
     object getExtension(DOMString extensionName);
 }
 </pre>
 
     <dl class="methods">
 
-      <dt class="idl-code">any getDeviceInfo(CLenum name)
+      <dt class="idl-code">any getInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-4.2">OpenCL 1.1 §4.2</a>, 
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceInfo.html">man page</a>)</span>
       </dt>
@@ -825,7 +860,7 @@ interface <dfn id="WebCLDevice">WebCLDevice</dfn> {
       </dd>
 
       <dt class="idl-code">DOMString[] getSupportedExtensions()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9">OpenCL 1.1 §9</a>)</span>
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9">OpenCL 1.1 §9</a>), 
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceInfo.html">man page</a>)</span>
       </dt>
       <dd>
@@ -866,7 +901,7 @@ dictionary <dfn id="WebCLImageFormat">WebCLImageFormat</dfn> {
     <pre class="idl">
 interface <dfn id="WebCLContext">WebCLContext</dfn> {
 
-    any getContextInfo(CLenum name);
+    any getInfo(CLenum name);
 
     WebCLProgram createProgram(DOMString source);
 
@@ -915,7 +950,7 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
 </pre>
 
     <dl class="methods">
-        <dt class="idl-code">any getContextInfo(CLenum name)</dt>
+        <dt class="idl-code">any getInfo(CLenum name)</dt>
             <dd>
             Return the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
@@ -965,8 +1000,8 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
     </p>
     <pre class="idl">
 interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
-    any getProgramInfo(CLenum name);
-    any getProgramBuildInfo(WebCLDevice device, CLenum name);
+    any getInfo(CLenum name);
+    any getBuildInfo(WebCLDevice device, CLenum name);
     void build(WebCLDevice [] devices, DOMString options, any userdata, function callback);
     WebCLKernel createKernel(DOMString kernelName);
     WebCLKernel [] createKernelsInProgram();
@@ -974,7 +1009,7 @@ interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
 </pre>
 
     <dl class="methods">
-        <dt class="idl-code">any getProgramInfo(CLenum name)</dt>
+        <dt class="idl-code">any getInfo(CLenum name)</dt>
             <dd>
             Return the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
@@ -1026,6 +1061,7 @@ interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
     </p>
 <pre class="idl">
 dictionary <dfn id="WebCLRegion">WebCLRegion</dfn> {
+  WebCLMemoryObject buffer = null;
   CLuint[3] origin = [0, 0, 0];                 
   CLuint[3] size = [1, 1, 1];
   CLuint[2] pitch = [0, 0];                // applies for 2D/3D buffers and images only
@@ -1040,7 +1076,7 @@ function readBufferToHost(srcBuffer) {
  // Query the number of bytes in the source buffer, and create a new
  // ArrayBuffer of that size.
 
- var numBytes = srcBuffer.getMemObjectInfo(WebCL.MEM_SIZE);
+ var numBytes = srcBuffer.getInfo(WebCL.MEM_SIZE);
  var dstArray = new ArrayBuffer(numBytes);
 
  // For reading the contents of a buffer object from CL to the host,
@@ -1066,8 +1102,8 @@ function copyBufferToImage(srcBuffer, dstImage) {
 
   // Extract the dimensions of the image.
 
-  var imgWidth = dstImage.getImageInfo(WebCL.IMAGE_WIDTH);
-  var imgHeight = dstImage.getImageInfo(WebCL.IMAGE_HEIGHT);
+  var imgWidth = dstImage.getInfo(WebCL.IMAGE_WIDTH);
+  var imgHeight = dstImage.getInfo(WebCL.IMAGE_HEIGHT);
 
   // The source buffer region can be specified with an empty object,
   // because only the 'origin' field is needed, and we are fine with
@@ -1163,7 +1199,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
   
   void flush();
 
-  any getCommandQueueInfo(CLenum name);
+  any getInfo(CLenum name);
 </pre>
 <div class="issue">
   // These methods are under consideration //
@@ -1269,7 +1305,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
         </dt>
             <dd>
             </dd>
-        <dt class="idl-code">any getCommandQueueInfo(CLenum name)
+        <dt class="idl-code">any getInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.1">OpenCL 1.1 §5.1</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetCommandQueueInfo.html">man page</a>)</span>
        </dt>
@@ -1375,7 +1411,7 @@ clQueue.finish();
     <h3><a id="WEBCLMEMORYOBJECT">WebCLMemoryObject</a></h3>
 
     <pre class="idl">interface <dfn id="WebCLMemoryObject">WebCLMemoryObject</dfn> {
-    any getMemoryObjectInfo(CLenum name);
+    any getInfo(CLenum name);
     </pre>
     <div class="issue">WARNING: The following method is under consideration
 	<pre>
@@ -1387,7 +1423,7 @@ clQueue.finish();
 </pre>
 
     <dl class="methods">
-        <dt class="idl-code">any getMemoryObjectInfo(CLenum name)</dt>
+        <dt class="idl-code">any getInfo(CLenum name)</dt>
             <dd>
             Return the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
@@ -1433,19 +1469,19 @@ clQueue.finish();
     <p>
     </p>
     <pre class="idl">interface <dfn id="WebCLImage">WebCLImage</dfn> : WebCLMemoryObject {
-    any getImageInfo(CLenum name);
+    any getInfo(CLenum name);
     </pre>
-    <p class="issue">WARNING: this method is under consideration
+    <div class="issue">WARNING: this method is under consideration
 	<pre>
     any getSharedImageInfo(CLenum name);
     </pre>
-    </p>
+    </div>
 <pre>
 }
 </pre>
 
     <dl class="methods">
-        <dt class="idl-code">any getImageInfo(CLenum name)</dt>
+        <dt class="idl-code">any getInfo(CLenum name)</dt>
             <dd>
             return Integer, or ImageFormat depending on the name queried.
             </dd>
@@ -1466,12 +1502,12 @@ clQueue.finish();
     </p>
     <pre class="idl">
 interface <dfn id="WebCLSampler">WebCLSampler</dfn> {
-    any getSamplerInfo(CLenum name);
+    any getInfo(CLenum name);
 }
 </pre>
 
     <dl class="methods">
-        <dt class="idl-code">any getSamplerInfo(CLenum name)</dt>
+        <dt class="idl-code">any getInfo(CLenum name)</dt>
             <dd>
             Return the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
@@ -1497,15 +1533,15 @@ interface <dfn id="WebCLSampler">WebCLSampler</dfn> {
 
     <pre class="idl">
 interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
-    any getEventInfo(CLenum name);
-    any getEventProfilingInfo(CLenum name);
+    any getInfo(CLenum name);
+    any getProfilingInfo(CLenum name);
     void release();
     void setUserEventStatus(CLenum executionStatus);
 }
 </pre>
 
     <dl class="methods">
-        <dt class="idl-code">any getEventInfo(CLenum name)
+        <dt class="idl-code">any getInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventInfo.html">man page</a>)</span>
         </dt>
@@ -1521,7 +1557,7 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
                 <tr><td>EVENT_REFERENCE_COUNT</td><td>Integer</td></tr>
             </table><br>
             </dd>
-        <dt class="idl-code">any getEventProfilingInfo(CLenum name)
+        <dt class="idl-code">any getProfilingInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.12">OpenCL 1.1 §5.12</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventProfilingInfo.html">man page</a>)</span>
         </dt>
@@ -1560,14 +1596,14 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
     
 <pre class="idl">
 interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
-    any getKernelInfo(CLenum name);
-    any getKernelWorkGroupInfo(WebCLDevice device, CLenum name);
-    void setKernelArg(CLuint index, any value, optional CLtype type);
+    any getInfo(CLenum name);
+    any getWorkGroupInfo(WebCLDevice device, CLenum name);
+    void setArg(CLuint index, any value, optional CLtype type);
 }
 </pre>
 
     <dl class="methods">
-      <dt class="idl-code">any getKernelInfo(CLenum name)</dt>
+      <dt class="idl-code">any getInfo(CLenum name)</dt>
       <dd>
         Return the value for the passed name. The type returned is the natural type for the
         requested name, as given in the following table:
@@ -1580,12 +1616,12 @@ interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
           <tr><td>KERNEL_PROGRAM</td><td>WebCLProgram</td></tr>
         </table><br>
       </dd>
-      <dt class="idl-code">any getKernelWorkGroupInfo(CLenum name)</dt>
+      <dt class="idl-code">any getWorkGroupInfo(CLenum name)</dt>
       <dd>
         return an Integer or Integer[1..3] depending on the name queried.
       </dd>
 
-      <dt class="idl-code">void setKernelArg(CLuint index, any value, optional CLtype type)
+      <dt class="idl-code">void setArg(CLuint index, any value, optional CLtype type)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.7.2">OpenCL 1.1 §5.7.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">man page</a>)</span>
       </dt>
@@ -1649,9 +1685,9 @@ interface <dfn id="WebCLTypes">WebCLTypes</dfn> {
 </pre>
 
 <pre class="example">
-myKernel.setKernelArg(0, 3.14159, WebCLTypes.FLOAT);                          // cast 3.14159 to FLOAT, then pass to kernel
-myKernel.setKernelArg(1, [1.23, 2.34], WebCLTypes.UINT | WebCLTypes.VEC2);    // cast the numbers to UINT, then pass to kernel
-myKernel.setKernelArg(2, 512, WebCLTypes.LOCAL_MEMORY_SIZE);                  // reserve 512 bytes for a kernel local variable
+myKernel.setArg(0, 3.14159, WebCLTypes.FLOAT);                          // cast 3.14159 to FLOAT, then pass to kernel
+myKernel.setArg(1, [1.23, 2.34], WebCLTypes.UINT | WebCLTypes.VEC2);    // cast the numbers to UINT, then pass to kernel
+myKernel.setArg(2, 512, WebCLTypes.LOCAL_MEMORY_SIZE);                  // reserve 512 bytes for a kernel local variable
 </pre>
 </div>
     </dl>
