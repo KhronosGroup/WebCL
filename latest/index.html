@@ -144,7 +144,6 @@
 <ul>
 <li>Asynchronuous callbacks need to be specified -- remaining issue if for callbacks with command queues methods</li>
 <li>Kernel argument types may not be generic enough</li>
-<li>Shared objects and External objects have never been discussed. They are flagged as "under discussion" in this document.</li>
 </ul>
 </div>
 
@@ -251,52 +250,6 @@ exception <dfn id="WebCLException">WebCLException</dfn> : DOMException {
 }
 </pre>
 
-
-<div class="issue">
-WARNING: This section is under consideration.<br>
-No External Objects or Shared Objects in this document has been discussed.
-
-    <h4><a id="WEBCLEXTERNALOBJECT">WebCLExternalObject</a></h4>
-
-<pre class="idl">
-dictionary <dfn id="WebCLExternalObject">WebCLExternalObject</dfn> {
-  object externalObject;                 // the external object to share, e.g. a WebGLTexture
-}
-</pre>
-
-<pre class="example">
-// STEP 1: Create a WebCL context that can interoperate with both
-// WebGL and HTMLVideoElement (or more precisely, the particular
-// instances that we provide).
-
-var ctxProps = { shareGroup : [ myGLContext, myVideo] };
-var clCtx = WebCL.createContext(ctxProps);
-if (!clCtx) alert("WebGL and/or video interoperability not supported");
-
-// STEP 2: Create WebCL memory objects that are mapped to external objects
-// owned by the particular instances of WebGL and HTMLVideoElement that we
-// declared above.
-
-var dstImage = ctx.createImage2D(WebCL.MEM_WRITE_ONLY, { externalObject: myTexture });
-
-// Some types of external objects, such as videos and cube map textures, may
-// require or allow additional fields in order to be optimally mapped to WebCL.
-// In this example, an image object of 1920x1080 pixels is created, and video
-// frames automatically scaled to that resolution. If width and height are not
-// given explicitly, they will be queried from the video element.
-
-var srcImage = ctx.createImage2D(WebCL.MEM_READ_ONLY, { externalObject: myVideo, width:1920, height:1080 });
-
-// STEP 3: Synchronize WebCL memory objects with their external counterparts, as
-// required for each command queue. A shared object must be acquired before using
-// it in a kernel or otherwise accessing it, and released afterwards.
-
-queue.enqueueAcquireSharedObjects([srcImage, dstImage]);
-queue.enqueueNDRangeKernel(processVideoAndWriteToTexture, ...);
-queue.enqueueReleaseSharedObjects([srcImage, dstImage]);
-queue.finish();
-</pre>
-</div>
 
     <h3><a id="WEBCL">WebCL</a></h3>
 
@@ -889,14 +842,8 @@ interface <dfn id="WebCLDevice">WebCLDevice</dfn> {
     <h3><a id="WEBCLCONTEXT">WebCLContext</a></h3>
 
     <p>
-        The WebCLImageFormat dictionary is defined as follows:
-<pre class="idl">
-dictionary <dfn id="WebCLImageFormat">WebCLImageFormat</dfn> {
-  CLenum order = WebCL.RGBA;        // Default: RGB colors + alpha
-  CLenum type = WebCL.UNORM_INT8;   // Default: 8-bit unsigned colors normalized to [0, 1]
-}
-</pre>
     </p>
+
     <pre class="idl">
 interface <dfn id="WebCLContext">WebCLContext</dfn> {
 
@@ -906,45 +853,30 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
 
     WebCLCommandQueue createCommandQueue(WebCLDevice device, CLenum properties);
 
-    WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer host_buffer);
+    WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer hostBuffer);
 
-    WebCLImage createImage2D(CLenum memFlags,
-                             WebCLImageFormat imageFormat,
-                             CLuint width,
-                             CLuint height,
-                             optional CLuint rowPitch,
-                             optional ArrayBuffer host_buffer);
-
-    WebCLImage createImage3D(CLenum memFlags,
-                             WebCLImageFormat imageFormat,
-                             CLuint width,
-                             CLuint height,
-                             CLuint depth,
-                             optional CLuint rowPitch,
-                             optional CLuint slicePitch,
-                             optional ArrayBuffer host_buffer);
+    WebCLImage createImage(CLenum memFlags, 
+                           WebCLImageDescriptor descriptor,
+                           optional ArrayBuffer hostBuffer);
 
     WebCLSampler createSampler(CLboolean normalizedCoords,
                                CLenum addressingMode,
                                CLenum filterMode);
 
-    WebCLImageFormat[] getSupportedImageFormats(CLenum memFlags,
-                                                CLenum imageType);
+    WebCLImageDescriptor[] getSupportedImageFormats(CLenum memFlags,
+                                                    CLenum imageType);
 
     WebCLEvent createUserEvent();
 
 </pre>
-<div class="issue">
-	These methods are under consideration<br>
-<pre>
-    // External object sharing
 
-    WebCLBuffer createBuffer(CLenum memFlags, WebCLExternalObject sharedObject);
-    WebCLImage createImage2D(CLenum memFlags, WebCLExternalObject sharedObject);
-    WebCLImage createImage3D(CLenum memFlags, WebCLExternalObject sharedObject);
-</pre>
-</div>
-<pre>
+<a id="WEBCLIMAGEDESCRIPTOR"></a>
+<pre class="idl">
+dictionary <dfn id="WebCLImageDescriptor">WebCLImageDescriptor</dfn> {
+  CLenum channelOrder = WebCL.RGBA;        // Default: RGB colors + alpha
+  CLenum channelType = WebCL.UNORM_INT8;   // Default: 8-bit unsigned colors normalized to [0, 1]
+  CLuint size[] = [ 1, 1, 1 ];
+  CLuint pitch[] = [ 0, 0 ];
 }
 </pre>
 
@@ -968,22 +900,18 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
         <dt class="idl-code">WebCLCommandQueue createCommandQueue(WebCLDevice device, CLenum properties[])</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLBuffer createBuffer(CLenum flags, CLuint size, optional ArrayBuffer host_buffer)</dt>
+        <dt class="idl-code">WebCLBuffer createBuffer(CLenum memFlags, CLuint size, optional ArrayBuffer hostBuffer)</dt>
             <dd>
-				If flags contains cl.MEM_USE_HOST_PTR then host_buffer must be provided.
+				If flags contains cl.MEM_USE_HOST_PTR then hostBuffer must be provided.
             </dd>
-        <dt class="idl-code">WebCLImage createImage2D(CLenum flags, WebCLImageChannelFormat format, CLuint width, CLuint height, CLuint row_pitch, optional ArrayBuffer host_buffer)</dt>
+        <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBuffer hostBuffer)</dt>
             <dd>
-				If flags contains cl.MEM_USE_HOST_PTR then host_buffer must be provided.<br>
+				      If flags contains cl.MEM_USE_HOST_PTR then hostBuffer must be provided.<br>
             </dd>
-        <dt class="idl-code">WebCLImage createImage3D(CLenum flags, WebCLImageChannelFormat format, CLuint width, CLuint height, CLuint depth, CLuint rowPitch, CLuint slicePitch, optional ArrayBuffer host_buffer)</dt>
-            <dd>
-				If flags contains cl.MEM_USE_HOST_PTR then host_buffer must be provided.
-            </dd>
-        <dt class="idl-code">WebCLSampler createSampler(CLboolean normalized_coords, CLenum addressing_mode, CLenum filter_mode)</dt>
+        <dt class="idl-code">WebCLSampler createSampler(CLboolean normalizedCoords, CLenum addressingMode, CLenum filterMode)</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLImageFormat[] getSupportedImageFormats(CLenum flags, CLenum imageType)</dt>
+        <dt class="idl-code">WebCLImageDescriptor[] getSupportedImageFormats(CLenum memFlags, CLenum imageType)</dt>
             <dd>
             </dd>
         <dt class="idl-code">WebCLEvent createUserEvent()</dt>
@@ -995,6 +923,181 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
 
     <h3><a id="WEBCLCOMMANDQUEUE">WebCLCommandQueue</a></h3>
 
+    <pre class="idl">
+interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
+
+  WebCLCommandQueue enqueueNDRangeKernel(WebCLKernel kernel, 
+                                 CLuint[3] offsets, CLuint[3] globals, CLuint[3] locals, 
+                                 optional WebCLEvent[] eventWaitList);
+  
+  WebCLCommandQueue enqueueCopyBuffer(WebCLRegion src, WebCLRegion dst, 
+                                      optional WebCLEvent[] eventWaitList);
+  
+  WebCLCommandQueue enqueueCopyBufferToImage(WebCLBuffer srcBuffer, WebCLImage dstImage, 
+                                             optional WebCLEvent[] eventWaitList);
+  
+  WebCLCommandQueue enqueueCopyImageToBuffer(WebCLImage srcImage, WebCLBuffer dstBuffer, 
+                                             optional WebCLEvent[] eventWaitList);
+
+  WebCLCommandQueue enqueueReadBuffer(WebCLBuffer srcBuffer, CLboolean blockingRead, 
+                                      ArrayBuffer dstArray, 
+                                      optional WebCLEvent[] eventWaitList);
+  
+  WebCLCommandQueue enqueueWriteBuffer(WebCLBuffer dstBuffer, CLboolean blockingWrite, 
+                                       ArrayBuffer srcArray, 
+                                       optional WebCLEvent[] eventWaitList);
+
+  WebCLCommandQueue enqueueReadBufferRect(...); // TODO
+  WebCLCommandQueue enqueueWriteBufferRect(...); // TODO
+  WebCLCommandQueue enqueueCopyBufferRect(...); // TODO
+
+  WebCLCommandQueue enqueueReadImage(...); // TODO
+  WebCLCommandQueue enqueueWriteImage(...); // TODO
+  WebCLCommandQueue enqueueCopyImage(...); // TODO
+  
+  WebCLCommandQueue enqueueTask(WebCLKernel kernel, optional WebCLEvent[] eventWaitList);
+  
+  WebCLCommandQueue enqueueWaitForEvents(WebCLEvent[] eventWaitList);
+  
+  WebCLEvent enqueueMarker();
+  
+  void enqueueBarrier();
+  
+  void finish();
+  
+  void flush();
+
+  any getInfo(CLenum name);
+<div class="issue">
+  // These methods are under consideration
+    
+  WebCLMappedRegion enqueueMapBuffer(WebCLRegion buffer, CLboolean blocking_map, CLenum map_flags, 
+                                     optional WebCLEvent[] eventWaitList);
+  
+  WebCLEvent enqueueUnmapMemObject(WebCLMemoryObject memory, WebCLMappedRegion mapped_region, 
+                                   optional WebCLEvent[] eventWaitList);
+</div>
+}
+</pre>
+
+    <dl class="methods">
+        <dt class="idl-code">void enqueueBarrier()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueBarrier.html">man page</a>)</span>
+        </dt>
+            <dd>
+            </dd>
+        <dt class="idl-code">WebCLCommandQueue enqueueCopyBuffer(WebCLRegion src, WebCLRegion dst, 
+        optional WebCLEvent[] eventWaitList)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBuffer.html">man page</a>)</span>
+        </dt>
+            <dd>     
+            </dd>
+        <dt class="idl-code">WebCLCommandQueue enqueueCopyBufferToImage(WebCLMemoryObject src_buffer, WebCLRegion dst_image, 
+        pptional WebCLEvent eventWaitList)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferToImage.html">man page</a>)</span>
+        </dt>
+            <dd>     
+            </dd>
+        <dt class="idl-code">WebCLCommandQueue enqueueCopyImageToBuffer(WebCLRegion src_image, WebCLMemory dst_buffer, 
+        optional WebCLEvent eventWaitList)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImageToBuffer.html">man page</a>)</span>
+        </dt>
+            <dd>     
+            </dd>
+        <dt class="idl-code">WebCLEvent enqueueMarker()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueMarker.html">man page</a>)</span>
+        </dt>
+            <dd>
+            </dd>
+        <dt class="idl-code">WebCLCommandQueue enqueueNDRangeKernel(WebCLKernel kernel, CLuint[3] offsets, CLuint[3] globals, 
+                                                            CLuint[3] locals, optional WebCLEvent[] eventWaitList)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueNDRangeKernel.html">man page</a>)</span>
+        </dt>
+            <dd>     
+            Offsets, globals, locals contain 1, 2, or 3 NDRange values. The number of dimensions is determined by the number of elements in globals.
+            </dd>
+        <dt class="idl-code">WebCLCommandQueue enqueueReadBuffer(WebCLMemoryObject buffer, CLboolean blocking_read, 
+        WebCLRegion array, optional WebCLEvent[] eventWaitList)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBuffer.html">man page</a>)</span>
+        </dt>
+            <dd>     
+            </dd>
+        <dt class="idl-code">WebCLCommandQueue enqueueTask(WebCLKernel kernel)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clWaitForEvents.html">man page</a>)</span>
+        </dt>
+            <dd>     
+            </dd>
+        <dt class="idl-code">WebCLCommandQueue enqueueWaitForEvents(WebCLEvent[] eventWaitList)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWaitForEvents.html">man page</a>)</span>
+        </dt>
+            <dd>
+            </dd>
+        <dt class="idl-code">WebCLCommandQueue enqueueWriteBuffer(WebCLMemoryObject buffer, CLboolean blocking_write, 
+        WebCLRegion array, optional WebCLEvent[] eventWaitList)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueTask.html">man page</a>)</span>
+        </dt>
+            <dd>
+              The WebCLRegion object contains the Array and offset in bytes being written.
+            </dd>
+        <dt class="idl-code">void finish()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFinish.html">man page</a>)</span>
+        </dt>
+            <dd>
+            </dd>
+        <dt class="idl-code">void flush()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFlush.html">man page</a>)</span>
+        </dt>
+            <dd>
+            </dd>
+        <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.1">OpenCL 1.1 §5.1</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetCommandQueueInfo.html">man page</a>)</span>
+       </dt>
+            <dd>     
+            Return the value for the passed name. The type returned is the natural type for the
+            requested name, as given in the following table:
+            <table class="foo">
+                <tr><th>name</th><th>ECMAScript returned type</th></tr>
+                <tr><td>QUEUE_CONTEXT</td><td>WebCLContext</td></tr>
+                <tr><td>QUEUE_DEVICE</td><td>WebCLDevice</td></tr>
+                <tr><td>QUEUE_REFERENCE_COUNT</td><td>Integer</td></tr>
+                <tr><td>QUEUE_PROPERTIES</td><td>CLenum</td></tr>
+            </table><br>
+            </dd>
+            
+            <div class="issue"> WARNING: These following methods are under consideration
+              <dt class="idl-code">WebCLEvent enqueueUnmapMemObject(WebCLMemoryObject memory, WebCLMappedRegion mapped_region, 
+                optional WebCLEvent eventWaitList, optional CLboolean generate_event = false)
+                <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.4.2">OpenCL 1.1 §5.4.2</a>,
+                  <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueUnmapMemObject.html">man page</a>)</span>
+              </dt>
+              <dd>
+                mapped_region must be a WebCLMappedRegion returned by enqueueMapBuffer() or enqueueMapImage().
+              </dd>
+
+              <dt class="idl-code">WebCLMappedRegion enqueueMapBuffer(WebCLRegion buffer, CLboolean blocking_map, 
+                CLenum map_flags, optional WebCLEvent[] eventWaitList, optional CLboolean generate_event = false)
+                <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.3">OpenCL 1.1 §5.2.3</a>,
+                  <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueMapBuffer.html">man page</a>)</span>
+              </dt>
+              <dd>     
+              </dd>
+            </div>
+    </dl>
+
+    <h4><a id="WEBCLREGION">WebCLRegion</a></h4>
     <p>
       WebCLRegion specifies a rectangular region of an image or buffer
       object. A WebCLRegion object, or any arbitrary object with the
@@ -1002,12 +1105,15 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
       When referring to images, all values are given in pixels; when
       referring to buffers, they are given in bytes.  If any of the
       fields required by a particular function are missing, they will
-      assume the default values specified below.<br>
+      assume the default values specified below.
+    </p>
+    <p>
       When copying regions of memory objects, the source and destination 
       WebCLRegion must have the same size[] property. If only one of the regions
       defines size[] then it is assumed to be the same for both regions. But if size[]
       is different for both regions, an exception will be thrown.
     </p>
+
 <pre class="idl">
 dictionary <dfn id="WebCLRegion">WebCLRegion</dfn> {
   WebCLMemoryObject buffer = null;
@@ -1113,261 +1219,12 @@ events[1] = queue.enqueueNDRangeKernel(kernel2, null, globals, null).enqueueMark
 queue.enqueueNDRangeKernel(kernel3, null, globals, null, events);
 </pre>
 
-    <pre class="idl">
-interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
-
-  void enqueueBarrier();
-  
-  WebCLCommandQueue enqueueNDRangeKernel(WebCLKernel kernel, 
-                                 CLuint[3] offsets, CLuint[3] globals, CLuint[3] locals, 
-                                 optional WebCLEvent[] event_wait_list);
-  
-  WebCLCommandQueue enqueueCopyBuffer(WebCLRegion src, WebCLRegion dst, 
-                               optional WebCLEvent[] event_wait_list);
-  
-  WebCLCommandQueue enqueueCopyBufferToImage(WebCLMemoryObject src_buffer, WebCLImage dst_image, 
-                                             optional WebCLEvent[] event_wait_list);
-  
-  WebCLCommandQueue enqueueCopyImageToBuffer(WebCLImage src_image, WebCLMemoryObject dst_buffer, 
-                                             optional WebCLEvent[] event_wait_list);
-  
-  WebCLEvent enqueueMarker();
-  
-  WebCLCommandQueue enqueueReadBuffer(WebCLMemoryObject buffer, CLboolean blocking_read, 
-                                      WebCLRegion array, 
-                                      optional WebCLEvent[] event_wait_list);
-  
-  WebCLCommandQueue enqueueTask(WebCLKernel kernel, optional WebCLEvent[] event_wait_list);
-  
-  WebCLCommandQueue enqueueWaitForEvents(WebCLEvent[] event_wait_list);
-  
-  WebCLCommandQueue enqueueWriteBuffer(WebCLMemoryObject buffer, CLboolean blocking_write, WebCLRegion array, 
-                                optional WebCLEvent[] event_wait_list);
-  
-  void finish();
-  
-  void flush();
-
-  any getInfo(CLenum name);
-</pre>
-<div class="issue">
-  // These methods are under consideration //
-<pre>
-    
-  WebCLEvent enqueueAcquireSharedObjects(WebCLMemoryObject[] sharedObjects,
-                                         optional WebCLEvent[] eventWaitList);
-
-  WebCLEvent enqueueReleaseSharedObjects(WebCLMemoryObject[] sharedObjects,
-                                         optional WebCLEvent[] eventWaitList);
-
-
-  WebCLMappedRegion enqueueMapBuffer(WebCLRegion buffer, CLboolean blocking_map, CLenum map_flags, 
-                                     optional WebCLEvent[] event_wait_list,
-                                     optional CLboolean generate_event = false);
-  
-  WebCLEvent enqueueUnmapMemObject(WebCLMemoryObject memory, WebCLMappedRegion mapped_region, 
-                                   optional WebCLEvent[] event_wait_list,
-                                   optional CLboolean generate_event = false);
-</pre></div>
-<pre>
-}
-</pre>
-
-    <dl class="methods">
-        <dt class="idl-code">void enqueueBarrier()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueBarrier.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
-        <dt class="idl-code">WebCLCommandQueue enqueueCopyBuffer(WebCLRegion src, WebCLRegion dst, 
-        optional WebCLEvent[] event_wait_list)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBuffer.html">man page</a>)</span>
-        </dt>
-            <dd>     
-            </dd>
-        <dt class="idl-code">WebCLCommandQueue enqueueCopyBufferToImage(WebCLMemoryObject src_buffer, WebCLRegion dst_image, 
-        pptional WebCLEvent event_wait_list)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferToImage.html">man page</a>)</span>
-        </dt>
-            <dd>     
-            </dd>
-        <dt class="idl-code">WebCLCommandQueue enqueueCopyImageToBuffer(WebCLRegion src_image, WebCLMemory dst_buffer, 
-        optional WebCLEvent event_wait_list)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImageToBuffer.html">man page</a>)</span>
-        </dt>
-            <dd>     
-            </dd>
-        <dt class="idl-code">WebCLEvent enqueueMarker()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueMarker.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
-        <dt class="idl-code">WebCLCommandQueue enqueueNDRangeKernel(WebCLKernel kernel, CLuint[3] offsets, CLuint[3] globals, 
-                                                            CLuint[3] locals, optional WebCLEvent[] event_wait_list)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueNDRangeKernel.html">man page</a>)</span>
-        </dt>
-            <dd>     
-            Offsets, globals, locals contain 1, 2, or 3 NDRange values. The number of dimensions is determined by the number of elements in globals.
-            </dd>
-        <dt class="idl-code">WebCLCommandQueue enqueueReadBuffer(WebCLMemoryObject buffer, CLboolean blocking_read, 
-        WebCLRegion array, optional WebCLEvent[] event_wait_list)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBuffer.html">man page</a>)</span>
-        </dt>
-            <dd>     
-            </dd>
-        <dt class="idl-code">WebCLCommandQueue enqueueTask(WebCLKernel kernel)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clWaitForEvents.html">man page</a>)</span>
-        </dt>
-            <dd>     
-            </dd>
-        <dt class="idl-code">WebCLCommandQueue enqueueWaitForEvents(WebCLEvent[] event_wait_list)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWaitForEvents.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
-        <dt class="idl-code">WebCLCommandQueue enqueueWriteBuffer(WebCLMemoryObject buffer, CLboolean blocking_write, 
-        WebCLRegion array, optional WebCLEvent[] event_wait_list)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueTask.html">man page</a>)</span>
-        </dt>
-            <dd>
-              The WebCLRegion object contains the Array and offset in bytes being written.
-            </dd>
-        <dt class="idl-code">void finish()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFinish.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
-        <dt class="idl-code">void flush()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFlush.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
-        <dt class="idl-code">any getInfo(CLenum name)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.1">OpenCL 1.1 §5.1</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetCommandQueueInfo.html">man page</a>)</span>
-       </dt>
-            <dd>     
-            Return the value for the passed name. The type returned is the natural type for the
-            requested name, as given in the following table:
-            <table class="foo">
-                <tr><th>name</th><th>ECMAScript returned type</th></tr>
-                <tr><td>QUEUE_CONTEXT</td><td>WebCLContext</td></tr>
-                <tr><td>QUEUE_DEVICE</td><td>WebCLDevice</td></tr>
-                <tr><td>QUEUE_REFERENCE_COUNT</td><td>Integer</td></tr>
-                <tr><td>QUEUE_PROPERTIES</td><td>CLenum</td></tr>
-            </table><br>
-            </dd>
-            
-            <div class="issue"> WARNING: These following methods are under consideration
-        <dt class="idl-code">WebCLEvent enqueueAcquireSharedObjects(WebCLMemoryObject[] sharedObjects, WebCLEvent[] event_wait_list)</dt>
-            <dd>
-            Acquires the given WebCLBuffer and WebCLImage objects that
-            have been previously created from external shared objects
-            (such as WebGLTextures). The objects must be acquired from
-            the context that owns them before they can be used by
-            WebCL.
-            </dd>
-        <dt class="idl-code">WebCLEvent enqueueReleaseSharedObjects(WebCLMemoryObject[] sharedObjects, WebCLEvent[] event_wait_list)</dt>
-            <dd>
-            Releases the given WebCLBuffer and WebCLImage objects that
-            have been previously created from external shared objects
-            (such as WebGLTextures).  The objects must be released
-            from WebCL before they can be used by the context that
-            owns them.
-            </dd>
-
-              <dt class="idl-code">WebCLEvent enqueueUnmapMemObject(WebCLMemoryObject memory, WebCLMappedRegion mapped_region, 
-                optional WebCLEvent event_wait_list, optional CLboolean generate_event = false)
-                <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.4.2">OpenCL 1.1 §5.4.2</a>,
-                  <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueUnmapMemObject.html">man page</a>)</span>
-              </dt>
-              <dd>
-                mapped_region must be a WebCLMappedRegion returned by enqueueMapBuffer() or enqueueMapImage().
-              </dd>
-
-              <dt class="idl-code">WebCLMappedRegion enqueueMapBuffer(WebCLRegion buffer, CLboolean blocking_map, 
-                CLenum map_flags, optional WebCLEvent[] event_wait_list, optional CLboolean generate_event = false)
-                <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.3">OpenCL 1.1 §5.2.3</a>,
-                  <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueMapBuffer.html">man page</a>)</span>
-              </dt>
-              <dd>     
-              </dd>
-            </div>
-    </dl>
-
-    <div class="issue">
-		WARNING: These following example is under consideration<br>
-<pre class="example">
-// This example illustrates resource sharing with WebGL, as per
-// the Nokia proposal. A WebGL texture is used as a source for
-// a CL kernel.
-
-var clCtx = WebCL.createContext({ gl : glCtx });
-var clImage1 = clCtx.createImage2D(WebCL.MEM_READ_ONLY, { externalObject: glCtx.TEXTURE_2D ]);
-var clImage2 = clCtx.createImage2D(WebCL.MEM_READ_ONLY, imageFormat, w, h);
-var clQueue = clCtx.createCommandQueue(...);
-clQueue.enqueueAcquireSharedObjects([clImage]);
-clQueue.enqueueWriteImage(clImage2, true, { width:w, height:h });
-clQueue.enqueueNDRangeKernel(...);
-clQueue.enqueueReleaseSharedObjects([clImage]);
-clQueue.finish();
-
-// This example illustrates the same operation if the sharing
-// functions are not part of the core spec, but reside in a
-// separate GL-specific extension object that must be queried
-// individually for each WebCLDevice.
-
-var clgl = null;
-var clCtx = null;
-var devices = [];
-var platforms = WebCL.getPlatforms();
-for (var i=0, found=false; i < platforms.length && !found; i++) {
-  devices = platforms[i].getDevices(WebCL.DEVICE_TYPE_ALL);
-  for (var j=0; j < devices.length; j++) {
-    clgl = devices[j].getExtension("cl_gl_sharing");
-    if (clgl) {
-      found = true;
-      clCtx = WebCL.createContext({ platform : platforms[i], device = devices[j] });
-    }
-  }
-}
-
-var clImage1 = clgl.createFromGLTexture2D(WebCL.MEM_READ_ONLY, glCtx.TEXTURE_2D, 0, texture);
-var clImage2 = clCtx.createImage2D(WebCL.MEM_READ_ONLY, imageFormat, w, h);
-var clQueue = clCtx.createCommandQueue();
-clgl.enqueueAcquireGLObjects(clQueue, [ clImage1 ]);
-clQueue.enqueueWriteImage(clImage2, true, { width:w, height:h });
-clQueue.enqueueNDRangeKernel(...);
-clgl.enqueueReleaseGLObjects(clQueue, [ clImage1 ]);
-clQueue.finish();
-</pre>
-</div>
-
 <!-- ======================================================================================================= -->
 
     <h3><a id="WEBCLMEMORYOBJECT">WebCLMemoryObject</a></h3>
 
-    <pre class="idl">interface <dfn id="WebCLMemoryObject">WebCLMemoryObject</dfn> {
-    any getInfo(CLenum name);
-    </pre>
-    <div class="issue">WARNING: The following method is under consideration
-	<pre>
-    any getSharedObjectInfo();  // Returns a WebGLTexture, WebGLBuffer, or WebGLRenderbuffer
-    </pre>
-    </div>
-    <pre>
+<pre class="idl">interface <dfn id="WebCLMemoryObject">WebCLMemoryObject</dfn> {
+  any getInfo(CLenum name);
 }
 </pre>
 
@@ -1417,31 +1274,18 @@ clQueue.finish();
 
     <p>
     </p>
-    <pre class="idl">interface <dfn id="WebCLImage">WebCLImage</dfn> : WebCLMemoryObject {
-    any getInfo(CLenum name);
-    </pre>
-    <div class="issue">WARNING: this method is under consideration
-	<pre>
-    any getSharedImageInfo(CLenum name);
-    </pre>
-    </div>
-<pre>
+
+<pre class="idl">interface <dfn id="WebCLImage">WebCLImage</dfn> : WebCLMemoryObject {
+  any getInfo(CLenum name);
 }
 </pre>
 
-    <dl class="methods">
-        <dt class="idl-code">any getInfo(CLenum name)</dt>
-            <dd>
-            return Integer, or ImageFormat depending on the name queried.
-            </dd>
-        <div class="issue">WARNING: this method is under consideration<br>
-        <dt class="idl-code">any getSharedImageInfo(CLenum name)</dt>
-            <dd>
-            Return the value for the passed name for an OpenCL memory
-            object created from a WebGLTexture object (or similar).
-            </dd>
-        </div>
-    </dl>
+  <dl class="methods">
+    <dt class="idl-code">any getInfo(CLenum name)</dt>
+    <dd>
+      return Integer, or ImageFormat depending on the name queried.
+    </dd>
+  </dl>
 
 <!-- ======================================================================================================= -->
 
@@ -1744,7 +1588,7 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
         <dt id="refsOPENCL">[OPENCL11]</dt>
         <dd><cite><a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf">
           OpenCL 1.1 Specification</a></cite>,
-          C. Munshi, January 2011.
+          A. Munshi, January 2011.
         </dd>
         <dt id="refsREGISTRY">[REGISTRY]</dt>
         <dd><cite><a href="http://www.khronos.org/registry/webcl/extensions/">
