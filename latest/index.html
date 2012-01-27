@@ -994,56 +994,6 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
 
 <!-- ======================================================================================================= -->
 
-    <h3><a id="WEBCLPROGRAM">WebCLProgram</a></h3>
-
-    <p>
-    </p>
-    <pre class="idl">
-interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
-    any getInfo(CLenum name);
-    any getBuildInfo(WebCLDevice device, CLenum name);
-    void build(WebCLDevice [] devices, DOMString options, any userdata, function callback);
-    WebCLKernel createKernel(DOMString kernelName);
-    WebCLKernel [] createKernelsInProgram();
-}
-</pre>
-
-    <dl class="methods">
-        <dt class="idl-code">any getInfo(CLenum name)</dt>
-            <dd>
-            Return the value for the passed name. The type returned is the natural type for the
-            requested name, as given in the following table:
-            <table class="foo">
-                <tr><th>name</th><th>ECMAScript returned type</th></tr>
-                <tr><td>PROGRAM_REFERENCE_COUNT</td><td>Integer</td></tr>
-                <tr><td>PROGRAM_CONTEXT</td><td>WebCLContext</td></tr>
-                <tr><td>PROGRAM_NUM_DEVICES</td><td>Integer</td></tr>
-                <tr><td>PROGRAM_DEVICES</td><td>WebCLDevice</td></tr>
-                <tr><td>PROGRAM_SOURCE</td><td>DOMString</td></tr>
-                <tr><td>PROGRAM_BINARY_SIZES</td><td>Integer []</td></tr>
-                <tr><td>PROGRAM_BINARIES</td><td>ArrayBuffer []</td></tr>
-            </table><br>
-            </dd>
-        </dt>
-        <dt class="idl-code">any getBuildInfo(WebCLDevice device, CLenum name)</dt>
-            <dd>
-            return Integer or DOMString depending on name queried.
-            </dd>
-        </dt>
-        <dt class="idl-code">void build(WebCLDevice devices[], optional DOMString options, any userdata, function callback)</dt>
-            <dd>
-              Compile a program with optional compiler options.<br>
-              An asynchronous callback method may be provided with optional userdata. The signature of the callback method is: <code>function(any userdata)</code>
-            </dd>
-        </dt>
-        <dt class="idl-code">WebCLKernel createKernel(DOMString name)</dt>
-            <dd>
-            </dd>
-        </dt>
-    </dl>
-
-<!-- ======================================================================================================= -->
-
     <h3><a id="WEBCLCOMMANDQUEUE">WebCLCommandQueue</a></h3>
 
     <p>
@@ -1524,67 +1474,52 @@ interface <dfn id="WebCLSampler">WebCLSampler</dfn> {
     </dl>
 
 <!-- ======================================================================================================= -->
-
-    <h3><a id="WEBCLEVENT">WebCLEvent</a></h3>
+    <h3><a id="WEBCLPROGRAM">WebCLProgram</a></h3>
 
     <p>
-      OpenCL's Event and UserEvent are merged into this WebCLEvent class.
     </p>
-
     <pre class="idl">
-interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
+interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
     any getInfo(CLenum name);
-    any getProfilingInfo(CLenum name);
-    void release();
-    void setUserEventStatus(CLenum executionStatus);
+    any getBuildInfo(WebCLDevice device, CLenum name);
+    void build(WebCLDevice [] devices, DOMString options, any userdata, function callback);
+    WebCLKernel createKernel(DOMString kernelName);
+    WebCLKernel [] createKernelsInProgram();
 }
 </pre>
 
     <dl class="methods">
-        <dt class="idl-code">any getInfo(CLenum name)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventInfo.html">man page</a>)</span>
-        </dt>
+        <dt class="idl-code">any getInfo(CLenum name)</dt>
             <dd>
             Return the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
             <table class="foo">
                 <tr><th>name</th><th>ECMAScript returned type</th></tr>
-                <tr><td>EVENT_COMMAND_QUEUE</td><td>WebCLCommandQueue</td></tr>
-                <tr><td>EVENT_CONTEXT</td><td>WebCLContext</td></tr>
-                <tr><td>EVENT_COMMAND_TYPE</td><td>CLenum</td></tr>
-                <tr><td>EVENT_COMMAND_EXECUTION_STATUS</td><td>CLenum</td></tr>
-                <tr><td>EVENT_REFERENCE_COUNT</td><td>Integer</td></tr>
+                <tr><td>PROGRAM_REFERENCE_COUNT</td><td>Integer</td></tr>
+                <tr><td>PROGRAM_CONTEXT</td><td>WebCLContext</td></tr>
+                <tr><td>PROGRAM_NUM_DEVICES</td><td>Integer</td></tr>
+                <tr><td>PROGRAM_DEVICES</td><td>WebCLDevice</td></tr>
+                <tr><td>PROGRAM_SOURCE</td><td>DOMString</td></tr>
+                <tr><td>PROGRAM_BINARY_SIZES</td><td>Integer []</td></tr>
+                <tr><td>PROGRAM_BINARIES</td><td>ArrayBuffer []</td></tr>
             </table><br>
             </dd>
-        <dt class="idl-code">any getProfilingInfo(CLenum name)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.12">OpenCL 1.1 §5.12</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventProfilingInfo.html">man page</a>)</span>
         </dt>
+        <dt class="idl-code">any getBuildInfo(WebCLDevice device, CLenum name)</dt>
             <dd>
-            Return the value for the passed name. The type returned is the natural type for the
-            requested name, as given in the following table:
-            <table class="foo">
-                <tr><th>name</th><th>ECMAScript returned type</th></tr>
-                <tr><td>PROFILING_COMMAND_QUEUED</td><td>Integer</td></tr>
-                <tr><td>PROFILING_COMMAND_SUBMIT</td><td>Integer</td></tr>
-                <tr><td>PROFILING_COMMAND_START</td><td>Integer</td></tr>
-                <tr><td>PROFILING_COMMAND_END</td><td>Integer</td></tr>
-            </table><br>
+            return Integer or DOMString depending on name queried.
             </dd>
-        <dt class="idl-code">void release()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseEvent.html">man page</a>)</span>
         </dt>
+        <dt class="idl-code">void build(WebCLDevice devices[], optional DOMString options, any userdata, function callback)</dt>
             <dd>
-				Release this WebCLEvent's resources.
+              Compile a program with optional compiler options.<br>
+              An asynchronous callback method may be provided with optional userdata. The signature of the callback method is: <code>function(any userdata)</code>
             </dd>
-        <dt class="idl-code">void setUserEventStatus(CLenum executionStatus)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetUserEventStatus.html">man page</a>)</span>
         </dt>
+        <dt class="idl-code">WebCLKernel createKernel(DOMString name)</dt>
             <dd>
             </dd>
+        </dt>
     </dl>
 
 <!-- ======================================================================================================= -->
@@ -1690,6 +1625,70 @@ myKernel.setArg(1, [1.23, 2.34], WebCLTypes.UINT | WebCLTypes.VEC2);    // cast 
 myKernel.setArg(2, 512, WebCLTypes.LOCAL_MEMORY_SIZE);                  // reserve 512 bytes for a kernel local variable
 </pre>
 </div>
+    </dl>
+
+<!-- ======================================================================================================= -->
+
+    <h3><a id="WEBCLEVENT">WebCLEvent</a></h3>
+
+    <p>
+      OpenCL's Event and UserEvent are merged into this WebCLEvent class.
+    </p>
+
+    <pre class="idl">
+interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
+    any getInfo(CLenum name);
+    any getProfilingInfo(CLenum name);
+    void release();
+    void setUserEventStatus(CLenum executionStatus);
+}
+</pre>
+
+    <dl class="methods">
+        <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventInfo.html">man page</a>)</span>
+        </dt>
+            <dd>
+            Return the value for the passed name. The type returned is the natural type for the
+            requested name, as given in the following table:
+            <table class="foo">
+                <tr><th>name</th><th>ECMAScript returned type</th></tr>
+                <tr><td>EVENT_COMMAND_QUEUE</td><td>WebCLCommandQueue</td></tr>
+                <tr><td>EVENT_CONTEXT</td><td>WebCLContext</td></tr>
+                <tr><td>EVENT_COMMAND_TYPE</td><td>CLenum</td></tr>
+                <tr><td>EVENT_COMMAND_EXECUTION_STATUS</td><td>CLenum</td></tr>
+                <tr><td>EVENT_REFERENCE_COUNT</td><td>Integer</td></tr>
+            </table><br>
+            </dd>
+        <dt class="idl-code">any getProfilingInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.12">OpenCL 1.1 §5.12</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventProfilingInfo.html">man page</a>)</span>
+        </dt>
+            <dd>
+            Return the value for the passed name. The type returned is the natural type for the
+            requested name, as given in the following table:
+            <table class="foo">
+                <tr><th>name</th><th>ECMAScript returned type</th></tr>
+                <tr><td>PROFILING_COMMAND_QUEUED</td><td>Integer</td></tr>
+                <tr><td>PROFILING_COMMAND_SUBMIT</td><td>Integer</td></tr>
+                <tr><td>PROFILING_COMMAND_START</td><td>Integer</td></tr>
+                <tr><td>PROFILING_COMMAND_END</td><td>Integer</td></tr>
+            </table><br>
+            </dd>
+        <dt class="idl-code">void release()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseEvent.html">man page</a>)</span>
+        </dt>
+            <dd>
+				Release this WebCLEvent's resources.
+            </dd>
+        <dt class="idl-code">void setUserEventStatus(CLenum executionStatus)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetUserEventStatus.html">man page</a>)</span>
+        </dt>
+            <dd>
+            </dd>
     </dl>
 
 <!-- ======================================================================================================= -->
