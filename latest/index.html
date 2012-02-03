@@ -642,7 +642,7 @@ interface <dfn id="WebCL">WebCL</dfn> {
 dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
   WebCLPlatform platform = null;                  // Default: let the implementation decide
   WebCLDevice[] devices = null;                   // Default: let the implementation decide
-  CLenum device_type = WebCL.DEVICE_TYPE_DEFAULT;  // Default: let the implementation decide
+  CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT;  // Default: let the implementation decide
 }
 </pre>
     <dl class="methods">
@@ -971,10 +971,10 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 <div class="issue">
   // These methods are under consideration
     
-  WebCLMappedRegion enqueueMapBuffer(WebCLRegion buffer, CLboolean blocking_map, CLenum map_flags, 
+  WebCLMappedRegion enqueueMapBuffer(WebCLRegion buffer, CLboolean blockingMap, CLenum mapFlags, 
                                      optional WebCLEvent[] eventWaitList);
   
-  WebCLEvent enqueueUnmapMemObject(WebCLMemoryObject memory, WebCLMappedRegion mapped_region, 
+  WebCLEvent enqueueUnmapMemObject(WebCLMemoryObject memory, WebCLMappedRegion mappedRegion, 
                                    optional WebCLEvent[] eventWaitList);
 </div>
 }
@@ -994,15 +994,15 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
         </dt>
             <dd>     
             </dd>
-        <dt class="idl-code">WebCLCommandQueue enqueueCopyBufferToImage(WebCLMemoryObject src_buffer, WebCLRegion dst_image, 
-        pptional WebCLEvent eventWaitList)
+        <dt class="idl-code">WebCLCommandQueue enqueueCopyBufferToImage(WebCLMemoryObject srcBuffer, WebCLRegion dstImage, 
+        optional WebCLEvent[] eventWaitList)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferToImage.html">man page</a>)</span>
         </dt>
             <dd>     
             </dd>
-        <dt class="idl-code">WebCLCommandQueue enqueueCopyImageToBuffer(WebCLRegion src_image, WebCLMemory dst_buffer, 
-        optional WebCLEvent eventWaitList)
+        <dt class="idl-code">WebCLCommandQueue enqueueCopyImageToBuffer(WebCLRegion srcImage, WebCLMemory dstBuffer, 
+        optional WebCLEvent[] eventWaitList)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImageToBuffer.html">man page</a>)</span>
         </dt>
@@ -1022,7 +1022,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             <dd>     
             Offsets, globals, locals contain 1, 2, or 3 NDRange values. The number of dimensions is determined by the number of elements in globals.
             </dd>
-        <dt class="idl-code">WebCLCommandQueue enqueueReadBuffer(WebCLMemoryObject buffer, CLboolean blocking_read, 
+        <dt class="idl-code">WebCLCommandQueue enqueueReadBuffer(WebCLMemoryObject buffer, CLboolean blockingRead, 
         WebCLRegion array, optional WebCLEvent[] eventWaitList)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBuffer.html">man page</a>)</span>
@@ -1041,7 +1041,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
         </dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLCommandQueue enqueueWriteBuffer(WebCLMemoryObject buffer, CLboolean blocking_write, 
+        <dt class="idl-code">WebCLCommandQueue enqueueWriteBuffer(WebCLMemoryObject buffer, CLboolean blockingWrite, 
         WebCLRegion array, optional WebCLEvent[] eventWaitList)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueTask.html">man page</a>)</span>
@@ -1078,17 +1078,17 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             </dd>
             
             <div class="issue"> WARNING: These following methods are under consideration
-              <dt class="idl-code">WebCLEvent enqueueUnmapMemObject(WebCLMemoryObject memory, WebCLMappedRegion mapped_region, 
-                optional WebCLEvent eventWaitList, optional CLboolean generate_event = false)
+              <dt class="idl-code">WebCLEvent enqueueUnmapMemObject(WebCLMemoryObject memory, WebCLMappedRegion mappedRegion, 
+                optional WebCLEvent[] eventWaitList)
                 <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.4.2">OpenCL 1.1 §5.4.2</a>,
                   <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueUnmapMemObject.html">man page</a>)</span>
               </dt>
               <dd>
-                mapped_region must be a WebCLMappedRegion returned by enqueueMapBuffer() or enqueueMapImage().
+                mappedRegion must be a WebCLMappedRegion returned by enqueueMapBuffer() or enqueueMapImage().
               </dd>
 
-              <dt class="idl-code">WebCLMappedRegion enqueueMapBuffer(WebCLRegion buffer, CLboolean blocking_map, 
-                CLenum map_flags, optional WebCLEvent[] eventWaitList, optional CLboolean generate_event = false)
+              <dt class="idl-code">WebCLMappedRegion enqueueMapBuffer(WebCLRegion buffer, CLboolean blockingMap, 
+                CLenum mapFlags, optional WebCLEvent[] eventWaitList)
                 <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.3">OpenCL 1.1 §5.2.3</a>,
                   <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueMapBuffer.html">man page</a>)</span>
               </dt>
