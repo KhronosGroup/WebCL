@@ -365,9 +365,6 @@ interface <dfn id="WebCL">WebCL</dfn> {
   const CLenum DEVICE_MAX_MEM_ALLOC_SIZE                =0x1010;
   const CLenum DEVICE_IMAGE2D_MAX_WIDTH                 =0x1011;
   const CLenum DEVICE_IMAGE2D_MAX_HEIGHT                =0x1012;
-  const CLenum DEVICE_IMAGE3D_MAX_WIDTH                 =0x1013;
-  const CLenum DEVICE_IMAGE3D_MAX_HEIGHT                =0x1014;
-  const CLenum DEVICE_IMAGE3D_MAX_DEPTH                 =0x1015;
   const CLenum DEVICE_IMAGE_SUPPORT                     =0x1016;
   const CLenum DEVICE_MAX_PARAMETER_SIZE                =0x1017;
   const CLenum DEVICE_MAX_SAMPLERS                      =0x1018;
@@ -510,10 +507,8 @@ interface <dfn id="WebCL">WebCL</dfn> {
   const CLenum IMAGE_FORMAT                             =0x1110;
   const CLenum IMAGE_ELEMENT_SIZE                       =0x1111;
   const CLenum IMAGE_ROW_PITCH                          =0x1112;
-  const CLenum IMAGE_SLICE_PITCH                        =0x1113;
   const CLenum IMAGE_WIDTH                              =0x1114;
   const CLenum IMAGE_HEIGHT                             =0x1115;
-  const CLenum IMAGE_DEPTH                              =0x1116;
 
   /* cl_addressing_mode */
   const CLenum ADDRESS_NONE                             =0x1130;
@@ -875,8 +870,8 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
 dictionary <dfn id="WebCLImageDescriptor">WebCLImageDescriptor</dfn> {
   CLenum channelOrder = WebCL.RGBA;        // Default: RGB colors + alpha
   CLenum channelType = WebCL.UNORM_INT8;   // Default: 8-bit unsigned colors normalized to [0, 1]
-  CLuint size[] = [ 1, 1, 1 ];
-  CLuint pitch[] = [ 0, 0 ];
+  CLuint size[] = [ 1, 1 ];
+  CLuint pitch = 0;
 }
 </pre>
 
@@ -1117,9 +1112,9 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 <pre class="idl">
 dictionary <dfn id="WebCLRegion">WebCLRegion</dfn> {
   WebCLMemoryObject buffer = null;
-  CLuint[3] origin = [0, 0, 0];                 
-  CLuint[3] size = [1, 1, 1];
-  CLuint[2] pitch = [0, 0];                // applies for 2D/3D buffers and images only
+  CLuint[2] origin = [0, 0];                 
+  CLuint[2] size = [1, 1];
+  CLuint pitch = 0;                // applies for 2D buffers and images only
 }
 </pre>
 <pre class="example">
@@ -1188,8 +1183,8 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
   // The row pitch could be different for source and destination,
   // but is assumed to be the same in this example.
 
-  var srcRegion = { size: [w, h], pitch: [pitch], origin: [srcX, srcY] };
-  var dstRegion = { size: [w, h], pitch: [pitch], origin: [dstX, dstY] };
+  var srcRegion = { size: [w, h], pitch: pitch, origin: [srcX, srcY] };
+  var dstRegion = { size: [w, h], pitch: pitch, origin: [dstX, dstY] };
   queue.enqueueCopyBuffer(srcBuffer, dstBuffer, srcRegion, dstRegion);
 
   // For comparison, here's the same operation with a raw parameter
@@ -1543,6 +1538,11 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
       OpenCL 1.1 (Embedded Profile) API to improve portability across
       various operating systems and devices.
     </p>
+
+    <ul>
+      <li>2D image support is required</li>
+      <li>3D images are not supported</li>
+    </ul>
 
 <!-- ======================================================================================================= -->
 
