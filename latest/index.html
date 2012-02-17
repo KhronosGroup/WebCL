@@ -1408,6 +1408,7 @@ interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
     any getInfo(CLenum name);
     any getWorkGroupInfo(WebCLDevice device, CLenum name);
     void setArg(CLuint index, any value, optional CLtype type);
+    void setArg(CLuint index, ArrayBuffer value, CLuint size)
 }
 </pre>
 
@@ -1450,7 +1451,14 @@ interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
         is given, the values 254.9 and 1000 will both be mapped to
         255. <b>(Q: Should we use standard C-style type casting
         instead, i.e., modulo arithmetic instead of clamping?)</b>
-<div class="issue"><b>These types are not sufficient to cover all scenarios for WebCLKernel.setArg(). Need refinement. See <a href="https://cvs.khronos.org/bugzilla/show_bug.cgi?id=8498">Bug 8498</a></b>
+
+      <dt class="idl-code">void setArg(CLuint index, ArrayBuffer value, optional CLtype type)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.7.2">OpenCL 1.1 §5.7.2</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">man page</a>)</span>
+      </dt>
+      <dd>
+      This variant of <code>setArg()</code> allows derived types (i.e. structures) to be passed as argument of a kernel. The structure's attribute values must be correctly aligned to the number of bytes each attribute uses natively.
+      </dd>
     <h4><a id="WEBCLTYPES">Kernel argument types</a></h4>
 
     <p>
@@ -1498,7 +1506,6 @@ myKernel.setArg(0, 3.14159, WebCLTypes.FLOAT);                          // cast 
 myKernel.setArg(1, [1.23, 2.34], WebCLTypes.UINT | WebCLTypes.VEC2);    // cast the numbers to UINT, then pass to kernel
 myKernel.setArg(2, 512, WebCLTypes.LOCAL_MEMORY_SIZE);                  // reserve 512 bytes for a kernel local variable
 </pre>
-</div>
     </dl>
 
 <!-- ======================================================================================================= -->
