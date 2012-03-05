@@ -103,7 +103,7 @@
             </dd>
     </dl>
     
-    <span style="font-size: x-small; font-style: oblique">Copyright © 2012 Khronos Group</span>
+    <p><span style="font-size: x-small; font-style: oblique">Copyright © 2012 Khronos Group</span></p>
 
     <hr>
     
@@ -267,7 +267,7 @@ interface <dfn id="WebCL">WebCL</dfn> {
   // Functions
 
   WebCLPlatform[] getPlatforms();
-  WebCLContext createContext(optional WebCLContextProperties properties);
+  WebCLContext createContext(optional WebCLContextProperties properties, optional any userdata, optional callback);
   DOMString[] getSupportedExtensions();
   void waitForEvents(WebCLEvent[] eventList);
   void unloadCompiler();
@@ -787,6 +787,7 @@ interface <dfn id="WebCLPlatform">WebCLPlatform</dfn> {
 interface <dfn id="WebCLDevice">WebCLDevice</dfn> {
     any getInfo(CLenum name);
     object getExtension(DOMString extensionName);
+	DOMString[] getSupportedExtensions();
 }
 </pre>
 
@@ -1125,7 +1126,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
               <dd>
                 mappedRegion must be the same ArrayBuffer returned by enqueueMapMemObject().
               </dd>
-          </div>
+	    </div>
     </dl>
 
     <h4><a id="WEBCLREGION">WebCLRegion</a></h4>
@@ -1298,7 +1299,6 @@ queue.enqueueNDRangeKernel(kernel3, null, globals, null, events);
       </dd>
     </dl>
 
-</pre>
  <!-- ======================================================================================================= -->
  
     <h3><a id="WEBCLIMAGE">WebCLImage</a></h3>
@@ -1344,7 +1344,6 @@ interface <dfn id="WebCLSampler">WebCLSampler</dfn> {
                 <tr><td>SAMPLER_FILTER_MODE</td><td>CLenum</td></tr>
             </table><br>
             </dd>
-        </dt>
     </dl>
 
 <!-- ======================================================================================================= -->
@@ -1378,22 +1377,18 @@ interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
                 <tr><td>PROGRAM_BINARIES</td><td>ArrayBuffer []</td></tr>
             </table><br>
             </dd>
-        </dt>
         <dt class="idl-code">any getBuildInfo(WebCLDevice device, CLenum name)</dt>
             <dd>
             return Integer or DOMString depending on name queried.
             </dd>
-        </dt>
         <dt class="idl-code">void build(WebCLDevice devices[], optional DOMString options, any userdata, function callback)</dt>
             <dd>
               Compile a program with optional compiler options.<br>
               An asynchronous callback method may be provided with optional userdata. The signature of the callback method is: <code>function(any userdata)</code>
             </dd>
-        </dt>
         <dt class="idl-code">WebCLKernel createKernel(DOMString name)</dt>
             <dd>
             </dd>
-        </dt>
     </dl>
 
 <!-- ======================================================================================================= -->
@@ -1690,7 +1685,7 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
     <p>
         Additional thanks to: ...
         and the members of the Khronos WebCL Working Group.
-</p>
+	</p>
 
 
 
