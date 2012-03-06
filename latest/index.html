@@ -641,6 +641,7 @@ dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
   WebCLPlatform platform = null;                  // Default: let the implementation decide
   WebCLDevice[] devices = null;                   // Default: let the implementation decide
   CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT;  // Default: let the implementation decide
+  any shareGroup = null;
 }
 </pre>
     <dl class="methods">
@@ -677,6 +678,11 @@ dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
           <tr><td>DEVICE_TYPE_ALL</td><td>All devices available on this platform.</td></tr>
         </table>
 
+      </dd>
+      <dt class="idl-code">any shareGroup</dt>
+      <dd>
+      shareGroup is an array of resources to be shared with OpenCL. Currently, only WebGL is supported.<br>
+      If resources must be shared between WebGL and WebCL, shareGroup must contain the WebGL object whose resources will be shared with WebCL.
       </dd>
       </dl>
       
@@ -846,27 +852,33 @@ interface <dfn id="WebCLDevice">WebCLDevice</dfn> {
     <pre class="idl">
 interface <dfn id="WebCLContext">WebCLContext</dfn> {
 
-    any getInfo(CLenum name);
-
-    WebCLProgram createProgram(DOMString source);
-
-    WebCLCommandQueue createCommandQueue(WebCLDevice device, CLenum properties);
-
     WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer hostBuffer);
+
+    WebCLCommandQueue createCommandQueue(WebCLDevice device, optional CLenum properties);
+
+    WebCLBuffer createFromGLBuffer(CLenum memFlags, GLuint bufobj);
+
+    WebCLBuffer createFromGLRenderBuffer(CLenum memFlags, GLuint renderbuffer);
+
+    WebCLBuffer createFromGLTexture2D(CLenum memFlags, GLenum textureTarget, 
+                                      GLint miplevel, GLuint texture);
 
     WebCLImage createImage(CLenum memFlags, 
                            WebCLImageDescriptor descriptor,
                            optional ArrayBuffer hostBuffer);
 
+    WebCLProgram createProgram(DOMString source);
+
     WebCLSampler createSampler(CLboolean normalizedCoords,
                                CLenum addressingMode,
                                CLenum filterMode);
 
-    WebCLImageDescriptor[] getSupportedImageFormats(CLenum memFlags,
-                                                    CLenum imageType);
-
     WebCLEvent createUserEvent();
 
+    any getInfo(CLenum name);
+
+    WebCLImageDescriptor[] getSupportedImageFormats(CLenum memFlags,
+                                                    CLenum imageType);
 </pre>
 
 <a id="WEBCLIMAGEDESCRIPTOR"></a>
@@ -880,6 +892,40 @@ dictionary <dfn id="WebCLImageDescriptor">WebCLImageDescriptor</dfn> {
 </pre>
 
     <dl class="methods">
+        <dt class="idl-code">WebCLBuffer createBuffer(CLenum memFlags, CLuint size, optional ArrayBuffer hostBuffer)</dt>
+            <dd>
+        If flags contains cl.MEM_USE_HOST_PTR then hostBuffer must be provided.
+            </dd>
+        <dt class="idl-code">WebCLCommandQueue createCommandQueue(WebCLDevice device, optional CLenum properties[])</dt>
+            <dd>
+            By default, a command queue is created with commands executed in-order, with profiling of commands disabled.
+            </dd>
+        <dt class="idl-code">WebCLBuffer createFromGLBuffer(CLenum memFlags, GLuint bufobj)</dt>
+            <dd>
+            This method is only valid if the WebCL context has been created with WebGL shared group.
+            </dd>
+        <dt class="idl-code">WebCLBuffer createFromGLRenderBuffer(CLenum memFlags, GLuint renderbuffer)</dt>
+            <dd>
+            This method is only valid if the WebCL context has been created with WebGL shared group.
+            </dd>
+        <dt class="idl-code">WebCLBuffer createFromGLGLTexture2D(CLenum memFlags, GLenum textureTarget, GLint miplevel, GLuint texture)</dt>
+            <dd>
+            This method is only valid if the WebCL context has been created with WebGL shared group.
+            </dd>
+        <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBuffer hostBuffer)</dt>
+            <dd>
+              If flags contains cl.MEM_USE_HOST_PTR then hostBuffer must be provided.<br>
+            </dd>
+        <dt class="idl-code">WebCLProgram createProgram(DOMString source)</dt>
+            <dd>
+            create a WebCLProgram from a UTF-8 string.
+            </dd>
+        <dt class="idl-code">WebCLSampler createSampler(CLboolean normalizedCoords, CLenum addressingMode, CLenum filterMode)</dt>
+            <dd>
+            </dd>
+        <dt class="idl-code">WebCLEvent createUserEvent()</dt>
+            <dd>
+            </dd>
         <dt class="idl-code">any getInfo(CLenum name)</dt>
             <dd>
             Return the value for the passed name. The type returned is the natural type for the
@@ -892,28 +938,7 @@ dictionary <dfn id="WebCLImageDescriptor">WebCLImageDescriptor</dfn> {
                 <tr><td>CONTEXT_PROPERTIES</td><td>Integer []</td></tr>
             </table><br>
             </dd>
-        <dt class="idl-code">WebCLProgram createProgram(DOMString source)</dt>
-            <dd>
-            create a WebCLProgram from a UTF-8 string.
-            </dd>
-        <dt class="idl-code">WebCLCommandQueue createCommandQueue(WebCLDevice device, CLenum properties[])</dt>
-            <dd>
-            </dd>
-        <dt class="idl-code">WebCLBuffer createBuffer(CLenum memFlags, CLuint size, optional ArrayBuffer hostBuffer)</dt>
-            <dd>
-        If flags contains cl.MEM_USE_HOST_PTR then hostBuffer must be provided.
-            </dd>
-        <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBuffer hostBuffer)</dt>
-            <dd>
-              If flags contains cl.MEM_USE_HOST_PTR then hostBuffer must be provided.<br>
-            </dd>
-        <dt class="idl-code">WebCLSampler createSampler(CLboolean normalizedCoords, CLenum addressingMode, CLenum filterMode)</dt>
-            <dd>
-            </dd>
         <dt class="idl-code">WebCLImageDescriptor[] getSupportedImageFormats(CLenum memFlags, CLenum imageType)</dt>
-            <dd>
-            </dd>
-        <dt class="idl-code">WebCLEvent createUserEvent()</dt>
             <dd>
             </dd>
     </dl>
@@ -926,6 +951,10 @@ dictionary <dfn id="WebCLImageDescriptor">WebCLImageDescriptor</dfn> {
 interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 
   void enqueueBarrier();
+  
+  WebCLEvent enqueueAcquireGLObjects(WebCLMemoryObject[] mem_objects,
+                                     optional WebCLEvent[] eventWaitList,
+                                     optional CLboolean generateEvent = false);
   
   WebCLEvent enqueueCopyBuffer(WebCLRegion src, WebCLRegion dst, 
                                optional WebCLEvent[] eventWaitList,
@@ -946,17 +975,21 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
   WebCLEvent enqueueMarker();
   
   WebCLEvent enqueueNDRangeKernel(WebCLKernel kernel, 
-                                 CLuint[3] offsets, CLuint[3] globals, CLuint[3] locals, 
-                                 optional WebCLEvent[] eventWaitList,
-                                 optional CLboolean generateEvent = false);
+                                  CLuint[3] offsets, CLuint[3] globals, CLuint[3] locals, 
+                                  optional WebCLEvent[] eventWaitList,
+                                  optional CLboolean generateEvent = false);
   
   WebCLEvent enqueueReadBuffer(WebCLBuffer buffer, CLboolean blocking_read, WebCLRegion array, 
                                optional WebCLEvent[] eventWaitList,
                                optional CLboolean generateEvent = false);
   
   WebCLEvent enqueueReadImage(WebCLImage buffer, CLboolean blocking_read, WebCLRegion array, 
-                               optional WebCLEvent[] eventWaitList,
-                               optional CLboolean generateEvent = false);
+                              optional WebCLEvent[] eventWaitList,
+                              optional CLboolean generateEvent = false);
+  
+  WebCLEvent enqueueReleaseGLObjects(WebCLMemoryObject[] mem_objects,
+                                     optional WebCLEvent[] eventWaitList,
+                                     optional CLboolean generateEvent = false);
   
   WebCLEvent enqueueTask(WebCLKernel kernel, 
                          optional WebCLEvent[] event_wait_list,
@@ -981,7 +1014,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
   // These methods are under consideration, see <a href="https://cvs.khronos.org/bugzilla/show_bug.cgi?id=8507">Bug 8507</a>
     
   ArrayBuffer enqueueMapMemObject(WebCLRegion memObject, CLboolean blockingMap, CLenum mapFlags, 
-                                     optional WebCLEvent[] eventWaitList);
+                                  optional WebCLEvent[] eventWaitList);
   
   WebCLEvent enqueueUnmapMemObject(WebCLMemoryObject memory, ArrayBuffer mappedRegion, 
                                    optional WebCLEvent[] eventWaitList, optional CLboolean generate_event = false);
@@ -993,6 +1026,14 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
         <dt class="idl-code">void enqueueBarrier()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueBarrier.html">man page</a>)</span>
+        </dt>
+            <dd>
+            </dd>
+        <dt class="idl-code">WebCLEvent enqueueAcquireGLObjects(WebCLMemoryObject[] mem_objects,
+                                 	 optional WebCLEvent[] eventWaitList,
+                                     optional CLboolean generateEvent = false);
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueAcquireGLObjects.html">man page</a>)</span>
         </dt>
             <dd>
             </dd>
@@ -1052,6 +1093,14 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBuffer.html">man page</a>)</span>
         </dt>
             <dd>     
+            </dd>
+        <dt class="idl-code">WebCLEvent enqueueReleaseGLObjects(WebCLMemoryObject[] mem_objects,
+                                 	 optional WebCLEvent[] eventWaitList,
+                                     optional CLboolean generateEvent = false);
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReleaseGLObjects.html">man page</a>)</span>
+        </dt>
+            <dd>
             </dd>
         <dt class="idl-code">WebCLEvent enqueueTask(WebCLKernel kernel, optional CLboolean generateEvent = false)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
@@ -1257,6 +1306,7 @@ queue.enqueueNDRangeKernel(kernel3, null, globals, null, events);
 
 <pre class="idl">interface <dfn id="WebCLMemoryObject">WebCLMemoryObject</dfn> {
   any getInfo(CLenum name);
+  WebCLGLObjectInfo getGLObjectInfo();
 }
 </pre>
 
@@ -1277,6 +1327,17 @@ queue.enqueueNDRangeKernel(kernel3, null, globals, null, events);
                 <tr><td>MEM_ASSOCIATED_MEMOBJECT</td><td>WebCLMemoryObject</td></tr>
                 <tr><td>MEM_OFFSET</td><td>Integer</td></tr>
             </table><br>
+            </dd>
+        <dt class="idl-code">WebCLGLObjectInfo getGLObjectInfo()</dt>
+            <dd>
+            Warning: this method is valid only if WebCL context was created with a WebGL shared group.<br>
+            
+            WebCLGLObjectInfo is defined as the following dictionary:
+<pre class="idl">interface <dfn id="WebCLGLObjectInfo">WebCLGLObjectInfo</dfn> {
+  CLenum type, // type of GL object attached to this memory object
+  GLuint name  // GL object name used to create this memory object
+}
+</pre>           
             </dd>
     </dl>
 
@@ -1308,6 +1369,7 @@ queue.enqueueNDRangeKernel(kernel3, null, globals, null, events);
 
 <pre class="idl">interface <dfn id="WebCLImage">WebCLImage</dfn> : WebCLMemoryObject {
   any getInfo(CLenum name);
+  GLint getGLtextureInfo(CLenum param_name);
 }
 </pre>
 
@@ -1316,6 +1378,11 @@ queue.enqueueNDRangeKernel(kernel3, null, globals, null, events);
     <dd>
       return Integer, or ImageFormat depending on the name queried.
     </dd>
+    <dt class="idl-code">GLint getGLTextureInfo(CLenum param_name)</dt>
+      <dd>
+        Warning: this method is only available if WebCLContext was created with a WebGL shared group.<br>
+        Returns texture values used in WebCLContext.createFromGLTexture2D() to create this memory object from a WebGL texture.
+      </dd>
   </dl>
 
 <!-- ======================================================================================================= -->
@@ -1598,6 +1665,7 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
     <ul>
       <li>2D image support is required</li>
       <li>3D images are not supported</li>
+      <li>WebGL interoperability is supported</li>
     </ul>
 
 <!-- ======================================================================================================= -->
