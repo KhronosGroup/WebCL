@@ -979,11 +979,16 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
                                   optional WebCLEvent[] eventWaitList,
                                   optional CLboolean generateEvent = false);
   
-  WebCLEvent enqueueReadBuffer(WebCLBuffer buffer, CLboolean blocking_read, WebCLRegion array, 
+  WebCLEvent enqueueReadBuffer(WebCLBuffer buffer, CLboolean blockingRead, WebCLRegion array, 
                                optional WebCLEvent[] eventWaitList,
                                optional CLboolean generateEvent = false);
   
-  WebCLEvent enqueueReadImage(WebCLImage buffer, CLboolean blocking_read, WebCLRegion array, 
+  WebCLEvent enqueueReadBufferRect(WebCLBuffer buffer, CLboolean blockingRead, 
+                                   WebCLRegion bufferRegion, WebCLRegion hostRegion,
+                                   optional WebCLEvent[] eventWaitList,
+                                   optional CLboolean generateEvent = false);
+  
+  WebCLEvent enqueueReadImage(WebCLImage buffer, CLboolean blockingRead, WebCLRegion array, 
                               optional WebCLEvent[] eventWaitList,
                               optional CLboolean generateEvent = false);
   
@@ -999,6 +1004,11 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 
   WebCLEvent enqueueWriteBuffer(WebCLBuffer buffer, CLboolean blockingWrite, 
                                 WebCLRegion array, optional WebCLEvent[] eventWaitList, 
+                                optional CLboolean generateEvent = false)
+
+  WebCLEvent enqueueWriteBuffer(WebCLBuffer buffer, CLboolean blockingWrite, 
+                                WebCLRegion bufferRegion, WebCLRegion hostRegion,
+                                optional WebCLEvent[] eventWaitList, 
                                 optional CLboolean generateEvent = false)
 
   WebCLEvent enqueueWriteImage(WebCLImage buffer, CLboolean blockingWrite, 
