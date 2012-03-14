@@ -89,7 +89,7 @@
     <!-- end Work in Progress -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">Working Group Internal Draft March 12, 2012</h2>
+    <h2 class="no-toc">Working Group Internal Draft March 13, 2012</h2>
     <dl>
         <dt>This version:
             </dt><dd>
@@ -333,8 +333,11 @@ typedef unsigned long CLenum;     // Used for enumerated types, such as WebCL.DE
       such functions. The signature of the callback is defined by
       WebCLAsyncOperationCallback.  An additional type of callback,
       defined by WebCLEventCallback, can be used to act on WebCLEvent
-      state changes.
+      state changes. The callback function can call arbitrary JavaScript
+      functions, including both blocking and non-blocking APIs.  The 
+      following diagram is non-normative, but describes a possible implementation.
     </p>
+    <img alt="callback" src="resources/callback.png" height="420" width="780"/>
 
 <pre class="idl">
 callback <dfn id="WebCLAsyncOperationCallback">WebCLAsyncOperationCallback</dfn> = void (DOMString? error, any userdata);  
