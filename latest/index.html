@@ -89,7 +89,7 @@
     <!-- end Work in Progress -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">Working Group Internal Draft March 13, 2012</h2>
+    <h2 class="no-toc">Working Group Internal Draft March 14, 2012</h2>
     <dl>
         <dt>This version:
             </dt><dd>
@@ -122,7 +122,7 @@
                 <a href="mailto:msevenier@motorola.com">Mika&euml;l Bourges-S&eacute;venier</a>
                 <a href="http://www.motorola.com/">(Motorola Mobility, Inc.)</a>
             </dd>
-	<DT>Contributers: 
+	<DT>Additional Contributors: 
 	    </DT><DD>
 	    <A HREF="../t.brutch@samsung.com">Tasneem Brutch (Chair WebCL WG)</A> <A HREF="http://www.samsung.com/">(Samsung Electronics)</A> 
 	    </DD><DD STYLE="margin-bottom: 0.2in">
@@ -166,15 +166,6 @@
     </ul></div>
 
 <!-- ======================================================================================================= -->
-<div class="issue">
-<b>General issues (in no particular oder)</b>
-<ul>
-<li><a href="https://cvs.khronos.org/bugzilla/show_bug.cgi?id=8494">Bug 8494</a>: Asynchronuous callbacks need to be specified -- remaining issue if for callbacks with command queues methods</li>
-<li><a href="https://cvs.khronos.org/bugzilla/show_bug.cgi?id=8590">Bug 8590</a>: should we have release() for all objects?</li>
-<li><a href="https://cvs.khronos.org/bugzilla/show_bug.cgi?id=8511">Bug 8511</a>: WebCL with web workers restrictions?</li>
-<li><a href="https://cvs.khronos.org/bugzilla/show_bug.cgi?id=8553">Bug 8553</a>: Define a generic way to sync WebCL context with external data sources</li>
-</ul>
-</div>
 
     <h2>Introduction</h2>
 
@@ -184,129 +175,140 @@
 
 <!-- ======================================================================================================= -->
 
-    <h2>WebCL Resources</h2>
+    <h2>Security</h2>
 
-    <p> 
-      TODO
+    <p>
+      The WebCL working group has identified a number of security
+      issues and vulnerabilities applicable to the WebCL standard, along
+      with recommendations for remediation. Depending upon the nature
+      of the issue, some of the recommendations may need to be implemented
+      by the OpenCL driver. The working group has identified the
+      following security issues of interest to WebCL.
+
+    <h3>Cross-origin information leakage</h3>
+
+    <p>
+      To prevent web applications from getting unauthorized access to
+      images or other content originating from another domain, WebCL
+      implementations must impose the same cross-origin restrictions
+      as WebGL.
     </p>
 
-<!-- ======================================================================================================= -->
 
-<H2>Security</H2>
-<P LANG="en">The WebCL working group identified a number of security
-issues and vulnerabilities applicable to the WebCL standard, along
-with recommendations for remediation.&nbsp; Depending upon the nature
-of the issue, some of the recommendations may need to be implemented
-by the OpenCL driver.&nbsp; The working group has identified the
-following security issues of interest to WebCL.</P>
-<UL>
-	<LI><P><SPAN LANG="en">Unauthorized Memory Accesses</SPAN></P>
-	<LI><P><SPAN LANG="en">Memory Leakage</SPAN></P>
-	<LI><P><SPAN LANG="en">Denial of service Attacks</SPAN></P>
-</UL>
-<H3 LANG="en" CLASS="western"><A NAME="_Toc193271162"></A><A NAME="_Unauthorized_Memory_Accesses"></A>
-Unauthorized Memory Accesses</H3>
-<UL>
-	<LI><P CLASS="msonormal" STYLE="margin-bottom: 0in">Provisions
-	need to be provided to prevent unauthorized memory accesses. No
-	memory should be accessible outside of its context. WebCL must
-	provide for prevention mechanisms against unintentional or malicious
-	out-of-bound memory accesses.&nbsp; Also being considered are
-	restrictions in the kernel language to facilitate static analysis
-	and detection of out of bounds memory accesses.</FONT></P>
-	<LI><P STYLE="margin-bottom: 0in"><SPAN LANG="en">Kernels must not
-	be allowed to read or write array elements that lie outside the
-	bounds of the array. This includes any variable of array type, as
-	well as vector or matrix types such as </SPAN><CODE><SPAN LANG="en">float3</SPAN></CODE>
-	<SPAN LANG="en">or </SPAN><CODE><SPAN LANG="en">uint4</SPAN></CODE>
-	<SPAN LANG="en">when accessed using array subscripting syntax. If
-	detected during compilation, such accesses must generate an error
-	and prevent the kernel from compiling. Otherwise, at runtime they
-	may return a constant value (such as 0), or the value at any valid
-	index of the same array. </SPAN>
-	</P>
-	<LI><P CLASS="msonormal" STYLE="margin-bottom: 0in">The
-	WebCL working group is working with the OpenCL working group members
-	on a proposal for provisions to prevent unauthorized out of bounds
-	memory accesses.</FONT></P>
-</UL>
-<H3 LANG="en" CLASS="western"><A NAME="_Toc193271163"></A><A NAME="_Memory_Leakage"></A>
-Memory Leakage</H3>
-<UL>
-	<LI><P STYLE="margin-bottom: 0.01in">No
-	information leakage should be possible when switching from one
-	context to another. It must not be possible to access arbitrary
-	system memory, or memory from another OpenCL/WebCL context, when
-	switching from one context to another.</FONT></P>
-	<LI><P STYLE="margin-bottom: 0.01in">Initialization
-	of buffer objects in WebCL, when the underlying OpenCL API allows
-	them to contain uninitialized memory.</FONT></P>
-	<LI><P STYLE="margin-bottom: 0.01in"><B>Access
-	from Scripts</B></FONT>: WebCL must not
-	allow scripts to read back data that they are not supposed to read
-	back.</FONT></P>
-</UL>
-<H3 CLASS="western"><A NAME="_Toc193271164"></A><A NAME="_Denial_of_Service"></A>
-Denial of Service Attacks</FONT></H3>
-<UL>
-<LI><P CLASS="msonormal" STYLE="margin-bottom: 0.01in">Long
-running/computationally intensive kernels may lead the users's
-system to become unresponsive, and can lead to denial of service. It
-is not acceptable for content downloaded over the internet to lock
-up the browser. This issue has received additional interest since
-without provisions for protection against DoS attacks, WebCL may
-allow unknown and untrusted code to get access to the GPU.</FONT></P>
-<LI><P CLASS="msonormal" STYLE="margin-bottom: 0.01in">WebCL</FONT>
-must not allow kernels to monopolize or
-lock up a GPU (or any OpenCL device). WebCL should provide a
-mechanism to detect and restrict long-running kernel. WebCL could
-leverage existing solutions provided in some operating systems, such
-as Microsoft Windows Vista and later, which resets the graphics
-processor if excessive time is spent by the device on an operation.</FONT></P>
-<LI><P CLASS="msonormal" STYLE="margin-bottom: 0.01in">The
-browser should be able to promptly terminate kernels running in a
-background thread, when switching away from a web page that invoked
-the kernel.</FONT></P>
-<LI><P CLASS="msonormal" STYLE="margin-bottom: 0.01in">WebCL</FONT>
-could provide provisions (similar to
-the GL_ARB_robustness OpenGL extension), as a platform independent
-way of detecting DoS attacks, to allow WebCL to receive
-notifications that an OpenCL device had been reset. This will
-provide a notification to user/application, and will allow the
-browser application to respond to it.</FONT></P>
-<LI><P CLASS="msonormal" STYLE="margin-bottom: 0.01in">Different
-browsers use different mechanisms to detect runaway JavaScript, for
-example, Internet Explorer counts statements, FireFox uses a timer,
-etc.&nbsp; Allow interruption of WebCL kernels running on an OpenCL
-device by a browser, in the same way that JavaScript can be
-interrupted.</FONT></P>
-<LI><P CLASS="msonormal" STYLE="margin-bottom: 0.01in">WebCL</FONT>
-implementation will provide mechanisms
-to prevent impact from a work group that is jeopardizing system
-stability. Such a work group may be terminated.</FONT></P>
-</UL>
-<H2 LANG="en" CLASS="western"><A NAME="_Toc193271165"></A><A NAME="_WebCL_Robustness"></A>
-WebCL Robustness</H2>
-<P LANG="en">WebCL defines the following restrictions for enhanced
-robustness:</P>
-<H3 LANG="en" CLASS="western"><A NAME="_Toc193271166"></A><A NAME="_Resource_Restrictions"></A>
-<!-- ======================================================================================================= -->Resource
-Restrictions</H3>
-<P LANG="en">When WebCL resources are accessed by kernels, the WebCL
-implementation must ensure that the kernel cannot access either out
-of bounds or uninitialized data. 
-</P>
-<H3 LANG="en" CLASS="western"><A NAME="ORIGIN_RESTRICTIONS1"></A><A NAME="_Toc193271167"></A><A NAME="_Origin_Restrictions"></A>
-<!-- ======================================================================================================= -->Origin
-Restrictions</H3>
-<P LANG="en">WebCL imposes the same restrictions as WebGL on
-cross-origin content [insert link to WebGL spec]. 
-</P>
-<H3 LANG="en" CLASS="western"><A NAME="KERNEL_RESTRICTIONS1"></A><A NAME="_Toc193271168"></A><A NAME="_Kernel_Restrictions"></A>
-<!-- ======================================================================================================= -->Kernel
-Restrictions</H3>
-<P><SPAN LANG="en">TODO </SPAN> 
-</P>
+    <h3>Unauthorized memory access</h3>
+
+    <ul>
+	    <li>
+        Provisions need to be provided to prevent unauthorized memory
+	      accesses. No memory should be accessible outside of its
+	      context. WebCL must provide for prevention mechanisms against
+	      unintentional or malicious out-of-bound memory accesses.  Also
+	      being considered are restrictions in the kernel language to
+	      facilitate static analysis and detection of out of bounds
+	      memory accesses.
+      </li>
+
+      <li>
+        Kernels must not be allowed to read or write array elements
+	      that lie outside the bounds of the array. This includes any
+	      variable of array type, as well as vector or matrix types such
+	      as `float3` or `uint4` when accessed using array subscripting
+	      syntax. If detected during compilation, such accesses must
+	      generate an error and prevent the kernel from
+	      compiling. Otherwise, at runtime they may return a constant
+	      value (such as 0), or the value at any valid index of the same
+	      array.
+      </li>
+
+      <li>
+        The WebCL working group is working with the OpenCL working
+	      group members on a proposal for provisions to prevent unauthorized
+	      out of bounds memory accesses.
+      </li>
+    </ul>
+
+
+    <h3>Cross-context information leakage</h3>
+
+    <ul>
+	    <li>
+        WebCL implementations must ensure that no information can leak
+        from one WebCL/OpenCL context to another. It must not be
+        possible for WebCL kernels or host code to access arbitrary
+        system memory, or memory from another OpenCL/WebCL context.
+      </li>
+
+      <li>
+        WebCL implementations must ensure that WebCL kernels or host
+        code cannot access uninitialized memory, because such memory
+        may contain sensitive data left over from whichever
+        application or system component was previously using it.
+        WebCL memory objects (buffers and images) must therefore be
+        initialized to zero before the application is allowed to read
+        from them, whether through kernel code or host code. The same
+        applies to `private` and `local` variables in kernel code.
+      </li>
+
+      <li>
+        <b>Access from Scripts</b>: WebCL must not allow scripts to
+	      read back data that they are not supposed to read back.
+      </li>
+    </ul>
+
+
+    <h3>Denial of service</h3>
+
+    <ul>
+      <li>
+        Long running/computationally intensive kernels may cause the
+        user's system to become unresponsive, and can lead to denial of
+        service. It is not acceptable for content downloaded over the
+        internet to lock up the browser. This issue has received
+        additional interest since without provisions for protection
+        against DoS attacks, WebCL may allow unknown and untrusted code
+        to get access to the GPU.
+      </li>
+
+      <li>
+        WebCL must not allow kernels to monopolize or lock up a GPU
+        (or any OpenCL device). WebCL should provide a mechanism to
+        detect and restrict a long-running kernel. The WebCL
+        implementation can leverage existing solutions provided in
+        some operating systems, such as Microsoft Windows Vista and
+        later, which resets the graphics processor if excessive time
+        is spent by the device on an operation.
+      </li>
+
+      <li>
+        The browser should be able to promptly terminate kernels
+        running in a background thread, when switching away from a web
+        page that invoked the kernel.
+      </li>
+
+      <li>
+        WebCL could provide provisions (similar to the
+        `GL_ARB_robustness` extension in OpenGL), as a platform
+        independent way of detecting DoS attacks, to allow WebCL to
+        receive notifications that an OpenCL device had been
+        reset. This will provide a notification to user/application,
+        and will allow the browser application to respond to it.
+      </li>
+
+      <li>
+        Different browsers use different mechanisms to detect runaway
+        JavaScript; for example, Internet Explorer counts statements,
+        Firefox uses a timer, etc.  WebCL implementations should allow
+        interruption of WebCL kernels running on an OpenCL device, in
+        in the same way that JavaScript can be interrupted.
+      </li>
+
+      <li>
+        WebCL implementations must provide mechanisms to prevent
+        impact from a workgroup that is jeopardizing system
+        stability. Such a workgroup may be terminated.
+      </li>
+    </ul>
+
 <!-- ======================================================================================================= -->
 
     <h2>DOM Interfaces</h2>
