@@ -648,7 +648,8 @@ dt { font-weight: bold }
 pre, code { font-size: 1.2em; font-family: monospace; } /* navigator 4 requires this */
 
 pre.idl { border: solid thin; background: #EEEEEE; color: black; padding: 0.5em 1em; min-width: 61em;}
-pre.idl :link, pre.idl :visited { color: inherit; background: transparent; }
+pre.idl :link, pre.idl :visited { color: inherit; color: green; text-decoration: none; background: transparent;  }
+pre.idl :hover { text-decoration: underline; }
 
 dl.methods {
     color: black;

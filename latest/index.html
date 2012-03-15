@@ -15,11 +15,11 @@
       // Convert WebCL class names into hyperlinks pointing
       // to the respective class definitions.
 
-      var hrefs = $('.idl-code');
+      var hrefs = $('.idl, .idl-code');
       var targets = $('dfn');
       for (var i=0; i < targets.length; i++) {
         var className = targets[i].id;
-        var classRegExp = new RegExp(className+" ", "g");
+        var classRegExp = new RegExp(className+"\[\? \]", "g");
         var classArrayRegExp = new RegExp(className+"\\[\\]", "g");
         var classLink = "<a href='#" + className.toUpperCase() + "'>" + className + "<\/a>";
         hrefs.each(function() {
@@ -193,20 +193,21 @@ typedef unsigned long CLenum;     // Used for enumerated types, such as WebCL.DE
     <h4><a id="WEBCLASYNCOPERATIONCALLBACK"><a id="WEBCLEVENTCALLBACK">Callbacks</a></a></h4>
 
     <p>
-      WebCL allows most long-running functions to be executed either
-      synchronously or asynchronously. The asynchronous mode is used
-      if a user-defined callback function is given as an argument to
-      such functions. The signature of the callback is defined by
+      WebCL allows certain long-running functions to be executed
+      either synchronously or asynchronously. The asynchronous mode is
+      used if a user-defined callback function is given as an argument
+      to such functions. The signature of the callback is defined by
       WebCLAsyncOperationCallback.  An additional type of callback,
       defined by WebCLEventCallback, can be used to act on WebCLEvent
-      state changes. The callback function can call arbitrary JavaScript
-      functions, including both blocking and non-blocking APIs.  The 
-      following diagram is non-normative, but describes a possible implementation.
+      state changes. Any WebCL callback function can call arbitrary
+      JavaScript functions, including both blocking and non-blocking
+      APIs.  The following diagram is non-normative, but describes a
+      possible implementation.
     </p>
     <img alt="callback" src="resources/callback.png" height="420" width="780"/>
 
 <pre class="idl">
-callback <dfn id="WebCLAsyncOperationCallback">WebCLAsyncOperationCallback</dfn> = void (DOMString? error, any userdata);  
+callback <dfn id="WebCLAsyncOperationCallback">WebCLAsyncOperationCallback</dfn> = void (any userdata);  
 callback <dfn id="WebCLEventCallback">WebCLEventCallback</dfn> = void (WebCLEvent event, CLenum eventCommandExecStatus, any... args);
 </pre>
 
@@ -469,7 +470,6 @@ interface <dfn id="WebCL">WebCL</dfn> {
   /* cl_mem_object_type */
   const CLenum MEM_OBJECT_BUFFER                        =0x10F0;
   const CLenum MEM_OBJECT_IMAGE2D                       =0x10F1;
-  const CLenum MEM_OBJECT_IMAGE3D                       =0x10F2;
 
   /* cl_mem_info */
   const CLenum MEM_TYPE                                 =0x1100;
@@ -866,7 +866,7 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
 dictionary <dfn id="WebCLImageDescriptor">WebCLImageDescriptor</dfn> {
   CLenum channelOrder = WebCL.RGBA;        // Default: RGB colors + alpha
   CLenum channelType = WebCL.UNORM_INT8;   // Default: 8-bit unsigned colors normalized to [0, 1]
-  CLuint[] size = [ 1, 1 ];
+  CLuint[2] size = [ 1, 1 ];
   CLuint pitch = 0;
 }
 </pre>
@@ -1054,15 +1054,21 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
         <dt class="idl-code">WebCLEvent enqueueCopyBuffer(WebCLRegion srcBuffer, WebCLRegion dstBuffer, 
         optional WebCLEvent[] eventWaitList = null, optional CLboolean generateEvent = false)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBuffer.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferRect.html">man page</a>)</span>
         </dt>
-            <dd>     
+            <dd>
+              The source and destination regions are treated as 1D, 2D
+              or 3D, depending on their `size` property (which must be
+              the same for both regions).  If `size[2]` is greater
+              than 1, the regions are 3D; otherwise, if `size[1]` is
+              greater than 1, the regions are 2D; otherwise, they are
+              1D.
             </dd>
 
         <dt class="idl-code">WebCLEvent enqueueCopyImage(WebCLRegion srcImage, WebCLRegion dstImage, 
         optional WebCLEvent[] eventWaitList = null, optional CLboolean generateEvent = false)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBuffer.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImage.html">man page</a>)</span>
         </dt>
             <dd>     
             </dd>
@@ -1098,7 +1104,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
                                                          optional WebCLEvent[] eventWaitList = null,
                                                          optional CLboolean generateEvent = false)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBuffer.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadImage.html">man page</a>)</span>
         </dt>
             <dd>     
             </dd>
@@ -1113,7 +1119,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
                                                            optional WebCLEvent[] eventWaitList = null, 
                                                            optional CLboolean generateEvent = false)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueTask.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBuffer.html">man page</a>)</span>
         </dt>
             <dd>
               The WebCLRegion object contains the Array and offset in bytes being written.
@@ -1124,7 +1130,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
                                                           optional WebCLEvent[] eventWaitList = null, 
                                                           optional CLboolean generateEvent = false)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueTask.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteImage.html">man page</a>)</span>
         </dt>
             <dd>
               The WebCLRegion object contains the Array and offset in bytes being written.
@@ -1165,7 +1171,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 
         <dt class="idl-code">WebCLEvent enqueueTask(WebCLKernel kernel, optional CLboolean generateEvent = false)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clWaitForEvents.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueTask.html">man page</a>)</span>
         </dt>
             <dd>     
             </dd>
@@ -1243,9 +1249,9 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 <pre class="idl">
 dictionary <dfn id="WebCLRegion">WebCLRegion</dfn> {
   WebCLMemoryObject? buffer = null;
-  CLuint[2] origin = [0, 0];                 
-  CLuint[2] size = [1, 1];
-  CLuint pitch = 0;                // applies for 2D buffers and images only
+  CLuint[3] origin = [0, 0, 0];       // 3rd element applies to 3D buffers only
+  CLuint[3] size = [1, 1, 1];         // 3rd element applies to 3D buffers only
+  CLuint[2] pitch = [0, 0];           // 2nd element applies to 3D buffers only
 }
 </pre>
 <pre class="example">
@@ -1314,8 +1320,8 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
   // The row pitch could be different for source and destination,
   // but is assumed to be the same in this example.
 
-  var srcRegion = { size: [w, h], pitch: pitch, origin: [srcX, srcY] };
-  var dstRegion = { size: [w, h], pitch: pitch, origin: [dstX, dstY] };
+  var srcRegion = { size: [w, h], pitch: [pitch], origin: [srcX, srcY] };
+  var dstRegion = { size: [w, h], pitch: [pitch], origin: [dstX, dstY] };
   queue.enqueueCopyBuffer(srcBuffer, dstBuffer, srcRegion, dstRegion);
 
   // For comparison, here's the same operation with a raw parameter
@@ -1376,7 +1382,8 @@ queue.enqueueNDRangeKernel(kernel3, null, globals, null, events);
             Warning: this method is valid only if WebCL context was created with a WebGL shared group.<br>
             
             WebCLGLObjectInfo is defined as the following dictionary:
-<pre class="idl">interface <dfn id="WebCLGLObjectInfo">WebCLGLObjectInfo</dfn> {
+<pre class="idl" id="WEBCLGLOBJECTINFO">
+interface <dfn id="WebCLGLObjectInfo">WebCLGLObjectInfo</dfn> {
   CLenum type, // type of GL object attached to this memory object
   GLuint name  // GL object name used to create this memory object
 }
