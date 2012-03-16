@@ -244,13 +244,11 @@ interface <dfn id="WebCL">WebCL</dfn> {
 
   WebCLPlatform[] getPlatforms();
 
-  WebCLContext createContext(optional WebCLContextProperties properties,
-                             optional any userdata,
-                             optional WebCLAsyncOperationCallback whenFinished);
+  WebCLContext createContext(optional WebCLContextProperties properties);
 
   DOMString[] getSupportedExtensions();
 
-  void waitForEvents(WebCLEvent[] eventList);
+  void waitForEvents(WebCLEvent[] eventWaitList);
 
   void unloadCompiler();
 
@@ -604,8 +602,7 @@ interface <dfn id="WebCL">WebCL</dfn> {
         Retrieves all WebCL platforms that are available in this system.
       </dd>
 
-       <dt class="idl-code">WebCLContext createContext(optional WebCLContextProperties properties, optional any userdata, 
-         optional WebCLAsyncOperationCallback whenFinished)
+       <dt class="idl-code">WebCLContext createContext(optional WebCLContextProperties properties)
           <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-4.3">OpenCL 1.1 §4.3</a>, 
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
          </dt>
@@ -613,9 +610,8 @@ interface <dfn id="WebCL">WebCL</dfn> {
         Creates a new WebCL context with the given properties. The
         `properties` parameter can be omitted, in which case the
         implementation will decide which platform and device to use.
-        An optional callback method can be provided with optional
-        `userdata`.<br>  The WebCLContextProperties dictionary is
-        defined as follows:
+        The WebCLContextProperties dictionary is defined as follows:
+
 <pre class="idl" id="WEBCLCONTEXTPROPERTIES">
 dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
   WebCLPlatform? platform = null;                  // Default: let the implementation decide
@@ -624,6 +620,7 @@ dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
   any shareGroup = null;
 }
 </pre>
+
     <dl class="methods">
 
       <dt class="idl-code">WebCLPlatform platform</dt>
@@ -679,12 +676,12 @@ dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
         platform or device, must return a valid extension object.
       </dd>
 
-      <dt class="idl-code">void waitForEvents(WebCLEvent[] eventList)
+      <dt class="idl-code">void waitForEvents(WebCLEvent[] eventWaitList)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clWaitForEvents.html">man page</a>)</span>
       </dt>
       <dd>
-        Waits until the given events have completed. See <a href="#WEBCLEVENT">WebCLEvent</a> for more information.
+        Waits until the given events have completed. See WebCLEvent for more information.
       </dd>
 
       <dt class="idl-code">void unloadCompiler()
