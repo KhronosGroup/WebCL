@@ -938,19 +938,19 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 
   void enqueueCopyBuffer(WebCLRegion srcBuffer, WebCLRegion dstBuffer, 
                                optional WebCLEvent[]? eventWaitList = null,
-                               optional WebCLEvent event = null);
+                               optional WebCLEvent? event = null);
   
   void enqueueCopyImage(WebCLRegion srcImage, WebCLRegion dstImage, 
                                optional WebCLEvent[]? eventWaitList = null,
-                               optional WebCLEvent event = null);
+                               optional WebCLEvent? event = null);
   
   void enqueueCopyBufferToImage(WebCLRegion srcBuffer, WebCLRegion dstImage, 
                                       optional WebCLEvent[]? eventWaitList = null,
-                                      optional WebCLEvent event = null);
+                                      optional WebCLEvent? event = null);
   
   void enqueueCopyImageToBuffer(WebCLRegion srcImage, WebCLRegion dstBuffer, 
                                       optional WebCLEvent[]? eventWaitList = null,
-                                      optional WebCLEvent event = null);
+                                      optional WebCLEvent? event = null);
 
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -962,20 +962,20 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
                                ArrayBuffer dstArray,
                                CLuint dstArrayRowPitch,
                                optional WebCLEvent[]? eventWaitList = null,
-                               optional WebCLEvent event = null);
+                               optional WebCLEvent? event = null);
   
   void enqueueReadImage(WebCLRegion srcImage,
                               CLboolean blockingRead,
                               ArrayBuffer dstArray,
                               optional WebCLEvent[]? eventWaitList = null,
-                              optional WebCLEvent event = null);
+                              optional WebCLEvent? event = null);
   
   void enqueueReadBufferRect(WebCLRegion srcBuffer,
                                    CLboolean blockingRead,
                                    ArrayBuffer dstArray,
                                    WebCLRegion dstArrayRegion,
                                    optional WebCLEvent[]? eventWaitList = null,
-                                   optional WebCLEvent event = null);
+                                   optional WebCLEvent? event = null);
   
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -986,20 +986,20 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
                                 CLboolean blockingWrite, 
                                 ArrayBuffer srcArray,
                                 optional WebCLEvent[]? eventWaitList = null, 
-                                optional WebCLEvent event = null)
+                                optional WebCLEvent? event = null)
 
   void enqueueWriteImage(WebCLRegion dstImage,
                                CLboolean blockingWrite, 
                                ArrayBuffer srcArray, 
                                optional WebCLEvent[]? eventWaitList = null, 
-                               optional WebCLEvent event = null)
+                               optional WebCLEvent? event = null)
 
   void enqueueWriteBufferRect(WebCLRegion dstBuffer, 
                                     CLboolean blockingWrite, 
                                     ArrayBuffer srcArray,
                                     WebCLRegion srcArrayRegion,
                                     optional WebCLEvent[]? eventWaitList = null,
-                                    optional WebCLEvent event = null);
+                                    optional WebCLEvent? event = null);
   
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -1012,7 +1012,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
   
   void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
                                      optional WebCLEvent[]? eventWaitList = null,
-                                     optional WebCLEvent event = null);
+                                     optional WebCLEvent? event = null);
   
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -1022,20 +1022,20 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
   void enqueueNDRangeKernel(WebCLKernel kernel, 
                                   CLuint[3]? offsets, CLuint[3]? globals, CLuint[3]? locals, 
                                   optional WebCLEvent[]? eventWaitList = null,
-                                  optional WebCLEvent event = null);
+                                  optional WebCLEvent? event = null);
   
   void enqueueTask(WebCLKernel kernel, 
                          optional WebCLEvent[]? eventWaitList = null,
-                         optional WebCLEvent event = null);
+                         optional WebCLEvent? event = null);
   
   ////////////////////////////////////////////////////////////////////////////
   //
   // Synchronization
   //
 
-  void enqueueMarker(WebCLEvent[] eventWaitList, optional WebCLEvent event = null);
+  void enqueueMarker(optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
 
-  void enqueueBarrier(WebCLEvent[] eventWaitList, optional WebCLEvent event = null);
+  void enqueueBarrier(optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
   
   void finish();
   
@@ -1053,7 +1053,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
     <dl class="methods">
 
         <dt class="idl-code">void enqueueCopyBuffer(WebCLRegion srcBuffer, WebCLRegion dstBuffer, 
-        optional WebCLEvent[] eventWaitList = null, optional WebCLEvent event = null)
+        optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferRect.html">man page</a>)</span>
         </dt>
@@ -1067,7 +1067,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             </dd>
 
         <dt class="idl-code">void enqueueCopyImage(WebCLRegion srcImage, WebCLRegion dstImage, 
-        optional WebCLEvent[] eventWaitList = null, optional WebCLEvent event = null)
+        optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImage.html">man page</a>)</span>
         </dt>
@@ -1075,7 +1075,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             </dd>
 
         <dt class="idl-code">void enqueueCopyBufferToImage(WebCLRegion srcBuffer, WebCLRegion dstImage, 
-        optional WebCLEvent[] eventWaitList = null, optional WebCLEvent event = null)
+        optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferToImage.html">man page</a>)</span>
         </dt>
@@ -1083,7 +1083,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             </dd>
 
         <dt class="idl-code">void enqueueCopyImageToBuffer(WebCLRegion srcImage, WebCLRegion dstBuffer, 
-        optional WebCLEvent[] eventWaitList = null, optional WebCLEvent event = null)
+        optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImageToBuffer.html">man page</a>)</span>
         </dt>
@@ -1092,8 +1092,8 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 
         <dt class="idl-code">void enqueueReadBuffer(WebCLRegion srcBuffer, CLboolean blockingRead, 
                                                           ArrayBuffer dstArray, 
-                                                          optional WebCLEvent[] eventWaitList = null, 
-                                                          optional WebCLEvent event = null)
+                                                          optional WebCLEvent[]? eventWaitList = null, 
+                                                          optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBuffer.html">man page</a>)</span>
         </dt>
@@ -1102,8 +1102,8 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 
         <dt class="idl-code">void enqueueReadImage(WebCLRegion srcImage, CLboolean blockingRead, 
                                                          ArrayBuffer dstArray, 
-                                                         optional WebCLEvent[] eventWaitList = null,
-                                                         optional WebCLEvent event = null)
+                                                         optional WebCLEvent[]? eventWaitList = null,
+                                                         optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadImage.html">man page</a>)</span>
         </dt>
@@ -1117,8 +1117,8 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 
         <dt class="idl-code">void enqueueWriteBuffer(WebCLRegion dstBuffer, CLboolean blockingWrite, 
                                                            ArrayBuffer srcArray, 
-                                                           optional WebCLEvent[] eventWaitList = null, 
-                                                           optional WebCLEvent event = null)
+                                                           optional WebCLEvent[]? eventWaitList = null, 
+                                                           optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBuffer.html">man page</a>)</span>
         </dt>
@@ -1128,8 +1128,8 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
 
         <dt class="idl-code">void enqueueWriteImage(WebCLRegion dstImage, CLboolean blockingWrite, 
                                                           ArrayBuffer srcArray, 
-                                                          optional WebCLEvent[] eventWaitList = null, 
-                                                          optional WebCLEvent event = null)
+                                                          optional WebCLEvent[]? eventWaitList = null, 
+                                                          optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteImage.html">man page</a>)</span>
         </dt>
@@ -1143,8 +1143,8 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             </dd>
 
         <dt class="idl-code">void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
-                                 	 optional WebCLEvent[] eventWaitList = null,
-                                     optional WebCLEvent event = null);
+                                 	 optional WebCLEvent[]? eventWaitList = null,
+                                     optional WebCLEvent? event = null);
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueAcquireGLObjects.html">man page</a>)</span>
         </dt>
@@ -1152,8 +1152,8 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             </dd>
 
         <dt class="idl-code">void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
-                                 	 optional WebCLEvent[] eventWaitList = null,
-                                     optional WebCLEvent event = null);
+                                 	 optional WebCLEvent[]? eventWaitList = null,
+                                     optional WebCLEvent? event = null);
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReleaseGLObjects.html">man page</a>)</span>
         </dt>
@@ -1161,8 +1161,8 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             </dd>
 
         <dt class="idl-code">void enqueueNDRangeKernel(WebCLKernel kernel, CLuint[3] offsets, CLuint[3] globals, 
-                                                            CLuint[3] locals, optional WebCLEvent[] eventWaitList = null, 
-                                                            optional WebCLEvent event = null)
+                                                            CLuint[3] locals, optional WebCLEvent[]? eventWaitList = null, 
+                                                            optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueNDRangeKernel.html">man page</a>)</span>
         </dt>
@@ -1170,21 +1170,21 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             Offsets, globals, locals contain 1, 2, or 3 NDRange values. The number of dimensions is determined by the number of elements in globals.
             </dd>
 
-        <dt class="idl-code">void enqueueTask(WebCLKernel kernel, optional WebCLEvent event = null)
+        <dt class="idl-code">void enqueueTask(WebCLKernel kernel, optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueTask.html">man page</a>)</span>
         </dt>
             <dd>     
             </dd>
 
-        <dt class="idl-code">void enqueueMarker(WebCLEvent[] eventWaitList, optional WebCLEvent event = null)
+        <dt class="idl-code">void enqueueMarker(optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueMarker.html">man page</a>)</span>
         </dt>
             <dd>
             </dd>
 
-        <dt class="idl-code">void enqueueBarrier(WebCLEvent[] eventWaitList, optional WebCLEvent event = null)
+        <dt class="idl-code">void enqueueBarrier(optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueBarrier.html">man page</a>)</span>
         </dt>
