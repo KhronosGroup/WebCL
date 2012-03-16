@@ -15,19 +15,19 @@
       // Convert WebCL class names into hyperlinks pointing
       // to the respective class definitions.
 
-      var hrefs = $('.idl, .idl-code');
-      var targets = $('dfn');
+      var hrefs = $(".idl, .idl-code");
+      var targets = $("dfn");
       for (var i=0; i < targets.length; i++) {
         var className = targets[i].id;
         if (className != "WebCL") {
-          //var classRegExp = new RegExp(className+" ", "g");
-          //var classNullableRegExp = new RegExp(className+"\\?", "g");
-          //var classArrayRegExp = new RegExp(className+"\\[", "g");
+          var classRegExp = new RegExp(className+" ", "g");
+          var classNullableRegExp = new RegExp(className+"\\?", "g");
+          var classArrayRegExp = new RegExp(className+"\\[", "g");
           var classLink = "<a href='#" + className.toUpperCase() + "'>" + className + "<\/a>";
           hrefs.each(function() {
-            this.innerHTML = this.innerHTML.replace(className+" ", classLink+" ");
-            this.innerHTML = this.innerHTML.replace(className+"?", classLink+"?");
-            this.innerHTML = this.innerHTML.replace(className+"[", classLink+"[");
+            this.innerHTML = this.innerHTML.replace(classRegExp, classLink+" ");
+            this.innerHTML = this.innerHTML.replace(classNullableRegExp, classLink+"?");
+            this.innerHTML = this.innerHTML.replace(classArrayRegExp, classLink+"[");
           });
         }
       }
@@ -201,18 +201,22 @@ typedef unsigned long CLenum;     // Used for enumerated types, such as WebCL.DE
       to such functions. The signature of the callback is defined by
       WebCLAsyncOperationCallback.  An additional type of callback,
       defined by WebCLEventCallback, can be used to act on WebCLEvent
-      state changes. Any WebCL callback function can call arbitrary
-      JavaScript functions, including both blocking and non-blocking
-      APIs.  The following diagram is non-normative, but describes a
-      possible implementation.
+      state changes.
     </p>
-    <img alt="callback" src="resources/callback.png" height="420" width="780"/>
 
 <pre class="idl">
 callback <dfn id="WebCLAsyncOperationCallback">WebCLAsyncOperationCallback</dfn> = void (any userdata);  
 callback <dfn id="WebCLEventCallback">WebCLEventCallback</dfn> = void (WebCLEvent event, CLenum eventCommandExecStatus, any... args);
 </pre>
 
+    <p>
+      Any WebCL callback function can call arbitrary
+      JavaScript functions, including both blocking and non-blocking
+      APIs.  The following diagram is non-normative, but describes a
+      possible implementation.
+    </p>
+
+    <img alt="callback" src="resources/callback.png" height="420" width="780"/>
 
     <h4><a id="WEBCLEXCEPTION">Exceptions</a></h4>
 
@@ -1655,7 +1659,6 @@ myKernel.setArg(2, 512, types.LOCAL_MEMORY_SIZE);             // reserve 512 byt
 interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
     any getInfo(CLenum name);
     any getProfilingInfo(CLenum name);
-    void release();
     void setUserEventStatus(CLenum executionStatus);
 <div class="issue">
     // this section is under discussion, see <a href="https://cvs.khronos.org/bugzilla/show_bug.cgi?id=8494">Bug 8494</a>
@@ -1695,13 +1698,6 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
                 <tr><td>PROFILING_COMMAND_START</td><td>Integer</td></tr>
                 <tr><td>PROFILING_COMMAND_END</td><td>Integer</td></tr>
             </table><br>
-            </dd>
-        <dt class="idl-code">void release()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseEvent.html">man page</a>)</span>
-        </dt>
-            <dd>
-        Release this WebCLEvent's resources.
             </dd>
         <dt class="idl-code">void setUserEventStatus(CLenum executionStatus)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
