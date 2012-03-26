@@ -192,21 +192,18 @@ typedef unsigned long CLenum;     // Used for enumerated types, such as WebCL.DE
 </pre>
 
 
-    <h4><a id="WEBCLASYNCOPERATIONCALLBACK"><a id="WEBCLEVENTCALLBACK">Callbacks</a></a></h4>
+    <h4><a id="WEBCLCALLBACK">Callbacks</a></a></h4>
 
     <p>
       WebCL allows certain long-running functions to be executed
       either synchronously or asynchronously. The asynchronous mode is
       used if a user-defined callback function is given as an argument
       to such functions. The signature of the callback is defined by
-      WebCLAsyncOperationCallback.  An additional type of callback,
-      defined by WebCLEventCallback, can be used to act on WebCLEvent
-      state changes.
+      WebCLCallback.
     </p>
 
 <pre class="idl">
-callback <dfn id="WebCLAsyncOperationCallback">WebCLAsyncOperationCallback</dfn> = void (any userdata);  
-callback <dfn id="WebCLEventCallback">WebCLEventCallback</dfn> = void (WebCLEvent event, CLenum eventCommandExecStatus, any... args);
+callback <dfn id="WebCLCallback">WebCLCallback</dfn> = void (CLenum status, any userdata);
 </pre>
 
     <p>
@@ -1481,8 +1478,8 @@ interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
 
     void build(WebCLDevice[] devices, 
                DOMString? options, 
-               optional any userdata,
-               optional WebCLAsyncOperationCallback whenFinished);
+               optional WebCLCallback whenFinished,
+               optional any userdata);
 
     WebCLKernel createKernel(DOMString kernelName);
 
@@ -1510,11 +1507,14 @@ interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
             <dd>
             return Integer or DOMString depending on name queried.
             </dd>
-        <dt class="idl-code">void build(WebCLDevice[] devices, optional DOMString? options, optional any userdata, 
-          optional WebCLAsyncOperationCallback whenFinished)</dt>
+        <dt class="idl-code">void build(WebCLDevice[] devices, 
+                                        optional DOMString? options, 
+                                        optional WebCLCallback whenFinished,
+                                        optional any userdata)</dt>
             <dd>
-              Compile a program with optional compiler options.<br>
-              An asynchronous callback method may be provided with optional userdata.
+              Compile a program with optional compiler options.  An
+              asynchronous callback method may be provided with
+              optional userdata.
             </dd>
         <dt class="idl-code">WebCLKernel createKernel(DOMString name)</dt>
             <dd>
@@ -1657,15 +1657,12 @@ myKernel.setArg(2, 512, types.LOCAL_MEMORY_SIZE);             // reserve 512 byt
       OpenCL's Event and UserEvent are merged into this WebCLEvent class.
     </p>
 
-    <pre class="idl">
+<pre class="idl">
 interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
     any getInfo(CLenum name);
     any getProfilingInfo(CLenum name);
     void setUserEventStatus(CLenum executionStatus);
-<div class="issue">
-    // this section is under discussion, see <a href="https://cvs.khronos.org/bugzilla/show_bug.cgi?id=8494">Bug 8494</a>
-    CLint setCallback(CLenum commandExecCallbackType, WebCLEventCallback notify, any… args);
-</div>
+    void setCallback(CLenum executionStatus, WebCLCallback notify, optional any userdata);
 }
 </pre>
 
@@ -1686,6 +1683,7 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
                 <tr><td>EVENT_REFERENCE_COUNT</td><td>Integer</td></tr>
             </table><br>
             </dd>
+
         <dt class="idl-code">any getProfilingInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.12">OpenCL 1.1 §5.12</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventProfilingInfo.html">man page</a>)</span>
@@ -1701,26 +1699,23 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
                 <tr><td>PROFILING_COMMAND_END</td><td>Integer</td></tr>
             </table><br>
             </dd>
+
         <dt class="idl-code">void setUserEventStatus(CLenum executionStatus)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetUserEventStatus.html">man page</a>)</span>
         </dt>
             <dd>
             </dd>
-<div class="issue">
-    // this section is under discussion, see <a href="https://cvs.khronos.org/bugzilla/show_bug.cgi?id=8494">Bug 8494</a>
-        <dt class="idl-code">CLint setCallback(CLenum commandExecCallbackType, WebCLEventCallback notify, any… args)
+
+        <dt class="idl-code">void setCallback(CLenum executionStatus, WebCLCallback notify, optional any userdata)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetUserEventStatus.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetEventCallback.html">man page</a>)</span>
         </dt>
-            <dd>
-            Sets a WebCLEventCallback `notify` to be called when this
-            WebCLEvent status is `COMPLETE` , `SUBMITTED`, or
-            `RUNNING`, or its associated command terminates
-            abnormally. Any number of arguments `args` can
-            be passed to the WebCLEventCallback.
-            </dd>
-</div>
+        <dd>
+          Sets a WebCLCallback function `notify` to be called when
+          this WebCLEvent reaches the given `executionStatus`
+          (`COMPLETE`, `RUNNING`, `SUBMITTED`, or `QUEUED`).
+        </dd>
     </dl>
 
 <!-- ======================================================================================================= -->
