@@ -936,21 +936,25 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
   // Copying: Buffer <-> Buffer, Image <-> Image, Buffer <-> Image
   //
 
-  void enqueueCopyBuffer(WebCLRegion srcBuffer, WebCLRegion dstBuffer, 
-                               optional WebCLEvent[]? eventWaitList = null,
-                               optional WebCLEvent? event = null);
+  void enqueueCopyBuffer(WebCLRegion srcBuffer,
+                         WebCLRegion dstBuffer, 
+                         optional WebCLEvent[]? eventWaitList = null,
+                         optional WebCLEvent? event = null);
   
-  void enqueueCopyImage(WebCLRegion srcImage, WebCLRegion dstImage, 
-                               optional WebCLEvent[]? eventWaitList = null,
-                               optional WebCLEvent? event = null);
+  void enqueueCopyImage(WebCLRegion srcImage,
+                        WebCLRegion dstImage, 
+                        optional WebCLEvent[]? eventWaitList = null,
+                        optional WebCLEvent? event = null);
   
-  void enqueueCopyBufferToImage(WebCLRegion srcBuffer, WebCLRegion dstImage, 
-                                      optional WebCLEvent[]? eventWaitList = null,
-                                      optional WebCLEvent? event = null);
+  void enqueueCopyBufferToImage(WebCLRegion srcBuffer,
+                                WebCLRegion dstImage, 
+                                optional WebCLEvent[]? eventWaitList = null,
+                                optional WebCLEvent? event = null);
   
-  void enqueueCopyImageToBuffer(WebCLRegion srcImage, WebCLRegion dstBuffer, 
-                                      optional WebCLEvent[]? eventWaitList = null,
-                                      optional WebCLEvent? event = null);
+  void enqueueCopyImageToBuffer(WebCLRegion srcImage,
+                                WebCLRegion dstBuffer, 
+                                optional WebCLEvent[]? eventWaitList = null,
+                                optional WebCLEvent? event = null);
 
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -958,24 +962,23 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
   //
 
   void enqueueReadBuffer(WebCLRegion srcBuffer, 
-                               CLboolean blockingRead, 
-                               ArrayBuffer dstArray,
-                               CLuint dstArrayRowPitch,
-                               optional WebCLEvent[]? eventWaitList = null,
-                               optional WebCLEvent? event = null);
+                         ArrayBuffer dstArray,
+                         CLboolean blockingRead, 
+                         optional WebCLEvent[]? eventWaitList = null,
+                         optional WebCLEvent? event = null);
   
   void enqueueReadImage(WebCLRegion srcImage,
-                              CLboolean blockingRead,
-                              ArrayBuffer dstArray,
-                              optional WebCLEvent[]? eventWaitList = null,
-                              optional WebCLEvent? event = null);
+                        ArrayBuffer dstArray,
+                        CLboolean blockingRead,
+                        optional WebCLEvent[]? eventWaitList = null,
+                        optional WebCLEvent? event = null);
   
   void enqueueReadBufferRect(WebCLRegion srcBuffer,
-                                   CLboolean blockingRead,
-                                   ArrayBuffer dstArray,
-                                   WebCLRegion dstArrayRegion,
-                                   optional WebCLEvent[]? eventWaitList = null,
-                                   optional WebCLEvent? event = null);
+                             ArrayBuffer dstArray,
+                             WebCLRegion dstArrayRegion,
+                             CLboolean blockingRead,
+                             optional WebCLEvent[]? eventWaitList = null,
+                             optional WebCLEvent? event = null);
   
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -983,23 +986,23 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
   //
 
   void enqueueWriteBuffer(WebCLRegion dstBuffer,
-                                CLboolean blockingWrite, 
-                                ArrayBuffer srcArray,
-                                optional WebCLEvent[]? eventWaitList = null, 
-                                optional WebCLEvent? event = null)
+                          ArrayBuffer srcArray,
+                          CLboolean blockingWrite, 
+                          optional WebCLEvent[]? eventWaitList = null, 
+                          optional WebCLEvent? event = null)
 
   void enqueueWriteImage(WebCLRegion dstImage,
-                               CLboolean blockingWrite, 
-                               ArrayBuffer srcArray, 
-                               optional WebCLEvent[]? eventWaitList = null, 
-                               optional WebCLEvent? event = null)
+                         ArrayBuffer srcArray, 
+                         CLboolean blockingWrite, 
+                         optional WebCLEvent[]? eventWaitList = null, 
+                         optional WebCLEvent? event = null)
 
   void enqueueWriteBufferRect(WebCLRegion dstBuffer, 
-                                    CLboolean blockingWrite, 
-                                    ArrayBuffer srcArray,
-                                    WebCLRegion srcArrayRegion,
-                                    optional WebCLEvent[]? eventWaitList = null,
-                                    optional WebCLEvent? event = null);
+                              ArrayBuffer srcArray,
+                              WebCLRegion srcArrayRegion,
+                              CLboolean blockingWrite, 
+                              optional WebCLEvent[]? eventWaitList = null,
+                              optional WebCLEvent? event = null);
   
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -1007,12 +1010,12 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
   //
 
   void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
-                                     optional WebCLEvent[]? eventWaitList = null,
-                                     optional CLboolean generateEvent = false);
-  
+                               optional WebCLEvent[]? eventWaitList = null,
+                               optional CLboolean generateEvent = false);
+ 
   void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
-                                     optional WebCLEvent[]? eventWaitList = null,
-                                     optional WebCLEvent? event = null);
+                               optional WebCLEvent[]? eventWaitList = null,
+                               optional WebCLEvent? event = null);
   
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -1020,13 +1023,13 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
   //
 
   void enqueueNDRangeKernel(WebCLKernel kernel, 
-                                  CLuint[3]? offsets, CLuint[3]? globals, CLuint[3]? locals, 
-                                  optional WebCLEvent[]? eventWaitList = null,
-                                  optional WebCLEvent? event = null);
+                            CLuint[3]? offsets, CLuint[3]? globals, CLuint[3]? locals, 
+                            optional WebCLEvent[]? eventWaitList = null,
+                            optional WebCLEvent? event = null);
   
   void enqueueTask(WebCLKernel kernel, 
-                         optional WebCLEvent[]? eventWaitList = null,
-                         optional WebCLEvent? event = null);
+                   optional WebCLEvent[]? eventWaitList = null,
+                   optional WebCLEvent? event = null);
   
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -1071,7 +1074,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImage.html">man page</a>)</span>
         </dt>
-            <dd>     
+            <dd>
             </dd>
 
         <dt class="idl-code">void enqueueCopyBufferToImage(WebCLRegion srcBuffer, WebCLRegion dstImage, 
@@ -1090,24 +1093,26 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             <dd>     
             </dd>
 
-        <dt class="idl-code">void enqueueReadBuffer(WebCLRegion srcBuffer, CLboolean blockingRead, 
-                                                          ArrayBuffer dstArray, 
-                                                          optional WebCLEvent[]? eventWaitList = null, 
-                                                          optional WebCLEvent? event = null)
+        <dt class="idl-code">void enqueueReadBuffer(WebCLRegion srcBuffer,
+                                                    ArrayBuffer dstArray, 
+                                                    CLboolean blockingRead, 
+                                                    optional WebCLEvent[]? eventWaitList = null, 
+                                                    optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBuffer.html">man page</a>)</span>
         </dt>
-            <dd>     
+            <dd>
             </dd>
 
-        <dt class="idl-code">void enqueueReadImage(WebCLRegion srcImage, CLboolean blockingRead, 
-                                                         ArrayBuffer dstArray, 
-                                                         optional WebCLEvent[]? eventWaitList = null,
-                                                         optional WebCLEvent? event = null)
+        <dt class="idl-code">void enqueueReadImage(WebCLRegion srcImage,
+                                                   ArrayBuffer dstArray,
+                                                   CLboolean blockingRead,
+                                                   optional WebCLEvent[]? eventWaitList = null,
+                                                   optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadImage.html">man page</a>)</span>
         </dt>
-            <dd>     
+            <dd>
             </dd>
 
         <dt class="idl-code">WebCLEvent enqueueReadBufferRect(TODO)
@@ -1115,10 +1120,11 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             <dd>     
             </dd>
 
-        <dt class="idl-code">void enqueueWriteBuffer(WebCLRegion dstBuffer, CLboolean blockingWrite, 
-                                                           ArrayBuffer srcArray, 
-                                                           optional WebCLEvent[]? eventWaitList = null, 
-                                                           optional WebCLEvent? event = null)
+        <dt class="idl-code">void enqueueWriteBuffer(WebCLRegion dstBuffer,
+                                                     ArrayBuffer srcArray, 
+                                                     CLboolean blockingWrite, 
+                                                     optional WebCLEvent[]? eventWaitList = null, 
+                                                     optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBuffer.html">man page</a>)</span>
         </dt>
@@ -1126,10 +1132,11 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
               The WebCLRegion object contains the Array and offset in bytes being written.
             </dd>
 
-        <dt class="idl-code">void enqueueWriteImage(WebCLRegion dstImage, CLboolean blockingWrite, 
-                                                          ArrayBuffer srcArray, 
-                                                          optional WebCLEvent[]? eventWaitList = null, 
-                                                          optional WebCLEvent? event = null)
+        <dt class="idl-code">void enqueueWriteImage(WebCLRegion dstImage,
+                                                    ArrayBuffer srcArray, 
+                                                    CLboolean blockingWrite, 
+                                                    optional WebCLEvent[]? eventWaitList = null, 
+                                                    optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteImage.html">man page</a>)</span>
         </dt>
@@ -1143,8 +1150,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             </dd>
 
         <dt class="idl-code">void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
-                                 	 optional WebCLEvent[]? eventWaitList = null,
-                                     optional WebCLEvent? event = null);
+          optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueAcquireGLObjects.html">man page</a>)</span>
         </dt>
@@ -1152,8 +1158,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             </dd>
 
         <dt class="idl-code">void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
-                                 	 optional WebCLEvent[]? eventWaitList = null,
-                                     optional WebCLEvent? event = null);
+          optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReleaseGLObjects.html">man page</a>)</span>
         </dt>
@@ -1161,8 +1166,8 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
             </dd>
 
         <dt class="idl-code">void enqueueNDRangeKernel(WebCLKernel kernel, CLuint[3] offsets, CLuint[3] globals, 
-                                                            CLuint[3] locals, optional WebCLEvent[]? eventWaitList = null, 
-                                                            optional WebCLEvent? event = null)
+          CLuint[3] locals, optional WebCLEvent[]? eventWaitList = null, 
+          optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueNDRangeKernel.html">man page</a>)</span>
         </dt>
@@ -1264,7 +1269,7 @@ function readBufferToHost(srcBuffer) {
  // we must specify the number of bytes to read. Optionally, we could
  // also specify the starting offset (origin[0]).
 
- queue.enqueueReadBuffer(srcBuffer, true, { size: [numBytes] }, dstArray);
+ queue.enqueueReadBuffer({ buffer: srcBuffer, size : [numBytes] }, dstArray, true);
 
  // For comparison, here's the same operation with a raw parameter
  // list, as in native OpenCL. In this simple case, the raw form is
@@ -1286,12 +1291,14 @@ function copyBufferToImage(srcBuffer, dstImage) {
   var imgWidth = dstImage.getInfo(WebCL.IMAGE_WIDTH);
   var imgHeight = dstImage.getInfo(WebCL.IMAGE_HEIGHT);
 
-  // The source buffer region can be specified with an empty object,
+  // The source buffer region can be specified with just the buffer,
   // because only the 'origin' field is needed, and we are fine with
   // its default value (zero). For the destination region, we use the
   // default origin (0, 0), but must specify the width and height.
 
-  queue.enqueueCopyBufferToImage(srcBuffer, dstImage, {}, { size:[imgWidth, imgHeight] });
+  var srcRegion = { buffer : srcBuffer };
+  var dstRegion = { buffer : dstImage, size : [imgWidth, imgHeight] };
+  queue.enqueueCopyBufferToImage(srcRegion, dstRegion);
 
   // For comparison, here's the same operation with a raw parameter
   // list, as in native OpenCL.
@@ -1316,7 +1323,9 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
 
   var srcRegion = { size: [w, h], pitch: [pitch], origin: [srcX, srcY] };
   var dstRegion = { size: [w, h], pitch: [pitch], origin: [dstX, dstY] };
-  queue.enqueueCopyBuffer(srcBuffer, dstBuffer, srcRegion, dstRegion);
+  srcRegion.buffer = srcBuffer;
+  dstRegion.buffer = dstBuffer;
+  queue.enqueueCopyBuffer(srcRegion, dstRegion);
 
   // For comparison, here's the same operation with a raw parameter
   // list, as in native OpenCL. It's more concise, but at the same
@@ -1334,14 +1343,16 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
 }
 </pre>
 <pre class="example">
-// This example shows how to wait for 2 kernels to complete before a third kernel executes
+// This example shows how to wait for two kernels to complete before a third kernel executes
 
 // enqueue 2 kernels exposing events
-var events = {};
-events[0] = queue.enqueueNDRangeKernel(kernel1, null, globals, null).enqueueMarker();
-events[1] = queue.enqueueNDRangeKernel(kernel2, null, globals, null).enqueueMarker();
 
-// enqueue next kernel, which wait for the 2 prior kernels events before executing
+var events = [ new WebCLEvent(), new WebCLEvent() ];
+queue.enqueueNDRangeKernel(kernel1, null, globals, null, null, ev[0]);
+queue.enqueueNDRangeKernel(kernel2, null, globals, null, null, ev[1]);
+
+// enqueue next kernel, which waits for the 2 prior kernels events before executing
+
 queue.enqueueNDRangeKernel(kernel3, null, globals, null, events);
 </pre>
 
