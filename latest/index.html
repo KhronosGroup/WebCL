@@ -1867,17 +1867,17 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
     <ul>
       <li>2D image support is required</li>
       <li>3D images are not supported</li>
-      <li>WebGL interoperability is supported</li>
+      <li>WebGL interoperability is supported (optionally)</li>
       <li>Structures as kernel arguments are not supported</li>
       <li>Mapping of CL memory objects into host memory space is not supported</li>
-      <li>adopted OpenCL 1.2 removal of enqueueWaitForEvent() and enqueueMarker/enqueueBarrier with its signature</li>
+      <li>Folded `enqueueWaitForEvents` into `enqueueMarker`/`enqueueBarrier` as in OpenCL 1.2</li>
     </ul>
 
 <!-- ======================================================================================================= -->
 
-    <h2> References</h2>
+    <h2>References</h2>
     
-    <h3> Normative references</h3>
+    <h3>Normative references</h3>
     <dl>
     
         <dt id="refsASCII">[ASCII]</dt>
