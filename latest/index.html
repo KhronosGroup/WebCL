@@ -1720,6 +1720,73 @@ interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
 
 <!-- ======================================================================================================= -->
 
+    <h2>WebCL Portability</h2>
+
+    <p> 
+    Web applications have greater portability expectations than native applications.
+    Ideally, a WebCL application would run on any browser supporting WebCL, regardless
+    of differences in the capabilities of the underlying OpenCL device.  To minimize
+    the burden on the application developer to perform extensive queries of the
+    platform capabilities, and to promote portability, WebCL simplifies application
+    configuration.  Towards this end, WebCL introduces a new WebCL Embedded Profile, 
+    to simplify the minimal requirements for initialization and application configuration.
+    The WebCL Embedded Profile is based on the OpenCL Embedded profile.
+    </p>
+    <p>
+        <table class="foo">
+          <tr><th>Platform Info: clGetPlatformInfo Parameter</th><th>OpenCL 1.1 Embedded Profile</th><th>WebCL Embedded Profile</th></tr>
+          <tr><td>CL_PLATFORM_PROFILE</td><td>Embedded Profile</td><td>WEBCL_EMBEDDED_PROFILE</td></tr>
+          <tr><td>CL_PLATFORM_VERSION</td><td>Version String</td><td>Visible</td></tr>
+          <tr><td>CL_PLATFORM_NAME</td><td>Not Specified</td><td>Not Visible</td></tr>
+          <tr><td>CL_PLATFORM_VENDOR</td><td>Not Specified</td><td>Not Visible</td></tr>
+          <tr><td>CL_PLATFORM_EXTENSIONS</td><td>Extension String</td><td>Not Visible</td></tr>
+        </table>
+
+    </p>
+    <p>
+        <table class="foo">
+          <tr><th>Device Info: clGetDeviceInfo Parameter</th><th>OpenCL 1.1 Embedded Profile</th><th>WebCL Embedded Profile</th></tr>
+          <tr><td>CL_DEVICE_TYPE</td><td>CL_DEVICE_TYPE_XXX</td><td>Visible</td></tr>
+          <tr><td>CL_DEVICE_VENDOR_ID</td><td>Not Specified</td><td>Not Visible</td></tr>
+          <tr><td>CL_DEVICE_MAX_COMPUTE_UNITS</td><td>>=1</td><td>Not Visible</td></tr>
+          <tr><td>CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS</td><td>>=3</td><td>>=3</td></tr>
+          <tr><td>CL_DEVICE_MAX_WORK_ITEM_SIZES</td><td>>=(1, 1, 1)</td><td>>=(1, 1, 1)</td></tr>
+          <tr><td>CL_DEVICE_MAX_WORK_GROUP_SIZE</td><td>>=1</td><td>>=1</td></tr>
+          <tr><td>CL_DEVICE_PREFERRED_VECTOR_WIDTH_*</td><td>cl_uint</td><td>Visible</td></tr>
+          <tr><td>CL_DEVICE_NATIVE_VECTOR_WIDTH_*</td><td>cl_uint</td><td>Not Visible</td></tr>
+          <tr><td>CL_DEVICE_MAX_CLOCK_FREQUENCY *</td><td>cl_uint</td><td>Not Visible</td></tr>
+          <tr><td>CL_DEVICE_ADDRESS_BITS</td><td>32 or 64 bits</td><td>Visible</td></tr>
+          <tr><td>CL_DEVICE_MAX_MEM_ALLOC_SIZE</td><td>>= max of CL_DEVICE_GLOBAL_MEM_SIZE/ 
+                                                             4,128, 1024, 1024</td><td>Visible</td></tr>
+          <tr><td>CL_DEVICE_IMAGE_SUPPORT</td><td>cl_bool</td><td>CL_TRUE</td></tr>
+          <tr><td>CL_DEVICE_MAX_READ_IMAGE_ARGS</td><td>>=8 (if image support)</td><td>>=8</td></tr>
+          <tr><td>CL_DEVICE_MAX_WRITE_IMAGE_ARGS</td><td>>=1 (if image support)</td><td>>=1</td></tr>
+          <tr><td>CL_DEVICE_IMAGE2D_MAX_WIDTH</td><td>>=2048 (if image support)</td><td>=2048</td></tr>
+          <tr><td>CL_DEVICE_IMAGE2D_MAX_HEIGHT</td><td>>=2048 (if image support)</td><td>=2048 
+                                                            (Cannot return 0 for 2D)</td></tr>
+          <tr><td>CL_DEVICE_IMAGE3D_MAX_WIDTH</td><td>>=2048 (if 3D image support)</td><td>
+                                                            No 3D support in WebCL 1.0</td></tr>
+          <tr><td>CL_DEVICE_IMAGE3D_MAX_HEIGHT</td><td>>=2048 (if 3D image support)</td><td>
+                                                            No 3D support in WebCL 1.0</td></tr>
+          <tr><td>CL_DEVICE_IMAGE3D_MAX_DEPTH</td><td>>=2048 (if 3D image support)</td><td>
+                                                            No 23 support in WebCL 1.0</td></tr>
+          <tr><td>CL_DEVICE_MAX_SAMPLERS</td><td>>=8 (if image support)</td><td>>=8</td></tr>
+          <tr><td>CL_DEVICE_MAX_PARAMETER_SIZE</td><td>>=256</td><td>>=256</td></tr>
+          <tr><td>CL_DEVICE_MEM_BASE_ADDR_ALIGN</td><td>>= num bits(int16)</td><td>Not Visible</td></tr>
+          <tr><td>CL_DEVICE_MIN_DATA_TYPE_ALIGN_SIZE</td><td>>=sizeof(int16) EMBEDDED;
+                                                                    </td><td>Not Visible</td></tr>
+          <tr><td>CL_DEVICE_SINGLE_FP_CONFIG</td><td>CL_FP_ROUND_TO_NEAREST; CL_FP_INF_NAN 
+                                                           (others optional)</td><td>Not Visible</td></tr>
+          <tr><td>CL_DEVICE_GLOBAL_MEM_CACHE_TYPE</td><td>CL_NONE; CL_READ_ONLY_CACHE; CL_READ_WRITE_CACHE
+                                                                     </td><td>Not Visible</td></tr>
+          <tr><td>CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
+          <tr><td>CL_DEVICE_GLOBAL_MEM_CACHE_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
+          <tr><td>CL_DEVICE_GLOBAL_MEM_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>                     
+        </table>
+    </p>
+
+<!-- ======================================================================================================= -->
+
     <h2>Security and Robustness</h2>
 
     <p>
