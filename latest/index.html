@@ -6,31 +6,16 @@
   <link rel="stylesheet" type="text/css" href="./resources/Khronos-WD.css">
   <script src="./resources/jquery-1.3.2.min.js" type="text/javascript"></script>
   <script src="./resources/generateTOC.js" type="text/javascript"></script>
+  <script src="./resources/generateHrefs.js" type="text/javascript"></script>
   <script type="text/javascript">
  
     function init() {
 
       generateTOC(document.querySelector('#toc'));
 
-      // Convert WebCL class names into hyperlinks pointing
-      // to the respective class definitions.
-
-      var hrefs = $(".idl, .idl-code");
-      var targets = $("dfn");
-      for (var i=0; i < targets.length; i++) {
-        var className = targets[i].id;
-        if (className != "WebCL") {
-          var classRegExp = new RegExp(className+" ", "g");
-          var classNullableRegExp = new RegExp(className+"\\?", "g");
-          var classArrayRegExp = new RegExp(className+"\\[", "g");
-          var classLink = "<a href='#" + className.toUpperCase() + "'>" + className + "<\/a>";
-          hrefs.each(function() {
-            this.innerHTML = this.innerHTML.replace(classRegExp, classLink+" ");
-            this.innerHTML = this.innerHTML.replace(classNullableRegExp, classLink+"?");
-            this.innerHTML = this.innerHTML.replace(classArrayRegExp, classLink+"[");
-          });
-        }
-      }
+      var typeDefs = $("dfn");
+      var funcDefs = $("pre.idl, dt.idl-code");
+      generateHrefs(typeDefs, funcDefs);
 
       // Replace inverse quotation marks with opening and
       // closing <code> tags.  For example, `myVariable`
@@ -203,7 +188,7 @@ typedef unsigned long CLenum;     // Used for enumerated types, such as WebCL.DE
     </p>
 
 <pre class="idl">
-callback <dfn id="WebCLCallback">WebCLCallback</dfn> = void (CLenum status, any userdata);
+callback <dfn>WebCLCallback</dfn> = void (CLenum status, any userdata);
 </pre>
 
     <p>
@@ -225,7 +210,7 @@ callback <dfn id="WebCLCallback">WebCLCallback</dfn> = void (CLenum status, any 
     </p>
 
 <pre class="idl">
-exception <dfn id="WebCLException">WebCLException</dfn> : DOMException {
+exception <dfn>WebCLException</dfn> : DOMException {
   DOMString name;              // A string representation of the numeric error code, e.g. "INVALID_VALUE"
   DOMString? message;          // An implementation-specific description of what caused the exception
 };
@@ -239,7 +224,7 @@ exception <dfn id="WebCLException">WebCLException</dfn> : DOMException {
     </p>
     
 <pre class="idl">
-interface <dfn id="WebCL">WebCL</dfn> {
+interface <dfn>WebCL</dfn> {
 
   // Functions
 
@@ -616,7 +601,7 @@ interface <dfn id="WebCL">WebCL</dfn> {
         follows:
 
 <pre class="idl" id="WEBCLCONTEXTPROPERTIES">
-dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
+dictionary <dfn>WebCLContextProperties</dfn> {
   WebCLPlatform? platform = null;                  // Default: let the implementation decide
   WebCLDevice[]? devices = null;                   // Default: let the implementation decide
   CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT;   // Default: let the implementation decide
@@ -713,7 +698,7 @@ dictionary <dfn id="WebCLContextProperties">WebCLContextProperties</dfn> {
     </p>
 
 <pre class="idl">
-interface <dfn id="WebCLPlatform">WebCLPlatform</dfn> {
+interface <dfn>WebCLPlatform</dfn> {
     object getInfo(CLenum name);
     WebCLDevice[] getDevices(CLenum deviceType);
 }
@@ -777,7 +762,7 @@ interface <dfn id="WebCLPlatform">WebCLPlatform</dfn> {
     </p>
 
 <pre class="idl">
-interface <dfn id="WebCLDevice">WebCLDevice</dfn> {
+interface <dfn>WebCLDevice</dfn> {
     any getInfo(CLenum name);
     object getExtension(DOMString extensionName);
     DOMString[] getSupportedExtensions();
@@ -837,7 +822,7 @@ interface <dfn id="WebCLDevice">WebCLDevice</dfn> {
     </p>
 
     <pre class="idl">
-interface <dfn id="WebCLContext">WebCLContext</dfn> {
+interface <dfn>WebCLContext</dfn> {
 
     WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer srcBuffer);
 
@@ -869,7 +854,7 @@ interface <dfn id="WebCLContext">WebCLContext</dfn> {
 </pre>
 
 <pre class="idl" id="WEBCLIMAGEDESCRIPTOR">
-dictionary <dfn id="WebCLImageDescriptor">WebCLImageDescriptor</dfn> {
+dictionary <dfn>WebCLImageDescriptor</dfn> {
   CLenum channelOrder = WebCL.RGBA;        // Default: RGB colors + alpha
   CLenum channelType = WebCL.UNORM_INT8;   // Default: 8-bit unsigned colors normalized to [0, 1]
   CLuint[2] size = [ 1, 1 ];
@@ -931,8 +916,8 @@ dictionary <dfn id="WebCLImageDescriptor">WebCLImageDescriptor</dfn> {
 
     <h3><a id="WEBCLCOMMANDQUEUE">WebCLCommandQueue</a></h3>
 
-    <pre class="idl">
-interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
+<pre class="idl">
+interface <dfn>WebCLCommandQueue</dfn> {
 
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -1249,7 +1234,7 @@ interface <dfn id="WebCLCommandQueue">WebCLCommandQueue</dfn> {
     </p>
 
 <pre class="idl">
-dictionary <dfn id="WebCLRegion">WebCLRegion</dfn> {
+dictionary <dfn>WebCLRegion</dfn> {
   WebCLMemoryObject? buffer = null;
   CLuint[3] origin = [0, 0, 0];       // 3rd element applies to 3D buffers only
   CLuint[3] size = [1, 1, 1];         // 3rd element applies to 3D buffers only
@@ -1363,7 +1348,7 @@ queue.enqueueNDRangeKernel(kernel3, null, globals, null, events);
 
     <h3><a id="WEBCLMEMORYOBJECT">WebCLMemoryObject</a></h3>
 
-<pre class="idl">interface <dfn id="WebCLMemoryObject">WebCLMemoryObject</dfn> {
+<pre class="idl">interface <dfn>WebCLMemoryObject</dfn> {
   any getInfo(CLenum name);
   WebCLGLObjectInfo getGLObjectInfo();
 }
@@ -1391,7 +1376,7 @@ queue.enqueueNDRangeKernel(kernel3, null, globals, null, events);
             
             WebCLGLObjectInfo is defined as the following dictionary:
 <pre class="idl" id="WEBCLGLOBJECTINFO">
-interface <dfn id="WebCLGLObjectInfo">WebCLGLObjectInfo</dfn> {
+interface <dfn>WebCLGLObjectInfo</dfn> {
   CLenum type, // type of GL object attached to this memory object
   GLuint name  // GL object name used to create this memory object
 }
@@ -1406,7 +1391,7 @@ interface <dfn id="WebCLGLObjectInfo">WebCLGLObjectInfo</dfn> {
      <p>
      </p>
 
-<pre class="idl">interface <dfn id="WebCLBuffer">WebCLBuffer</dfn> : WebCLMemoryObject {
+<pre class="idl">interface <dfn>WebCLBuffer</dfn> : WebCLMemoryObject {
   WebCLBuffer createSubBuffer(CLenum flags, CLenum type, WebCLRegion region);
 }
 </pre>
@@ -1425,7 +1410,7 @@ interface <dfn id="WebCLGLObjectInfo">WebCLGLObjectInfo</dfn> {
     <p>
     </p>
 
-<pre class="idl">interface <dfn id="WebCLImage">WebCLImage</dfn> : WebCLMemoryObject {
+<pre class="idl">interface <dfn>WebCLImage</dfn> : WebCLMemoryObject {
   any getInfo(CLenum name);
   GLint getGLtextureInfo(CLenum paramName);
 }
@@ -1450,7 +1435,7 @@ interface <dfn id="WebCLGLObjectInfo">WebCLGLObjectInfo</dfn> {
     <p>
     </p>
     <pre class="idl">
-interface <dfn id="WebCLSampler">WebCLSampler</dfn> {
+interface <dfn>WebCLSampler</dfn> {
     any getInfo(CLenum name);
 }
 </pre>
@@ -1477,7 +1462,7 @@ interface <dfn id="WebCLSampler">WebCLSampler</dfn> {
     <p>
     </p>
     <pre class="idl">
-interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
+interface <dfn>WebCLProgram</dfn> {
     any getInfo(CLenum name);
 
     any getBuildInfo(WebCLDevice device, CLenum name);
@@ -1537,7 +1522,7 @@ interface <dfn id="WebCLProgram">WebCLProgram</dfn> {
     </p>
     
 <pre class="idl">
-interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
+interface <dfn>WebCLKernel</dfn> {
     any getInfo(CLenum name);
     any getWorkGroupInfo(WebCLDevice device, CLenum name);
     void setArg(CLuint index, any value, optional CLtype type);
@@ -1554,7 +1539,7 @@ interface <dfn id="WebCLKernel">WebCLKernel</dfn> {
     </p>
 
 <pre class="idl">
-interface <dfn id="WebCLKernelArgumentTypes">WebCLKernelArgumentTypes</dfn> {
+interface <dfn>WebCLKernelArgumentTypes</dfn> {
 
   typedef unsigned long CLtype;
 
@@ -1664,7 +1649,7 @@ myKernel.setArg(2, 512, types.LOCAL_MEMORY_SIZE);             // reserve 512 byt
     </p>
 
 <pre class="idl">
-interface <dfn id="WebCLEvent">WebCLEvent</dfn> {
+interface <dfn>WebCLEvent</dfn> {
     any getInfo(CLenum name);
     any getProfilingInfo(CLenum name);
     void setUserEventStatus(CLenum executionStatus);
