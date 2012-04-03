@@ -11,7 +11,12 @@
  
     function init() {
 
+      // Generate a hyperlinked Table of Contents
+
       generateTOC(document.querySelector('#toc'));
+
+      // Convert WebCL type names occurring in function signatures
+      // into hyperlinks to the respective type definitions
 
       var typeDefs = $("dfn");
       var funcDefs = $("pre.idl, dt.idl-code");
@@ -37,6 +42,7 @@
 </head>
 
 <body onload="init()">
+
     <!--begin-logo-->
     <div class="head">
         <p>
@@ -54,67 +60,50 @@
     </div>
     <!--end-logo-->
     
-    <!-- begin Work in Progress -->
-  <div id="multipage-common">
-    <p class="stability" id="wip"><strong>This is a work in
-    progress!</strong> For the latest updates from the WebCL WG,
-    please look at
-    the <a href="https://www.khronos.org/registry/webcl/specs/latest/">editor's
-    draft</a> instead.
-    <input onclick="closeWarning(this.parentNode)" type="button" value="&#9587;&#8413;"></p>
-    <script type="text/javascript">
-     function closeWarning(element) {
-     element.parentNode.removeChild(element);
-     var date = new Date();
-     date.setDate(date.getDate()+4);
-     document.cookie = 'hide-obsolescence-warning=1; expires=' + date.toGMTString();
-     }
-     if (getCookie('hide-obsolescence-warning') == '1')
-     setTimeout(function () { document.getElementById('wip').parentNode.removeChild(document.getElementById('wip')); }, 2000);
-    </script>
-  </div>
-    <!-- end Work in Progress -->
+    <!-- begin warning box -->
+    <div id="multipage-common">
+      <p class="stability" id="wip">
+        <strong>This is a work in progress!</strong>
+        <input onclick="this.parentNode.parentNode.removeChild(this.parentNode)" type="button" value="x"/>
+      </p>
+    </div>
+    <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">Working Group Internal Draft March 14, 2012</h2>
+    <h2 class="no-toc">April 5, 2012</h2>
     <dl>
-        <dt>This version:
-            </dt><dd>
-                <a href="https://www.khronos.org/registry/webcl/specs/latest/">
-                    https://www.khronos.org/registry/webcl/specs/latest/
-                </a>
-                <br>
-                <a href="https://www.khronos.org/registry/webcl/specs/latest/webcl.idl">
-                    <b>WebIDL:</b> https://www.khronos.org/registry/webcl/specs/latest/webcl.idl
-                </a>
-            </dd>
-        <dt>Latest version:
-            </dt><dd>
-                <a href="https://www.khronos.org/registry/webcl/specs/latest/">
-                    https://www.khronos.org/registry/webcl/specs/latest/
-                </a>
-                <br>
-                <a href="https://www.khronos.org/registry/webcl/specs/latest/webcl.idl">
-                    <b>WebIDL:</b> https://www.khronos.org/registry/webcl/specs/latest/webcl.idl
-                </a>
-            </dd>
-        <dt>Previous version:
-            </dt><dd>None</dd>
-        <dt>Editors:
-            </dt><dd>
-                <a href="mailto:tomi.aarnio@nokia.com">Tomi Aarnio</a>
-                <a href="http://webcl.nokiaresearch.com/">(Nokia Research)</a>
-            </dd>
-            <dd>
-                <a href="mailto:msevenier@motorola.com">Mika&euml;l Bourges-S&eacute;venier</a>
-                <a href="http://www.motorola.com/">(Motorola Mobility, Inc.)</a>
-            </dd>
-	<DT>Additional Contributors: 
-	    </DT><DD>
-	    <A HREF="../t.brutch@samsung.com">Tasneem Brutch (Chair WebCL WG)</A> <A HREF="http://www.samsung.com/">(Samsung Electronics)</A> 
-	    </DD><DD STYLE="margin-bottom: 0.2in">
-	    <A HREF="mailto:s.gibbs@samsung.com">Simon Gibbs</A> <A HREF="http://www.samsung.com/">(Samsung Electronics)</A> 
-	    </DD>
+      <dt>This version:
+      </dt><dd>
+        <a href="https://cvs.khronos.org/svn/repos/registry/trunk/public/webcl/specs/latest/">
+          https://cvs.khronos.org/svn/repos/registry/trunk/public/webcl/specs/latest/
+        </a>
+      </dd>
+      <dt>Latest version:
+      </dt><dd>
+        <a href="https://cvs.khronos.org/svn/repos/registry/trunk/public/webcl/specs/latest/">
+          https://cvs.khronos.org/svn/repos/registry/trunk/public/webcl/specs/latest/
+        </a>
+      </dd>
+      <dt>Previous version:
+      </dt><dd>None</dd>
+      <dt>Editors:</dt>
+      <dd>
+        <a href="mailto:tomi.aarnio@nokia.com">Tomi Aarnio</a>
+        (<a href="http://webcl.nokiaresearch.com/">Nokia Research</a>)
+      </dd>
+      <dd>
+        <a href="mailto:msevenier@motorola.com">Mika&euml;l Bourges-S&eacute;venier</a>
+        (<a href="http://www.motorola.com/">Motorola Mobility, Inc.</a>)
+      </dd>
+	    <dt>Additional Contributors:</dt>
+      <dd>
+	      <a href="mailto:t.brutch@samsung.com">Tasneem Brutch</a> 
+        (<a href="http://www.samsung.com/">Samsung Electronics</a>) (Chair, WebCL WG) 
+      </dd>
+      <dd>
+	      <a href="mailto:s.gibbs@samsung.com">Simon Gibbs</a>
+        (<a href="http://www.samsung.com/">Samsung Electronics</A>)
+	    </dd>
     </dl>
     
     <p><span style="font-size: x-small; font-style: oblique">Copyright © 2012 Khronos Group</span></p>
@@ -136,10 +125,10 @@
     
     <!--begin-status-->
     <p>
-        This document is a WebCL Working Group internal draft. <b>It
-        has not yet been approved by the Working Group.</b>  Do not
-        cite this document as other than work in progress.  Public
-        discussion of this draft is welcome on the
+        This document is a Working Draft, not an official
+        specification.  Do not cite this document as anything other
+        than work in progress.  Public discussion of this draft is
+        welcome on the
         (<a href="https://www.khronos.org/webcl/public-mailing-list/archives/">archived</a>)
         WebCL mailing
         list <a href="mailto:public_webcl@khronos.org">public_webcl@khronos.org</a>
@@ -148,7 +137,7 @@
     </p>
     <!--end-status-->
     
-    <h2 class="no-toc">Table of contents</h2>
+    <h2 class="no-toc">Contents</h2>
     <div id="toc"><ul class="toc">
     </ul></div>
 
