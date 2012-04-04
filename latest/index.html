@@ -687,8 +687,9 @@ dictionary <dfn>WebCLContextProperties</dfn> {
 
 <pre class="idl">
 interface <dfn>WebCLPlatform</dfn> {
-    object getInfo(CLenum name);
-    WebCLDevice[] getDevices(CLenum deviceType);
+  object getInfo(CLenum name);
+  WebCLDevice[] getDevices(CLenum deviceType);
+  DOMString[] getSupportedExtensions();  
 }
 </pre>
 
@@ -719,15 +720,8 @@ interface <dfn>WebCLPlatform</dfn> {
       </dt>
       <dd>
         Retrieves information about this WebCLPlatform. The available
-        query parameters are listed in the OpenCL specification and
-        reference manual. However, the query parameters listed in the
-        table below are not available in WebCL.
-        <table class="foo">
-          <tr><th>name</th><th>Rationale</th></tr>
-          <tr><td>PLATFORM_EXTENSIONS</td><td>Native OpenCL extensions
-          are not exposed as such; the corresponding WebCL extensions
-          can be queried by `getSupportedExtensions`.</td></tr>
-        </table>
+        query parameters are listed
+        in <a href="#getPlatformInfoEnums">Chapter 4</a>.
       </dd>
 
       <dt class="idl-code">DOMString[] getSupportedExtensions()
@@ -764,16 +758,10 @@ interface <dfn>WebCLDevice</dfn> {
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceInfo.html">man page</a>)</span>
       </dt>
       <dd>
+      <dd>
         Retrieves information about this WebCLDevice. The available
-        query parameters are listed in the OpenCL specification and
-        reference manual. However, the query parameters listed in the
-        table below are not available in WebCL.
-        <table class="foo">
-          <tr><th>name</th><th>Rationale</th></tr>
-          <tr><td>DEVICE_EXTENSIONS</td><td>Native OpenCL extensions
-          are not exposed as such; the corresponding WebCL extensions
-          can be queried by `getSupportedExtensions`.</td></tr>
-        </table>
+        query parameters are listed
+        in <a href="#getDeviceInfoEnums">Chapter 4</a>.
       </dd>
 
       <dt class="idl-code">DOMString[] getSupportedExtensions()
@@ -889,10 +877,9 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
             requested name, as given in the following table:
             <table class="foo">
                 <tr><th>name</th><th>ECMAScript returned type</th></tr>
-                <tr><td>CONTEXT_REFERENCE_COUNT</td><td>Integer</td></tr>
                 <tr><td>CONTEXT_NUM_DEVICES</td><td>Integer</td></tr>
                 <tr><td>CONTEXT_DEVICES</td><td>WebCLDevice[]</td></tr>
-                <tr><td>CONTEXT_PROPERTIES</td><td>Integer[]</td></tr>
+                <tr><td>CONTEXT_PROPERTIES</td><td>WebCLContextProperties</td></tr>
             </table><br>
             </dd>
         <dt class="idl-code">WebCLImageDescriptor[] getSupportedImageFormats(CLenum memFlags, CLenum imageType)</dt>
@@ -1197,7 +1184,6 @@ interface <dfn>WebCLCommandQueue</dfn> {
                 <tr><th>name</th><th>ECMAScript returned type</th></tr>
                 <tr><td>QUEUE_CONTEXT</td><td>WebCLContext</td></tr>
                 <tr><td>QUEUE_DEVICE</td><td>WebCLDevice</td></tr>
-                <tr><td>QUEUE_REFERENCE_COUNT</td><td>Integer</td></tr>
                 <tr><td>QUEUE_PROPERTIES</td><td>CLenum</td></tr>
             </table><br>
             </dd>
@@ -1352,7 +1338,6 @@ queue.enqueueNDRangeKernel(kernel3, null, globals, null, events);
                 <tr><td>MEM_TYPE</td><td>CLenum</td></tr>
                 <tr><td>MEM_FLAGS</td><td>CLenum</td></tr>
                 <tr><td>MEM_SIZE</td><td>Integer</td></tr>
-                <tr><td>MEM_REFERENCE_COUNT</td><td>Integer</td></tr>
                 <tr><td>MEM_CONTEXT</td><td>WebCLContext</td></tr>
                 <tr><td>MEM_ASSOCIATED_MEMOBJECT</td><td>WebCLMemoryObject</td></tr>
                 <tr><td>MEM_OFFSET</td><td>Integer</td></tr>
@@ -1435,7 +1420,6 @@ interface <dfn>WebCLSampler</dfn> {
             requested name, as given in the following table:
             <table class="foo">
                 <tr><th>name</th><th>ECMAScript returned type</th></tr>
-                <tr><td>SAMPLER_REFERENCE_COUNT</td><td>Integer</td></tr>
                 <tr><td>SAMPLER_CONTEXT</td><td>WebCLContext</td></tr>
                 <tr><td>SAMPLER_NORMALIZED_COORDS</td><td>Boolean</td></tr>
                 <tr><td>SAMPLER_ADDRESSING_MODE</td><td>CLenum</td></tr>
@@ -1473,13 +1457,10 @@ interface <dfn>WebCLProgram</dfn> {
             requested name, as given in the following table:
             <table class="foo">
                 <tr><th>name</th><th>ECMAScript returned type</th></tr>
-                <tr><td>PROGRAM_REFERENCE_COUNT</td><td>Integer</td></tr>
                 <tr><td>PROGRAM_CONTEXT</td><td>WebCLContext</td></tr>
                 <tr><td>PROGRAM_NUM_DEVICES</td><td>Integer</td></tr>
                 <tr><td>PROGRAM_DEVICES</td><td>WebCLDevice</td></tr>
                 <tr><td>PROGRAM_SOURCE</td><td>DOMString</td></tr>
-                <tr><td>PROGRAM_BINARY_SIZES</td><td>Integer[]</td></tr>
-                <tr><td>PROGRAM_BINARIES</td><td>ArrayBuffer[]</td></tr>
             </table><br>
             </dd>
         <dt class="idl-code">any getBuildInfo(WebCLDevice device, CLenum name)</dt>
@@ -1496,6 +1477,9 @@ interface <dfn>WebCLProgram</dfn> {
               optional userdata.
             </dd>
         <dt class="idl-code">WebCLKernel createKernel(DOMString name)</dt>
+            <dd>
+            </dd>
+        <dt class="idl-code">WebCLKernel[] createKernelsInProgram()</dt>
             <dd>
             </dd>
     </dl>
@@ -1568,7 +1552,6 @@ interface <dfn>WebCLKernelArgumentTypes</dfn> {
           <tr><th>name</th><th>ECMAScript returned type</th></tr>
           <tr><td>KERNEL_FUNCTION_NAME</td><td>DOMString</td></tr>
           <tr><td>KERNEL_NUM_ARGS</td><td>Integer</td></tr>
-          <tr><td>KERNEL_REFERENCE_COUNT</td><td>Integer</td></tr>
           <tr><td>KERNEL_CONTEXT</td><td>WebCLContext</td></tr>
           <tr><td>KERNEL_PROGRAM</td><td>WebCLProgram</td></tr>
         </table><br>
@@ -1660,7 +1643,6 @@ interface <dfn>WebCLEvent</dfn> {
                 <tr><td>EVENT_CONTEXT</td><td>WebCLContext</td></tr>
                 <tr><td>EVENT_COMMAND_TYPE</td><td>CLenum</td></tr>
                 <tr><td>EVENT_COMMAND_EXECUTION_STATUS</td><td>CLenum</td></tr>
-                <tr><td>EVENT_REFERENCE_COUNT</td><td>Integer</td></tr>
             </table><br>
             </dd>
 
@@ -1795,9 +1777,9 @@ interface <dfn>WebCLEvent</dfn> {
       <li>2D image support is required</li>
       <li>3D images are not supported</li>
       <li>WebGL interoperability is supported (optionally)</li>
-      <li>Structures as kernel arguments are not supported</li>
+      <li>Structures are not supported as kernel arguments</li>
       <li>Mapping of CL memory objects into host memory space is not supported</li>
-      <li>Folded `enqueueWaitForEvents` into `enqueueMarker`/`enqueueBarrier` as in OpenCL 1.2</li>
+      <li>`enqueueWaitForEvents` is folded into `enqueueMarker`/`enqueueBarrier` as in OpenCL 1.2</li>
     </ul>
 
     <p>
@@ -1810,7 +1792,7 @@ interface <dfn>WebCLEvent</dfn> {
     </p>
 
     <p>
-      <table>
+      <table id="getPlatformInfoEnums">
         <tr><th>Platform Info: clGetPlatformInfo Parameter</th><th>OpenCL 1.1 Embedded Profile</th><th>WebCL Profile</th></tr>
 
         <tr><td>CL_PLATFORM_PROFILE</td><td>"EMBEDDED_PROFILE"</td><td>"WEBCL_PROFILE"</td></tr>
@@ -1822,7 +1804,7 @@ interface <dfn>WebCLEvent</dfn> {
     </p>
 
     <p>
-      <table>
+      <table id="getDeviceInfoEnums">
         <tr><th>Device Info: clGetDeviceInfo Parameter</th><th>OpenCL 1.1 Embedded Profile</th><th>WebCL Profile</th></tr>
         <tr><td>CL_DEVICE_TYPE</td><td>CL_DEVICE_TYPE_CPU;
                                        CL_DEVIDE_TYPE_GPU;
@@ -1855,8 +1837,7 @@ interface <dfn>WebCLEvent</dfn> {
         <tr><td>CL_DEVICE_MAX_SAMPLERS</td><td>&gt;=8 (if image support)</td><td>&gt;=8</td></tr>
         <tr><td>CL_DEVICE_MAX_PARAMETER_SIZE</td><td>&gt;=256</td><td>&gt;=256</td></tr>
         <tr><td>CL_DEVICE_MEM_BASE_ADDR_ALIGN</td><td>&gt;= num bits(int16)</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_MIN_DATA_TYPE_ALIGN_SIZE</td><td>&gt;=sizeof(int16) EMBEDDED;
-          </td><td>Not Visible</td></tr>
+        <tr><td>CL_DEVICE_MIN_DATA_TYPE_ALIGN_SIZE</td><td>&gt;=sizeof(int16)</td><td>Not Visible</td></tr>
         <tr><td>CL_DEVICE_SINGLE_FP_CONFIG</td><td>CL_FP_ROUND_TO_NEAREST; CL_FP_INF_NAN 
             (others optional)</td><td>Not Visible</td></tr>
         <tr><td>CL_DEVICE_GLOBAL_MEM_CACHE_TYPE</td><td>CL_NONE; CL_READ_ONLY_CACHE; CL_READ_WRITE_CACHE
@@ -1864,10 +1845,10 @@ interface <dfn>WebCLEvent</dfn> {
         <tr><td>CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
         <tr><td>CL_DEVICE_GLOBAL_MEM_CACHE_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
         <tr><td>CL_DEVICE_GLOBAL_MEM_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr> 
-        <tr><td>CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE </td><td>>=1 KB</td><td>>=1</td></tr>
-        <tr><td>CL_DEVICE_CONSTANT_ARGS</td><td>>=4</td><td>>=4</td></tr>
+        <tr><td>CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE </td><td>&gt;=1 KB</td><td>&gt;=1</td></tr>
+        <tr><td>CL_DEVICE_CONSTANT_ARGS</td><td>&gt;=4</td><td>&gt;=4</td></tr>
         <tr><td>CL_DEVICE_LOCAL_MEM_TYPE</td><td>CL_LOCAL; CL_GLOBAL</td><td>Visible</td></tr>
-        <tr><td>CL_DEVICE_LOCAL_MEM_SIZE</td><td>>=1 KB</td><td>>=1 KB</td></tr>
+        <tr><td>CL_DEVICE_LOCAL_MEM_SIZE</td><td>&gt;=1 KB</td><td>&gt;=1 KB</td></tr>
         <tr><td>CL_DEVICE_ERROR_CORRECTION_SUPPORT</td><td>cl_bool</td><td>Not Visible</td></tr>
         <tr><td>CL_DEVICE_HOST_UNIFIED_MEMORY</td><td>cl_bool</td><td>Visible</td></tr>
         <tr><td>CL_DEVICE_PROFILING_TIMER_RESOLUTION</td><td>size_t</td><td>Not Visible</td></tr>
@@ -1882,7 +1863,7 @@ interface <dfn>WebCLEvent</dfn> {
         <tr><td>CL_DEVICE_NAME</td><td>Not Specified</td><td>Not Visible</td></tr>
         <tr><td>CL_DEVICE_VENDOR</td><td>Not Specified</td><td>Not Visible</td></tr>
         <tr><td>CL_DRIVER_VERSION</td><td>Version String</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_PROFILE</td><td>EMBEDDED_PROFILE</td><td>WEBCL_PROFILE</td></tr>
+        <tr><td>CL_DEVICE_PROFILE</td><td>"EMBEDDED_PROFILE"</td><td>"WEBCL_PROFILE"</td></tr>
         <tr><td>CL_DEVICE_VERSION</td><td>Version String</td><td>"WebCL 1.0"</td></tr>
         <tr><td>CL_DEVICE_OPENCL_C_VERSION</td><td>Version String</td><td>Visible</td></tr>
         <tr><td>CL_DEVICE_EXTENSIONS</td><td>Extension String</td><td>Visible</td></tr>
