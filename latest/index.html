@@ -1706,175 +1706,80 @@ interface <dfn>WebCLEvent</dfn> {
       To promote robustness of the WebCL standard, the working group is actively
       working on identifying and remediatig potential vulnerabilities.  Depending 
       upon the nature of the issue, the remediation may need to be addressed by
-      the OpenCL standard as OpenCL extensions. The working group has identified the
-      following security aspects of interest to WebCL.
+      the OpenCL Working Group or the WebCL Working Group, or both.  The working group has identified the
+      following security requirements for WebCL.
+    </p>
+
+    <h3>Undefined Behavior</h3>
+      Behavior left undefined in OpenCL will be defined by the WebCL specification 
+      where possible, to ensure the authoring of strong conformance tests, and to 
+      prevent the potential introduction of security vulnerabilities resulting 
+      from undefined behavior.
+    </h3>
 
     <h3>Cross-Origin Information Leakage</h3>
 
     <p>
-      To prevent web applications from getting unauthorized access to
-      images or other content originating from another domain, WebCL
-      implementations must impose the same cross-origin restrictions
-      as WebGL.
+     WebCL will restrict the use of media, such as image and video, originating from 
+     a different web site than the hosting web page.  WebCL will leverage provisions 
+     such as Cross-Origin Resource Sharing (CORS) to help enforce the restriction on 
+     the use of media by a web page different than the originating web site. 
     </p>
 
 
-    <h3>Unauthorized Memory Access</h3>
+    <h3>Out-of-Range Memory Accesses</h3>
 
-    <ul>
-	<p>
-        Provisions need to be provided to prevent unauthorized memory
-	      accesses. No memory should be accessible outside of its
-	      context. WebCL must provide for prevention mechanisms against
-	      unintentional or malicious out-of-bound memory accesses.  Also
-	      being considered are restrictions in the kernel language to
-	      facilitate static analysis and detection of out of bounds
-	      memory accesses.
-      </p>
+    <p>
+     To ensure that all access indices are valid, protections will be provided 
+     against out of bounds memory writes.  All out of bounds memory reads will
+     return a pre-defined value.
+    </p>
 
-      <p>
-        Kernels must not be allowed to read or write array elements
-	      that lie outside the bounds of the array. This includes any
-	      variable of array type, as well as vector or matrix types such
-	      as `float3` or `uint4` when accessed using array subscripting
-	      syntax. If detected during compilation, such accesses must
-	      generate an error and prevent the kernel from
-	      compiling. Otherwise, at runtime they may return a constant
-	      value (such as 0), or the value at any valid index of the same
-	      array.
-      </p>
 
-      <p>
-        The WebCL working group is working with the OpenCL working
-	      group members on a proposal for provisions to prevent unauthorized
-	      out of bounds memory accesses.
-      </p>
-    </ul>
+    <h3> Memory Initialization</h3>
+
+    <p>
+     To prevent information leakage from un-initialized memory, all WebCL 
+     allocated memory objects (buffers and images), inclusive of private and 
+     local variables in kernel code, must be initialized at allocation time 
+     (before the application will be allowed to use them).  To minimize the 
+     performance burden on applications for initializing allocated memory to 
+     zeroes, WebCL implementations will ensure that memory is initialized 
+     to a pre-defined value at allocation time.    
+    </p>
 
 
     <h3>Cross-Context Information Leakage</h3>
 
-    <ul>
-      <p>
-        WebCL implementations must ensure that no information can leak
-        from one WebCL/OpenCL context to another. It must not be
-        possible for WebCL kernels or host code to access arbitrary
-        system memory, or memory from another OpenCL/WebCL context.
-      </p>
-
-      <p>
-        WebCL implementations must ensure that WebCL kernels or host
-        code cannot access uninitialized memory, because such memory
-        may contain sensitive data left over from whichever
-        application or system component was previously using it.
-        WebCL memory objects (buffers and images) must therefore be
-        initialized to zero before the application is allowed to read
-        from them, whether through kernel code or host code. The same
-        applies to `private` and `local` variables in kernel code.
-      </p>
-
-      <p>
-        <b>Access from Scripts</b>: WebCL must not allow scripts to
-	      read back data that they are not supposed to read back.
-      </p>
-    </ul>
+    <p>
+     WebCL implementations must ensure that no information can leak
+     from one WebCL/OpenCL context to another. It must not be
+     possible for WebCL kernels or host code to access arbitrary
+     system memory, or memory from another OpenCL/WebCL context.
+    </p>
 
 
     <h3>Denial of Service (DoS)</h3>
 
-    <ul>
-        <p> 
-        Long running/computationally intensive kernels may cause the
-        user's system to become unresponsive, and can lead to denial of
-        service. It is not acceptable for content downloaded over the
-        internet to lock up the browser. This issue has received
-        additional interest since without provisions for protection
-        against DoS attacks, WebCL may allow unknown and untrusted code
-        to get access to the GPU.
-        </p>
+    <p> 
+     Long running and/or computationally intensive kernels may cause the
+     system to become unresponsive, and can lead to denial of
+     service. It is not acceptable for content downloaded over the
+     internet to lock up the browser.
 
-        <p> 
-        WebCL must not allow kernels to monopolize or lock up a GPU
-        (or any OpenCL device). WebCL should provide a mechanism to
-        detect and restrict a long-running kernel. The WebCL
-        implementation can leverage existing solutions provided in
-        some operating systems, such as Microsoft Windows Vista and
-        later, which resets the graphics processor if excessive time
-        is spent by the device on an operation.
-        </p>
+     To prevent bugs/issues in unknown and untrusted code from monopolizing 
+     an OpenCL device and making it unresponsive, WebCL implementations need to 
+     be able to:
+    </p>
 
-        <p> 
-        The browser should be able to promptly terminate kernels
-        running in a background thread, when switching away from a web
-        page that invoked the kernel.
-        </p>
-
-        <p> 
-        WebCL could provide provisions (similar to the
-        `GL_ARB_robustness` extension in OpenGL), as a platform
-        independent way of detecting DoS attacks, to allow WebCL to
-        receive notifications that an OpenCL device had been
-        reset. This will provide a notification to user/application,
-        and will allow the browser application to respond to it.
-        </p>
-
-        <p> 
-        Different browsers use different mechanisms to detect runaway
-        JavaScript; for example, Internet Explorer counts statements,
-        Firefox uses a timer, etc.  WebCL implementations should allow
-        interruption of WebCL kernels running on an OpenCL device, in
-        in the same way that JavaScript can be interrupted.
-        </p>
-
-        <p> 
-        WebCL implementations must provide mechanisms to prevent
-        impact from a workgroup that is jeopardizing system
-        stability. Such a workgroup may be terminated.
-        </p>
+    <ul>  
+    <li> Detect offending kernels.  A kernel is considered "offending"
+         if it runs for an excessively long time, or disproportionately 
+         consumes system resources.
+    <li> Terminate contexts associated with long-running malicious or 
+         erroneous kernels, before they render the OpenCL device 
+         unresponsive, and result in potential device reset.
     </ul>
-
-    <h4>Termination of Offending Context to Prevent DoS</h4>
-
-        <p>
-        The WebCL working group is proposing a robustness extension to
-        OpenCL 1.2, which would provide the (browser) application the 
-        ability to terminate an offending context.  A context is 
-        considered "offending" if it runs for an excessively 
-        long time, or disproportiontely consumes system resources.  
-        Depending upon the support provided by 
-        the OpenCL standard, the OpenCL driver and device 
-        vendors, either the offending context, or all contexts sharing 
-        the GPU with the offending context may be terminated.
-        </p>
-
-        <p> 
-        At the time of context creation, an additional flag is being
-        proposed to allow the application (such as a browser),  
-        to specify specify that an offending context may be terminated
-        by the OpenCL driver.  The addition of an additional to OpenCL
-        clCreateContext is proposed, to allow the user to opt in, along
-        with the addition of a new TerminateContext() API.  The flag will
-        be used to specify that a given context may be terminated, if 
-        needed (and a callback is registered).  Application, such as a
-        browser, may use the new OpenCL clTerminateContext() API to
-        terminate the offending context.
-        </p>
-
-     <h4>Limiting Overall Execution Time of a Kernel</h4>
-
-        <p>
-        The WebCL working group is proposing the addition of a new parameter
-        for the OpenCL clCreateContext, to allow applications (for example
-        browsers) to specify the maximum "time limit" that each kernel in the context 
-        may take.  Using OpenCL clTerminateContext(), an applicaiton may
-        terminate a context associated with a kernel running for a duration
-        longer than the maximum specified time limit.  The WebCL working group
-        is proposing the addition of a new parameter to OpenCL clCreateContext(), to 
-        allow the user to opt in, by specifying the maximum execution time limit for
-        kernel execution.  This would result in a callback being registered
-        Maximum kernel execution time limit may be specified at either queue creation
-        time, or at context creation time. 
-        </p> 
 
 <!-- ======================================================================================================= -->
 
