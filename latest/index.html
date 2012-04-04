@@ -1078,10 +1078,17 @@ interface <dfn>WebCLCommandQueue</dfn> {
             <dd>
             </dd>
 
-        <dt class="idl-code">WebCLEvent enqueueReadBufferRect(TODO)
+        <dt class="idl-code">void enqueueReadBufferRect(WebCLRegion srcBuffer,
+                                                        ArrayBuffer dstArray,
+                                                        WebCLRegion dstArrayRegion,
+                                                        CLboolean blockingRead,
+                                                        optional WebCLEvent[]? eventWaitList = null,
+                                                        optional WebCLEvent? event = null);
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBufferRect.html">man page</a>)</span>
         </dt>
-            <dd>     
-            </dd>
+        <dd>
+        </dd>
 
         <dt class="idl-code">void enqueueWriteBuffer(WebCLRegion dstBuffer,
                                                      ArrayBuffer srcArray, 
@@ -1092,7 +1099,6 @@ interface <dfn>WebCLCommandQueue</dfn> {
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBuffer.html">man page</a>)</span>
         </dt>
             <dd>
-              The WebCLRegion object contains the Array and offset in bytes being written.
             </dd>
 
         <dt class="idl-code">void enqueueWriteImage(WebCLRegion dstImage,
@@ -1104,13 +1110,19 @@ interface <dfn>WebCLCommandQueue</dfn> {
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteImage.html">man page</a>)</span>
         </dt>
             <dd>
-              The WebCLRegion object contains the Array and offset in bytes being written.
             </dd>
 
-        <dt class="idl-code">WebCLEvent enqueueWriteBufferRect(TODO)
+        <dt class="idl-code">void enqueueWriteBufferRect(WebCLRegion dstBuffer,
+                                                         ArrayBuffer srcArray,
+                                                         WebCLRegion srcArrayRegion,
+                                                         CLboolean blockingRead,
+                                                         optional WebCLEvent[]? eventWaitList = null,
+                                                         optional WebCLEvent? event = null);
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBufferRect.html">man page</a>)</span>
         </dt>
-            <dd>     
-            </dd>
+        <dd>     
+        </dd>
 
         <dt class="idl-code">void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
           optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
