@@ -1906,7 +1906,7 @@ interface <dfn>WebCLEvent</dfn> {
 
     <p>
       <table>
-        <tr><th>Platform Info: clGetPlatformInfo Parameter</th><th>OpenCL 1.1 Embedded Profile</th><th>WebCL</th></tr>
+        <tr><th>Platform Info: clGetPlatformInfo Parameter</th><th>OpenCL 1.1 Embedded Profile</th><th>WebCL Profile</th></tr>
 
         <tr><td>CL_PLATFORM_PROFILE</td><td>"EMBEDDED_PROFILE"</td><td>"WEBCL_PROFILE"</td></tr>
         <tr><td>CL_PLATFORM_VERSION</td><td>"OpenCL 1.1" + optional vendor string</td><td>"WebCL 1.0"</td></tr>
@@ -1918,16 +1918,21 @@ interface <dfn>WebCLEvent</dfn> {
 
     <p>
       <table>
-        <tr><th>Device Info: clGetDeviceInfo Parameter</th><th>OpenCL 1.1 Embedded Profile</th><th>WebCL</th></tr>
-        <tr><td>CL_DEVICE_TYPE</td><td>CL_DEVICE_TYPE_XXX</td><td>Visible</td></tr>
+        <tr><th>Device Info: clGetDeviceInfo Parameter</th><th>OpenCL 1.1 Embedded Profile</th><th>WebCL Profile</th></tr>
+        <tr><td>CL_DEVICE_TYPE</td><td>CL_DEVICE_TYPE_CPU;
+                                       CL_DEVIDE_TYPE_GPU;
+                                       CL_DEVICE_TYPE_ACCELERATOR;
+                                       CL_DEVICE_TYPE_DEFAULT; 
+                                       (Or a combination of the above)</td><td>Visible</td></tr>
         <tr><td>CL_DEVICE_VENDOR_ID</td><td>Not Specified</td><td>Not Visible</td></tr>
         <tr><td>CL_DEVICE_MAX_COMPUTE_UNITS</td><td> &gt;=1 </td><td>Not Visible</td></tr>
         <tr><td>CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS</td><td> &gt;=3 </td><td> &gt;=3 </td></tr>
         <tr><td>CL_DEVICE_MAX_WORK_ITEM_SIZES</td><td>&gt;=(1, 1, 1)</td><td>&gt;=(1, 1, 1)</td></tr>
         <tr><td>CL_DEVICE_MAX_WORK_GROUP_SIZE</td><td>&gt;=1</td><td>&gt;=1</td></tr>
-        <tr><td>CL_DEVICE_PREFERRED_VECTOR_WIDTH_*</td><td>cl_uint</td><td>Visible</td></tr>
+        <tr><td>CL_DEVICE_PREFERRED_VECTOR_WIDTH_* (*=CHAR, SHORT, INT, LONG, FLOAT, DOUBLE, HALF)
+                                                    </td><td>cl_uint</td><td>Visible</td></tr>
         <tr><td>CL_DEVICE_NATIVE_VECTOR_WIDTH_*</td><td>cl_uint</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_MAX_CLOCK_FREQUENCY *</td><td>cl_uint</td><td>Not Visible</td></tr>
+        <tr><td>CL_DEVICE_MAX_CLOCK_FREQUENCY</td><td>cl_uint</td><td>Not Visible</td></tr>
         <tr><td>CL_DEVICE_ADDRESS_BITS</td><td>32 or 64 bits</td><td>Visible</td></tr>
         <tr><td>CL_DEVICE_MAX_MEM_ALLOC_SIZE</td><td> &gt;= max of CL_DEVICE_GLOBAL_MEM_SIZE/ 
             4,128, 1024, 1024</td><td>Visible</td></tr>
@@ -1953,9 +1958,52 @@ interface <dfn>WebCLEvent</dfn> {
           </td><td>Not Visible</td></tr>
         <tr><td>CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
         <tr><td>CL_DEVICE_GLOBAL_MEM_CACHE_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_GLOBAL_MEM_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>                     
+        <tr><td>CL_DEVICE_GLOBAL_MEM_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr> 
+        <tr><td>CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE </td><td>>=1 KB</td><td>>=1</td></tr>
+        <tr><td>CL_DEVICE_CONSTANT_ARGS</td><td>>=4</td><td>>=4</td></tr>
+        <tr><td>CL_DEVICE_LOCAL_MEM_TYPE</td><td>CL_LOCAL; CL_GLOBAL</td><td>Visible</td></tr>
+        <tr><td>CL_DEVICE_LOCAL_MEM_SIZE</td><td>>=1 KB</td><td>>=1 KB</td></tr>
+        <tr><td>CL_DEVICE_ERROR_CORRECTION_SUPPORT</td><td>cl_bool</td><td>Not Visible</td></tr>
+        <tr><td>CL_DEVICE_HOST_UNIFIED_MEMORY</td><td>cl_bool</td><td>Visible</td></tr>
+        <tr><td>CL_DEVICE_PROFILING_TIMER_RESOLUTION</td><td>size_t</td><td>Not Visible</td></tr>
+        <tr><td>CL_DEVICE_ENDIAN_LITTLE</td><td>cl_bool</td><td>Visible</td></tr>
+        <tr><td>CL_DEVICE_AVAILABLE</td><td>cl_bool</td><td>Visible</td></tr>
+        <tr><td>CL_DEVICE_COMPILER_AVAILABLE</td><td>cl_bool</td><td>Not Visible</td></tr>
+        <tr><td>CL_DEVICE_EXECUTION_CAPABILITIES</td><td>CL_EXEC_KERNEL; 
+                                                         CL_EXEC_NATIVE_KERNEL</td><td>Not Visible</td></tr>
+        <tr><td>CL_DEVICE_QUEUE_PROPERTIES</td><td>CL_QUEUE_PROFILING_ENABLE; 
+                CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE (optional)</td><td>Visible</td></tr>
+        <tr><td>CL_DEVICE_PLATFORM</td><td>cl_platform_id</td><td>WebCLPlatform Object</td></tr>
+        <tr><td>CL_DEVICE_NAME</td><td>Not Specified</td><td>Not Visible</td></tr>
+        <tr><td>CL_DEVICE_VENDOR</td><td>Not Specified</td><td>Not Visible</td></tr>
+        <tr><td>CL_DRIVER_VERSION</td><td>Version String</td><td>Not Visible</td></tr>
+        <tr><td>CL_DEVICE_PROFILE</td><td>EMBEDDED_PROFILE</td><td>WEBCL_PROFILE</td></tr>
+        <tr><td>CL_DEVICE_VERSION</td><td>Version String</td><td>"WebCL 1.0"</td></tr>
+        <tr><td>CL_DEVICE_OPENCL_C_VERSION</td><td>Version String</td><td>Visible</td></tr>
+        <tr><td>CL_DEVICE_EXTENSIONS</td><td>Extension String</td><td>Visible</td></tr>
+                    
       </table>
     </p>
+
+
+    <p>
+      <table>
+        <tr><th>KHR Extensions: OpenCL 1.1 Extensions</th><th>WebCL Profile</th></tr>
+        <tr><td>cl_khr_global_int32_base_atomics; cl_khr_global_int32_extended_atomics;
+                cl_khr_local_int32_base_atomics; cl_khr_local_int32_extended_atomics;
+                cl_khr_byte_addressable_store</td><td>Optional</td></tr>
+        <tr><td>cl_khr_gl_sharing</td><td>If the driver suppports WebGL, and if CL_DEVICE_TYPE_GPU is
+                supported, then ths extension shall be supported.</td></tr>
+        <tr><td>cl_khr_gl_event</td><td>Not Visible</td></tr>
+        <tr><td>cl_khr_d3d10_sharing</td><td>Not Visible</td></tr>
+        <tr><td>cl_khr_int64_base_atomics</td><td>Not Visible</td></tr>
+        <tr><td>cl_khr_extended_atomics</td><td>Not Visible</td></tr>
+        <tr><td>cl_khr_fp16</td><td>Visible</td></tr>
+        <tr><td>cl_khr_fp64</td><td>Not visible</td></tr>
+                    
+      </table>
+    </p>
+
 
 <!-- ======================================================================================================= -->
 
