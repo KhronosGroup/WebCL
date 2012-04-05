@@ -160,6 +160,7 @@
 
 <pre class="idl">
 typedef boolean       CLboolean;
+typedef long          CLint;
 typedef unsigned long CLuint;
 typedef unsigned long CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
 </pre>
@@ -882,8 +883,8 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
             Returns the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
             <table class="foo">
-                <tr><th>name</th><th>ECMAScript returned type</th></tr>
-                <tr><td>CONTEXT_NUM_DEVICES</td><td>Integer</td></tr>
+                <tr><th>name</th><th>return type</th></tr>
+                <tr><td>CONTEXT_NUM_DEVICES</td><td>CLuint</td></tr>
                 <tr><td>CONTEXT_DEVICES</td><td>WebCLDevice[]</td></tr>
                 <tr><td>CONTEXT_PROPERTIES</td><td>WebCLContextProperties</td></tr>
             </table><br>
@@ -1199,13 +1200,23 @@ interface <dfn>WebCLCommandQueue</dfn> {
             Return the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
             <table class="foo">
-                <tr><th>name</th><th>ECMAScript returned type</th></tr>
+                <tr><th>name</th><th>return type</th></tr>
                 <tr><td>QUEUE_CONTEXT</td><td>WebCLContext</td></tr>
                 <tr><td>QUEUE_DEVICE</td><td>WebCLDevice</td></tr>
                 <tr><td>QUEUE_PROPERTIES</td><td>CLenum</td></tr>
             </table><br>
             </dd>
     </dl>
+
+<pre class="example">
+// This example shows how to wait for two kernels to complete before a
+// third kernel executes
+
+var eventWaitList = [ new WebCLEvent(), new WebCLEvent() ];
+queue.enqueueNDRangeKernel(kernel1, null, globals, null, null, eventWaitList[0]);
+queue.enqueueNDRangeKernel(kernel2, null, globals, null, null, eventWaitList[1]);
+queue.enqueueNDRangeKernel(kernel3, null, globals, null, eventWaitList);
+</pre>
 
     <h4><a id="WEBCLREGION">WebCLRegion</a></h4>
     <p>
@@ -1251,12 +1262,6 @@ function readBufferToHost(srcBuffer) {
 
  queue.enqueueReadBuffer({ buffer: srcBuffer, size : [numBytes] }, dstArray, true);
 
- // For comparison, here's the same operation with a raw parameter
- // list, as in native OpenCL. In this simple case, the raw form is
- // equally concise and readable as the JavaScript object notation.
-
- // C // queue.enqueueReadBuffer(srcBuffer, true, 0, numBytes, dstArray);
-
  return dstBuffer;
 }
 </pre>
@@ -1279,11 +1284,6 @@ function copyBufferToImage(srcBuffer, dstImage) {
   var srcRegion = { buffer : srcBuffer };
   var dstRegion = { buffer : dstImage, size : [imgWidth, imgHeight] };
   queue.enqueueCopyBufferToImage(srcRegion, dstRegion);
-
-  // For comparison, here's the same operation with a raw parameter
-  // list, as in native OpenCL.
-  
-  // C // queue.enqueueCopyBufferToImage(srcBuffer, dstImage, 0, [0, 0, 0], [imgWidth, imgHeight, 1]);
 }
 </pre>
 
@@ -1306,34 +1306,7 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
   srcRegion.buffer = srcBuffer;
   dstRegion.buffer = dstBuffer;
   queue.enqueueCopyBuffer(srcRegion, dstRegion);
-
-  // For comparison, here's the same operation with a raw parameter
-  // list, as in native OpenCL. It's more concise, but at the same
-  // time the large number of parameters requires the developer to
-  // look them up from a manual. Note also that default values (0s
-  // and 1s) must be given explicitly for parameters that are only
-  // relevant for 3D buffers.
-  
-  /*// C // queue.enqueueCopyBufferRect(srcBuffer, dstBuffer,
-                                        [srcOriginX, srcOriginY, 1],
-                                        [dstOriginX, dstOriginY, 1],
-                                        [w, h, 1],
-                                        pitch, 0, pitch, 0);
-  */
 }
-</pre>
-<pre class="example">
-// This example shows how to wait for two kernels to complete before a third kernel executes
-
-// enqueue 2 kernels exposing events
-
-var events = [ new WebCLEvent(), new WebCLEvent() ];
-queue.enqueueNDRangeKernel(kernel1, null, globals, null, null, ev[0]);
-queue.enqueueNDRangeKernel(kernel2, null, globals, null, null, ev[1]);
-
-// enqueue next kernel, which waits for the 2 prior kernels events before executing
-
-queue.enqueueNDRangeKernel(kernel3, null, globals, null, events);
 </pre>
 
 <!-- ======================================================================================================= -->
@@ -1349,16 +1322,19 @@ queue.enqueueNDRangeKernel(kernel3, null, globals, null, events);
     <dl class="methods">
         <dt class="idl-code">any getInfo(CLenum name)</dt>
             <dd>
-            Return the value for the passed name. The type returned is the natural type for the
+            Returns the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
             <table class="foo">
-                <tr><th>name</th><th>ECMAScript returned type</th></tr>
-                <tr><td>MEM_TYPE</td><td>CLenum</td></tr>
-                <tr><td>MEM_FLAGS</td><td>CLenum</td></tr>
-                <tr><td>MEM_SIZE</td><td>Integer</td></tr>
-                <tr><td>MEM_CONTEXT</td><td>WebCLContext</td></tr>
-                <tr><td>MEM_ASSOCIATED_MEMOBJECT</td><td>WebCLMemoryObject</td></tr>
-                <tr><td>MEM_OFFSET</td><td>Integer</td></tr>
+                <tr><th>name</th><th>return type</th><th>return value</th></tr>
+                <tr><td>`MEM_TYPE`</td><td>`CLenum`</td><td>`MEM_OBJECT_BUFFER` or `MEM_OBJECT_IMAGE2D`</td></tr>
+                <tr><td>`MEM_FLAGS`</td><td>`CLenum`</td><td>The `memFlags` as specified at construction time</td></tr>
+                <tr><td>`MEM_SIZE`</td><td>`CLuint`</td><td>The size of this memory object in bytes</td></tr>
+                <tr><td>`MEM_CONTEXT`</td><td>`WebCLContext`</td><td>the WebCL context of this memory object</td></tr>
+                <tr><td>`MEM_ASSOCIATED_MEMOBJECT`</td><td>`WebCLBuffer`</td><td>The buffer
+                    object that this buffer was created from, or `null`
+                    if this buffer was not created using `createSubBuffer`</td></tr>
+                <tr><td>`MEM_OFFSET`</td><td>`CLuint`</td><td>The offset given to `createSubBuffer`,
+                    or zero if this buffer was not created using `createSubBuffer`</td></tr>
             </table><br>
             </dd>
         <dt class="idl-code">WebCLGLObjectInfo getGLObjectInfo()</dt>
@@ -1367,9 +1343,9 @@ queue.enqueueNDRangeKernel(kernel3, null, globals, null, events);
             
             WebCLGLObjectInfo is defined as the following dictionary:
 <pre class="idl" id="WEBCLGLOBJECTINFO">
-interface <dfn>WebCLGLObjectInfo</dfn> {
-  CLenum type, // type of GL object attached to this memory object
-  GLuint name  // GL object name used to create this memory object
+dictionary <dfn>WebCLGLObjectInfo</dfn> {
+  CLenum type;   // type of GL object attached to this memory object
+  any glObject;  // The GL object used to create this memory object
 }
 </pre>           
             </dd>
@@ -1383,14 +1359,20 @@ interface <dfn>WebCLGLObjectInfo</dfn> {
      </p>
 
 <pre class="idl">interface <dfn>WebCLBuffer</dfn> : WebCLMemoryObject {
-  WebCLBuffer createSubBuffer(CLenum flags, CLenum type, WebCLRegion region);
+  WebCLBuffer createSubBuffer(CLenum flags, CLuint origin, CLuint size);
 }
 </pre>
 
     <dl class="methods">
-      <dt class="idl-code">WebCLBuffer createSubBuffer(CLenum flags, CLenum type, WebCLRegion region)</dt>
+      <dt class="idl-code">WebCLBuffer createSubBuffer(CLenum flags, CLuint origin, CLuint size)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.1">OpenCL 1.1 §5.2.1</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateSubBuffer.html">man page</a>)</span>
+      </dt>
       <dd>
-        The only allowed value for type is BUFFER_CREATE_TYPE_REGION.
+        Creates a new WebCLBuffer that represents a sub-region of this
+        WebCLBuffer. The two buffers reference the same area of global
+        memory, so changes made into one are immediately reflected in
+        the other.
       </dd>
     </dl>
 
@@ -1402,15 +1384,16 @@ interface <dfn>WebCLGLObjectInfo</dfn> {
     </p>
 
 <pre class="idl">interface <dfn>WebCLImage</dfn> : WebCLMemoryObject {
-  any getInfo(CLenum name);
+  WebCLImageDescriptor getInfo();
   GLint getGLtextureInfo(CLenum paramName);
 }
 </pre>
 
    <dl class="methods">
-     <dt class="idl-code">any getInfo(CLenum name)</dt>
+     <dt class="idl-code">WebCLImageDescriptor getInfo()</dt>
      <dd>
-       return Integer, or ImageFormat depending on the name queried.
+       Returns a new WebCLImageDescriptor containing information about
+       the pixel format and dimensions of this WebCLImage.
      </dd>
      <dt class="idl-code">GLint getGLTextureInfo(CLenum paramName)</dt>
        <dd>
@@ -1438,9 +1421,9 @@ interface <dfn>WebCLSampler</dfn> {
             Return the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
             <table class="foo">
-                <tr><th>name</th><th>ECMAScript returned type</th></tr>
+                <tr><th>name</th><th>return type</th></tr>
                 <tr><td>SAMPLER_CONTEXT</td><td>WebCLContext</td></tr>
-                <tr><td>SAMPLER_NORMALIZED_COORDS</td><td>Boolean</td></tr>
+                <tr><td>SAMPLER_NORMALIZED_COORDS</td><td>CLboolean</td></tr>
                 <tr><td>SAMPLER_ADDRESSING_MODE</td><td>CLenum</td></tr>
                 <tr><td>SAMPLER_FILTER_MODE</td><td>CLenum</td></tr>
             </table><br>
@@ -1475,10 +1458,10 @@ interface <dfn>WebCLProgram</dfn> {
             Return the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
             <table class="foo">
-                <tr><th>name</th><th>ECMAScript returned type</th></tr>
+                <tr><th>name</th><th>return type</th></tr>
                 <tr><td>PROGRAM_CONTEXT</td><td>WebCLContext</td></tr>
-                <tr><td>PROGRAM_NUM_DEVICES</td><td>Integer</td></tr>
-                <tr><td>PROGRAM_DEVICES</td><td>WebCLDevice</td></tr>
+                <tr><td>PROGRAM_NUM_DEVICES</td><td>CLuint</td></tr>
+                <tr><td>PROGRAM_DEVICES</td><td>WebCLDevice[]</td></tr>
                 <tr><td>PROGRAM_SOURCE</td><td>DOMString</td></tr>
             </table><br>
             </dd>
@@ -1568,9 +1551,9 @@ interface <dfn>WebCLKernelArgumentTypes</dfn> {
         Return the value for the passed name. The type returned is the natural type for the
         requested name, as given in the following table:
         <table class="foo">
-          <tr><th>name</th><th>ECMAScript returned type</th></tr>
+          <tr><th>name</th><th>return type</th></tr>
           <tr><td>KERNEL_FUNCTION_NAME</td><td>DOMString</td></tr>
-          <tr><td>KERNEL_NUM_ARGS</td><td>Integer</td></tr>
+          <tr><td>KERNEL_NUM_ARGS</td><td>CLuint</td></tr>
           <tr><td>KERNEL_CONTEXT</td><td>WebCLContext</td></tr>
           <tr><td>KERNEL_PROGRAM</td><td>WebCLProgram</td></tr>
         </table><br>
@@ -1657,7 +1640,7 @@ interface <dfn>WebCLEvent</dfn> {
             Return the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
             <table class="foo">
-                <tr><th>name</th><th>ECMAScript returned type</th></tr>
+                <tr><th>name</th><th>return type</th></tr>
                 <tr><td>EVENT_COMMAND_QUEUE</td><td>WebCLCommandQueue</td></tr>
                 <tr><td>EVENT_CONTEXT</td><td>WebCLContext</td></tr>
                 <tr><td>EVENT_COMMAND_TYPE</td><td>CLenum</td></tr>
@@ -1673,11 +1656,11 @@ interface <dfn>WebCLEvent</dfn> {
             Return the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
             <table class="foo">
-                <tr><th>name</th><th>ECMAScript returned type</th></tr>
-                <tr><td>PROFILING_COMMAND_QUEUED</td><td>Integer</td></tr>
-                <tr><td>PROFILING_COMMAND_SUBMIT</td><td>Integer</td></tr>
-                <tr><td>PROFILING_COMMAND_START</td><td>Integer</td></tr>
-                <tr><td>PROFILING_COMMAND_END</td><td>Integer</td></tr>
+                <tr><th>name</th><th>return type</th></tr>
+                <tr><td>PROFILING_COMMAND_QUEUED</td><td>CLuint</td></tr>
+                <tr><td>PROFILING_COMMAND_SUBMIT</td><td>CLuint</td></tr>
+                <tr><td>PROFILING_COMMAND_START</td><td>CLuint</td></tr>
+                <tr><td>PROFILING_COMMAND_END</td><td>CLuint</td></tr>
             </table><br>
             </dd>
 
@@ -1831,7 +1814,7 @@ partial interface WebCLContext {
       <li>For HTMLImageElement sources, the buffer size is <code>srcImage.width * srcImage.height * 4</code>.
     </ul>
 
-    <h3>Binding a WebCLImage to an HTMLVideoElement</h3>
+    <h3>Binding with HTMLVideoElement</h3>
 
     <p>
       A newly created WebCLImage can be permanently bound to an HTML
@@ -1868,7 +1851,7 @@ dictionary <dfn>WebCLVideoDescriptor</dfn> : WebCLImageDescriptor {
       is scheduled.
     </p>
 
-    <h3>Reading and writing to/from HTML elements</h3>
+    <h3>Reading and writing HTML elements</h3>
 
 <pre class="idl">
 partial interface WebCLCommandQueue {
