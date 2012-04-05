@@ -1784,6 +1784,198 @@ interface <dfn>WebCLEvent</dfn> {
 
 <!-- ======================================================================================================= -->
 
+    <h2>Interoperability with HTML Canvas, Image and Video Elements</h2>
+
+<div class="strawman">
+
+    <p>
+      This section proposes mechanisms for transferring pixel data
+      between WebCL memory objects and HTML media elements.
+      Server-side or Web Worker based implementations of WebCL will
+      not be required to support these features.
+    </p>
+
+    <h3>Creating WebCL memory objects</h3>
+
+    <p>
+      A newly created WebCLBuffer or WebCLImage can be initialized
+      from an ImageData, Canvas, or Image element.  This does not
+      create a binding of any kind between the WebCL memory object and
+      the data source.  The source pixel format is treated as 32-bit
+      RGBA (8 bits per component) with non-premultiplied alpha,
+      regardless of the source.  The newly created WebCLImage will
+      have `channelOrder` equal to `RGBA`, `channelType` equal to
+      `UNORM_INT8`, and width and height equal to the source width
+      and height.
+    </p>
+
+<pre class="idl">
+partial interface WebCLContext {
+  WebCLBuffer createBuffer(CLenum memFlags, ImageData srcPixels);
+  WebCLBuffer createBuffer(CLenum memFlags, HTMLCanvasElement srcCanvas);
+  WebCLBuffer createImage(CLenum memFlags, HTMLImageElement srcImage);
+  WebCLImage createImage(CLenum memFlags, ImageData srcPixels);
+  WebCLImage createImage(CLenum memFlags, HTMLCanvasElement srcCanvas);
+  WebCLImage createImage(CLenum memFlags, HTMLImageElement srcImage);
+}
+</pre> 
+
+    <p>
+      The size in bytes of a new WebCLBuffer is computed from the
+      source as follows:
+    </p>
+
+    <ul>
+      <li>For ImageData sources, the buffer size is `srcPixels.data.length`.
+      <li>For HMTLCanvasElement sources, the buffer size is <code>srcCanvas.getContext(“2d”).getImageData().data.length</code>.
+      <li>For HTMLImageElement sources, the buffer size is <code>srcImage.width * srcImage.height * 4</code>.
+    </ul>
+
+    <h3>Binding a WebCLImage to an HTMLVideoElement</h3>
+
+    <p>
+      A newly created WebCLImage can be permanently bound to an HTML
+      video element.  `enqueueWriteImage` from a video element is only
+      allowed when the video element is bound to the target
+      WebCLImage. Note that `memFlags` must be equal to
+      `MEM_READ_ONLY`.
+    </p>
+
+<pre class="idl">
+partial interface WebCLContext {
+  WebCLImage createImage(CLenum memFlags, HTMLVideoElement srcVideo);
+}
+</pre>
+
+    <p>
+      To allow the application to query information from a WebCLImage
+      that is bound to an HTMLVideoElement, the WebCLImageDescriptor
+      dictionary is extended as follows:
+    </p>
+
+<pre class="idl">
+dictionary <dfn>WebCLVideoDescriptor</dfn> : WebCLImageDescriptor {
+  CLint framesPerSecond = -1;         // video frame rate, -1 if unknown
+  CLint currentEnqueuedFrame = -1:    // -1, 0 to totalFrames-1
+  CLint totalFrames = -1;             // -1 if unknown or “live” / streaming	
+}
+</pre> 
+
+    <p>
+      The `currentEnqueuedFrame` field is set by each invocation of
+      `enqueueWriteImage`. It indicates which frame is scheduled to be
+      written into the WebCLImage. If the value is -1, then no frame
+      is scheduled.
+    </p>
+
+    <h3>Reading and writing to/from HTML elements</h3>
+
+<pre class="idl">
+partial interface WebCLCommandQueue {
+
+  //////////////////////////////////////////////////////////////////////
+  //
+  // Writing to WebCLBuffer
+  //
+
+  void enqueueWriteBuffer(WebCLRegion dstBuffer,
+                          ImageData srcPixels,
+                          CLboolean blockingWrite,
+                          optional WebCLEvent[]? eventWaitList = null, 
+                          optional WebCLEvent? event = null);
+
+  void enqueueWriteBuffer(WebCLRegion dstBuffer,
+                          HTMLCanvasElement srcCanvas,
+                          CLboolean blockingWrite,
+                          optional WebCLEvent[]? eventWaitList = null, 
+                          optional WebCLEvent? event = null);
+
+  void enqueueWriteBuffer(WebCLRegion dstBuffer,
+                          HTMLImageElement srcImage,
+                          CLboolean blockingWrite,
+                          optional WebCLEvent[]? eventWaitList = null, 
+                          optional WebCLEvent? event = null);
+
+  void enqueueWriteBufferRect(WebCLRegion dstBuffer, 
+                              ImageData srcPixels,
+                              WebCLRegion srcRegion,
+                              CLboolean blockingWrite, 
+                              optional WebCLEvent[]? eventWaitList = null,
+                              optional WebCLEvent? event = null);
+
+  void enqueueWriteBufferRect(WebCLRegion dstBuffer, 
+                              HTMLCanvasElement srcCanvas,
+                              WebCLRegion srcRegion,
+                              CLboolean blockingWrite, 
+                              optional WebCLEvent[]? eventWaitList = null,
+                              optional WebCLEvent? event = null);
+
+  void enqueueWriteBufferRect(WebCLRegion dstBuffer, 
+                              HTMLImageElement srcCanvas,
+                              WebCLRegion srcRegion,
+                              CLboolean blockingWrite, 
+                              optional WebCLEvent[]? eventWaitList = null,
+                              optional WebCLEvent? event = null);
+
+  //////////////////////////////////////////////////////////////////////
+  //
+  // Writing to WebCLImage
+  //
+
+  void enqueueWriteImage(WebCLRegion dstImage,
+                         ImageData srcPixels,
+                         CLboolean blockingWrite, 
+                         optional WebCLEvent[]? eventWaitList = null, 
+                         optional WebCLEvent? event = null);
+
+  void enqueueWriteImage(WebCLRegion dstImage,
+                         HTMLCanvasElement srcCanvas,
+                         CLboolean blockingWrite, 
+                         optional WebCLEvent[]? eventWaitList = null, 
+                         optional WebCLEvent? event = null);
+
+  void enqueueWriteImage(WebCLRegion dstImage,
+                         HTMLImageElement srcImage,
+                         CLboolean blockingWrite, 
+                         optional WebCLEvent[]? eventWaitList = null, 
+                         optional WebCLEvent? event = null);
+
+  void enqueueWriteImage(WebCLRegion dstImage,
+                         HTMLVideoElement srcVideo,
+                         CLboolean blockingWrite, 
+                         optional WebCLEvent[]? eventWaitList = null, 
+                         optional WebCLEvent? event = null);
+
+  //////////////////////////////////////////////////////////////////////
+  //
+  // Reading from WebCL
+  //
+
+  void enqueueReadBuffer(WebCLRegion srcBuffer,
+                         HTMLCanvasElement dstCanvas,
+                         CLboolean blockingRead,
+                         optional WebCLEvent[]? eventWaitList = null,
+                         optional WebCLEvent? event = null);
+
+  void enqueueReadBufferRect(WebCLRegion srcBuffer,
+                             HTMLCanvasElement dstCanvas,
+                             WebCLRegion dstCanvasRegion,
+                             CLboolean blockingRead, 
+                             optional WebCLEvent[]? eventWaitList = null,
+                             optional WebCLEvent? event = null);
+
+  void enqueueReadImage(WebCLRegion srcImage,
+                        HTMLCanvasElement dstCanvas,
+                        CLboolean blockingRead,
+                        optional WebCLEvent[]? eventWaitList = null,
+                        optional WebCLEvent? event = null);
+}
+</pre> 
+
+</div> <!-- strawman -->
+
+<!-- ======================================================================================================= -->
+
     <h2> <a id="WEBCL_OPENCL_DIFF">Differences between WebCL and OpenCL 1.1</a></h2>
     
     <p>
@@ -1912,144 +2104,6 @@ interface <dfn>WebCLEvent</dfn> {
  
 <!-- ======================================================================================================= -->
 
-    <h3>Proposal for Interoperability with Browser Technologies: Support for HTML Canvas, Image, Video Elements</h3>
-
-    <p>
-    To allow WebCL to work well with HTML media elements, the following proposed APIs are based on
-    the WebGL texImabe2D, texSubImage2D APIs, which provide:
-    </p>
-
-    <ul>  
-    <li> Support for creating WebCL buffers and WebCL image objects from canvas, image and video elements. 
-    <li> An extension for WebCLRegion, so that canvas, image and video elements can be the sources
-         of enqueueWrites or the the destinations of enqueueReads. 
-    </ul>
-
-    <p>
-    The proposal is intended to make it easier to write portable WebCL applications, and to simplying the
-    moving of data between processed video and image elements, and canvas or ImageData (which already use i
-    32-bit RGBA pixels. It is noted that the WebCL standard does not require server-side or web worker-based 
-    implementations to support DOM elements.
-    
-   
-   </p>
-
-<pre class="idl">
-void texImage2D(GLenum target, GLint level, GLenum internalformat, 
-                    GLsizei width, GLsizei height, GLint border, GLenum format, 
-                    GLenum type, ArrayBufferView pixels);
-void texImage2D(GLenum target, GLint level, GLenum internalformat,
-                    GLenum format, GLenum type, ImageData pixels);
-void texImage2D(GLenum target, GLint level, GLenum internalformat,
-                    GLenum format, GLenum type, HTMLImageElement image) raises (DOMException);
-void texImage2D(GLenum target, GLint level, GLenum internalformat,
-                    GLenum format, GLenum type, HTMLCanvasElement canvas) raises (DOMException);
-void texImage2D(GLenum target, GLint level, GLenum internalformat,
-                    GLenum format, GLenum type, HTMLVideoElement video) raises (DOMException);
-
-void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, 
-                    GLsizei width, GLsizei height, 
-                    GLenum format, GLenum type, ArrayBufferView pixels);
-void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, 
-                    GLenum format, GLenum type, ImageData pixels);
-void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, 
-                    GLenum format, GLenum type, HTMLImageElement image) raises (DOMException);
-void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, 
-                    GLenum format, GLenum type, HTMLCanvasElement canvas) raises (DOMException);
-void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, 
-                    GLenum format, GLenum type, HTMLVideoElement video) raises (DOMException);
-WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer srcBuffer);
-WebCLBuffer createBuffer(CLenum memFlags, ImageData pixels);
-WebCLBuffer createBuffer(CLenum memFlags, HTMLCanvasElement canvas) raises (DOMException);
-
-</pre> 
-
-<ul>
-<li> For ImageData source, the buffer size, in bytes, is: pixels.data.length þtp://www.w3.org/TR/2dcontext/#dom-canvaspixelarray-length
-<li> For HMTLCanvasElement source, the buffer size is: canvas.getContext(“2d”).getImageData().data.length
-<li> In both cases, pixel format is 32-bit RGBA, non-premultiplied alpha.
-<li> A DOMException is raised if the HTML element is not of the right type or has undefined width or height.
-</ul>
-
-<pre class="idl">
-WebCLImage createImage(CLenum memFlags,  WebCLImageDescriptor descriptor, optional ArrayBuffer srcBuffer);
-WebCLImage createImage(CLenum memFlags, ImageData pixels);
-WebCLImage createImage(CLenum memFlags, HTMLCanvasElement canvas) raises (DOMException);
-WebCLImage createImage(CLenum memFlags, HTMLImageElement image) raises (DOMException);
-WebCLImage createImage(CLenum memFlags, HTMLVideoElement video) raises (DOMException);
-
-// For WebCLImage objects created from HTMLVideoElements, the WebCLImageDescriptor is extended as follows
-dictionary WebCLImageDescriptor {
-	CLenum channelOrder = WebCL.RGBA;       // Default: RGB colors + alpha
-  	CLenum channelType = WebCL.UNORM_INT8;  // Default: 8-bit unsigned colors normalized to [0, 1]
-  	CLuint[2] size = [ 1, 1 ];
-  	CLuint pitch = 0;i
-        CLint framesPerSecond = -1;	        // video frame rate, -1 if unknowni
-        CLint currentEnqueuedFrame = -1;	// -1, 0 to totalFrames-1
-        CLint totalFrames = -1;	                // -1 if unknown or “live” / streaming	
-}
-
-</pre> 
-
-<ul>
-<li> For HTMLImageElement and HTMLVideoElement sources, memFlags must be WebCL.MEM_READ_ONLY.
-<li> A DOMException is raised if the HTML element is not of the right type or has undefined width or height.
-<li> After the WebCLImage is created, the application can query for the descriptor via: WebCLImage.getInfo(WebCL.IMAGE_FORMAT);
-<li> The currentEnqueuedFrame field is set by enqueueWriteImage, it indicates which frame is scheduled to be “loaded” into the CLImage. If the value is -1, then no frame is scheduled.
-<li> If a CLImage is created from ImageData, or HTML elements, then channelOrder is WebCL.RGBA and channelType is WebCL.UNORM_INT8.
-</ul>
-
-<pre class="idl">
-WebCLEvent enqueueWriteBuffer(WebCLRegion dstBuffer,
-	ArrayBuffer srcArray, 
-        //also allow as source: ImageData pixels, HTMLCanvasElement canvas 
-	CLboolean blockingWrite, 
-	optional WebCLEvent[]? eventWaitList = null, 
-        optional CLboolean generateEvent = false) raises (DOMException);
-
-WebCLEvent enqueueWriteImage(WebCLRegion dstImage,
-	ArrayBuffer srcArray, 
-	// also allow as source: ImageData pixels, HTMLCanvasElement canvas,
-        // HTMLImageElement image, HTMLVideoElement video
-	CLboolean blockingWrite, 
-	optional WebCLEvent[]? eventWaitList = null, 
-	optional CLboolean generateEvent = false) raises (DOMException);
-
-  WebCLEvent enqueueWriteBufferRect(WebCLRegion dstBuffer, 
-	ArrayBuffer srcArray, 
-        // also allow as source: ImageData pixels, HTMLCanvasElement canvas 
-	WebCLRegion srcArrayRegion,
-	CLboolean blockingWrite, 
-	optional WebCLEvent[]? eventWaitList = null,
-	optional CLboolean generateEvent = false) raises (DOMException
-
-WebCLEvent enqueueReadBuffer(WebCLRegion srcBuffer, 
-	ArrayBuffer dstArray,// also allow as  destination:  
-        ImageData pixels, HTMLCanvasElement canvas
-	CLboolean blockingRead, 
-	optional WebCLEvent[]? eventWaitList = null,
-	optional CLboolean generateEvent = false) raises (DOMException);
-  
- WebCLEvent enqueueReadImage(WebCLRegion srcImage,
-	ArrayBuffer dstArray,
-	// also allow as  destination:  ImageData pixels, HTMLCanvasElement canvas
- 	CLboolean blockingRead, 
-	optional WebCLEvent[]? eventWaitList = null,
-	optional CLboolean generateEvent = false) raises (DOMException);
-  
- WebCLEvent enqueueReadBufferRect(WebCLRegion srcBuffer,
-	ArrayBuffer dstArray,
-        // also allow as  destination: ImageData pixels, HTMLCanvasElement canvas
-	WebCLRegion dstArrayRegion,
-	CLboolean blockingRead, 
-	optional WebCLEvent[]? eventWaitList = null,
-	optional CLboolean generateEvent = false) raises (DOMException);
-
-</pre> 
-
-
-<!-- ======================================================================================================= -->
-
     <h2>References</h2>
     
     <h3>Normative references</h3>
@@ -2133,7 +2187,7 @@ WebCLEvent enqueueReadBuffer(WebCLRegion srcBuffer,
     <p>
         Additional thanks to: ...
         and the members of the Khronos WebCL Working Group.
-	</p>
+ </p>
 
 
 
