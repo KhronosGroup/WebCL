@@ -585,8 +585,8 @@ interface <dfn>WebCL</dfn> {
         properties, or `null` if a suitable context could not be
         created.  The `properties` parameter can be omitted, in which
         case the implementation will decide which platform and device
-        to use.  The WebCLContextProperties dictionary is defined as
-        follows:
+        (or devices) to use.  The WebCLContextProperties dictionary is
+        defined as follows:
 
 <pre class="idl" id="WEBCLCONTEXTPROPERTIES">
 dictionary <dfn>WebCLContextProperties</dfn> {
@@ -623,8 +623,9 @@ dictionary <dfn>WebCLContextProperties</dfn> {
         the given type in the system or on the given `platform`,
         `createContext` will return `null`.  If `platform` and
         `devices` are both `null`, the WebCL implementation will
-        select any platform and any (single) device that matches the
-        given type.
+        select any platform that has one or more devices of the
+        given type, and creates a context that spans all of those
+        devices.
 
         <table class="foo">
           <tr><th>deviceType</th><th>Description</th></tr>
@@ -802,7 +803,7 @@ interface <dfn>WebCLContext</dfn> {
 
     WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer srcBuffer);
 
-    WebCLCommandQueue createCommandQueue(WebCLDevice device, optional CLenum properties = 0);
+    WebCLCommandQueue createCommandQueue(optional WebCLDevice? device = null, optional CLenum properties = 0);
 
     WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
 
@@ -842,10 +843,15 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
         <dt class="idl-code">WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer srcBuffer)</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLCommandQueue createCommandQueue(WebCLDevice device, optional CLenum properties = 0)</dt>
-            <dd>
-            By default, a command queue is created with commands executed in-order, with profiling of commands disabled.
-            </dd>
+        <dt class="idl-code">WebCLCommandQueue createCommandQueue(optional WebCLDevice? device = null, optional CLenum properties = 0)</dt>
+        <dd>
+            Creates a new command queue for the given device. If
+            `device` is `null`, the WebCL implementation will select
+            any WebCLDevice that matches the given `properties` and is
+            covered by this WebCLContext.  If `properties` is omitted,
+            the command queue is created with out-of-order execution
+            disabled and profiling disabled.
+        </dd>
         <dt class="idl-code">WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer)</dt>
             <dd>
             This method is only valid if the WebCL context has been created with WebGL shared group.
@@ -863,7 +869,7 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
             </dd>
         <dt class="idl-code">WebCLProgram createProgram(DOMString source)</dt>
             <dd>
-            create a WebCLProgram from a UTF-8 string.
+            creates a WebCLProgram from a UTF-8 string.
             </dd>
         <dt class="idl-code">WebCLSampler createSampler(CLboolean normalizedCoords, CLenum addressingMode, CLenum filterMode)</dt>
             <dd>
@@ -873,7 +879,7 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
             </dd>
         <dt class="idl-code">any getInfo(CLenum name)</dt>
             <dd>
-            Return the value for the passed name. The type returned is the natural type for the
+            Returns the value for the passed name. The type returned is the natural type for the
             requested name, as given in the following table:
             <table class="foo">
                 <tr><th>name</th><th>ECMAScript returned type</th></tr>
@@ -900,10 +906,10 @@ interface <dfn>WebCLCommandQueue</dfn> {
   //
 
   void enqueueCopyBuffer(WebCLRegion srcBuffer,
-                         WebCLRegion dstBuffer, 
+                         WebCLRegion dstBuffer,
                          optional WebCLEvent[]? eventWaitList = null,
                          optional WebCLEvent? event = null);
-  
+
   void enqueueCopyImage(WebCLRegion srcImage,
                         WebCLRegion dstImage, 
                         optional WebCLEvent[]? eventWaitList = null,
@@ -929,7 +935,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
                          CLboolean blockingRead, 
                          optional WebCLEvent[]? eventWaitList = null,
                          optional WebCLEvent? event = null);
-  
+ 
   void enqueueReadImage(WebCLRegion srcImage,
                         ArrayBuffer dstArray,
                         CLboolean blockingRead,
