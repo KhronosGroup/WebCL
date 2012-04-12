@@ -1,0 +1,82 @@
+
+/* Style for a public "Working Draft" */
+
+@import "default.css";
+
+body {
+  background-image: url('logo-WD.png');
+}
+
+.stability {
+     position: fixed;
+     bottom: 0;
+     left: 0; right: 0;
+     margin: 0 auto 0 auto !important;
+     z-index: 1000;
+     width: 50%;
+     background: maroon; color: yellow;
+     -webkit-border-radius: 1em 1em 0 0;
+     -moz-border-radius: 1em 1em 0 0;
+     border-radius: 1em 1em 0 0;
+     -moz-box-shadow: 0 0 1em #500;
+     -webkit-box-shadow: 0 0 1em #500;
+     box-shadow: 0 0 1em red;
+     padding: 0.5em 1em;
+     text-align: center;
+}
+.stability strong {
+ display: block;
+}
+.stability input {
+ appearance: none; margin: 0; border: 0; padding: 0.25em 0.5em; background: transparent; color: black;
+ position: absolute; top: -0.5em; right: 0; font: 1.25em sans-serif; text-align: center;
+}
+.stability input:hover {
+ color: white;
+ text-shadow: 0 0 2px black;
+}
+.stability input:active {
+ padding: 0.3em 0.45em 0.2em 0.55em;
+}
+.stability :link, .stability :visited,
+.stability :link:hover, .stability :visited:hover {
+ background: transparent;
+ color: white;
+}
+
+/* --- EDITORIAL NOTES --- */
+.issue {
+    padding:    1em;
+    margin: 1em 0em 0em;
+    border: 1px solid #f00;
+    background: #ffc;
+}
+
+.issue::before {
+    content:    "Issue";
+    display:    block;
+    width:  50px;
+    margin: -1.5em 0 0.5em 0;
+    font-weight:    bold;
+    border: 1px solid #f00;
+    background: #fff;
+    padding:    3px 1em;
+}
+
+.editor-note {
+    margin: 1em 0em 0em;
+    padding:    1em;
+    border: 2px solid #cff6d9;
+    background: #e2fff0;
+}
+
+.editor-note::before {
+    content:    "Note";
+    display:    block;
+    width:  50px;
+    margin: -1.5em 0 0.5em 0;
+    font-weight:    bold;
+    border: 1px solid #cff6d9;
+    background: #fff;
+    padding:    3px 1em;
+}
