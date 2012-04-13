@@ -1715,9 +1715,9 @@ interface <dfn>WebCLEvent</dfn> {
     <h3>Out-of-Range Memory Accesses</h3>
 
     <p>
-     To ensure that all access indices are valid, protections will be provided 
-     against out of bounds memory writes.  All out of bounds memory reads will
-     return a pre-defined value.
+     To ensure that all accessed indices are valid, protections will be provided 
+     against out of bounds memory writes.  Out of bounds memory reads should not
+     return any uninitialized value.
     </p>
 
 
