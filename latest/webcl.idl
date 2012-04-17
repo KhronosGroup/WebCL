@@ -668,7 +668,7 @@ partial interface WebCLContext {
 
 dictionary WebCLVideoDescriptor : WebCLImageDescriptor {
   CLint framesPerSecond = -1;         // video frame rate, -1 if unknown
-  CLint currentEnqueuedFrame = -1:    // -1, 0 to totalFrames-1
+  CLint currentEnqueuedFrame = -1;    // -1, 0 to totalFrames-1
   CLint totalFrames = -1;             // -1 if unknown or "live" / streaming	
 };
 
