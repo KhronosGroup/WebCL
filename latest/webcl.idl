@@ -1,7 +1,7 @@
 typedef boolean       CLboolean;
 typedef long          CLint;
 typedef unsigned long CLuint;
-typedef const unsigned long CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
+typedef unsigned long CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
 
 
 callback WebCLCallback = void (CLenum status, any userdata);
