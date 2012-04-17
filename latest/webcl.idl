@@ -393,7 +393,7 @@ interface WebCLContext {
 
     WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer srcBuffer);
 
-    WebCLCommandQueue createCommandQueue(optional WebCLDevice? device = null, optional CLenum properties = 0);
+    WebCLCommandQueue createCommandQueue(optional WebCLDevice? device = null, optional CLenum properties);
 
     WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
 
