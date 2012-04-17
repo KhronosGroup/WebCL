@@ -489,13 +489,13 @@ interface WebCLCommandQueue {
                           ArrayBuffer srcArray,
                           CLboolean blockingWrite, 
                           optional WebCLEvent[]? eventWaitList, 
-                          optional WebCLEvent? event)
+                          optional WebCLEvent? event);
 
   void enqueueWriteImage(WebCLRegion dstImage,
                          ArrayBuffer srcArray, 
                          CLboolean blockingWrite, 
                          optional WebCLEvent[]? eventWaitList, 
-                         optional WebCLEvent? event)
+                         optional WebCLEvent? event);
 
   void enqueueWriteBufferRect(WebCLRegion dstBuffer, 
                               ArrayBuffer srcArray,
