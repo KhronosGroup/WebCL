@@ -418,12 +418,13 @@ interface WebCLContext {
 
     WebCLImageDescriptor[] getSupportedImageFormats(CLenum memFlags,
                                                     CLenum imageType);
+};
 
 
 dictionary WebCLImageDescriptor {
   CLenum channelOrder = 0x10B5;            // 0x10B5 == WebCL.RGBA
   CLenum channelType = 0x10D2;             // 0x10D2 == WebCL.UNORM_INT8, 8-bit colors normalized to [0, 1]
-  CLuint[2] size = [ 1, 1 ];
+  CLuint[/*2*/] size /* = [ 1, 1 ] */;
   CLuint pitch = 0;
 };
 
