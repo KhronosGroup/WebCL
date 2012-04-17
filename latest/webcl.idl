@@ -393,7 +393,7 @@ interface WebCLContext {
 
     WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer srcBuffer);
 
-    WebCLCommandQueue createCommandQueue(optional WebCLDevice? device = null, optional CLenum properties /* = 0 */);
+    WebCLCommandQueue createCommandQueue(optional WebCLDevice? device /* = null */, optional CLenum properties /* = 0 */);
 
     WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
 
@@ -554,9 +554,9 @@ interface WebCLCommandQueue {
 
 dictionary WebCLRegion {
   WebCLMemoryObject? buffer = null;
-  CLuint[3] origin = [0, 0, 0];       // 3rd element applies to 3D buffers only
-  CLuint[3] size = [1, 1, 1];         // 3rd element applies to 3D buffers only
-  CLuint[2] pitch = [0, 0];           // 2nd element applies to 3D buffers only
+  CLuint[/*3*/] origin /* = [0, 0, 0] */;       // 3rd element applies to 3D buffers only
+  CLuint[/*3*/] size /* = [1, 1, 1] */;         // 3rd element applies to 3D buffers only
+  CLuint[/*2*/] pitch /* = [0, 0] */;           // 2nd element applies to 3D buffers only
 };
 
 
