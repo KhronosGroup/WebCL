@@ -523,7 +523,7 @@ interface WebCLCommandQueue {
   //
 
   void enqueueNDRangeKernel(WebCLKernel kernel, 
-                            CLuint[3]? offsets, CLuint[3]? globals, CLuint[3]? locals, 
+                            CLuint[]? offsets, CLuint[]? globals, CLuint[]? locals, 
                             optional WebCLEvent[]? eventWaitList,
                             optional WebCLEvent? event);
   
