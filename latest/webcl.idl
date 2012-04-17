@@ -2,6 +2,7 @@ typedef boolean       CLboolean;
 typedef long          CLint;
 typedef unsigned long CLuint;
 typedef unsigned long CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
+typedef unsigned long CLtype;     // Used in WebCLKernelArgumentTypes
 
 
 callback WebCLCallback = void (CLenum status, any userdata);
@@ -613,8 +614,6 @@ interface WebCLKernel {
 
 
 interface WebCLKernelArgumentTypes {
-
-  typedef unsigned long CLtype;
 
   // Scalar types; may be bitwise-OR'ed with a vector type
 
