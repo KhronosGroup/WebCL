@@ -370,7 +370,7 @@ interface WebCL {
 dictionary WebCLContextProperties {
   WebCLPlatform? platform = null;                  // Default: let the implementation decide
   WebCLDevice[]? devices = null;                   // Default: let the implementation decide
-  CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT;   // Default: let the implementation decide
+  CLenum deviceType = 0x1;                         // 0x1 == WebCL.DEVICE_TYPE_DEFAULT
   any shareGroup = null;
 };
 
@@ -421,8 +421,8 @@ interface WebCLContext {
 
 
 dictionary WebCLImageDescriptor {
-  CLenum channelOrder = WebCL.RGBA;        // Default: RGB colors + alpha
-  CLenum channelType = WebCL.UNORM_INT8;   // Default: 8-bit unsigned colors normalized to [0, 1]
+  CLenum channelOrder = 0x10B5;            // 0x10B5 == WebCL.RGBA
+  CLenum channelType = 0x10D2;             // 0x10D2 == WebCL.UNORM_INT8, 8-bit colors normalized to [0, 1]
   CLuint[2] size = [ 1, 1 ];
   CLuint pitch = 0;
 };
