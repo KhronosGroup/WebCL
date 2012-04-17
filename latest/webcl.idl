@@ -424,7 +424,7 @@ interface WebCLContext {
 dictionary WebCLImageDescriptor {
   CLenum channelOrder = 0x10B5;            // 0x10B5 == WebCL.RGBA
   CLenum channelType = 0x10D2;             // 0x10D2 == WebCL.UNORM_INT8, 8-bit colors normalized to [0, 1]
-  CLuint[/*2*/] size /* = [ 1, 1 ] */;
+  CLuint[] size /* = [ 1, 1 ] */;
   CLuint pitch = 0;
 };
 
@@ -438,23 +438,23 @@ interface WebCLCommandQueue {
 
   void enqueueCopyBuffer(WebCLRegion srcBuffer,
                          WebCLRegion dstBuffer,
-                         optional WebCLEvent[]? eventWaitList = null,
-                         optional WebCLEvent? event = null);
+                         optional WebCLEvent[]? eventWaitList,
+                         optional WebCLEvent? event);
 
   void enqueueCopyImage(WebCLRegion srcImage,
                         WebCLRegion dstImage, 
-                        optional WebCLEvent[]? eventWaitList = null,
-                        optional WebCLEvent? event = null);
+                        optional WebCLEvent[]? eventWaitList,
+                        optional WebCLEvent? event);
   
   void enqueueCopyBufferToImage(WebCLRegion srcBuffer,
                                 WebCLRegion dstImage, 
-                                optional WebCLEvent[]? eventWaitList = null,
-                                optional WebCLEvent? event = null);
+                                optional WebCLEvent[]? eventWaitList,
+                                optional WebCLEvent? event);
   
   void enqueueCopyImageToBuffer(WebCLRegion srcImage,
                                 WebCLRegion dstBuffer, 
-                                optional WebCLEvent[]? eventWaitList = null,
-                                optional WebCLEvent? event = null);
+                                optional WebCLEvent[]? eventWaitList,
+                                optional WebCLEvent? event);
 
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -464,21 +464,21 @@ interface WebCLCommandQueue {
   void enqueueReadBuffer(WebCLRegion srcBuffer, 
                          ArrayBuffer dstArray,
                          CLboolean blockingRead, 
-                         optional WebCLEvent[]? eventWaitList = null,
-                         optional WebCLEvent? event = null);
+                         optional WebCLEvent[]? eventWaitList,
+                         optional WebCLEvent? event);
  
   void enqueueReadImage(WebCLRegion srcImage,
                         ArrayBuffer dstArray,
                         CLboolean blockingRead,
-                        optional WebCLEvent[]? eventWaitList = null,
-                        optional WebCLEvent? event = null);
+                        optional WebCLEvent[]? eventWaitList,
+                        optional WebCLEvent? event);
   
   void enqueueReadBufferRect(WebCLRegion srcBuffer,
                              ArrayBuffer dstArray,
                              WebCLRegion dstArrayRegion,
                              CLboolean blockingRead,
-                             optional WebCLEvent[]? eventWaitList = null,
-                             optional WebCLEvent? event = null);
+                             optional WebCLEvent[]? eventWaitList,
+                             optional WebCLEvent? event);
   
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -488,21 +488,21 @@ interface WebCLCommandQueue {
   void enqueueWriteBuffer(WebCLRegion dstBuffer,
                           ArrayBuffer srcArray,
                           CLboolean blockingWrite, 
-                          optional WebCLEvent[]? eventWaitList = null, 
-                          optional WebCLEvent? event = null)
+                          optional WebCLEvent[]? eventWaitList, 
+                          optional WebCLEvent? event)
 
   void enqueueWriteImage(WebCLRegion dstImage,
                          ArrayBuffer srcArray, 
                          CLboolean blockingWrite, 
-                         optional WebCLEvent[]? eventWaitList = null, 
-                         optional WebCLEvent? event = null)
+                         optional WebCLEvent[]? eventWaitList, 
+                         optional WebCLEvent? event)
 
   void enqueueWriteBufferRect(WebCLRegion dstBuffer, 
                               ArrayBuffer srcArray,
                               WebCLRegion srcArrayRegion,
                               CLboolean blockingWrite, 
-                              optional WebCLEvent[]? eventWaitList = null,
-                              optional WebCLEvent? event = null);
+                              optional WebCLEvent[]? eventWaitList,
+                              optional WebCLEvent? event);
   
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -510,12 +510,12 @@ interface WebCLCommandQueue {
   //
 
   void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
-                               optional WebCLEvent[]? eventWaitList = null,
-                               optional CLboolean generateEvent = false);
+                               optional WebCLEvent[]? eventWaitList,
+                               optional WebCLEvent? event);
  
   void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
-                               optional WebCLEvent[]? eventWaitList = null,
-                               optional WebCLEvent? event = null);
+                               optional WebCLEvent[]? eventWaitList,
+                               optional WebCLEvent? event);
   
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -524,21 +524,21 @@ interface WebCLCommandQueue {
 
   void enqueueNDRangeKernel(WebCLKernel kernel, 
                             CLuint[3]? offsets, CLuint[3]? globals, CLuint[3]? locals, 
-                            optional WebCLEvent[]? eventWaitList = null,
-                            optional WebCLEvent? event = null);
+                            optional WebCLEvent[]? eventWaitList,
+                            optional WebCLEvent? event);
   
   void enqueueTask(WebCLKernel kernel, 
-                   optional WebCLEvent[]? eventWaitList = null,
-                   optional WebCLEvent? event = null);
+                   optional WebCLEvent[]? eventWaitList,
+                   optional WebCLEvent? event);
   
   ////////////////////////////////////////////////////////////////////////////
   //
   // Synchronization
   //
 
-  void enqueueMarker(optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
+  void enqueueMarker(optional WebCLEvent[]? eventWaitList, optional WebCLEvent? event);
 
-  void enqueueBarrier(optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
+  void enqueueBarrier(optional WebCLEvent[]? eventWaitList, optional WebCLEvent? event);
   
   void finish();
   
@@ -555,9 +555,9 @@ interface WebCLCommandQueue {
 
 dictionary WebCLRegion {
   WebCLMemoryObject? buffer = null;
-  CLuint[/*3*/] origin /* = [0, 0, 0] */;       // 3rd element applies to 3D buffers only
-  CLuint[/*3*/] size /* = [1, 1, 1] */;         // 3rd element applies to 3D buffers only
-  CLuint[/*2*/] pitch /* = [0, 0] */;           // 2nd element applies to 3D buffers only
+  CLuint[] origin /* = [0, 0, 0] */;       // 3rd element applies to 3D buffers only
+  CLuint[] size /* = [1, 1, 1] */;         // 3rd element applies to 3D buffers only
+  CLuint[] pitch /* = [0, 0] */;           // 2nd element applies to 3D buffers only
 };
 
 
@@ -684,41 +684,41 @@ partial interface WebCLCommandQueue {
   void enqueueWriteBuffer(WebCLRegion dstBuffer,
                           ImageData srcPixels,
                           CLboolean blockingWrite,
-                          optional WebCLEvent[]? eventWaitList = null, 
-                          optional WebCLEvent? event = null);
+                          optional WebCLEvent[]? eventWaitList, 
+                          optional WebCLEvent? event);
 
   void enqueueWriteBuffer(WebCLRegion dstBuffer,
                           HTMLCanvasElement srcCanvas,
                           CLboolean blockingWrite,
-                          optional WebCLEvent[]? eventWaitList = null, 
-                          optional WebCLEvent? event = null);
+                          optional WebCLEvent[]? eventWaitList, 
+                          optional WebCLEvent? event);
 
   void enqueueWriteBuffer(WebCLRegion dstBuffer,
                           HTMLImageElement srcImage,
                           CLboolean blockingWrite,
-                          optional WebCLEvent[]? eventWaitList = null, 
-                          optional WebCLEvent? event = null);
+                          optional WebCLEvent[]? eventWaitList, 
+                          optional WebCLEvent? event);
 
   void enqueueWriteBufferRect(WebCLRegion dstBuffer, 
                               ImageData srcPixels,
                               WebCLRegion srcRegion,
                               CLboolean blockingWrite, 
-                              optional WebCLEvent[]? eventWaitList = null,
-                              optional WebCLEvent? event = null);
+                              optional WebCLEvent[]? eventWaitList,
+                              optional WebCLEvent? event);
 
   void enqueueWriteBufferRect(WebCLRegion dstBuffer, 
                               HTMLCanvasElement srcCanvas,
                               WebCLRegion srcRegion,
                               CLboolean blockingWrite, 
-                              optional WebCLEvent[]? eventWaitList = null,
-                              optional WebCLEvent? event = null);
+                              optional WebCLEvent[]? eventWaitList,
+                              optional WebCLEvent? event);
 
   void enqueueWriteBufferRect(WebCLRegion dstBuffer, 
                               HTMLImageElement srcCanvas,
                               WebCLRegion srcRegion,
                               CLboolean blockingWrite, 
-                              optional WebCLEvent[]? eventWaitList = null,
-                              optional WebCLEvent? event = null);
+                              optional WebCLEvent[]? eventWaitList,
+                              optional WebCLEvent? event);
 
   //////////////////////////////////////////////////////////////////////
   //
@@ -728,26 +728,26 @@ partial interface WebCLCommandQueue {
   void enqueueWriteImage(WebCLRegion dstImage,
                          ImageData srcPixels,
                          CLboolean blockingWrite, 
-                         optional WebCLEvent[]? eventWaitList = null, 
-                         optional WebCLEvent? event = null);
+                         optional WebCLEvent[]? eventWaitList, 
+                         optional WebCLEvent? event);
 
   void enqueueWriteImage(WebCLRegion dstImage,
                          HTMLCanvasElement srcCanvas,
                          CLboolean blockingWrite, 
-                         optional WebCLEvent[]? eventWaitList = null, 
-                         optional WebCLEvent? event = null);
+                         optional WebCLEvent[]? eventWaitList, 
+                         optional WebCLEvent? event);
 
   void enqueueWriteImage(WebCLRegion dstImage,
                          HTMLImageElement srcImage,
                          CLboolean blockingWrite, 
-                         optional WebCLEvent[]? eventWaitList = null, 
-                         optional WebCLEvent? event = null);
+                         optional WebCLEvent[]? eventWaitList, 
+                         optional WebCLEvent? event);
 
   void enqueueWriteImage(WebCLRegion dstImage,
                          HTMLVideoElement srcVideo,
                          CLboolean blockingWrite, 
-                         optional WebCLEvent[]? eventWaitList = null, 
-                         optional WebCLEvent? event = null);
+                         optional WebCLEvent[]? eventWaitList, 
+                         optional WebCLEvent? event);
 
   //////////////////////////////////////////////////////////////////////
   //
@@ -757,20 +757,20 @@ partial interface WebCLCommandQueue {
   void enqueueReadBuffer(WebCLRegion srcBuffer,
                          HTMLCanvasElement dstCanvas,
                          CLboolean blockingRead,
-                         optional WebCLEvent[]? eventWaitList = null,
-                         optional WebCLEvent? event = null);
+                         optional WebCLEvent[]? eventWaitList,
+                         optional WebCLEvent? event);
 
   void enqueueReadBufferRect(WebCLRegion srcBuffer,
                              HTMLCanvasElement dstCanvas,
                              WebCLRegion dstCanvasRegion,
                              CLboolean blockingRead, 
-                             optional WebCLEvent[]? eventWaitList = null,
-                             optional WebCLEvent? event = null);
+                             optional WebCLEvent[]? eventWaitList,
+                             optional WebCLEvent? event);
 
   void enqueueReadImage(WebCLRegion srcImage,
                         HTMLCanvasElement dstCanvas,
                         CLboolean blockingRead,
-                        optional WebCLEvent[]? eventWaitList = null,
-                        optional WebCLEvent? event = null);
+                        optional WebCLEvent[]? eventWaitList,
+                        optional WebCLEvent? event);
 };
 
