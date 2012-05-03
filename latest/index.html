@@ -186,7 +186,7 @@ typedef unsigned long CLtype;     // Used in WebCLKernelArgumentTypes
     </p>
 
 <pre class="idl">
-callback <dfn>WebCLCallback</dfn> = void (CLenum status, any userdata);
+callback <dfn>WebCLCallback</dfn> = void (WebCLEvent event, any userdata);
 </pre>
 
     <p>
@@ -609,8 +609,8 @@ dictionary <dfn>WebCLContextProperties</dfn> {
   WebCLPlatform?  platform = null;      // Default: let the implementation decide
   WebCLDevice[]?  devices = null;       // Default: let the implementation decide
   CLenum          deviceType = 0x1;     // 0x1 == WebCL.DEVICE_TYPE_DEFAULT
-  any 			      shareGroup = null;    // can only be a WebGL context
-  DOMString[]     hint = null;          // 'audio', 'video'
+  any?            shareGroup = null;    // can only be a WebGL context
+  DOMString[]?    hint = null;          // 'audio', 'video'
 };
 </pre>
 
@@ -1336,7 +1336,7 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
 
     <h3><a id="WEBCLMEMORYOBJECT">WebCLMemoryObject</a></h3>
 
-<pre class="idl">interface <dfn>WebCLMemoryObject</dfn> {
+<pre class="idl">interface <dfn>WebCLMemoryObject</dfn> : Transferable {
   any getInfo(CLenum name);
   WebCLGLObjectInfo getGLObjectInfo();
 };
@@ -1644,11 +1644,15 @@ myKernel.setArg(2, 512, types.LOCAL_MEMORY_SIZE);             // reserve 512 byt
     </p>
 
 <pre class="idl">
+[Constructor]
 interface <dfn>WebCLEvent</dfn> {
-    any getInfo(CLenum name);
-    any getProfilingInfo(CLenum name);
-    void setUserEventStatus(CLenum executionStatus);
-    void setCallback(CLenum executionStatus, WebCLCallback notify, optional any userdata);
+    readonly attribute CLenum status;
+    readonly attribute WebCLMemoryObject buffer;
+    
+    any   getInfo(CLenum name);
+    any   getProfilingInfo(CLenum name);
+    void  setUserEventStatus(CLenum executionStatus);
+    void  setCallback(CLenum executionStatus, WebCLCallback notify, optional any userdata);
 };
 </pre>
 
