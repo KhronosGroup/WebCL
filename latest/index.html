@@ -606,10 +606,11 @@ interface <dfn>WebCL</dfn> {
 
 <pre class="idl" id="WEBCLCONTEXTPROPERTIES">
 dictionary <dfn>WebCLContextProperties</dfn> {
-  WebCLPlatform? platform = null;                  // Default: let the implementation decide
-  WebCLDevice[]? devices = null;                   // Default: let the implementation decide
-  CLenum deviceType = 0x1;                         // 0x1 == WebCL.DEVICE_TYPE_DEFAULT
-  any shareGroup = null;
+  WebCLPlatform?  platform = null;      // Default: let the implementation decide
+  WebCLDevice[]?  devices = null;       // Default: let the implementation decide
+  CLenum          deviceType = 0x1;     // 0x1 == WebCL.DEVICE_TYPE_DEFAULT
+  any 			      shareGroup = null;    // can only be a WebGL context
+  DOMString[]     hint = null;          // 'audio', 'video'
 };
 </pre>
 
@@ -660,6 +661,12 @@ dictionary <dfn>WebCLContextProperties</dfn> {
       with WebGL.  If resources are to be shared between WebGL and
       WebCL, `shareGroup` must contain the WebGLRenderingContext
       instance whose resources are to be shared.
+      </dd>
+      <dt class="idl-code">DOMString[] hint</dt>
+      <dd>
+      An optional array of hints to allow the implementation to find an appropriate
+      WebCLContext suitable for audio-visual content. There is no guarantee implementations
+      support these hints.
       </dd>
       </dl>
       
