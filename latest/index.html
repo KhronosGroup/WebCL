@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">May 2, 2012</h2>
+    <h2 class="no-toc">May 3, 2012</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -1046,6 +1046,131 @@ interface <dfn>WebCLCommandQueue</dfn> {
 };
 </pre>
 
+<div class="strawman">
+<p>[bug 8812] use OpenCL method signature instead of grouping arguments in WebCLRegion</p>
+<pre class="idl">
+interface <dfn>WebCLCommandQueue</dfn> {
+
+void enqueueReadBuffer(
+                    WebCLBuffer             buffer,
+                    CLboolean               blocking_read,
+                    CLuint                  offset,
+                    CLuint                  cb, 
+                    ArrayBuffer             ptr,
+                    optional WebCLEvent[]?  eventWaitList, 
+                    optional WebCLEvent?    event);
+                            
+void enqueueReadBufferRect(
+                    WebCLBuffer             buffer,
+                    CLboolean               blocking_read,
+                    CLuint[3]               buffer_origin,
+                    CLuint[3]               host_origin, 
+                    CLuint[3]               region,
+                    CLuint                  buffer_row_pitch,
+                    CLuint                  buffer_slice_pitch,
+                    CLuint                  host_row_pitch,
+                    CLuint                  host_slice_pitch,
+                    ArrayBuffer             ptr,
+                    optional WebCLEvent[]?  eventWaitList, 
+                    optional WebCLEvent?    event);
+                            
+void enqueueWriteBuffer(
+                    WebCLBuffer             buffer,
+                    CLboolean               blocking_write, 
+                    CLuint                  offset, 
+                    CLuint                  cb, 
+                    ArrayBuffer             ptr,
+                    optional WebCLEvent[]?  eventWaitList, 
+                    optional WebCLEvent?    event);
+                            
+void enqueueWriteBufferRect(
+                    WebCLBuffer             buffer,
+                    CLboolean               blocking_write,
+                    CLuint[3]               buffer_origin,
+                    CLuint[3]               host_origin,
+                    CLuint[3]               region,
+                    CLuint                  buffer_row_pitch,
+                    CLuint                  buffer_slice_pitch,
+                    CLuint                  host_row_pitch,
+                    CLuint                  host_slice_pitch,
+                    ArrayBuffer             ptr,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
+                            
+void enqueueCopyBuffer(
+                    WebCLBuffer             src_buffer,
+                    WebCLBuffer             dst_buffer,
+                    CLuint                  src_offset,
+                    CLuint                  dst_offset,
+                    CLuint                  cb, 
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
+                            
+void enqueueCopyBufferRect(
+                    WebCLBuffer             src_buffer,
+                    WebCLBuffer             dst_buffer, 
+                    CLuint[3]               src_origin,
+                    CLuint[3]               dst_origin,
+                    CLuint[3]               region, 
+                    CLuint                  src_row_pitch,
+                    CLuint                  src_slice_pitch,
+                    CLuint                  dst_row_pitch,
+                    CLuint                  dst_slice_pitch,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
+                           
+void enqueueReadImage(
+                    WebCLImage              image,
+                    CLboolean               blocking_read, 
+                    CLuint[3]               origin,
+                    CLuint[3]               region,
+                    CLuint                  row_pitch,
+                    CLuint                  slice_pitch, 
+                    ArrayBuffer             ptr,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
+
+void enqueueWriteImage(
+                    WebCLImage              image,
+                    CLboolean               blocking_write, 
+                    CLuint[3]               origin,
+                    CLuint[3]               region,
+                    CLuint                  input_row_pitch,
+                    CLuint                  input_slice_pitch, 
+                    ArrayBuffer             ptr,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
+
+void enqueueCopyImage(
+                    WebCLImage              src_image,
+                    WebCLImage              dst_image, 
+                    CLuint[3]               src_origin,
+                    CLuint[3]               dst_origin,
+                    CLuint[3]               region, 
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
+
+void enqueueCopyImageToBuffer(
+                    WebCLImage              src_image,
+                    WebCLBuffer             dst_buffer, 
+                    CLuint[3]               src_origin,
+                    CLuint[3]               region, 
+                    CLuint                  dst_offset,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
+
+void enqueueCopyBufferToImage(
+                    WebCLBuffer             src_buffer,
+                    WebCLImage              dst_image, 
+                    CLuint                  src_offset,
+                    CLuint[3]               dst_origin,
+                    CLuint[3]               region, 
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
+};
+</pre>
+</div>
+
     <dl class="methods">
 
         <dt class="idl-code">void enqueueCopyBuffer(WebCLRegion srcBuffer, WebCLRegion dstBuffer, 
@@ -1242,6 +1367,9 @@ queue.enqueueNDRangeKernel(kernel3, null, globals, null, eventWaitList);
 </pre>
 
     <h4><a id="WEBCLREGION">WebCLRegion</a></h4>
+<div class="strawman">
+<p>[bug 8812] remove this section (WebCLRegion not used in the spec anymore)</p>
+</div>
     <p>
       WebCLRegion specifies a rectangular region of an image or buffer
       object. A WebCLRegion object, or any arbitrary object with the
@@ -1878,6 +2006,10 @@ dictionary <dfn>WebCLVideoDescriptor</dfn> : WebCLImageDescriptor {
     </p>
 
     <h3>Reading and writing HTML elements</h3>
+<div class="strawman">
+<p>[bug 8812] if WebCLRegion is removed, all these methods must be rewritten to follow OpenCL 
+signature, as proposed in WebCLCommandQueue section.</p>
+</div>
 
 <pre class="idl">
 partial interface WebCLCommandQueue {
