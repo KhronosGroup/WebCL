@@ -217,11 +217,17 @@ exception <dfn>WebCLException</dfn> : DOMException {
     <h3><a id="WEBCL">WebCL</a></h3>
 
     <p>
-      A WebCL computing context can be created through the `window.WebCL` object.
+      A WebCL computing context can be created through the global `WebCL` object.
       The `WebCL` object also declares all enumerated types used in the API.
     </p>
     
+<pre class="example">
+// Creates a webcl computing context
+var webcl = new WebCL();
+</pre>
+
 <pre class="idl">
+[Constructor]
 interface <dfn>WebCL</dfn> {
 
   // Functions
