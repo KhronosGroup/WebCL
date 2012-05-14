@@ -826,7 +826,7 @@ interface <dfn>WebCLContext</dfn> {
 
     WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer srcBuffer);
 
-    WebCLCommandQueue createCommandQueue(optional WebCLDevice? device /* = null */, optional CLenum properties /* = 0 */);
+    WebCLCommandQueue createCommandQueue(optional WebCLDevice[]? devices, optional CLenum properties);
 
     WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
 
@@ -867,14 +867,14 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
         <dt class="idl-code">WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer srcBuffer)</dt>
             <dd>
             </dd>
-        <dt class="idl-code">WebCLCommandQueue createCommandQueue(optional WebCLDevice? device = null, optional CLenum properties = 0)</dt>
+        <dt class="idl-code">WebCLCommandQueue createCommandQueue(optional WebCLDevice[]? devices = null, optional CLenum properties = 0)</dt>
         <dd>
-            Creates a new command queue for the given device. If
-            `device` is `null`, the WebCL implementation will select
-            any WebCLDevice that matches the given `properties` and is
-            covered by this WebCLContext.  If `properties` is omitted,
-            the command queue is created with out-of-order execution
-            disabled and profiling disabled.
+            Creates a new command queue for the devices in the given
+            array. If `devices` is `null`, the WebCL implementation
+            will select any single WebCLDevice that matches the given
+            `properties` and is covered by this WebCLContext.  If
+            `properties` is omitted, the command queue is created with
+            out-of-order execution disabled and profiling disabled.
         </dd>
         <dt class="idl-code">WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer)</dt>
             <dd>
