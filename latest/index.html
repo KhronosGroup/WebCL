@@ -609,7 +609,7 @@ dictionary <dfn>WebCLContextProperties</dfn> {
   WebCLPlatform?  platform = null;      // Default: let the implementation decide
   WebCLDevice[]?  devices = null;       // Default: let the implementation decide
   CLenum          deviceType = 0x1;     // 0x1 == WebCL.DEVICE_TYPE_DEFAULT
-  any?            shareGroup = null;    // can only be a WebGL context
+  any             shareGroup = null;    // can only be a WebGL context
   DOMString[]?    hint = null;          // 'audio', 'video'
 };
 </pre>
