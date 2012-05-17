@@ -858,8 +858,8 @@ interface <dfn>WebCLContext</dfn> {
 dictionary <dfn>WebCLImageDescriptor</dfn> {
   CLenum channelOrder = 0x10B5;            // 0x10B5 == WebCL.RGBA
   CLenum channelType = 0x10D2;             // 0x10D2 == WebCL.UNORM_INT8, 8-bit colors normalized to [0, 1]
-  CLuint[] size /* = [ 1, 1 ] */;
-  CLuint rowPitch = 0, slicePitch = 0;
+  CLuint width = 0, height = 0;
+  CLuint rowPitch = 0;
 };
 </pre>
 
