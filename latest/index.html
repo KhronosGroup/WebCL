@@ -236,7 +236,7 @@ interface <dfn>WebCL</dfn> {
 
   WebCLContext? createContext(optional WebCLContextProperties properties);
 
-  DOMString[] getSupportedExtensions();
+  sequence&lt;DOMString&gt; getSupportedExtensions();
 
   void waitForEvents(WebCLEvent[] eventWaitList);
 
@@ -679,7 +679,7 @@ dictionary <dfn>WebCLContextProperties</dfn> {
       </dd>
       </dl>
       
-      <dt class="idl-code">DOMString[] getSupportedExtensions()
+      <dt class="idl-code">sequency&lt;DOMString&gt; getSupportedExtensions()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9">OpenCL 1.1 §9</a>)</span>
       </dt>
       <dd>
@@ -722,7 +722,7 @@ dictionary <dfn>WebCLContextProperties</dfn> {
 interface <dfn>WebCLPlatform</dfn> {
   object getInfo(CLenum name);
   WebCLDevice[] getDevices(CLenum deviceType);
-  DOMString[] getSupportedExtensions();  
+  sequence&lt;DOMString&gt; getSupportedExtensions();
 };
 </pre>
 
@@ -757,7 +757,7 @@ interface <dfn>WebCLPlatform</dfn> {
         in <a href="#getPlatformInfoEnums">Chapter 4</a>.
       </dd>
 
-      <dt class="idl-code">DOMString[] getSupportedExtensions()
+      <dt class="idl-code">sequence&lt;DOMString&gt; getSupportedExtensions()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9">OpenCL 1.1 §9</a>)</span>
       </dt>
       <dd>
@@ -780,7 +780,7 @@ interface <dfn>WebCLPlatform</dfn> {
 interface <dfn>WebCLDevice</dfn> {
     any getInfo(CLenum name);
     object getExtension(DOMString extensionName);
-    DOMString[] getSupportedExtensions();
+    sequence&lt;DOMString&gt; getSupportedExtensions();
 };
 </pre>
 
@@ -797,7 +797,7 @@ interface <dfn>WebCLDevice</dfn> {
         in <a href="#getDeviceInfoEnums">Chapter 4</a>.
       </dd>
 
-      <dt class="idl-code">DOMString[] getSupportedExtensions()
+      <dt class="idl-code">sequence&lt;DOMString&gt; getSupportedExtensions()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9">OpenCL 1.1 §9</a>), 
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceInfo.html">man page</a>)</span>
       </dt>
