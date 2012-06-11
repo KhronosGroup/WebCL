@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">May 3, 2012</h2>
+    <h2 class="no-toc">June 11, 2012</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -170,7 +170,7 @@
 typedef boolean       CLboolean;
 typedef long          CLint;
 typedef unsigned long CLuint;
-typedef unsigned long CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
+typedef long          CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
 typedef unsigned long CLtype;     // Used in WebCLKernelArgumentTypes
 </pre>
 
@@ -245,349 +245,349 @@ interface <dfn>WebCL</dfn> {
   // Enums
 
   /* Error Codes */
-  const unsigned short /*CLenum*/ SUCCESS                                   = 0;
-  const unsigned short /*CLenum*/ DEVICE_NOT_FOUND                          = -1;
-  const unsigned short /*CLenum*/ DEVICE_NOT_AVAILABLE                      = -2;
-  const unsigned short /*CLenum*/ COMPILER_NOT_AVAILABLE                    = -3;
-  const unsigned short /*CLenum*/ MEM_OBJECT_ALLOCATION_FAILURE             = -4;
-  const unsigned short /*CLenum*/ OUT_OF_RESOURCES                          = -5;
-  const unsigned short /*CLenum*/ OUT_OF_HOST_MEMORY                        = -6;
-  const unsigned short /*CLenum*/ PROFILING_INFO_NOT_AVAILABLE              = -7;
-  const unsigned short /*CLenum*/ MEM_COPY_OVERLAP                          = -8;
-  const unsigned short /*CLenum*/ IMAGE_FORMAT_MISMATCH                     = -9;
-  const unsigned short /*CLenum*/ IMAGE_FORMAT_NOT_SUPPORTED                = -10;
-  const unsigned short /*CLenum*/ BUILD_PROGRAM_FAILURE                     = -11;
-  const unsigned short /*CLenum*/ MAP_FAILURE                               = -12;
-  const unsigned short /*CLenum*/ MISALIGNED_SUB_BUFFER_OFFSET              = -13;
-  const unsigned short /*CLenum*/ EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST = -14;
-  const unsigned short /*CLenum*/ INVALID_VALUE                             = -30;
-  const unsigned short /*CLenum*/ INVALID_DEVICE_TYPE                       = -31;
-  const unsigned short /*CLenum*/ INVALID_PLATFORM                          = -32;
-  const unsigned short /*CLenum*/ INVALID_DEVICE                            = -33;
-  const unsigned short /*CLenum*/ INVALID_CONTEXT                           = -34;
-  const unsigned short /*CLenum*/ INVALID_QUEUE_PROPERTIES                  = -35;
-  const unsigned short /*CLenum*/ INVALID_COMMAND_QUEUE                     = -36;
-  const unsigned short /*CLenum*/ INVALID_HOST_PTR                          = -37;
-  const unsigned short /*CLenum*/ INVALID_MEM_OBJECT                        = -38;
-  const unsigned short /*CLenum*/ INVALID_IMAGE_FORMAT_DESCRIPTOR           = -39;
-  const unsigned short /*CLenum*/ INVALID_IMAGE_SIZE                        = -40;
-  const unsigned short /*CLenum*/ INVALID_SAMPLER                           = -41;
-  const unsigned short /*CLenum*/ INVALID_BINARY                            = -42;
-  const unsigned short /*CLenum*/ INVALID_BUILD_OPTIONS                     = -43;
-  const unsigned short /*CLenum*/ INVALID_PROGRAM                           = -44;
-  const unsigned short /*CLenum*/ INVALID_PROGRAM_EXECUTABLE                = -45;
-  const unsigned short /*CLenum*/ INVALID_KERNEL_NAME                       = -46;
-  const unsigned short /*CLenum*/ INVALID_KERNEL_DEFINITION                 = -47;
-  const unsigned short /*CLenum*/ INVALID_KERNEL                            = -48;
-  const unsigned short /*CLenum*/ INVALID_ARG_INDEX                         = -49;
-  const unsigned short /*CLenum*/ INVALID_ARG_VALUE                         = -50;
-  const unsigned short /*CLenum*/ INVALID_ARG_SIZE                          = -51;
-  const unsigned short /*CLenum*/ INVALID_KERNEL_ARGS                       = -52;
-  const unsigned short /*CLenum*/ INVALID_WORK_DIMENSION                    = -53;
-  const unsigned short /*CLenum*/ INVALID_WORK_GROUP_SIZE                   = -54;
-  const unsigned short /*CLenum*/ INVALID_WORK_ITEM_SIZE                    = -55;
-  const unsigned short /*CLenum*/ INVALID_GLOBAL_OFFSET                     = -56;
-  const unsigned short /*CLenum*/ INVALID_EVENT_WAIT_LIST                   = -57;
-  const unsigned short /*CLenum*/ INVALID_EVENT                             = -58;
-  const unsigned short /*CLenum*/ INVALID_OPERATION                         = -59;
-  const unsigned short /*CLenum*/ INVALID_GL_OBJECT                         = -60;
-  const unsigned short /*CLenum*/ INVALID_BUFFER_SIZE                       = -61;
-  const unsigned short /*CLenum*/ INVALID_MIP_LEVEL                         = -62;
-  const unsigned short /*CLenum*/ INVALID_GLOBAL_WORK_SIZE                  = -63;
-  const unsigned short /*CLenum*/ INVALID_PROPERTY                          = -64;
+  CLenum SUCCESS                                   = 0;
+  CLenum DEVICE_NOT_FOUND                          = -1;
+  CLenum DEVICE_NOT_AVAILABLE                      = -2;
+  CLenum COMPILER_NOT_AVAILABLE                    = -3;
+  CLenum MEM_OBJECT_ALLOCATION_FAILURE             = -4;
+  CLenum OUT_OF_RESOURCES                          = -5;
+  CLenum OUT_OF_HOST_MEMORY                        = -6;
+  CLenum PROFILING_INFO_NOT_AVAILABLE              = -7;
+  CLenum MEM_COPY_OVERLAP                          = -8;
+  CLenum IMAGE_FORMAT_MISMATCH                     = -9;
+  CLenum IMAGE_FORMAT_NOT_SUPPORTED                = -10;
+  CLenum BUILD_PROGRAM_FAILURE                     = -11;
+  CLenum MAP_FAILURE                               = -12;
+  CLenum MISALIGNED_SUB_BUFFER_OFFSET              = -13;
+  CLenum EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST = -14;
+  CLenum INVALID_VALUE                             = -30;
+  CLenum INVALID_DEVICE_TYPE                       = -31;
+  CLenum INVALID_PLATFORM                          = -32;
+  CLenum INVALID_DEVICE                            = -33;
+  CLenum INVALID_CONTEXT                           = -34;
+  CLenum INVALID_QUEUE_PROPERTIES                  = -35;
+  CLenum INVALID_COMMAND_QUEUE                     = -36;
+  CLenum INVALID_HOST_PTR                          = -37;
+  CLenum INVALID_MEM_OBJECT                        = -38;
+  CLenum INVALID_IMAGE_FORMAT_DESCRIPTOR           = -39;
+  CLenum INVALID_IMAGE_SIZE                        = -40;
+  CLenum INVALID_SAMPLER                           = -41;
+  CLenum INVALID_BINARY                            = -42;
+  CLenum INVALID_BUILD_OPTIONS                     = -43;
+  CLenum INVALID_PROGRAM                           = -44;
+  CLenum INVALID_PROGRAM_EXECUTABLE                = -45;
+  CLenum INVALID_KERNEL_NAME                       = -46;
+  CLenum INVALID_KERNEL_DEFINITION                 = -47;
+  CLenum INVALID_KERNEL                            = -48;
+  CLenum INVALID_ARG_INDEX                         = -49;
+  CLenum INVALID_ARG_VALUE                         = -50;
+  CLenum INVALID_ARG_SIZE                          = -51;
+  CLenum INVALID_KERNEL_ARGS                       = -52;
+  CLenum INVALID_WORK_DIMENSION                    = -53;
+  CLenum INVALID_WORK_GROUP_SIZE                   = -54;
+  CLenum INVALID_WORK_ITEM_SIZE                    = -55;
+  CLenum INVALID_GLOBAL_OFFSET                     = -56;
+  CLenum INVALID_EVENT_WAIT_LIST                   = -57;
+  CLenum INVALID_EVENT                             = -58;
+  CLenum INVALID_OPERATION                         = -59;
+  CLenum INVALID_GL_OBJECT                         = -60;
+  CLenum INVALID_BUFFER_SIZE                       = -61;
+  CLenum INVALID_MIP_LEVEL                         = -62;
+  CLenum INVALID_GLOBAL_WORK_SIZE                  = -63;
+  CLenum INVALID_PROPERTY                          = -64;
 
   /* OpenCL Version */
-  const unsigned short /*CLenum*/ VERSION_1_0                               = 1;
-  const unsigned short /*CLenum*/ VERSION_1_1                               = 1;
+  CLenum VERSION_1_0                               = 1;
+  CLenum VERSION_1_1                               = 1;
 
   /* cl_bool */
-  const unsigned short /*CLenum*/ FALSE                                     = 0;
-  const unsigned short /*CLenum*/ TRUE                                      = 1;
+  CLenum FALSE                                     = 0;
+  CLenum TRUE                                      = 1;
 
   /* cl_platform_info */
-  const unsigned short /*CLenum*/ PLATFORM_PROFILE                          = 0x0900;
-  const unsigned short /*CLenum*/ PLATFORM_VERSION                          = 0x0901;
-  const unsigned short /*CLenum*/ PLATFORM_NAME                             = 0x0902;
-  const unsigned short /*CLenum*/ PLATFORM_VENDOR                           = 0x0903;
-  const unsigned short /*CLenum*/ PLATFORM_EXTENSIONS                       = 0x0904;
+  CLenum PLATFORM_PROFILE                          = 0x0900;
+  CLenum PLATFORM_VERSION                          = 0x0901;
+  CLenum PLATFORM_NAME                             = 0x0902;
+  CLenum PLATFORM_VENDOR                           = 0x0903;
+  CLenum PLATFORM_EXTENSIONS                       = 0x0904;
 
   /* cl_device_type - bitfield */
-  const unsigned short /*CLenum*/ DEVICE_TYPE_DEFAULT                       = 0x1;
-  const unsigned short /*CLenum*/ DEVICE_TYPE_CPU                           = 0x2;
-  const unsigned short /*CLenum*/ DEVICE_TYPE_GPU                           = 0x4;
-  const unsigned short /*CLenum*/ DEVICE_TYPE_ACCELERATOR                   = 0x8;
-  const unsigned short /*CLenum*/ DEVICE_TYPE_ALL                           = 0xFFFFFFFF;
+  CLenum DEVICE_TYPE_DEFAULT                       = 0x1;
+  CLenum DEVICE_TYPE_CPU                           = 0x2;
+  CLenum DEVICE_TYPE_GPU                           = 0x4;
+  CLenum DEVICE_TYPE_ACCELERATOR                   = 0x8;
+  CLenum DEVICE_TYPE_ALL                           = 0xFFFFFFFF;
 
   /* cl_device_info */
-  const unsigned short /*CLenum*/ DEVICE_TYPE                               = 0x1000;
-  const unsigned short /*CLenum*/ DEVICE_VENDOR_ID                          = 0x1001;
-  const unsigned short /*CLenum*/ DEVICE_MAX_COMPUTE_UNITS                  = 0x1002;
-  const unsigned short /*CLenum*/ DEVICE_MAX_WORK_ITEM_DIMENSIONS           = 0x1003;
-  const unsigned short /*CLenum*/ DEVICE_MAX_WORK_GROUP_SIZE                = 0x1004;
-  const unsigned short /*CLenum*/ DEVICE_MAX_WORK_ITEM_SIZES                = 0x1005;
-  const unsigned short /*CLenum*/ DEVICE_PREFERRED_VECTOR_WIDTH_CHAR        = 0x1006;
-  const unsigned short /*CLenum*/ DEVICE_PREFERRED_VECTOR_WIDTH_SHORT       = 0x1007;
-  const unsigned short /*CLenum*/ DEVICE_PREFERRED_VECTOR_WIDTH_INT         = 0x1008;
-  const unsigned short /*CLenum*/ DEVICE_PREFERRED_VECTOR_WIDTH_LONG        = 0x1009;
-  const unsigned short /*CLenum*/ DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT       = 0x100A;
-  const unsigned short /*CLenum*/ DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE      = 0x100B;
-  const unsigned short /*CLenum*/ DEVICE_MAX_CLOCK_FREQUENCY                = 0x100C;
-  const unsigned short /*CLenum*/ DEVICE_ADDRESS_BITS                       = 0x100D;
-  const unsigned short /*CLenum*/ DEVICE_MAX_READ_IMAGE_ARGS                = 0x100E;
-  const unsigned short /*CLenum*/ DEVICE_MAX_WRITE_IMAGE_ARGS               = 0x100F;
-  const unsigned short /*CLenum*/ DEVICE_MAX_MEM_ALLOC_SIZE                 = 0x1010;
-  const unsigned short /*CLenum*/ DEVICE_IMAGE2D_MAX_WIDTH                  = 0x1011;
-  const unsigned short /*CLenum*/ DEVICE_IMAGE2D_MAX_HEIGHT                 = 0x1012;
-  const unsigned short /*CLenum*/ DEVICE_IMAGE_SUPPORT                      = 0x1016;
-  const unsigned short /*CLenum*/ DEVICE_MAX_PARAMETER_SIZE                 = 0x1017;
-  const unsigned short /*CLenum*/ DEVICE_MAX_SAMPLERS                       = 0x1018;
-  const unsigned short /*CLenum*/ DEVICE_MEM_BASE_ADDR_ALIGN                = 0x1019;
-  const unsigned short /*CLenum*/ DEVICE_MIN_DATA_TYPE_ALIGN_SIZE           = 0x101A;
-  const unsigned short /*CLenum*/ DEVICE_SINGLE_FP_CONFIG                   = 0x101B;
-  const unsigned short /*CLenum*/ DEVICE_GLOBAL_MEM_CACHE_TYPE              = 0x101C;
-  const unsigned short /*CLenum*/ DEVICE_GLOBAL_MEM_CACHELINE_SIZE          = 0x101D;
-  const unsigned short /*CLenum*/ DEVICE_GLOBAL_MEM_CACHE_SIZE              = 0x101E;
-  const unsigned short /*CLenum*/ DEVICE_GLOBAL_MEM_SIZE                    = 0x101F;
-  const unsigned short /*CLenum*/ DEVICE_MAX_CONSTANT_BUFFER_SIZE           = 0x1020;
-  const unsigned short /*CLenum*/ DEVICE_MAX_CONSTANT_ARGS                  = 0x1021;
-  const unsigned short /*CLenum*/ DEVICE_LOCAL_MEM_TYPE                     = 0x1022;
-  const unsigned short /*CLenum*/ DEVICE_LOCAL_MEM_SIZE                     = 0x1023;
-  const unsigned short /*CLenum*/ DEVICE_ERROR_CORRECTION_SUPPORT           = 0x1024;
-  const unsigned short /*CLenum*/ DEVICE_PROFILING_TIMER_RESOLUTION         = 0x1025;
-  const unsigned short /*CLenum*/ DEVICE_ENDIAN_LITTLE                      = 0x1026;
-  const unsigned short /*CLenum*/ DEVICE_AVAILABLE                          = 0x1027;
-  const unsigned short /*CLenum*/ DEVICE_COMPILER_AVAILABLE                 = 0x1028;
-  const unsigned short /*CLenum*/ DEVICE_EXECUTION_CAPABILITIES             = 0x1029;
-  const unsigned short /*CLenum*/ DEVICE_QUEUE_PROPERTIES                   = 0x102A;
-  const unsigned short /*CLenum*/ DEVICE_NAME                               = 0x102B;
-  const unsigned short /*CLenum*/ DEVICE_VENDOR                             = 0x102C;
-  const unsigned short /*CLenum*/ DRIVER_VERSION                            = 0x102D;
-  const unsigned short /*CLenum*/ DEVICE_PROFILE                            = 0x102E;
-  const unsigned short /*CLenum*/ DEVICE_VERSION                            = 0x102F;
-  const unsigned short /*CLenum*/ DEVICE_EXTENSIONS                         = 0x1030;
-  const unsigned short /*CLenum*/ DEVICE_PLATFORM                           = 0x1031;
-  const unsigned short /*CLenum*/ DEVICE_DOUBLE_FP_CONFIG                   = 0x1032;
-  const unsigned short /*CLenum*/ DEVICE_HALF_FP_CONFIG                     = 0x1033;
-  const unsigned short /*CLenum*/ DEVICE_PREFERRED_VECTOR_WIDTH_HALF        = 0x1034;
-  const unsigned short /*CLenum*/ DEVICE_HOST_UNIFIED_MEMORY                = 0x1035;
-  const unsigned short /*CLenum*/ DEVICE_NATIVE_VECTOR_WIDTH_CHAR           = 0x1036;
-  const unsigned short /*CLenum*/ DEVICE_NATIVE_VECTOR_WIDTH_SHORT          = 0x1037;
-  const unsigned short /*CLenum*/ DEVICE_NATIVE_VECTOR_WIDTH_INT            = 0x1038;
-  const unsigned short /*CLenum*/ DEVICE_NATIVE_VECTOR_WIDTH_LONG           = 0x1039;
-  const unsigned short /*CLenum*/ DEVICE_NATIVE_VECTOR_WIDTH_FLOAT          = 0x103A;
-  const unsigned short /*CLenum*/ DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE         = 0x103B;
-  const unsigned short /*CLenum*/ DEVICE_NATIVE_VECTOR_WIDTH_HALF           = 0x103C;
-  const unsigned short /*CLenum*/ DEVICE_OPENCL_C_VERSION                   = 0x103D;
+  CLenum DEVICE_TYPE                               = 0x1000;
+  CLenum DEVICE_VENDOR_ID                          = 0x1001;
+  CLenum DEVICE_MAX_COMPUTE_UNITS                  = 0x1002;
+  CLenum DEVICE_MAX_WORK_ITEM_DIMENSIONS           = 0x1003;
+  CLenum DEVICE_MAX_WORK_GROUP_SIZE                = 0x1004;
+  CLenum DEVICE_MAX_WORK_ITEM_SIZES                = 0x1005;
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_CHAR        = 0x1006;
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_SHORT       = 0x1007;
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_INT         = 0x1008;
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_LONG        = 0x1009;
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT       = 0x100A;
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE      = 0x100B;
+  CLenum DEVICE_MAX_CLOCK_FREQUENCY                = 0x100C;
+  CLenum DEVICE_ADDRESS_BITS                       = 0x100D;
+  CLenum DEVICE_MAX_READ_IMAGE_ARGS                = 0x100E;
+  CLenum DEVICE_MAX_WRITE_IMAGE_ARGS               = 0x100F;
+  CLenum DEVICE_MAX_MEM_ALLOC_SIZE                 = 0x1010;
+  CLenum DEVICE_IMAGE2D_MAX_WIDTH                  = 0x1011;
+  CLenum DEVICE_IMAGE2D_MAX_HEIGHT                 = 0x1012;
+  CLenum DEVICE_IMAGE_SUPPORT                      = 0x1016;
+  CLenum DEVICE_MAX_PARAMETER_SIZE                 = 0x1017;
+  CLenum DEVICE_MAX_SAMPLERS                       = 0x1018;
+  CLenum DEVICE_MEM_BASE_ADDR_ALIGN                = 0x1019;
+  CLenum DEVICE_MIN_DATA_TYPE_ALIGN_SIZE           = 0x101A;
+  CLenum DEVICE_SINGLE_FP_CONFIG                   = 0x101B;
+  CLenum DEVICE_GLOBAL_MEM_CACHE_TYPE              = 0x101C;
+  CLenum DEVICE_GLOBAL_MEM_CACHELINE_SIZE          = 0x101D;
+  CLenum DEVICE_GLOBAL_MEM_CACHE_SIZE              = 0x101E;
+  CLenum DEVICE_GLOBAL_MEM_SIZE                    = 0x101F;
+  CLenum DEVICE_MAX_CONSTANT_BUFFER_SIZE           = 0x1020;
+  CLenum DEVICE_MAX_CONSTANT_ARGS                  = 0x1021;
+  CLenum DEVICE_LOCAL_MEM_TYPE                     = 0x1022;
+  CLenum DEVICE_LOCAL_MEM_SIZE                     = 0x1023;
+  CLenum DEVICE_ERROR_CORRECTION_SUPPORT           = 0x1024;
+  CLenum DEVICE_PROFILING_TIMER_RESOLUTION         = 0x1025;
+  CLenum DEVICE_ENDIAN_LITTLE                      = 0x1026;
+  CLenum DEVICE_AVAILABLE                          = 0x1027;
+  CLenum DEVICE_COMPILER_AVAILABLE                 = 0x1028;
+  CLenum DEVICE_EXECUTION_CAPABILITIES             = 0x1029;
+  CLenum DEVICE_QUEUE_PROPERTIES                   = 0x102A;
+  CLenum DEVICE_NAME                               = 0x102B;
+  CLenum DEVICE_VENDOR                             = 0x102C;
+  CLenum DRIVER_VERSION                            = 0x102D;
+  CLenum DEVICE_PROFILE                            = 0x102E;
+  CLenum DEVICE_VERSION                            = 0x102F;
+  CLenum DEVICE_EXTENSIONS                         = 0x1030;
+  CLenum DEVICE_PLATFORM                           = 0x1031;
+  CLenum DEVICE_DOUBLE_FP_CONFIG                   = 0x1032;
+  CLenum DEVICE_HALF_FP_CONFIG                     = 0x1033;
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_HALF        = 0x1034;
+  CLenum DEVICE_HOST_UNIFIED_MEMORY                = 0x1035;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_CHAR           = 0x1036;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_SHORT          = 0x1037;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_INT            = 0x1038;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_LONG           = 0x1039;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_FLOAT          = 0x103A;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE         = 0x103B;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_HALF           = 0x103C;
+  CLenum DEVICE_OPENCL_C_VERSION                   = 0x103D;
 
   /* cl_device_fp_config - bitfield */
-  const unsigned short /*CLenum*/ FP_DENORM                                 = 0x1;
-  const unsigned short /*CLenum*/ FP_INF_NAN                                = 0x2;
-  const unsigned short /*CLenum*/ FP_ROUND_TO_NEAREST                       = 0x4;
-  const unsigned short /*CLenum*/ FP_ROUND_TO_ZERO                          = 0x8;
-  const unsigned short /*CLenum*/ FP_ROUND_TO_INF                           = 0x10;
-  const unsigned short /*CLenum*/ FP_FMA                                    = 0x20;
-  const unsigned short /*CLenum*/ FP_SOFT_FLOAT                             = 0x40;
+  CLenum FP_DENORM                                 = 0x1;
+  CLenum FP_INF_NAN                                = 0x2;
+  CLenum FP_ROUND_TO_NEAREST                       = 0x4;
+  CLenum FP_ROUND_TO_ZERO                          = 0x8;
+  CLenum FP_ROUND_TO_INF                           = 0x10;
+  CLenum FP_FMA                                    = 0x20;
+  CLenum FP_SOFT_FLOAT                             = 0x40;
 
   /* cl_device_mem_cache_type */
-  const unsigned short /*CLenum*/ NONE                                      = 0x0;
-  const unsigned short /*CLenum*/ READ_ONLY_CACHE                           = 0x1;
-  const unsigned short /*CLenum*/ READ_WRITE_CACHE                          = 0x2;
+  CLenum NONE                                      = 0x0;
+  CLenum READ_ONLY_CACHE                           = 0x1;
+  CLenum READ_WRITE_CACHE                          = 0x2;
 
   /* cl_device_local_mem_type */
-  const unsigned short /*CLenum*/ LOCAL                                     = 0x1;
-  const unsigned short /*CLenum*/ GLOBAL                                    = 0x2;
+  CLenum LOCAL                                     = 0x1;
+  CLenum GLOBAL                                    = 0x2;
 
   /* cl_device_exec_capabilities - bitfield */
-  const unsigned short /*CLenum*/ EXEC_KERNEL                               = 0x1;
-  const unsigned short /*CLenum*/ EXEC_NATIVE_KERNEL                        = 0x2;
+  CLenum EXEC_KERNEL                               = 0x1;
+  CLenum EXEC_NATIVE_KERNEL                        = 0x2;
 
   /* cl_command_queue_properties - bitfield */
-  const unsigned short /*CLenum*/ QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE       = 0x1;
-  const unsigned short /*CLenum*/ QUEUE_PROFILING_ENABLE                    = 0x2;
+  CLenum QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE       = 0x1;
+  CLenum QUEUE_PROFILING_ENABLE                    = 0x2;
 
   /* cl_context_info  */
-  const unsigned short /*CLenum*/ CONTEXT_REFERENCE_COUNT                   = 0x1080;
-  const unsigned short /*CLenum*/ CONTEXT_DEVICES                           = 0x1081;
-  const unsigned short /*CLenum*/ CONTEXT_PROPERTIES                        = 0x1082;
-  const unsigned short /*CLenum*/ CONTEXT_NUM_DEVICES                       = 0x1083;
+  CLenum CONTEXT_REFERENCE_COUNT                   = 0x1080;
+  CLenum CONTEXT_DEVICES                           = 0x1081;
+  CLenum CONTEXT_PROPERTIES                        = 0x1082;
+  CLenum CONTEXT_NUM_DEVICES                       = 0x1083;
 
   /* cl_context_info + cl_context_properties */
-  const unsigned short /*CLenum*/ CONTEXT_PLATFORM                          = 0x1084;
+  CLenum CONTEXT_PLATFORM                          = 0x1084;
 
   /* cl_command_queue_info */
-  const unsigned short /*CLenum*/ QUEUE_CONTEXT                             = 0x1090;
-  const unsigned short /*CLenum*/ QUEUE_DEVICE                              = 0x1091;
-  const unsigned short /*CLenum*/ QUEUE_REFERENCE_COUNT                     = 0x1092;
-  const unsigned short /*CLenum*/ QUEUE_PROPERTIES                          = 0x1093;
+  CLenum QUEUE_CONTEXT                             = 0x1090;
+  CLenum QUEUE_DEVICE                              = 0x1091;
+  CLenum QUEUE_REFERENCE_COUNT                     = 0x1092;
+  CLenum QUEUE_PROPERTIES                          = 0x1093;
 
   /* cl_mem_flags - bitfield */
-  const unsigned short /*CLenum*/ MEM_READ_WRITE                            = 0x1;
-  const unsigned short /*CLenum*/ MEM_WRITE_ONLY                            = 0x2;
-  const unsigned short /*CLenum*/ MEM_READ_ONLY                             = 0x4;
+  CLenum MEM_READ_WRITE                            = 0x1;
+  CLenum MEM_WRITE_ONLY                            = 0x2;
+  CLenum MEM_READ_ONLY                             = 0x4;
 
   /* cl_channel_order */
-  const unsigned short /*CLenum*/ R                                         = 0x10B0;
-  const unsigned short /*CLenum*/ A                                         = 0x10B1;
-  const unsigned short /*CLenum*/ RG                                        = 0x10B2;
-  const unsigned short /*CLenum*/ RA                                        = 0x10B3;
-  const unsigned short /*CLenum*/ RGB                                       = 0x10B4;
-  const unsigned short /*CLenum*/ RGBA                                      = 0x10B5;
-  const unsigned short /*CLenum*/ BGRA                                      = 0x10B6;
-  const unsigned short /*CLenum*/ ARGB                                      = 0x10B7;
-  const unsigned short /*CLenum*/ INTENSITY                                 = 0x10B8;
-  const unsigned short /*CLenum*/ LUMINANCE                                 = 0x10B9;
-  const unsigned short /*CLenum*/ Rx                                        = 0x10BA;
-  const unsigned short /*CLenum*/ RGx                                       = 0x10BB;
-  const unsigned short /*CLenum*/ RGBx                                      = 0x10BC;
+  CLenum R                                         = 0x10B0;
+  CLenum A                                         = 0x10B1;
+  CLenum RG                                        = 0x10B2;
+  CLenum RA                                        = 0x10B3;
+  CLenum RGB                                       = 0x10B4;
+  CLenum RGBA                                      = 0x10B5;
+  CLenum BGRA                                      = 0x10B6;
+  CLenum ARGB                                      = 0x10B7;
+  CLenum INTENSITY                                 = 0x10B8;
+  CLenum LUMINANCE                                 = 0x10B9;
+  CLenum Rx                                        = 0x10BA;
+  CLenum RGx                                       = 0x10BB;
+  CLenum RGBx                                      = 0x10BC;
 
   /* cl_channel_type */
-  const unsigned short /*CLenum*/ SNORM_INT8                                = 0x10D0;
-  const unsigned short /*CLenum*/ SNORM_INT16                               = 0x10D1;
-  const unsigned short /*CLenum*/ UNORM_INT8                                = 0x10D2;
-  const unsigned short /*CLenum*/ UNORM_INT16                               = 0x10D3;
-  const unsigned short /*CLenum*/ UNORM_SHORT_565                           = 0x10D4;
-  const unsigned short /*CLenum*/ UNORM_SHORT_555                           = 0x10D5;
-  const unsigned short /*CLenum*/ UNORM_INT_101010                          = 0x10D6;
-  const unsigned short /*CLenum*/ SIGNED_INT8                               = 0x10D7;
-  const unsigned short /*CLenum*/ SIGNED_INT16                              = 0x10D8;
-  const unsigned short /*CLenum*/ SIGNED_INT32                              = 0x10D9;
-  const unsigned short /*CLenum*/ UNSIGNED_INT8                             = 0x10DA;
-  const unsigned short /*CLenum*/ UNSIGNED_INT16                            = 0x10DB;
-  const unsigned short /*CLenum*/ UNSIGNED_INT32                            = 0x10DC;
-  const unsigned short /*CLenum*/ HALF_FLOAT                                = 0x10DD;
-  const unsigned short /*CLenum*/ FLOAT                                     = 0x10DE;
+  CLenum SNORM_INT8                                = 0x10D0;
+  CLenum SNORM_INT16                               = 0x10D1;
+  CLenum UNORM_INT8                                = 0x10D2;
+  CLenum UNORM_INT16                               = 0x10D3;
+  CLenum UNORM_SHORT_565                           = 0x10D4;
+  CLenum UNORM_SHORT_555                           = 0x10D5;
+  CLenum UNORM_INT_101010                          = 0x10D6;
+  CLenum SIGNED_INT8                               = 0x10D7;
+  CLenum SIGNED_INT16                              = 0x10D8;
+  CLenum SIGNED_INT32                              = 0x10D9;
+  CLenum UNSIGNED_INT8                             = 0x10DA;
+  CLenum UNSIGNED_INT16                            = 0x10DB;
+  CLenum UNSIGNED_INT32                            = 0x10DC;
+  CLenum HALF_FLOAT                                = 0x10DD;
+  CLenum FLOAT                                     = 0x10DE;
 
   /* cl_mem_object_type */
-  const unsigned short /*CLenum*/ MEM_OBJECT_BUFFER                         = 0x10F0;
-  const unsigned short /*CLenum*/ MEM_OBJECT_IMAGE2D                        = 0x10F1;
+  CLenum MEM_OBJECT_BUFFER                         = 0x10F0;
+  CLenum MEM_OBJECT_IMAGE2D                        = 0x10F1;
 
   /* cl_mem_info */
-  const unsigned short /*CLenum*/ MEM_TYPE                                  = 0x1100;
-  const unsigned short /*CLenum*/ MEM_FLAGS                                 = 0x1101;
-  const unsigned short /*CLenum*/ MEM_SIZE                                  = 0x1102;
-  const unsigned short /*CLenum*/ MEM_HOST_PTR                              = 0x1103;
-  const unsigned short /*CLenum*/ MEM_MAP_COUNT                             = 0x1104;
-  const unsigned short /*CLenum*/ MEM_REFERENCE_COUNT                       = 0x1105;
-  const unsigned short /*CLenum*/ MEM_CONTEXT                               = 0x1106;
-  const unsigned short /*CLenum*/ MEM_ASSOCIATED_MEMOBJECT                  = 0x1107;
-  const unsigned short /*CLenum*/ MEM_OFFSET                                = 0x1108;
+  CLenum MEM_TYPE                                  = 0x1100;
+  CLenum MEM_FLAGS                                 = 0x1101;
+  CLenum MEM_SIZE                                  = 0x1102;
+  CLenum MEM_HOST_PTR                              = 0x1103;
+  CLenum MEM_MAP_COUNT                             = 0x1104;
+  CLenum MEM_REFERENCE_COUNT                       = 0x1105;
+  CLenum MEM_CONTEXT                               = 0x1106;
+  CLenum MEM_ASSOCIATED_MEMOBJECT                  = 0x1107;
+  CLenum MEM_OFFSET                                = 0x1108;
 
   /* cl_image_info */
-  const unsigned short /*CLenum*/ IMAGE_FORMAT                              = 0x1110;
-  const unsigned short /*CLenum*/ IMAGE_ELEMENT_SIZE                        = 0x1111;
-  const unsigned short /*CLenum*/ IMAGE_ROW_PITCH                           = 0x1112;
-  const unsigned short /*CLenum*/ IMAGE_WIDTH                               = 0x1114;
-  const unsigned short /*CLenum*/ IMAGE_HEIGHT                              = 0x1115;
+  CLenum IMAGE_FORMAT                              = 0x1110;
+  CLenum IMAGE_ELEMENT_SIZE                        = 0x1111;
+  CLenum IMAGE_ROW_PITCH                           = 0x1112;
+  CLenum IMAGE_WIDTH                               = 0x1114;
+  CLenum IMAGE_HEIGHT                              = 0x1115;
 
   /* cl_addressing_mode */
-  const unsigned short /*CLenum*/ ADDRESS_NONE                              = 0x1130;
-  const unsigned short /*CLenum*/ ADDRESS_CLAMP_TO_EDGE                     = 0x1131;
-  const unsigned short /*CLenum*/ ADDRESS_CLAMP                             = 0x1132;
-  const unsigned short /*CLenum*/ ADDRESS_REPEAT                            = 0x1133;
-  const unsigned short /*CLenum*/ ADDRESS_MIRRORED_REPEAT                   = 0x1134;
+  CLenum ADDRESS_NONE                              = 0x1130;
+  CLenum ADDRESS_CLAMP_TO_EDGE                     = 0x1131;
+  CLenum ADDRESS_CLAMP                             = 0x1132;
+  CLenum ADDRESS_REPEAT                            = 0x1133;
+  CLenum ADDRESS_MIRRORED_REPEAT                   = 0x1134;
 
   /* cl_filter_mode */
-  const unsigned short /*CLenum*/ FILTER_NEAREST                            = 0x1140;
-  const unsigned short /*CLenum*/ FILTER_LINEAR                             = 0x1141;
+  CLenum FILTER_NEAREST                            = 0x1140;
+  CLenum FILTER_LINEAR                             = 0x1141;
 
   /* cl_sampler_info */
-  const unsigned short /*CLenum*/ SAMPLER_REFERENCE_COUNT                   = 0x1150;
-  const unsigned short /*CLenum*/ SAMPLER_CONTEXT                           = 0x1151;
-  const unsigned short /*CLenum*/ SAMPLER_NORMALIZED_COORDS                 = 0x1152;
-  const unsigned short /*CLenum*/ SAMPLER_ADDRESSING_MODE                   = 0x1153;
-  const unsigned short /*CLenum*/ SAMPLER_FILTER_MODE                       = 0x1154;
+  CLenum SAMPLER_REFERENCE_COUNT                   = 0x1150;
+  CLenum SAMPLER_CONTEXT                           = 0x1151;
+  CLenum SAMPLER_NORMALIZED_COORDS                 = 0x1152;
+  CLenum SAMPLER_ADDRESSING_MODE                   = 0x1153;
+  CLenum SAMPLER_FILTER_MODE                       = 0x1154;
 
   /* cl_map_flags - bitfield */
-  const unsigned short /*CLenum*/ MAP_READ                                  = 0x1;
-  const unsigned short /*CLenum*/ MAP_WRITE                                 = 0x2;
+  CLenum MAP_READ                                  = 0x1;
+  CLenum MAP_WRITE                                 = 0x2;
 
   /* cl_program_info */
-  const unsigned short /*CLenum*/ PROGRAM_REFERENCE_COUNT                   = 0x1160;
-  const unsigned short /*CLenum*/ PROGRAM_CONTEXT                           = 0x1161;
-  const unsigned short /*CLenum*/ PROGRAM_NUM_DEVICES                       = 0x1162;
-  const unsigned short /*CLenum*/ PROGRAM_DEVICES                           = 0x1163;
-  const unsigned short /*CLenum*/ PROGRAM_SOURCE                            = 0x1164;
-  const unsigned short /*CLenum*/ PROGRAM_BINARY_SIZES                      = 0x1165;
-  const unsigned short /*CLenum*/ PROGRAM_BINARIES                          = 0x1166;
+  CLenum PROGRAM_REFERENCE_COUNT                   = 0x1160;
+  CLenum PROGRAM_CONTEXT                           = 0x1161;
+  CLenum PROGRAM_NUM_DEVICES                       = 0x1162;
+  CLenum PROGRAM_DEVICES                           = 0x1163;
+  CLenum PROGRAM_SOURCE                            = 0x1164;
+  CLenum PROGRAM_BINARY_SIZES                      = 0x1165;
+  CLenum PROGRAM_BINARIES                          = 0x1166;
 
   /* cl_program_build_info */
-  const unsigned short /*CLenum*/ PROGRAM_BUILD_STATUS                      = 0x1181;
-  const unsigned short /*CLenum*/ PROGRAM_BUILD_OPTIONS                     = 0x1182;
-  const unsigned short /*CLenum*/ PROGRAM_BUILD_LOG                         = 0x1183;
+  CLenum PROGRAM_BUILD_STATUS                      = 0x1181;
+  CLenum PROGRAM_BUILD_OPTIONS                     = 0x1182;
+  CLenum PROGRAM_BUILD_LOG                         = 0x1183;
 
   /* cl_build_status */
-  const unsigned short /*CLenum*/ BUILD_SUCCESS                             = 0;
-  const unsigned short /*CLenum*/ BUILD_NONE                                = 1;
-  const unsigned short /*CLenum*/ BUILD_ERROR                               = -2;
-  const unsigned short /*CLenum*/ BUILD_IN_PROGRESS                         = -3;
+  CLenum BUILD_SUCCESS                             = 0;
+  CLenum BUILD_NONE                                = 1;
+  CLenum BUILD_ERROR                               = -2;
+  CLenum BUILD_IN_PROGRESS                         = -3;
 
   /* cl_kernel_info */
-  const unsigned short /*CLenum*/ KERNEL_FUNCTION_NAME                      = 0x1190;
-  const unsigned short /*CLenum*/ KERNEL_NUM_ARGS                           = 0x1191;
-  const unsigned short /*CLenum*/ KERNEL_REFERENCE_COUNT                    = 0x1192;
-  const unsigned short /*CLenum*/ KERNEL_CONTEXT                            = 0x1193;
-  const unsigned short /*CLenum*/ KERNEL_PROGRAM                            = 0x1194;
+  CLenum KERNEL_FUNCTION_NAME                      = 0x1190;
+  CLenum KERNEL_NUM_ARGS                           = 0x1191;
+  CLenum KERNEL_REFERENCE_COUNT                    = 0x1192;
+  CLenum KERNEL_CONTEXT                            = 0x1193;
+  CLenum KERNEL_PROGRAM                            = 0x1194;
 
   /* cl_kernel_work_group_info */
-  const unsigned short /*CLenum*/ KERNEL_WORK_GROUP_SIZE                    = 0x11B0;
-  const unsigned short /*CLenum*/ KERNEL_COMPILE_WORK_GROUP_SIZE            = 0x11B1;
-  const unsigned short /*CLenum*/ KERNEL_LOCAL_MEM_SIZE                     = 0x11B2;
-  const unsigned short /*CLenum*/ KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE = 0x11B3;
-  const unsigned short /*CLenum*/ KERNEL_PRIVATE_MEM_SIZE                   = 0x11B4;
+  CLenum KERNEL_WORK_GROUP_SIZE                    = 0x11B0;
+  CLenum KERNEL_COMPILE_WORK_GROUP_SIZE            = 0x11B1;
+  CLenum KERNEL_LOCAL_MEM_SIZE                     = 0x11B2;
+  CLenum KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE = 0x11B3;
+  CLenum KERNEL_PRIVATE_MEM_SIZE                   = 0x11B4;
 
   /* cl_event_info  */
-  const unsigned short /*CLenum*/ EVENT_COMMAND_QUEUE                       = 0x11D0;
-  const unsigned short /*CLenum*/ EVENT_COMMAND_TYPE                        = 0x11D1;
-  const unsigned short /*CLenum*/ EVENT_REFERENCE_COUNT                     = 0x11D2;
-  const unsigned short /*CLenum*/ EVENT_COMMAND_EXECUTION_STATUS            = 0x11D3;
-  const unsigned short /*CLenum*/ EVENT_CONTEXT                             = 0x11D4;
+  CLenum EVENT_COMMAND_QUEUE                       = 0x11D0;
+  CLenum EVENT_COMMAND_TYPE                        = 0x11D1;
+  CLenum EVENT_REFERENCE_COUNT                     = 0x11D2;
+  CLenum EVENT_COMMAND_EXECUTION_STATUS            = 0x11D3;
+  CLenum EVENT_CONTEXT                             = 0x11D4;
 
   /* cl_command_type */
-  const unsigned short /*CLenum*/ COMMAND_NDRANGE_KERNEL                    = 0x11F0;
-  const unsigned short /*CLenum*/ COMMAND_TASK                              = 0x11F1;
-  const unsigned short /*CLenum*/ COMMAND_NATIVE_KERNEL                     = 0x11F2;
-  const unsigned short /*CLenum*/ COMMAND_READ_BUFFER                       = 0x11F3;
-  const unsigned short /*CLenum*/ COMMAND_WRITE_BUFFER                      = 0x11F4;
-  const unsigned short /*CLenum*/ COMMAND_COPY_BUFFER                       = 0x11F5;
-  const unsigned short /*CLenum*/ COMMAND_READ_IMAGE                        = 0x11F6;
-  const unsigned short /*CLenum*/ COMMAND_WRITE_IMAGE                       = 0x11F7;
-  const unsigned short /*CLenum*/ COMMAND_COPY_IMAGE                        = 0x11F8;
-  const unsigned short /*CLenum*/ COMMAND_COPY_IMAGE_TO_BUFFER              = 0x11F9;
-  const unsigned short /*CLenum*/ COMMAND_COPY_BUFFER_TO_IMAGE              = 0x11FA;
-  const unsigned short /*CLenum*/ COMMAND_MAP_BUFFER                        = 0x11FB;
-  const unsigned short /*CLenum*/ COMMAND_MAP_IMAGE                         = 0x11FC;
-  const unsigned short /*CLenum*/ COMMAND_UNMAP_MEM_OBJECT                  = 0x11FD;
-  const unsigned short /*CLenum*/ COMMAND_MARKER                            = 0x11FE;
-  const unsigned short /*CLenum*/ COMMAND_ACQUIRE_GL_OBJECTS                = 0x11FF;
-  const unsigned short /*CLenum*/ COMMAND_RELEASE_GL_OBJECTS                = 0x1200;
-  const unsigned short /*CLenum*/ COMMAND_READ_BUFFER_RECT                  = 0x1201;
-  const unsigned short /*CLenum*/ COMMAND_WRITE_BUFFER_RECT                 = 0x1202;
-  const unsigned short /*CLenum*/ COMMAND_COPY_BUFFER_RECT                  = 0x1203;
-  const unsigned short /*CLenum*/ COMMAND_USER                              = 0x1204;
+  CLenum COMMAND_NDRANGE_KERNEL                    = 0x11F0;
+  CLenum COMMAND_TASK                              = 0x11F1;
+  CLenum COMMAND_NATIVE_KERNEL                     = 0x11F2;
+  CLenum COMMAND_READ_BUFFER                       = 0x11F3;
+  CLenum COMMAND_WRITE_BUFFER                      = 0x11F4;
+  CLenum COMMAND_COPY_BUFFER                       = 0x11F5;
+  CLenum COMMAND_READ_IMAGE                        = 0x11F6;
+  CLenum COMMAND_WRITE_IMAGE                       = 0x11F7;
+  CLenum COMMAND_COPY_IMAGE                        = 0x11F8;
+  CLenum COMMAND_COPY_IMAGE_TO_BUFFER              = 0x11F9;
+  CLenum COMMAND_COPY_BUFFER_TO_IMAGE              = 0x11FA;
+  CLenum COMMAND_MAP_BUFFER                        = 0x11FB;
+  CLenum COMMAND_MAP_IMAGE                         = 0x11FC;
+  CLenum COMMAND_UNMAP_MEM_OBJECT                  = 0x11FD;
+  CLenum COMMAND_MARKER                            = 0x11FE;
+  CLenum COMMAND_ACQUIRE_GL_OBJECTS                = 0x11FF;
+  CLenum COMMAND_RELEASE_GL_OBJECTS                = 0x1200;
+  CLenum COMMAND_READ_BUFFER_RECT                  = 0x1201;
+  CLenum COMMAND_WRITE_BUFFER_RECT                 = 0x1202;
+  CLenum COMMAND_COPY_BUFFER_RECT                  = 0x1203;
+  CLenum COMMAND_USER                              = 0x1204;
 
   /* command execution status */
-  const unsigned short /*CLenum*/ COMPLETE                                  = 0x0;
-  const unsigned short /*CLenum*/ RUNNING                                   = 0x1;
-  const unsigned short /*CLenum*/ SUBMITTED                                 = 0x2;
-  const unsigned short /*CLenum*/ QUEUED                                    = 0x3;
+  CLenum COMPLETE                                  = 0x0;
+  CLenum RUNNING                                   = 0x1;
+  CLenum SUBMITTED                                 = 0x2;
+  CLenum QUEUED                                    = 0x3;
   
   /* cl_buffer_create_type  */
-  const unsigned short /*CLenum*/ BUFFER_CREATE_TYPE_REGION                 = 0x1220;
+  CLenum BUFFER_CREATE_TYPE_REGION                 = 0x1220;
 
   /* cl_profiling_info  */
-  const unsigned short /*CLenum*/ PROFILING_COMMAND_QUEUED                  = 0x1280;
-  const unsigned short /*CLenum*/ PROFILING_COMMAND_SUBMIT                  = 0x1281;
-  const unsigned short /*CLenum*/ PROFILING_COMMAND_START                   = 0x1282;
-  const unsigned short /*CLenum*/ PROFILING_COMMAND_END                     = 0x1283;
+  CLenum PROFILING_COMMAND_QUEUED                  = 0x1280;
+  CLenum PROFILING_COMMAND_SUBMIT                  = 0x1281;
+  CLenum PROFILING_COMMAND_START                   = 0x1282;
+  CLenum PROFILING_COMMAND_END                     = 0x1283;
 
   /* cl_gl_object_type */
-  const unsigned short /*CLenum*/ GL_OBJECT_BUFFER                          = 0x2000;
-  const unsigned short /*CLenum*/ GL_OBJECT_TEXTURE2D                       = 0x2001;
-  const unsigned short /*CLenum*/ GL_OBJECT_RENDERBUFFER                    = 0x2003;
+  CLenum GL_OBJECT_BUFFER                          = 0x2000;
+  CLenum GL_OBJECT_TEXTURE2D                       = 0x2001;
+  CLenum GL_OBJECT_RENDERBUFFER                    = 0x2003;
 
   /* cl_gl_texture_info */
-  const unsigned short /*CLenum*/ GL_TEXTURE_TARGET                         = 0x2004;
-  const unsigned short /*CLenum*/ GL_MIPMAP_LEVEL                           = 0x2005;
+  CLenum GL_TEXTURE_TARGET                         = 0x2004;
+  CLenum GL_MIPMAP_LEVEL                           = 0x2005;
 };
 </pre>
  
@@ -1625,29 +1625,29 @@ interface <dfn>WebCLKernelArgumentTypes</dfn> {
 
   // Scalar types; may be bitwise-OR'ed with a vector type
 
-  const unsigned long /*CLtype*/ CHAR   = 0;
-  const unsigned long /*CLtype*/ UCHAR  = 1;
-  const unsigned long /*CLtype*/ SHORT  = 2;
-  const unsigned long /*CLtype*/ USHORT = 3;
-  const unsigned long /*CLtype*/ INT    = 4;
-  const unsigned long /*CLtype*/ UINT   = 5;
-  const unsigned long /*CLtype*/ LONG   = 6;
-  const unsigned long /*CLtype*/ ULONG  = 7;
-  const unsigned long /*CLtype*/ FLOAT  = 8;
-  const unsigned long /*CLtype*/ HALF   = 9;    // not supported in all implementations
-  const unsigned long /*CLtype*/ DOUBLE = 10;   // not supported in all implementations
+  CLtype CHAR   = 0;
+  CLtype UCHAR  = 1;
+  CLtype SHORT  = 2;
+  CLtype USHORT = 3;
+  CLtype INT    = 4;
+  CLtype UINT   = 5;
+  CLtype LONG   = 6;
+  CLtype ULONG  = 7;
+  CLtype FLOAT  = 8;
+  CLtype HALF   = 9;    // not supported in all implementations
+  CLtype DOUBLE = 10;   // not supported in all implementations
 
   // Vector types; must be bitwise-OR'ed with a scalar type
 
-  const unsigned long /*CLtype*/ VEC2  = 0x0100;
-  const unsigned long /*CLtype*/ VEC3  = 0x0200;
-  const unsigned long /*CLtype*/ VEC4  = 0x0400;
-  const unsigned long /*CLtype*/ VEC8  = 0x0800;
-  const unsigned long /*CLtype*/ VEC16 = 0x1000;
+  CLtype VEC2  = 0x0100;
+  CLtype VEC3  = 0x0200;
+  CLtype VEC4  = 0x0400;
+  CLtype VEC8  = 0x0800;
+  CLtype VEC16 = 0x1000;
 
   // Special types; must not be bitwise-OR'ed with any other type
 
-  const unsigned long /*CLtype*/ LOCAL_MEMORY_SIZE = 255;
+  CLtype LOCAL_MEMORY_SIZE = 255;
 };
 </pre>
 
