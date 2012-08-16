@@ -221,13 +221,7 @@ exception <dfn>WebCLException</dfn> : DOMException {
       The `WebCL` object also declares all enumerated types used in the API.
     </p>
     
-<pre class="example">
-// Creates a webcl computing context
-var webcl = new WebCL();
-</pre>
-
 <pre class="idl">
-[Constructor]
 interface <dfn>WebCL</dfn> {
 
   // Functions
@@ -238,7 +232,9 @@ interface <dfn>WebCL</dfn> {
 
   sequence&lt;DOMString&gt; getSupportedExtensions();
 
-  void waitForEvents(WebCLEvent[] eventWaitList);
+  void waitForEvents(WebCLEvent[] eventWaitList,
+                     optional WebCLCallback whenFinished,
+                     optional any userdata);
 
   void unloadCompiler();
 
@@ -689,7 +685,7 @@ dictionary <dfn>WebCLContextProperties</dfn> {
         platform or device, must return a valid extension object.
       </dd>
 
-      <dt class="idl-code">void waitForEvents(WebCLEvent[] eventWaitList)
+      <dt class="idl-code">void waitForEvents(WebCLEvent[] eventWaitList, optional WebCLCallback whenFinished, optional any userdata)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clWaitForEvents.html">man page</a>)</span>
       </dt>
