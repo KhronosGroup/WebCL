@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">August 16, 2012</h2>
+    <h2 class="no-toc">August 30, 2012</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -235,8 +235,6 @@ interface <dfn>WebCL</dfn> {
   void waitForEvents(WebCLEvent[] eventWaitList,
                      optional WebCLCallback whenFinished,
                      optional any userdata);
-
-  void unloadCompiler();
 
   // Enums
 
@@ -693,18 +691,6 @@ dictionary <dfn>WebCLContextProperties</dfn> {
         Waits until the given events have completed. See WebCLEvent for more information.
       </dd>
 
-      <dt class="idl-code">void unloadCompiler()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.6.4">OpenCL 1.1 §5.6.4</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clUnloadCompiler.html">man page</a>)</span>
-      </dt>
-      <dd>
-        Gives a hint to the implementation that the application does
-        not intend to use the kernel compiler any longer.  This does
-        not cause any commitments, however: The implementation will
-        not necessarily unload the compiler, and the application will
-        not necessarily refrain from using it.
-      </dd>
-
     </dl>
 
 <!-- ======================================================================================================= -->
@@ -837,7 +823,7 @@ interface <dfn>WebCLContext</dfn> {
 
     WebCLImage createFromGLRenderBuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer);
 
-    WebCLImage createFromGLTexture2D(CLenum memFlags, GLenum textureTarget,
+    WebCLImage createFromGLTexture(CLenum memFlags, GLenum textureTarget,
                                       GLint miplevel, WebGLTexture texture);
 
     WebCLImage createImage(CLenum memFlags,
@@ -889,7 +875,7 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
             <dd>
             This method is only valid if the WebCL context has been created with WebGL shared group.
             </dd>
-        <dt class="idl-code">WebCLImage createFromGLTexture2D(CLenum memFlags, GLenum textureTarget, GLint miplevel, WebGLTexture texture)</dt>
+        <dt class="idl-code">WebCLImage createFromGLTexture(CLenum memFlags, GLenum textureTarget, GLint miplevel, WebGLTexture texture)</dt>
             <dd>
             This method is only valid if the WebCL context has been created with WebGL shared group.
             </dd>
