@@ -217,8 +217,11 @@ exception <dfn>WebCLException</dfn> : DOMException {
     <h3><a id="WEBCL">WebCL</a></h3>
 
     <p>
-      Tthe 'WebCL' object is a single global object. It is not possible to use the WebCL object as a constructor with the new operator. It is not possible to invoke the WebCL object as a function.
-      The `WebCL` object declares all enumerated types used in the API as well as functions to query the list of platforms, to create WebCL computing context, to wait for events, and to unload WebCL compiler.
+      `WebCL` is a singleton object in the global namespace that can
+      not be used as a constructor or invoked as a function.  It
+      provides functions for creating computing contexts and for
+      querying the available CL platforms and extensions. It also
+      defines all enumerated types used in the API.
     </p>
 
 <pre class="idl">
