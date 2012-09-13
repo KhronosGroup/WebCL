@@ -216,7 +216,6 @@ exception <dfn>WebCLException</dfn> : DOMException {
 
     <h3><a id="WEBCL">WebCL</a></h3>
 
-<div class="strawman">[bug 9504]
       Window and WorkerUtils object MUST implement the WebCLEnvironment interface.
 
 <pre class="idl">
@@ -239,7 +238,6 @@ interface <dfn>WebCLEnvironment</dfn> {
         <i>No exceptions.</i>
       </dd>
     </dl>
-</div>
 
     <p>
       `WebCL` is a singleton object in the global namespace that can
@@ -720,10 +718,8 @@ dictionary <dfn>WebCLContextProperties</dfn> {
 
     </dl>
 
-<div class="strawman">[bug 694]
     <h4><a id="WEBCL_Lifetime">Lifetime</a></h4>
 The <a href="#WEBCL">WebCL</a> will live until the Window object or WorkerUtils object goes away.
-</div>
 <!-- ======================================================================================================= -->
 
     <h3><a id="WEBCLPLATFORM">WebCLPlatform</a></h3>
@@ -982,10 +978,6 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
     </div>
     </dl>
 
-<div class="strawman">[bug 694]
-    <h4><a id="WEBCLCONTEXT_Lifetime">Lifetime</a></h4>
-Once created, a <a href="#WEBCLCONTEXT">WebCLContext</a> will not be garbage collected. It will live until the document goes away.
-</div>
 <!-- ======================================================================================================= -->
 
     <h3><a id="WEBCLCOMMANDQUEUE">WebCLCommandQueue</a></h3>
