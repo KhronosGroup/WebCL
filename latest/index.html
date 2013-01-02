@@ -1346,7 +1346,7 @@ void enqueueWriteImage(
             Offsets, globals, locals contain 1, 2, or 3 NDRange values. The number of dimensions is determined by the number of elements in globals.
             </dd>
 
-        <dt class="idl-code">void enqueueTask(WebCLKernel kernel, optional WebCLEvent? event = null)
+        <dt class="idl-code">void enqueueTask(WebCLKernel kernel, optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueTask.html">man page</a>)</span>
         </dt>
