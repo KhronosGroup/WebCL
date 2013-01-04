@@ -1668,7 +1668,7 @@ interface <dfn>WebCLProgram</dfn> {
     any getBuildInfo(WebCLDevice device, CLenum name);
 
     void build(WebCLDevice[] devices,
-               DOMString? options,
+               optional DOMString? options,
                optional WebCLCallback whenFinished,
                optional any userdata);
 
