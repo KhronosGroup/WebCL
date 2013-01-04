@@ -889,11 +889,13 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateBuffer.html">man page</a>)</span>
       </dt>
       <dd>
-        Creates a new buffer object with a capacity of `sizeInBytes`,
+        Creates a new WebCLBuffer with a capacity of `sizeInBytes`,
         and optionally fills it with data from the given ArrayBuffer.
-        If `hostPtr` is given, its `byteLength` must be greater than
-        or equal to `sizeInBytes`.  Otherwise, an `INVALID_HOST_PTR`
-        exception is thrown.
+        <dl>
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if values specified in `memFlags` are not valid</li>
+          <li>`INVALID_BUFFER_SIZE` -- if <code>sizeInBytes == 0 || sizeInBytes &gt; DEVICE_MAX_MEM_ALLOC_SIZE</code></li>
+          <li>`INVALID_HOST_PTR` -- if <code>hostPtr.byteLength &lt; sizeInBytes</code></li>
       </dd>
       <dt class="idl-code">WebCLCommandQueue createCommandQueue(optional WebCLDevice[]? devices = null, optional CLenum properties = 0)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=51">OpenCL 1.1 §5.1</a>,
@@ -935,9 +937,15 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
       <dd>
         Creates a new WebCLImage with the width and height specified
         in `descriptor`, and optionally fills it with data from the
-        given ArrayBuffer.  If `hostPtr` is given, its `byteLength`
-        must be greater than or equal to `rowPitch` times `height`.
-        Otherwise, an `INVALID_HOST_PTR` exception is thrown.
+        given ArrayBuffer.  
+        <dl>
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if values specified in `memFlags` are not valid</li>
+          <li>`INVALID_IMAGE_SIZE` -- if <code>descriptor.width == 0 || descriptor.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code>
+          <li>`INVALID_IMAGE_SIZE` -- if <code>descriptor.height == 0 || descriptor.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code>
+          <li>`INVALID_HOST_PTR` -- if <code>hostPtr.byteLength &lt; descriptor.rowPitch * descriptor.height</code></li>
+          <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if `descriptor.channelOrder` or `descriptor.channelType` is not valid</li>
+          <li>`IMAGE_FORMAT_NOT_SUPPORTED` -- if the given combination of `channelOrder` and `channelType` is not supported</li>
       </dd>
       <dt class="idl-code">WebCLProgram createProgram(DOMString source)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=110">OpenCL 1.1 §5.6.1</a>,
