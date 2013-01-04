@@ -638,7 +638,7 @@ dictionary <dfn>WebCLContextProperties</dfn> {
   WebCLDevice[]?  devices = null;       // Default: let the implementation decide
   CLenum          deviceType = 0x1;     // 0x1 == WebCL.DEVICE_TYPE_DEFAULT
   any             shareGroup = null;    // can only be a WebGL context
-  DOMString[]?    hint = null;          // 'audio', 'video'
+  DOMString[]?    hints = null;         // 'audio', 'video'
 };
 </pre>
 
@@ -690,7 +690,7 @@ dictionary <dfn>WebCLContextProperties</dfn> {
       WebCL, `shareGroup` must contain the WebGLRenderingContext
       instance whose resources are to be shared.
       </dd>
-      <dt class="idl-code">DOMString[] hint</dt>
+      <dt class="idl-code">DOMString[] hints</dt>
       <dd>
       An optional array of hints to allow the implementation to find an appropriate
       WebCLContext suitable for audio-visual content. There is no guarantee implementations
@@ -698,7 +698,7 @@ dictionary <dfn>WebCLContextProperties</dfn> {
       </dd>
       </dl>
 
-      <dt class="idl-code">sequency&lt;DOMString&gt; getSupportedExtensions()
+      <dt class="idl-code">sequence&lt;DOMString&gt; getSupportedExtensions()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9">OpenCL 1.1 §9</a>)</span>
       </dt>
       <dd>
@@ -884,94 +884,107 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
 </pre>
 
     <dl class="methods">
-        <dt class="idl-code">WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer hostPtr)
+      <dt class="idl-code">WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer hostPtr)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=56">OpenCL 1.1 §5.2.1</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateBuffer.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
-        <dt class="idl-code">WebCLCommandQueue createCommandQueue(optional WebCLDevice[]? devices = null, optional CLenum properties = 0)
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateBuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Creates a new buffer object with a capacity of `sizeInBytes`,
+        and optionally fills it with data from the given ArrayBuffer.
+        If `hostPtr` is given, its `byteLength` must be greater than
+        or equal to `sizeInBytes`.  Otherwise, an `INVALID_HOST_PTR`
+        exception is thrown.
+      </dd>
+      <dt class="idl-code">WebCLCommandQueue createCommandQueue(optional WebCLDevice[]? devices = null, optional CLenum properties = 0)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=51">OpenCL 1.1 §5.1</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateCommandQueue.html">man page</a>)</span>
-        </dt>
-        <dd>
-            Creates a new command queue for the devices in the given
-            array. If `devices` is `null`, the WebCL implementation
-            will select any single WebCLDevice that matches the given
-            `properties` and is covered by this WebCLContext.  If
-            `properties` is omitted, the command queue is created with
-            out-of-order execution disabled and profiling disabled.
-        </dd>
-        <dt class="idl-code">WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer)
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateCommandQueue.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Creates a new command queue for the devices in the given
+        array. If `devices` is `null`, the WebCL implementation
+        will select any single WebCLDevice that matches the given
+        `properties` and is covered by this WebCLContext.  If
+        `properties` is omitted, the command queue is created with
+        out-of-order execution disabled and profiling disabled.
+      </dd>
+      <dt class="idl-code">WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=320">OpenCL 1.1 §9.8.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLBuffer.html">man page</a>)</span>
-        </dt>
-            <dd>
-            This method is only valid if the WebCL context has been created with WebGL shared group.
-            </dd>
-        <dt class="idl-code">WebCLImage createFromGLRenderBuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer)
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLBuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+        This method is only valid if the WebCL context has been created with WebGL shared group.
+      </dd>
+      <dt class="idl-code">WebCLImage createFromGLRenderBuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=325">OpenCL 1.1 §9.8.4</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLRenderbuffer.html">man page</a>)</span>
-        </dt>
-            <dd>
-            This method is only valid if the WebCL context has been created with WebGL shared group.
-            </dd>
-        <dt class="idl-code">WebCLImage createFromGLTexture(CLenum memFlags, GLenum textureTarget, GLint miplevel, WebGLTexture texture)
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLRenderbuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+        This method is only valid if the WebCL context has been created with WebGL shared group.
+      </dd>
+      <dt class="idl-code">WebCLImage createFromGLTexture(CLenum memFlags, GLenum textureTarget, GLint miplevel, WebGLTexture texture)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=321">OpenCL 1.1 §9.8.34</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLTexture2D.html">man page</a>)</span>
-        </dt>
-            <dd>
-            This method is only valid if the WebCL context has been created with WebGL shared group.
-            </dd>
-        <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBuffer hostPtr)
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLTexture2D.html">man page</a>)</span>
+      </dt>
+      <dd>
+        This method is only valid if the WebCL context has been created with WebGL shared group.
+      </dd>
+      <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBuffer hostPtr)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=76">OpenCL 1.1 §5.3.1</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateImage2D.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
-        <dt class="idl-code">WebCLProgram createProgram(DOMString source)
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateImage2D.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Creates a new WebCLImage with the width and height specified
+        in `descriptor`, and optionally fills it with data from the
+        given ArrayBuffer.  If `hostPtr` is given, its `byteLength`
+        must be greater than or equal to `rowPitch` times `height`.
+        Otherwise, an `INVALID_HOST_PTR` exception is thrown.
+      </dd>
+      <dt class="idl-code">WebCLProgram createProgram(DOMString source)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=110">OpenCL 1.1 §5.6.1</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateProgramWithSource.html">man page</a>)</span>
-        </dt>
-            <dd>
-            creates a WebCLProgram from a UTF-8 string.
-            </dd>
-        <dt class="idl-code">WebCLSampler createSampler(CLboolean normalizedCoords, CLenum addressingMode, CLenum filterMode)
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateProgramWithSource.html">man page</a>)</span>
+      </dt>
+      <dd>
+        creates a WebCLProgram from a UTF-8 string.
+      </dd>
+      <dt class="idl-code">WebCLSampler createSampler(CLboolean normalizedCoords, CLenum addressingMode, CLenum filterMode)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=106">OpenCL 1.1 §5.5.1</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateSampler.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
-        <dt class="idl-code">WebCLEvent createUserEvent()
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateSampler.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
+      <dt class="idl-code">WebCLEvent createUserEvent()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=142">OpenCL 1.1 §5.9</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateUserEvent.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
-        <dt class="idl-code">any getInfo(CLenum name)
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateUserEvent.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
+      <dt class="idl-code">any getInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=49">OpenCL 1.1 §4.3</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetContextInfo.html">man page</a>)</span>
-        </dt>
-            <dd>
-            Returns the value for the passed name. The type returned is the natural type for the
-            requested name, as given in the following table:
-            <table class="foo">
-                <tr><th>name</th><th>return type</th></tr>
-                <tr><td>CONTEXT_NUM_DEVICES</td><td>CLuint</td></tr>
-                <tr><td>CONTEXT_DEVICES</td><td>WebCLDevice[]</td></tr>
-                <tr><td>CONTEXT_PROPERTIES</td><td>WebCLContextProperties</td></tr>
-            </table><br>
-            </dd>
-        <dt class="idl-code">WebCLImageDescriptor[] getSupportedImageFormats(CLenum memFlags, CLenum imageType)</dt>
-            <dd>
-            </dd>
-        <dt class="idl-code">void release()
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetContextInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Returns the value for the passed name. The type returned is the natural type for the
+        requested name, as given in the following table:
+        <table class="foo">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>CONTEXT_NUM_DEVICES</td><td>CLuint</td></tr>
+          <tr><td>CONTEXT_DEVICES</td><td>WebCLDevice[]</td></tr>
+          <tr><td>CONTEXT_PROPERTIES</td><td>WebCLContextProperties</td></tr>
+        </table><br>
+      </dd>
+      <dt class="idl-code">WebCLImageDescriptor[] getSupportedImageFormats(CLenum memFlags, CLenum imageType)</dt>
+      <dd>
+      </dd>
+      <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=48">OpenCL 1.1 §4.3</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">man page</a>)</span>
-        </dt>
-            <dd>
-            Decrement the native context reference count. After the context reference count becomes zero and all objects attached to context (such as memory objects, command-queues) are released, the context is deleted.
-            </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Decrements the native context reference count. After the
+        context reference count becomes zero and all objects
+        attached to context (such as memory objects,
+        command-queues) are released, the context is deleted.
+      </dd>
     </dl>
 
 <!-- ======================================================================================================= -->
@@ -1564,7 +1577,10 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
 </pre>
 
    <dl class="methods">
-     <dt class="idl-code">WebCLImageDescriptor getInfo()</dt>
+     <dt class="idl-code">WebCLImageDescriptor getInfo()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=97">OpenCL 1.1 §5.3.6</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetImageInfo.html">man page</a>)</span>
+      </dt>
      <dd>
        Returns a new WebCLImageDescriptor containing information about
        the pixel format and dimensions of this WebCLImage.
@@ -1592,25 +1608,28 @@ interface <dfn>WebCLSampler</dfn> {
 </pre>
 
     <dl class="methods">
-        <dt class="idl-code">any getInfo(CLenum name)</dt>
-            <dd>
-            Return the value for the passed name. The type returned is the natural type for the
-            requested name, as given in the following table:
-            <table class="foo">
-                <tr><th>name</th><th>return type</th></tr>
-                <tr><td>SAMPLER_CONTEXT</td><td>WebCLContext</td></tr>
-                <tr><td>SAMPLER_NORMALIZED_COORDS</td><td>CLboolean</td></tr>
-                <tr><td>SAMPLER_ADDRESSING_MODE</td><td>CLenum</td></tr>
-                <tr><td>SAMPLER_FILTER_MODE</td><td>CLenum</td></tr>
-            </table><br>
-            </dd>
-        <dt class="idl-code">void release()
+      <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=108">OpenCL 1.1 §5.5.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetSamplerInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Return the value for the passed name. The type returned is the natural type for the
+        requested name, as given in the following table:
+        <table class="foo">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>SAMPLER_CONTEXT</td><td>WebCLContext</td></tr>
+          <tr><td>SAMPLER_NORMALIZED_COORDS</td><td>CLboolean</td></tr>
+          <tr><td>SAMPLER_ADDRESSING_MODE</td><td>CLenum</td></tr>
+          <tr><td>SAMPLER_FILTER_MODE</td><td>CLenum</td></tr>
+        </table><br>
+      </dd>
+      <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=107">OpenCL 1.1 §5.5.1</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseSampler.html">man page</a>)</span>
-        </dt>
-            <dd>
-            Decrement the native sampler reference count. The sampler object is deleted after the reference count becomes zero and commands queued for execution on a command-queue(s) that use sampler have finished.
-            </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseSampler.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Decrement the native sampler reference count. The sampler object is deleted after the reference count becomes zero and commands queued for execution on a command-queue(s) that use sampler have finished.
+      </dd>
     </dl>
 
 <!-- ======================================================================================================= -->
@@ -1638,44 +1657,47 @@ interface <dfn>WebCLProgram</dfn> {
 </pre>
 
     <dl class="methods">
-        <dt class="idl-code">any getInfo(CLenum name)</dt>
-            <dd>
-            Return the value for the passed name. The type returned is the natural type for the
-            requested name, as given in the following table:
-            <table class="foo">
-                <tr><th>name</th><th>return type</th></tr>
-                <tr><td>PROGRAM_CONTEXT</td><td>WebCLContext</td></tr>
-                <tr><td>PROGRAM_NUM_DEVICES</td><td>CLuint</td></tr>
-                <tr><td>PROGRAM_DEVICES</td><td>WebCLDevice[]</td></tr>
-                <tr><td>PROGRAM_SOURCE</td><td>DOMString</td></tr>
-            </table><br>
-            </dd>
-        <dt class="idl-code">any getBuildInfo(WebCLDevice device, CLenum name)</dt>
-            <dd>
-            return Integer or DOMString depending on name queried.
-            </dd>
-        <dt class="idl-code">void build(WebCLDevice[] devices,
-                                        optional DOMString? options,
-                                        optional WebCLCallback whenFinished,
-                                        optional any userdata)</dt>
-            <dd>
-              Compile a program with optional compiler options.  An
-              asynchronous callback method may be provided with
-              optional userdata.
-            </dd>
-        <dt class="idl-code">WebCLKernel createKernel(DOMString name)</dt>
-            <dd>
-            </dd>
-        <dt class="idl-code">WebCLKernel[] createKernelsInProgram()</dt>
-            <dd>
-            </dd>
-        <dt class="idl-code">void release()
+      <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=119">OpenCL 1.1 §5.6.5</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetProgramInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Return the value for the passed name. The type returned is the natural type for the
+        requested name, as given in the following table:
+        <table class="foo">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>PROGRAM_CONTEXT</td><td>WebCLContext</td></tr>
+          <tr><td>PROGRAM_NUM_DEVICES</td><td>CLuint</td></tr>
+          <tr><td>PROGRAM_DEVICES</td><td>WebCLDevice[]</td></tr>
+          <tr><td>PROGRAM_SOURCE</td><td>DOMString</td></tr>
+        </table><br>
+      </dd>
+      <dt class="idl-code">any getBuildInfo(WebCLDevice device, CLenum name)</dt>
+      <dd>
+        return Integer or DOMString depending on name queried.
+      </dd>
+      <dt class="idl-code">void build(WebCLDevice[] devices,
+        optional DOMString? options,
+        optional WebCLCallback whenFinished,
+        optional any userdata)</dt>
+      <dd>
+        Compile a program with optional compiler options.  An
+        asynchronous callback method may be provided with
+        optional userdata.
+      </dd>
+      <dt class="idl-code">WebCLKernel createKernel(DOMString name)</dt>
+      <dd>
+      </dd>
+      <dt class="idl-code">WebCLKernel[] createKernelsInProgram()</dt>
+      <dd>
+      </dd>
+      <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=113">OpenCL 1.1 §5.6.1</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseProgram.html">man page</a>)</span>
-        </dt>
-            <dd>
-            Decrement the native program reference count. The program object is deleted after all kernel objects associated with program have been deleted and the program reference count becomes zero.
-            </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseProgram.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Decrement the native program reference count. The program object is deleted after all kernel objects associated with program have been deleted and the program reference count becomes zero.
+      </dd>
     </dl>
 
 <!-- ======================================================================================================= -->
@@ -1737,7 +1759,10 @@ interface <dfn>WebCLKernelArgumentTypes</dfn> {
 </pre>
 
     <dl class="methods">
-      <dt class="idl-code">any getInfo(CLenum name)</dt>
+      <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=129">OpenCL 1.1 §5.7.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetKernelInfo.html">man page</a>)</span>
+      </dt>
       <dd>
         Return the value for the passed name. The type returned is the natural type for the
         requested name, as given in the following table:
@@ -1837,61 +1862,65 @@ interface <dfn>WebCLEvent</dfn> {
 </pre>
 
     <dl class="methods">
-        <dt class="idl-code">any getInfo(CLenum name)
+      <dt class="idl-code">any getInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventInfo.html">man page</a>)</span>
-        </dt>
-            <dd>
-            Return the value for the passed name. The type returned is the natural type for the
-            requested name, as given in the following table:
-            <table class="foo">
-                <tr><th>name</th><th>return type</th></tr>
-                <tr><td>EVENT_COMMAND_QUEUE</td><td>WebCLCommandQueue</td></tr>
-                <tr><td>EVENT_CONTEXT</td><td>WebCLContext</td></tr>
-                <tr><td>EVENT_COMMAND_TYPE</td><td>CLenum</td></tr>
-                <tr><td>EVENT_COMMAND_EXECUTION_STATUS</td><td>CLenum</td></tr>
-            </table><br>
-            </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Return the value for the passed name. The type returned is the natural type for the
+        requested name, as given in the following table:
+        <table class="foo">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>EVENT_COMMAND_QUEUE</td><td>WebCLCommandQueue</td></tr>
+          <tr><td>EVENT_CONTEXT</td><td>WebCLContext</td></tr>
+          <tr><td>EVENT_COMMAND_TYPE</td><td>CLenum</td></tr>
+          <tr><td>EVENT_COMMAND_EXECUTION_STATUS</td><td>CLenum</td></tr>
+        </table><br>
+      </dd>
 
-        <dt class="idl-code">any getProfilingInfo(CLenum name)
+      <dt class="idl-code">any getProfilingInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.12">OpenCL 1.1 §5.12</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventProfilingInfo.html">man page</a>)</span>
-        </dt>
-            <dd>
-            Return the value for the passed name. The type returned is the natural type for the
-            requested name, as given in the following table:
-            <table class="foo">
-                <tr><th>name</th><th>return type</th></tr>
-                <tr><td>PROFILING_COMMAND_QUEUED</td><td>CLuint</td></tr>
-                <tr><td>PROFILING_COMMAND_SUBMIT</td><td>CLuint</td></tr>
-                <tr><td>PROFILING_COMMAND_START</td><td>CLuint</td></tr>
-                <tr><td>PROFILING_COMMAND_END</td><td>CLuint</td></tr>
-            </table><br>
-            </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventProfilingInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Return the value for the passed name. The type returned is the natural type for the
+        requested name, as given in the following table:
+        <table class="foo">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>PROFILING_COMMAND_QUEUED</td><td>CLuint</td></tr>
+          <tr><td>PROFILING_COMMAND_SUBMIT</td><td>CLuint</td></tr>
+          <tr><td>PROFILING_COMMAND_START</td><td>CLuint</td></tr>
+          <tr><td>PROFILING_COMMAND_END</td><td>CLuint</td></tr>
+        </table><br>
+      </dd>
 
-        <dt class="idl-code">void setUserEventStatus(CLenum executionStatus)
+      <dt class="idl-code">void setUserEventStatus(CLenum executionStatus)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetUserEventStatus.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetUserEventStatus.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
 
-        <dt class="idl-code">void setCallback(CLenum executionStatus, WebCLCallback notify, optional any userdata)
+      <dt class="idl-code">void setCallback(CLenum executionStatus, WebCLCallback notify, optional any userdata)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetEventCallback.html">man page</a>)</span>
-        </dt>
-        <dd>
-          Sets a WebCLCallback function `notify` to be called when
-          this WebCLEvent reaches the given `executionStatus`
-          (`COMPLETE`, `RUNNING`, `SUBMITTED`, or `QUEUED`).
-        </dd>
-        <dt class="idl-code">void release()
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetEventCallback.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Sets a WebCLCallback function `notify` to be called when
+        this WebCLEvent reaches the given `executionStatus`
+        (`COMPLETE`, `RUNNING`, `SUBMITTED`, or `QUEUED`).
+      </dd>
+      <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=149">OpenCL 1.1 §5.9</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseEvent.html">man page</a>)</span>
-        </dt>
-            <dd>
-            Decrement the native event reference count. This event object is deleted once the reference count becomes zero, the specific command identified by this event has completed (or terminated) and there are no commands in the command-queues of a context that require a wait for this event to complete.
-            </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseEvent.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Decrements the native event reference count. This event object
+        is deleted once the reference count becomes zero, the specific
+        command identified by this event has completed (or terminated)
+        and there are no commands in the command-queues of a context
+        that require a wait for this event to complete.
+      </dd>
     </dl>
 
 <!-- ======================================================================================================= -->
