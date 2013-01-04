@@ -844,7 +844,7 @@ interface <dfn>WebCLContext</dfn> {
 
     WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer hostPtr);
 
-    WebCLCommandQueue createCommandQueue(optional WebCLDevice? devices, optional CLenum properties);
+    WebCLCommandQueue createCommandQueue(optional WebCLDevice? device, optional CLenum properties);
 
     WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
 
