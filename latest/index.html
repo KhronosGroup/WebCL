@@ -891,7 +891,7 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
       <dd>
         Creates a new WebCLBuffer with a capacity of `sizeInBytes`,
         and optionally fills it with data from the given ArrayBuffer.
-        <dl>
+        <dl class="exceptions">
           <dt>Exceptions:</dt>
           <li>`INVALID_VALUE` -- if values specified in `memFlags` are not valid</li>
           <li>`INVALID_BUFFER_SIZE` -- if <code>sizeInBytes == 0 || sizeInBytes &gt; DEVICE_MAX_MEM_ALLOC_SIZE</code></li>
@@ -938,7 +938,7 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
         Creates a new WebCLImage with the width and height specified
         in `descriptor`, and optionally fills it with data from the
         given ArrayBuffer.  
-        <dl>
+        <dl class="exceptions">
           <dt>Exceptions:</dt>
           <li>`INVALID_VALUE` -- if values specified in `memFlags` are not valid</li>
           <li>`INVALID_IMAGE_SIZE` -- if <code>descriptor.width == 0 || descriptor.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code>

@@ -659,6 +659,10 @@ dl.methods {
     background: #EEEEFF;
 }
 
+dl.exceptions {
+    font-size: small;
+}
+
 .methods dt {
     padding-top: 1em;
 }
