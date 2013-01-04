@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">November 28, 2012</h2>
+    <h2 class="no-toc">January 4, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -114,7 +114,7 @@
 	    </dd>
     </dl>
 
-    <p><span style="font-size: x-small; font-style: oblique">Copyright © 2012 Khronos Group</span></p>
+    <p><span style="font-size: x-small; font-style: oblique">Copyright © 2013 Khronos Group</span></p>
 
     <hr>
 
@@ -842,7 +842,7 @@ interface <dfn>WebCLDevice</dfn> {
     <pre class="idl">
 interface <dfn>WebCLContext</dfn> {
 
-    WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer srcBuffer);
+    WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer hostPtr);
 
     WebCLCommandQueue createCommandQueue(optional WebCLDevice[]? devices, optional CLenum properties);
 
@@ -855,7 +855,7 @@ interface <dfn>WebCLContext</dfn> {
 
     WebCLImage createImage(CLenum memFlags,
                            WebCLImageDescriptor descriptor,
-                           optional ArrayBuffer srcBuffer);
+                           optional ArrayBuffer hostPtr);
 
     WebCLProgram createProgram(DOMString source);
 
@@ -884,7 +884,7 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
 </pre>
 
     <dl class="methods">
-        <dt class="idl-code">WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer srcBuffer)
+        <dt class="idl-code">WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer hostPtr)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=56">OpenCL 1.1 §5.2.1</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateBuffer.html">man page</a>)</span>
         </dt>
@@ -923,7 +923,7 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
             <dd>
             This method is only valid if the WebCL context has been created with WebGL shared group.
             </dd>
-        <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBuffer srcBuffer)
+        <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBuffer hostPtr)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=76">OpenCL 1.1 §5.3.1</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateImage2D.html">man page</a>)</span>
         </dt>
