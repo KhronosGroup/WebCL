@@ -251,7 +251,7 @@ interface <dfn>WebCL</dfn> {
 
   // Functions
 
-  WebCLPlatform[] getPlatforms();
+  sequence&lt;WebCLPlatform&gt; getPlatforms();
 
   WebCLContext? createContext(optional WebCLContextProperties properties);
 
@@ -612,7 +612,7 @@ interface <dfn>WebCL</dfn> {
 
     <dl class="methods">
 
-      <dt class="idl-code">WebCLPlatform[] getPlatforms()
+      <dt class="idl-code">sequence&lt;WebCLPlatform&gt; getPlatforms()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=32">OpenCL 1.1 §4.1</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetPlatformIDs.html">man page</a>)</span>
       </dt>
@@ -730,14 +730,13 @@ The <a href="#WEBCL">WebCL</a> will live until the Window object or WorkerUtils 
 <pre class="idl">
 interface <dfn>WebCLPlatform</dfn> {
   object getInfo(CLenum name);
-  WebCLDevice[] getDevices(CLenum deviceType);
+  sequence&lt;WebCLDevice&gt; getDevices(CLenum deviceType);
   sequence&lt;DOMString&gt; getSupportedExtensions();
-};
 </pre>
 
     <dl class="methods">
 
-      <dt class="idl-code">WebCLDevice[] getDevices(optional CLenum deviceType)
+      <dt class="idl-code">sequence&lt;WebCLDevice&gt; getDevices(optional CLenum deviceType)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=34">OpenCL 1.1 §4.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceIDs.html">man page</a>)</span>
       </dt>
@@ -867,8 +866,8 @@ interface <dfn>WebCLContext</dfn> {
 
     any getInfo(CLenum name);
 
-    WebCLImageDescriptor[] getSupportedImageFormats(CLenum memFlags,
-                                                    CLenum imageType);
+    sequence&lt;WebCLImageDescriptor&gt; getSupportedImageFormats(CLenum memFlags,
+                                                                  CLenum imageType);
 
     void release();
 };
@@ -996,7 +995,7 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
           <tr><td>CONTEXT_PROPERTIES</td><td>WebCLContextProperties</td></tr>
         </table><br>
       </dd>
-      <dt class="idl-code">WebCLImageDescriptor[] getSupportedImageFormats(CLenum memFlags, CLenum imageType)</dt>
+      <dt class="idl-code">sequence&lt;WebCLImageDescriptor&gt; getSupportedImageFormats(CLenum memFlags, CLenum imageType)</dt>
       <dd>
       </dd>
       <dt class="idl-code">void release()
@@ -1674,7 +1673,7 @@ interface <dfn>WebCLProgram</dfn> {
 
     WebCLKernel createKernel(DOMString kernelName);
 
-    WebCLKernel[] createKernelsInProgram();
+    sequence&lt;WebCLKernel&gt; createKernelsInProgram();
 
     void release();
 };
@@ -1712,7 +1711,7 @@ interface <dfn>WebCLProgram</dfn> {
       <dt class="idl-code">WebCLKernel createKernel(DOMString name)</dt>
       <dd>
       </dd>
-      <dt class="idl-code">WebCLKernel[] createKernelsInProgram()</dt>
+      <dt class="idl-code">sequence&lt;WebCLKernel&gt; createKernelsInProgram()</dt>
       <dd>
       </dd>
       <dt class="idl-code">void release()
