@@ -257,6 +257,8 @@ interface <dfn>WebCL</dfn> {
 
   sequence&lt;DOMString&gt; getSupportedExtensions();
 
+  object getExtension(DOMString extensionName);
+
   void waitForEvents(WebCLEvent[] eventWaitList,
                      optional WebCLCallback whenFinished,
                      optional any userdata);
@@ -704,8 +706,23 @@ dictionary <dfn>WebCLContextProperties</dfn> {
       <dd>
         Returns an array of extension names that are supported by all
         WebCLPlatforms and WebCLDevices in this implementation.  Any
-        string in this list, when passed to `getExtension` on any
-        platform or device, must return a valid extension object.
+        string in this list, when passed to `getExtension`, must
+        enable the corresponding extension and return a valid
+        extension object.
+      </dd>
+
+      <dt class="idl-code">object getExtension(DOMString extensionName)</dt>
+      <dd>
+        Enables the given extension on all WebCLPlatforms and
+        WebCLDevices.  Returns an object if the extension is
+        supported, or `null` if not.  The available extension names
+        can be queried by `getSupportedExtensions`.  The returned
+        object contains the constants and functions that are required
+        by the extension, if any.  Even if the extension does not
+        define any functions or constants, a valid object must still
+        be returned.  That object is used to indicate that the
+        extension has been enabled.  Multiple calls to `getExtension`
+        with the same extension string must return the same object.
       </dd>
 
       <dt class="idl-code">void waitForEvents(WebCLEvent[] eventWaitList, optional WebCLCallback whenFinished, optional any userdata)
@@ -732,6 +749,7 @@ interface <dfn>WebCLPlatform</dfn> {
   object getInfo(CLenum name);
   sequence&lt;WebCLDevice&gt; getDevices(CLenum deviceType);
   sequence&lt;DOMString&gt; getSupportedExtensions();
+  object getExtension(DOMString extensionName);
 </pre>
 
     <dl class="methods">
@@ -771,10 +789,24 @@ interface <dfn>WebCLPlatform</dfn> {
       <dd>
         Returns an array of extension names that are supported by all
         WebCLDevices on this WebCLPlatform.  Any string in this list,
-        when passed to `getExtension` on any device on this
-        platform, must return a valid extension object.
+        when passed to `getExtension` on this platform, or any device
+        on this platform, must enable the corresponding extension and
+        return a valid extension object.
       </dd>
 
+      <dt class="idl-code">object getExtension(DOMString extensionName)</dt>
+      <dd>
+        Enables the given WebCL extension on this WebCLPlatform.
+        Returns an object if the extension is supported by this
+        platform, or `null` if not.  The available extension names can
+        be queried by `getSupportedExtensions`.  The returned object
+        contains the constants and functions that are required by the
+        extension, if any.  Even if the extension does not define any
+        functions or constants, a valid object must still be returned.
+        That object is used to indicate that the extension has been
+        enabled.  Multiple calls to `getExtension` with the same
+        extension string must return the same object.
+      </dd>
     </dl>
 
 <!-- ======================================================================================================= -->
@@ -787,8 +819,8 @@ interface <dfn>WebCLPlatform</dfn> {
 <pre class="idl">
 interface <dfn>WebCLDevice</dfn> {
     any getInfo(CLenum name);
-    object getExtension(DOMString extensionName);
     sequence&lt;DOMString&gt; getSupportedExtensions();
+    object getExtension(DOMString extensionName);
 };
 </pre>
 
@@ -811,23 +843,23 @@ interface <dfn>WebCLDevice</dfn> {
       </dt>
       <dd>
         Returns an array of extension names that are supported by this
-        WebCLDevice. Any string in this list, when passed
-        to `getExtension`, must return a valid extension
-        object.
+        WebCLDevice. Any string in this list, when passed to
+        `getExtension`, must enable the corresponding extension and
+        return a valid extension object.
       </dd>
 
       <dt class="idl-code">object getExtension(DOMString extensionName)</dt>
       <dd>
-        Enables the given WebCL extension on this WebCLDevice. Returns
-        an object if the extension is supported by this device, or
-        `null` if not.  The available extension names can be queried by
-        `getSupportedExtensions`.  The returned object
+        Enables the given WebCL extension on this WebCLDevice.
+        Returns an object if the extension is supported by this
+        device, or `null` if not.  The available extension names can
+        be queried by `getSupportedExtensions`.  The returned object
         contains the constants and functions that are required by the
         extension, if any.  Even if the extension does not define any
         functions or constants, a valid object must still be returned.
         That object is used to indicate that the extension has been
-        enabled. Multiple calls to `getExtension` with the
-        same device and extension string must return the same object.
+        enabled. Multiple calls to `getExtension` with the same
+        extension string must return the same object.
       </dd>
     </dl>
 
