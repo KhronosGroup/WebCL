@@ -427,7 +427,6 @@ interface <dfn>WebCL</dfn> {
   CLenum QUEUE_PROFILING_ENABLE                    = 0x2;
 
   /* cl_context_info  */
-  CLenum CONTEXT_REFERENCE_COUNT                   = 0x1080;
   CLenum CONTEXT_DEVICES                           = 0x1081;
   CLenum CONTEXT_PROPERTIES                        = 0x1082;
   CLenum CONTEXT_NUM_DEVICES                       = 0x1083;
@@ -438,7 +437,6 @@ interface <dfn>WebCL</dfn> {
   /* cl_command_queue_info */
   CLenum QUEUE_CONTEXT                             = 0x1090;
   CLenum QUEUE_DEVICE                              = 0x1091;
-  CLenum QUEUE_REFERENCE_COUNT                     = 0x1092;
   CLenum QUEUE_PROPERTIES                          = 0x1093;
 
   /* cl_mem_flags - bitfield */
@@ -488,7 +486,6 @@ interface <dfn>WebCL</dfn> {
   CLenum MEM_SIZE                                  = 0x1102;
   CLenum MEM_HOST_PTR                              = 0x1103;
   CLenum MEM_MAP_COUNT                             = 0x1104;
-  CLenum MEM_REFERENCE_COUNT                       = 0x1105;
   CLenum MEM_CONTEXT                               = 0x1106;
   CLenum MEM_ASSOCIATED_MEMOBJECT                  = 0x1107;
   CLenum MEM_OFFSET                                = 0x1108;
@@ -512,7 +509,6 @@ interface <dfn>WebCL</dfn> {
   CLenum FILTER_LINEAR                             = 0x1141;
 
   /* cl_sampler_info */
-  CLenum SAMPLER_REFERENCE_COUNT                   = 0x1150;
   CLenum SAMPLER_CONTEXT                           = 0x1151;
   CLenum SAMPLER_NORMALIZED_COORDS                 = 0x1152;
   CLenum SAMPLER_ADDRESSING_MODE                   = 0x1153;
@@ -523,7 +519,6 @@ interface <dfn>WebCL</dfn> {
   CLenum MAP_WRITE                                 = 0x2;
 
   /* cl_program_info */
-  CLenum PROGRAM_REFERENCE_COUNT                   = 0x1160;
   CLenum PROGRAM_CONTEXT                           = 0x1161;
   CLenum PROGRAM_NUM_DEVICES                       = 0x1162;
   CLenum PROGRAM_DEVICES                           = 0x1163;
@@ -545,7 +540,6 @@ interface <dfn>WebCL</dfn> {
   /* cl_kernel_info */
   CLenum KERNEL_FUNCTION_NAME                      = 0x1190;
   CLenum KERNEL_NUM_ARGS                           = 0x1191;
-  CLenum KERNEL_REFERENCE_COUNT                    = 0x1192;
   CLenum KERNEL_CONTEXT                            = 0x1193;
   CLenum KERNEL_PROGRAM                            = 0x1194;
 
@@ -559,7 +553,6 @@ interface <dfn>WebCL</dfn> {
   /* cl_event_info  */
   CLenum EVENT_COMMAND_QUEUE                       = 0x11D0;
   CLenum EVENT_COMMAND_TYPE                        = 0x11D1;
-  CLenum EVENT_REFERENCE_COUNT                     = 0x11D2;
   CLenum EVENT_COMMAND_EXECUTION_STATUS            = 0x11D3;
   CLenum EVENT_CONTEXT                             = 0x11D4;
 
