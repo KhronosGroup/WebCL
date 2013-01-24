@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">January 17, 2013</h2>
+    <h2 class="no-toc">January 24, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -328,9 +328,6 @@ interface <dfn>WebCL</dfn> {
   /* cl_platform_info */
   CLenum PLATFORM_PROFILE                          = 0x0900;
   CLenum PLATFORM_VERSION                          = 0x0901;
-  CLenum PLATFORM_NAME                             = 0x0902;
-  CLenum PLATFORM_VENDOR                           = 0x0903;
-  CLenum PLATFORM_EXTENSIONS                       = 0x0904;
 
   /* cl_device_type - bitfield */
   CLenum DEVICE_TYPE_DEFAULT                       = 0x1;
@@ -341,8 +338,6 @@ interface <dfn>WebCL</dfn> {
 
   /* cl_device_info */
   CLenum DEVICE_TYPE                               = 0x1000;
-  CLenum DEVICE_VENDOR_ID                          = 0x1001;
-  CLenum DEVICE_MAX_COMPUTE_UNITS                  = 0x1002;
   CLenum DEVICE_MAX_WORK_ITEM_DIMENSIONS           = 0x1003;
   CLenum DEVICE_MAX_WORK_GROUP_SIZE                = 0x1004;
   CLenum DEVICE_MAX_WORK_ITEM_SIZES                = 0x1005;
@@ -352,7 +347,6 @@ interface <dfn>WebCL</dfn> {
   CLenum DEVICE_PREFERRED_VECTOR_WIDTH_LONG        = 0x1009;
   CLenum DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT       = 0x100A;
   CLenum DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE      = 0x100B;
-  CLenum DEVICE_MAX_CLOCK_FREQUENCY                = 0x100C;
   CLenum DEVICE_ADDRESS_BITS                       = 0x100D;
   CLenum DEVICE_MAX_READ_IMAGE_ARGS                = 0x100E;
   CLenum DEVICE_MAX_WRITE_IMAGE_ARGS               = 0x100F;
@@ -362,42 +356,19 @@ interface <dfn>WebCL</dfn> {
   CLenum DEVICE_IMAGE_SUPPORT                      = 0x1016;
   CLenum DEVICE_MAX_PARAMETER_SIZE                 = 0x1017;
   CLenum DEVICE_MAX_SAMPLERS                       = 0x1018;
-  CLenum DEVICE_MEM_BASE_ADDR_ALIGN                = 0x1019;
-  CLenum DEVICE_MIN_DATA_TYPE_ALIGN_SIZE           = 0x101A;
-  CLenum DEVICE_SINGLE_FP_CONFIG                   = 0x101B;
-  CLenum DEVICE_GLOBAL_MEM_CACHE_TYPE              = 0x101C;
-  CLenum DEVICE_GLOBAL_MEM_CACHELINE_SIZE          = 0x101D;
-  CLenum DEVICE_GLOBAL_MEM_CACHE_SIZE              = 0x101E;
-  CLenum DEVICE_GLOBAL_MEM_SIZE                    = 0x101F;
   CLenum DEVICE_MAX_CONSTANT_BUFFER_SIZE           = 0x1020;
   CLenum DEVICE_MAX_CONSTANT_ARGS                  = 0x1021;
   CLenum DEVICE_LOCAL_MEM_TYPE                     = 0x1022;
   CLenum DEVICE_LOCAL_MEM_SIZE                     = 0x1023;
-  CLenum DEVICE_ERROR_CORRECTION_SUPPORT           = 0x1024;
-  CLenum DEVICE_PROFILING_TIMER_RESOLUTION         = 0x1025;
   CLenum DEVICE_ENDIAN_LITTLE                      = 0x1026;
   CLenum DEVICE_AVAILABLE                          = 0x1027;
-  CLenum DEVICE_COMPILER_AVAILABLE                 = 0x1028;
-  CLenum DEVICE_EXECUTION_CAPABILITIES             = 0x1029;
   CLenum DEVICE_QUEUE_PROPERTIES                   = 0x102A;
-  CLenum DEVICE_NAME                               = 0x102B;
-  CLenum DEVICE_VENDOR                             = 0x102C;
-  CLenum DRIVER_VERSION                            = 0x102D;
   CLenum DEVICE_PROFILE                            = 0x102E;
   CLenum DEVICE_VERSION                            = 0x102F;
   CLenum DEVICE_EXTENSIONS                         = 0x1030;
   CLenum DEVICE_PLATFORM                           = 0x1031;
-  CLenum DEVICE_DOUBLE_FP_CONFIG                   = 0x1032;
-  CLenum DEVICE_HALF_FP_CONFIG                     = 0x1033;
   CLenum DEVICE_PREFERRED_VECTOR_WIDTH_HALF        = 0x1034;
   CLenum DEVICE_HOST_UNIFIED_MEMORY                = 0x1035;
-  CLenum DEVICE_NATIVE_VECTOR_WIDTH_CHAR           = 0x1036;
-  CLenum DEVICE_NATIVE_VECTOR_WIDTH_SHORT          = 0x1037;
-  CLenum DEVICE_NATIVE_VECTOR_WIDTH_INT            = 0x1038;
-  CLenum DEVICE_NATIVE_VECTOR_WIDTH_LONG           = 0x1039;
-  CLenum DEVICE_NATIVE_VECTOR_WIDTH_FLOAT          = 0x103A;
-  CLenum DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE         = 0x103B;
-  CLenum DEVICE_NATIVE_VECTOR_WIDTH_HALF           = 0x103C;
   CLenum DEVICE_OPENCL_C_VERSION                   = 0x103D;
 
   /* cl_device_fp_config - bitfield */
@@ -1206,9 +1177,9 @@ void enqueueWriteImage(
   // Synchronization
   //
 
-  void enqueueMarker(optional WebCLEvent[]? eventWaitList, optional WebCLEvent? event);
+  void enqueueMarker(optional WebCLEvent? event);
 
-  void enqueueBarrier(optional WebCLEvent[]? eventWaitList, optional WebCLEvent? event);
+  void enqueueBarrier();
 
   void finish();
 
@@ -1414,14 +1385,14 @@ void enqueueWriteImage(
             <dd>
             </dd>
 
-        <dt class="idl-code">void enqueueMarker(optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null)
+        <dt class="idl-code">void enqueueMarker(optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueMarker.html">man page</a>)</span>
         </dt>
             <dd>
             </dd>
 
-        <dt class="idl-code">void enqueueBarrier(optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null)
+        <dt class="idl-code">void enqueueBarrier()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueBarrier.html">man page</a>)</span>
         </dt>
@@ -2262,12 +2233,12 @@ partial interface WebCLCommandQueue {
     </p>
 
     <ul>
+      <li>Kernel identifiers must be less than 256 characters</li>
       <li>2D image support is required</li>
       <li>3D images are not supported</li>
       <li>WebGL interoperability is supported (optionally)</li>
       <li>Structures are not supported as kernel arguments</li>
       <li>Mapping of CL memory objects into host memory space is not supported</li>
-      <li>`enqueueWaitForEvents` is folded into `enqueueMarker`/`enqueueBarrier` as in OpenCL 1.2</li>
     </ul>
 
     <p>
@@ -2359,6 +2330,23 @@ partial interface WebCLCommandQueue {
       </table>
     </p>
 
+    <p>
+    WebCL supports the minimum set of <a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=365">image formats and image data types allowed by OpenCL 1.1 embedded profile</a>. Browsers may provide extensions to support other formats.
+      <table id="WebCL_image_formats">
+        <tr><th>image_num_channels</th><th>image_channel_order</th><th>image_channel_data_type</th></tr>
+        <tr><td valign="top">4</td><td valign="top">CL_RGBA</td><td>	CL_UNORM_INT8<br>
+        								  	CL_UNORM_INT16<br>
+									        CL_SIGNED_INT8<br>
+									        CL_SIGNED_INT16<br>
+									        CL_SIGNED_INT32<br>
+									        CL_UNSIGNED_INT8<br>
+									        CL_UNSIGNED_INT16<br>
+									        CL_UNSIGNED_INT32<br>
+									        CL_HALF_FLOAT<br>
+									        CL_FLOAT</td></tr>
+      </table>
+    </p>
+    
 <!-- ======================================================================================================= -->
 
     <h2>References</h2>
