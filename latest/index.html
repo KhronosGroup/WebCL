@@ -2141,6 +2141,9 @@ partial interface WebCLContext {
       <li>For HTMLImageElement sources, the buffer size is <code>srcImage.width * srcImage.height * 4</code>.
     </ul>
 
+    <p>
+      If the ImageData or HTMLImageElement object is not fully loaded then createBuffer() and createImage() throw CL_INVALID_HOST_PTR.
+    </p>
     <h3>Binding with HTMLVideoElement</h3>
 
     <p>
