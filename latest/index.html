@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">January 24, 2013</h2>
+    <h2 class="no-toc">January 30, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -862,8 +862,7 @@ interface <dfn>WebCLContext</dfn> {
 
     any getInfo(CLenum name);
 
-    sequence&lt;WebCLImageDescriptor&gt; getSupportedImageFormats(CLenum memFlags,
-                                                                  CLenum imageType);
+    sequence&lt;WebCLImageDescriptor&gt; getSupportedImageFormats(CLenum memFlags);
 
     void release();
 };
@@ -888,7 +887,7 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
         and optionally fills it with data from the given ArrayBuffer.
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`INVALID_VALUE` -- if values specified in `memFlags` are not valid</li>
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
           <li>`INVALID_BUFFER_SIZE` -- if <code>sizeInBytes == 0 || sizeInBytes &gt; DEVICE_MAX_MEM_ALLOC_SIZE</code></li>
           <li>`INVALID_HOST_PTR` -- if <code>hostPtr.byteLength &lt; sizeInBytes</code></li>
         </dl>
@@ -939,15 +938,15 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
       <dd>
         Creates a new WebCLImage with the width and height specified
         in `descriptor`, and optionally fills it with data from the
-        given ArrayBuffer.  
+        given ArrayBuffer.
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`INVALID_VALUE` -- if values specified in `memFlags` are not valid</li>
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
           <li>`INVALID_IMAGE_SIZE` -- if <code>descriptor.width == 0 || descriptor.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code>
           <li>`INVALID_IMAGE_SIZE` -- if <code>descriptor.height == 0 || descriptor.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code>
           <li>`INVALID_HOST_PTR` -- if <code>hostPtr.byteLength &lt; descriptor.rowPitch * descriptor.height</code></li>
           <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if `descriptor.channelOrder` or `descriptor.channelType` is not valid</li>
-          <li>`IMAGE_FORMAT_NOT_SUPPORTED` -- if the given combination of `channelOrder` and `channelType` is not supported</li>
+          <li>`IMAGE_FORMAT_NOT_SUPPORTED` -- if the given combination `channelOrder`, `channelType` and `memFlags` is not supported</li>
         </dl>
       </dd>
       <dt class="idl-code">WebCLProgram createProgram(DOMString source)
@@ -991,9 +990,18 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
           <tr><td>CONTEXT_PROPERTIES</td><td>WebCLContextProperties</td></tr>
         </table><br>
       </dd>
-      <dt class="idl-code">sequence&lt;WebCLImageDescriptor&gt; getSupportedImageFormats(CLenum memFlags, CLenum imageType)</dt>
+      <dt class="idl-code">sequence&lt;WebCLImageDescriptor&gt; getSupportedImageFormats(CLenum memFlags)</dt>
       <dd>
+        Returns a list of image formats that are supported by this
+        WebCLContext with the given `memFlags`. For example, passing
+        in `MEM_READ_WRITE` will return a list of image formats that
+        are available for both reading and writing in kernel code.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+        </dl>
       </dd>
+
       <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=48">OpenCL 1.1 §4.3</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">man page</a>)</span>
