@@ -1217,6 +1217,8 @@ void enqueueWriteImage(
 
   void enqueueBarrier();
 
+  void enqueueWaitForEvents (optional WebCLEvent[]? eventWaitList);
+  
   void finish();
 
   void flush();
@@ -1439,6 +1441,13 @@ void enqueueWriteImage(
         <dt class="idl-code">void enqueueBarrier()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueBarrier.html">man page</a>)</span>
+        </dt>
+            <dd>
+            </dd>
+
+        <dt class="idl-code">void enqueueWaitForEvents (optional WebCLEvent[]? eventWaitList);
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWaitForEvents.html">man page</a>)</span>
         </dt>
             <dd>
             </dd>
