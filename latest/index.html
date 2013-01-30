@@ -45,18 +45,18 @@
 
     <!--begin-logo-->
     <div class="head">
-        <p>
-            <a href="http://khronos.org/">
-                <img alt="Khronos" src="resources/KhronosGroup-3D.png" height="60" width="220">
-            </a>
-        </p>
+      <p>
+        <a href="http://khronos.org/">
+          <img alt="Khronos" src="resources/KhronosGroup-3D.png" height="60" width="220">
+        </a>
+      </p>
     </div>
     <div class="head">
-        <p>
-            <a href="http://www.khronos.org/webcl">
-                <img alt="WebCL logo" src="resources/WebCL_logo.png" width="150" height="69">
-            </a>
-        </p>
+      <p>
+        <a href="http://www.khronos.org/webcl">
+          <img alt="WebCL logo" src="resources/WebCL_logo.png" width="150" height="69">
+        </a>
+      </p>
     </div>
     <!--end-logo-->
 
@@ -201,10 +201,12 @@ callback <dfn>WebCLCallback</dfn> = void (WebCLEvent event, any userdata);
     <h4><a id="WEBCLEXCEPTION">Exceptions</a></h4>
 
     <p>
-      WebCL uses exceptions instead of returning error codes from
-      functions. Both the type and message fields are present in any
-      WebCLException thrown by the implementation, but the message may
-      be null.
+      WebCL methods throw exceptions instead of returning error codes
+      as return values.  Exceptions that may be thrown by each method
+      are listed in that method's documentation.  Additionally, all
+      methods may throw the `OUT_OF_RESOURCES` and
+      `OUT_OF_HOST_MEMORY` exceptions, so they are not listed
+      separately.
     </p>
 
 <pre class="idl">
@@ -213,6 +215,12 @@ exception <dfn>WebCLException</dfn> : DOMException {
   DOMString? message;          // An implementation-specific description of what caused the exception
 };
 </pre>
+
+    <p>
+      Both the `type` and `message` fields are present in any
+      WebCLException thrown by the implementation, but the message may
+      be `null`.
+    </p>
 
     <h3><a id="WEBCL">WebCL</a></h3>
 
@@ -843,10 +851,10 @@ interface <dfn>WebCLContext</dfn> {
 
     WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
 
-    WebCLImage createFromGLRenderBuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer);
+    WebCLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer);
 
     WebCLImage createFromGLTexture(CLenum memFlags, GLenum textureTarget,
-                                      GLint miplevel, WebGLTexture texture);
+                                   GLint miplevel, WebGLTexture texture);
 
     WebCLImage createImage(CLenum memFlags,
                            WebCLImageDescriptor descriptor,
@@ -915,21 +923,43 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLBuffer.html">man page</a>)</span>
       </dt>
       <dd>
-        This method is only valid if the WebCL context has been created with WebGL shared group.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_CONTEXT` -- if this WebCLContext was not created with a shared WebGLRenderingContext</li>
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+          <li>`INVALID_GL_OBJECT` -- if `buffer` is not a valid WebGLBuffer</li>
+        </dl>
       </dd>
-      <dt class="idl-code">WebCLImage createFromGLRenderBuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer)
+      <dt class="idl-code">WebCLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=325">OpenCL 1.1 §9.8.4</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLRenderbuffer.html">man page</a>)</span>
       </dt>
       <dd>
-        This method is only valid if the WebCL context has been created with WebGL shared group.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_CONTEXT` -- if this WebCLContext was not created with a shared WebGLRenderingContext</li>
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+          <li>`INVALID_GL_OBJECT` -- if `renderbuffer` is not a valid WebGLRenderbuffer, or has zero width or height</li>
+          <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if the internal format of `renderbuffer` does not map to a supported WebCL image format</li>
+          <li>`INVALID_OPERATION` -- if `renderbuffer` is a multi-sample WebGLRenderbuffer object</li>
+        </dl>
       </dd>
       <dt class="idl-code">WebCLImage createFromGLTexture(CLenum memFlags, GLenum textureTarget, GLint miplevel, WebGLTexture texture)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=321">OpenCL 1.1 §9.8.34</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLTexture2D.html">man page</a>)</span>
       </dt>
       <dd>
-        This method is only valid if the WebCL context has been created with WebGL shared group.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_CONTEXT` -- if this WebCLContext was not created with a shared WebGLRenderingContext</li>
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+          <li>`INVALID_VALUE` -- if `textureTarget` is not `TEXTURE_2D` or one of `TEXTURE_CUBE_MAP_*`</li>
+          <li>`INVALID_MIP_LEVEL` -- if <code>miplevel &lt; 0 || miplevel &gt; q</code>, where `q` is as defined as in OpenGL ES 2.0</li>
+          <li>`INVALID_MIP_LEVEL` -- if <code>miplevel &gt; 0</code> and creating from non-zero mipmap levels is not supported</li>
+          <li>`INVALID_GL_OBJECT` -- if `texture` is not a valid WebGLTexture, or does not match the given `textureTarget`</li>
+          <li>`INVALID_GL_OBJECT` -- if the specified `miplevel` is not defined for `texture`, or has zero width or height</li>
+          <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if the internal format of `texture` does not map to a supported WebCL image format</li>
+        </dl>
       </dd>
       <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBuffer hostPtr)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=76">OpenCL 1.1 §5.3.1</a>,
@@ -946,7 +976,7 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
           <li>`INVALID_IMAGE_SIZE` -- if <code>descriptor.height == 0 || descriptor.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code>
           <li>`INVALID_HOST_PTR` -- if <code>hostPtr.byteLength &lt; descriptor.rowPitch * descriptor.height</code></li>
           <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if `descriptor.channelOrder` or `descriptor.channelType` is not valid</li>
-          <li>`IMAGE_FORMAT_NOT_SUPPORTED` -- if the given combination `channelOrder`, `channelType` and `memFlags` is not supported</li>
+          <li>`IMAGE_FORMAT_NOT_SUPPORTED` -- if the given combination `channelOrder`, `channelType` and `memFlags` is not supported by this WebCLContext</li>
         </dl>
       </dd>
       <dt class="idl-code">WebCLProgram createProgram(DOMString source)
@@ -1362,19 +1392,27 @@ void enqueueWriteImage(
 
         <dt class="idl-code">void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
           optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueAcquireGLObjects.html">man page</a>)</span>
+          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
+            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueAcquireGLObjects.html">man page</a>)</span>
         </dt>
-            <dd>
-            </dd>
+        <dd>
+          <dl class="exceptions">
+            <dt>Exceptions:</dt>
+            <li>`INVALID_CONTEXT` -- if the WebCLContext of this command queue was not created with a shared WebGLRenderingContext</li>
+          </dl>
+        </dd>
 
         <dt class="idl-code">void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
           optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReleaseGLObjects.html">man page</a>)</span>
+          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
+            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReleaseGLObjects.html">man page</a>)</span>
         </dt>
-            <dd>
-            </dd>
+        <dd>
+          <dl class="exceptions">
+            <dt>Exceptions:</dt>
+            <li>`INVALID_CONTEXT` -- if the WebCLContext of this command queue was not created with a shared WebGLRenderingContext</li>
+          </dl>
+        </dd>
 
         <dt class="idl-code">void enqueueNDRangeKernel(WebCLKernel kernel, CLuint[3] offsets, CLuint[3] globals,
           CLuint[3] locals, optional WebCLEvent[]? eventWaitList = null,
@@ -1527,43 +1565,51 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
 </pre>
 
     <dl class="methods">
-        <dt class="idl-code">any getInfo(CLenum name)</dt>
-            <dd>
-            Returns the value for the passed name. The type returned is the natural type for the
-            requested name, as given in the following table:
-            <table class="foo">
-                <tr><th>name</th><th>return type</th><th>return value</th></tr>
-                <tr><td>`MEM_TYPE`</td><td>`CLenum`</td><td>`MEM_OBJECT_BUFFER` or `MEM_OBJECT_IMAGE2D`</td></tr>
-                <tr><td>`MEM_FLAGS`</td><td>`CLenum`</td><td>The `memFlags` as specified at construction time</td></tr>
-                <tr><td>`MEM_SIZE`</td><td>`CLuint`</td><td>The size of this memory object in bytes</td></tr>
-                <tr><td>`MEM_CONTEXT`</td><td>`WebCLContext`</td><td>the WebCL context of this memory object</td></tr>
-                <tr><td>`MEM_ASSOCIATED_MEMOBJECT`</td><td>`WebCLBuffer`</td><td>The buffer
-                    object that this buffer was created from, or `null`
-                    if this buffer was not created using `createSubBuffer`</td></tr>
-                <tr><td>`MEM_OFFSET`</td><td>`CLuint`</td><td>The offset given to `createSubBuffer`,
-                    or zero if this buffer was not created using `createSubBuffer`</td></tr>
-            </table><br>
-            </dd>
-        <dt class="idl-code">WebCLGLObjectInfo getGLObjectInfo()</dt>
-            <dd>
-            Warning: this method is valid only if WebCL context was created with a WebGL shared group.<br>
+      <dt class="idl-code">any getInfo(CLenum name)</dt>
+      <dd>
+        Returns the value for the passed name. The type returned is the natural type for the
+        requested name, as given in the following table:
+        <table class="foo">
+          <tr><th>name</th><th>return type</th><th>return value</th></tr>
+          <tr><td>`MEM_TYPE`</td><td>`CLenum`</td><td>`MEM_OBJECT_BUFFER` or `MEM_OBJECT_IMAGE2D`</td></tr>
+          <tr><td>`MEM_FLAGS`</td><td>`CLenum`</td><td>The `memFlags` as specified at construction time</td></tr>
+          <tr><td>`MEM_SIZE`</td><td>`CLuint`</td><td>The size of this memory object in bytes</td></tr>
+          <tr><td>`MEM_CONTEXT`</td><td>`WebCLContext`</td><td>the WebCL context of this memory object</td></tr>
+          <tr><td>`MEM_ASSOCIATED_MEMOBJECT`</td><td>`WebCLBuffer`</td><td>The buffer
+              object that this buffer was created from, or `null`
+              if this buffer was not created using `createSubBuffer`</td></tr>
+          <tr><td>`MEM_OFFSET`</td><td>`CLuint`</td><td>The offset given to `createSubBuffer`,
+              or zero if this buffer was not created using `createSubBuffer`</td></tr>
+        </table><br>
+      </dd>
 
-            WebCLGLObjectInfo is defined as the following dictionary:
-<pre class="idl" id="WEBCLGLOBJECTINFO">
-dictionary <dfn>WebCLGLObjectInfo</dfn> {
-  CLenum type;   // type of GL object attached to this memory object
-  any glObject;  // The GL object used to create this memory object
-};
-</pre>
-            </dd>
-        <dt class="idl-code">void release()
+      <dt class="idl-code">WebCLGLObjectInfo getGLObjectInfo()</dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_CONTEXT` -- if the WebCLContext of this memory object was not created with a shared WebGLRenderingContext</li>
+        </dl>
+
+        WebCLGLObjectInfo is defined as the following dictionary:
+        <pre class="idl" id="WEBCLGLOBJECTINFO">
+          dictionary <dfn>WebCLGLObjectInfo</dfn> {
+            CLenum type;   // type of GL object attached to this memory object
+            any glObject;  // The GL object used to create this memory object
+          };
+        </pre>
+      </dd>
+
+      <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=99">OpenCL 1.1 §5.4.1</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseMemObject.html">man page</a>)</span>
-        </dt>
-            <dd>
-            Decrement the native memory object reference count. After the memory object reference count becomes zero and commands queued for execution on a command-queue(s) that use this memory object have finished, the memory object is deleted.
-            </dd>
-   </dl>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseMemObject.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Decrement the native memory object reference count. After the
+        memory object reference count becomes zero and commands queued
+        for execution on a command-queue(s) that use this memory
+        object have finished, the memory object is deleted.
+      </dd>
+    </dl>
 
 <!-- ======================================================================================================= -->
 
@@ -1612,11 +1658,16 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
        Returns a new WebCLImageDescriptor containing information about
        the pixel format and dimensions of this WebCLImage.
      </dd>
+
      <dt class="idl-code">GLint getGLTextureInfo(CLenum paramName)</dt>
-       <dd>
-         Warning: this method is only available if WebCLContext was created with a WebGL shared group.<br>
-         Returns texture values used in WebCLContext.createFromGLTexture() to create this memory object from a WebGL texture.
-       </dd>
+     <dd>
+       Returns the values passed in to `createFromGLTexture` when
+       creating this WebCLImage from a WebGL texture.
+       <dl class="exceptions">
+         <dt>Exceptions:</dt>
+         <li>`INVALID_CONTEXT` -- if the WebCLContext of this memory object was not created with a shared WebGLRenderingContext</li>
+       </dl>
+     </dd>
    </dl>
 
 
@@ -2339,19 +2390,24 @@ partial interface WebCLCommandQueue {
     </p>
 
     <p>
-    WebCL supports the minimum set of <a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=365">image formats and image data types allowed by OpenCL 1.1 embedded profile</a>. Browsers may provide extensions to support other formats.
+      WebCL supports the minimum set
+      of <a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=365">image
+        formats and image data types allowed by OpenCL 1.1 Embedded
+        Profile</a>. Browsers may provide extensions to support other
+      formats.
       <table id="WebCL_image_formats">
-        <tr><th>image_num_channels</th><th>image_channel_order</th><th>image_channel_data_type</th></tr>
-        <tr><td valign="top">4</td><td valign="top">CL_RGBA</td><td>	CL_UNORM_INT8<br>
-        								  	CL_UNORM_INT16<br>
-									        CL_SIGNED_INT8<br>
-									        CL_SIGNED_INT16<br>
-									        CL_SIGNED_INT32<br>
-									        CL_UNSIGNED_INT8<br>
-									        CL_UNSIGNED_INT16<br>
-									        CL_UNSIGNED_INT32<br>
-									        CL_HALF_FLOAT<br>
-									        CL_FLOAT</td></tr>
+        <tr><th>channelOrder</th><th>channelType</th></tr>
+        <tr><td valign="center">RGBA</td>
+          <td>UNORM_INT8<br>
+        		UNORM_INT16<br>
+						SIGNED_INT8<br>
+						SIGNED_INT16<br>
+						SIGNED_INT32<br>
+						UNSIGNED_INT8<br>
+						UNSIGNED_INT16<br>
+						UNSIGNED_INT32<br>
+						HALF_FLOAT<br>
+						FLOAT</td></tr>
       </table>
     </p>
     
