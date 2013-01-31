@@ -573,14 +573,6 @@ interface <dfn>WebCL</dfn> {
   CLenum PROFILING_COMMAND_START                   = 0x1282;
   CLenum PROFILING_COMMAND_END                     = 0x1283;
 
-  /* cl_gl_object_type */
-  CLenum GL_OBJECT_BUFFER                          = 0x2000;
-  CLenum GL_OBJECT_TEXTURE2D                       = 0x2001;
-  CLenum GL_OBJECT_RENDERBUFFER                    = 0x2003;
-
-  /* cl_gl_texture_info */
-  CLenum GL_TEXTURE_TARGET                         = 0x2004;
-  CLenum GL_MIPMAP_LEVEL                           = 0x2005;
 };
 </pre>
 
@@ -847,13 +839,6 @@ interface <dfn>WebCLContext</dfn> {
 
     WebCLCommandQueue createCommandQueue(optional WebCLDevice? device, optional CLenum properties);
 
-    WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
-
-    WebCLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer);
-
-    WebCLImage createFromGLTexture(CLenum memFlags, GLenum textureTarget,
-                                   GLint miplevel, WebGLTexture texture);
-
     WebCLImage createImage(CLenum memFlags,
                            WebCLImageDescriptor descriptor,
                            optional ArrayBuffer hostPtr);
@@ -914,49 +899,6 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
           <li>`INVALID_DEVICE` -- if `device` is invalid or not associated with this context</li>
           <li>`INVALID_VALUE` -- if values specified in `properties` are not valid</li>
           <li>`INVALID_QUEUE_PROPERTIES` -- if values specified in `properties` are valid but not supported by the device</li>
-        </dl>
-      </dd>
-      <dt class="idl-code">WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=320">OpenCL 1.1 §9.8.2</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLBuffer.html">man page</a>)</span>
-      </dt>
-      <dd>
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>`INVALID_CONTEXT` -- if this WebCLContext was not created with a shared WebGLRenderingContext</li>
-          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
-          <li>`INVALID_GL_OBJECT` -- if `buffer` is not a valid WebGLBuffer</li>
-        </dl>
-      </dd>
-      <dt class="idl-code">WebCLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=325">OpenCL 1.1 §9.8.4</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLRenderbuffer.html">man page</a>)</span>
-      </dt>
-      <dd>
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>`INVALID_CONTEXT` -- if this WebCLContext was not created with a shared WebGLRenderingContext</li>
-          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
-          <li>`INVALID_GL_OBJECT` -- if `renderbuffer` is not a valid WebGLRenderbuffer, or has zero width or height</li>
-          <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if the internal format of `renderbuffer` does not map to a supported WebCL image format</li>
-          <li>`INVALID_OPERATION` -- if `renderbuffer` is a multi-sample WebGLRenderbuffer object</li>
-        </dl>
-      </dd>
-      <dt class="idl-code">WebCLImage createFromGLTexture(CLenum memFlags, GLenum textureTarget, GLint miplevel, WebGLTexture texture)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=321">OpenCL 1.1 §9.8.34</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLTexture2D.html">man page</a>)</span>
-      </dt>
-      <dd>
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>`INVALID_CONTEXT` -- if this WebCLContext was not created with a shared WebGLRenderingContext</li>
-          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
-          <li>`INVALID_VALUE` -- if `textureTarget` is not `TEXTURE_2D` or one of `TEXTURE_CUBE_MAP_*`</li>
-          <li>`INVALID_MIP_LEVEL` -- if <code>miplevel &lt; 0 || miplevel &gt; q</code>, where `q` is as defined as in OpenGL ES 2.0</li>
-          <li>`INVALID_MIP_LEVEL` -- if <code>miplevel &gt; 0</code> and creating from non-zero mipmap levels is not supported</li>
-          <li>`INVALID_GL_OBJECT` -- if `texture` is not a valid WebGLTexture, or does not match the given `textureTarget`</li>
-          <li>`INVALID_GL_OBJECT` -- if the specified `miplevel` is not defined for `texture`, or has zero width or height</li>
-          <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if the internal format of `texture` does not map to a supported WebCL image format</li>
         </dl>
       </dd>
       <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBuffer hostPtr)
@@ -1183,19 +1125,6 @@ void enqueueWriteImage(
 
   ////////////////////////////////////////////////////////////////////////////
   //
-  // Acquiring and releasing WebGL objects
-  //
-
-  void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
-                               optional WebCLEvent[]? eventWaitList,
-                               optional WebCLEvent? event);
-
-  void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
-                               optional WebCLEvent[]? eventWaitList,
-                               optional WebCLEvent? event);
-
-  ////////////////////////////////////////////////////////////////////////////
-  //
   // Executing kernels
   //
 
@@ -1390,30 +1319,6 @@ void enqueueWriteImage(
         <dd>
         </dd>
 
-        <dt class="idl-code">void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
-          optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
-          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
-            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueAcquireGLObjects.html">man page</a>)</span>
-        </dt>
-        <dd>
-          <dl class="exceptions">
-            <dt>Exceptions:</dt>
-            <li>`INVALID_CONTEXT` -- if the WebCLContext of this command queue was not created with a shared WebGLRenderingContext</li>
-          </dl>
-        </dd>
-
-        <dt class="idl-code">void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
-          optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
-          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
-            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReleaseGLObjects.html">man page</a>)</span>
-        </dt>
-        <dd>
-          <dl class="exceptions">
-            <dt>Exceptions:</dt>
-            <li>`INVALID_CONTEXT` -- if the WebCLContext of this command queue was not created with a shared WebGLRenderingContext</li>
-          </dl>
-        </dd>
-
         <dt class="idl-code">void enqueueNDRangeKernel(WebCLKernel kernel, CLuint[3] offsets, CLuint[3] globals,
           CLuint[3] locals, optional WebCLEvent[]? eventWaitList = null,
           optional WebCLEvent? event = null)
@@ -1565,8 +1470,6 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
 
 <pre class="idl">interface <dfn>WebCLMemoryObject</dfn> : Transferable {
   any getInfo(CLenum name);
-  WebCLGLObjectInfo getGLObjectInfo();
-
   void release();
 };
 </pre>
@@ -1588,22 +1491,6 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
           <tr><td>`MEM_OFFSET`</td><td>`CLuint`</td><td>The offset given to `createSubBuffer`,
               or zero if this buffer was not created using `createSubBuffer`</td></tr>
         </table><br>
-      </dd>
-
-      <dt class="idl-code">WebCLGLObjectInfo getGLObjectInfo()</dt>
-      <dd>
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>`INVALID_CONTEXT` -- if the WebCLContext of this memory object was not created with a shared WebGLRenderingContext</li>
-        </dl>
-
-        WebCLGLObjectInfo is defined as the following dictionary:
-        <pre class="idl" id="WEBCLGLOBJECTINFO">
-          dictionary <dfn>WebCLGLObjectInfo</dfn> {
-            CLenum type;   // type of GL object attached to this memory object
-            any glObject;  // The GL object used to create this memory object
-          };
-        </pre>
       </dd>
 
       <dt class="idl-code">void release()
@@ -1652,7 +1539,6 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
 
 <pre class="idl">interface <dfn>WebCLImage</dfn> : WebCLMemoryObject {
   WebCLImageDescriptor getInfo();
-  GLint getGLtextureInfo(CLenum paramName);
 };
 </pre>
 
@@ -1666,15 +1552,6 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
        the pixel format and dimensions of this WebCLImage.
      </dd>
 
-     <dt class="idl-code">GLint getGLTextureInfo(CLenum paramName)</dt>
-     <dd>
-       Returns the values passed in to `createFromGLTexture` when
-       creating this WebCLImage from a WebGL texture.
-       <dl class="exceptions">
-         <dt>Exceptions:</dt>
-         <li>`INVALID_CONTEXT` -- if the WebCLContext of this memory object was not created with a shared WebGLRenderingContext</li>
-       </dl>
-     </dd>
    </dl>
 
 
@@ -2009,6 +1886,178 @@ interface <dfn>WebCLEvent</dfn> {
     </dl>
 
 <!-- ======================================================================================================= -->
+<div class="strawman">
+
+    <h2>Extensions</h2>
+    
+    <p>
+      To allow developers to use WebCL extensions to the core specification, WebCL.getExtension("extension_name") returns
+      an object with attributes and/or methods if the extension is supported, or null if the extension is not available.<br>
+      <br>
+      A WebCL implementation may support the following extensions:
+      <ul>
+      <li>CL_KHR_GL_SHARING -- Allow applications to use OpenGL buffer, texture, and renderbuffer objects as OpenCL memory objects.</li>
+      </ul>
+    </p>
+    
+    <h3><a id="CL_KHR_GL_SHARING">CL_KHR_GL_SHARING</a></h3>
+    WebCL.getExtension("CL_KHR_GL_SHARING") returns a WebCLGL object, which is a singleton object that extends WebCL interface.<br>
+    <br>
+    CL_KHR_GL_SHARING adds new methods to WebCLContext, WebCLCommandQueue, WebCLMemoryObject and WebCLImage objects.<br><br>
+     
+    If a WebCLContext is created with a shared WebGL context, then any method in the core specification returning a 
+    WebCLContext, or a WebCLCommandQueue object will return respectively a WebCLGLContext, or a WebCLGLCommandQueue
+    object respectively.
+    
+<pre class="idl">
+interface <dfn>WebCLGL</dfn> : WebCL {
+    /* cl_gl_object_type */
+    CLenum GL_OBJECT_BUFFER                          = 0x2000;
+    CLenum GL_OBJECT_TEXTURE2D                       = 0x2001;
+    CLenum GL_OBJECT_TEXTURE3D                       = 0x2002;
+    CLenum GL_OBJECT_RENDERBUFFER                    = 0x2003;
+	
+    /* cl_gl_object_type */
+    CLenum GL_OBJECT_BUFFER                          = 0x2000;
+    CLenum GL_OBJECT_TEXTURE2D                       = 0x2001;
+    CLenum GL_OBJECT_RENDERBUFFER                    = 0x2003;
+	
+    /* cl_gl_texture_info */
+    CLenum GL_TEXTURE_TARGET                         = 0x2004;
+    CLenum GL_MIPMAP_LEVEL                           = 0x2005;
+}
+
+// returned by WebCL.createContext() with a WebGL shared context
+interface <dfn>WebCLGLContext</dfn> : WebCLContext {
+    WebCLGLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
+
+    WebCLGLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer);
+
+    WebCLGLImage createFromGLTexture(CLenum memFlags, GLenum textureTarget,
+                                   GLint miplevel, WebGLTexture texture);
+}
+
+// returned by WebCLContext.createCommandQueue() if WebCLContext is a WebCLGLContext object
+interface <dfn>WebCLGLCommandQueue</dfn> : WebCLCommandQueue {
+    void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
+	                           optional WebCLEvent[]? eventWaitList,
+	                           optional WebCLEvent? event);
+	
+    void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
+	                           optional WebCLEvent[]? eventWaitList,
+	                           optional WebCLEvent? event);
+};
+
+// returned by WebCLGLContext.createFromGLBuffer()
+interface <dfn>WebCLGLBuffer</dfn> : WebCLBuffer {
+    WebCLGLObjectInfo getGLObjectInfo();
+};
+
+// returned by WebCLGLContext.createFromGLRenderbuffer/.createFromGLTexture()
+interface <dfn>WebCLGLImage</dfn> : WebCLImage {
+    GLint getGLtextureInfo(CLenum paramName);
+};
+</pre>
+    <dl class="methods">
+      <dt class="idl-code">WebCLGLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=320">OpenCL 1.1 §9.8.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLBuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_CONTEXT` -- if this WebCLContext was not created with a shared WebGLRenderingContext</li>
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+          <li>`INVALID_GL_OBJECT` -- if `buffer` is not a valid WebGLBuffer</li>
+        </dl>
+      </dd>
+      
+      <dt class="idl-code">WebCLGLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=325">OpenCL 1.1 §9.8.4</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLRenderbuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_CONTEXT` -- if this WebCLContext was not created with a shared WebGLRenderingContext</li>
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+          <li>`INVALID_GL_OBJECT` -- if `renderbuffer` is not a valid WebGLRenderbuffer, or has zero width or height</li>
+          <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if the internal format of `renderbuffer` does not map to a supported WebCL image format</li>
+          <li>`INVALID_OPERATION` -- if `renderbuffer` is a multi-sample WebGLRenderbuffer object</li>
+        </dl>
+      </dd>
+      
+      <dt class="idl-code">WebCLGLImage createFromGLTexture(CLenum memFlags, GLenum textureTarget, GLint miplevel, WebGLTexture texture)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=321">OpenCL 1.1 §9.8.34</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLTexture2D.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_CONTEXT` -- if this WebCLContext was not created with a shared WebGLRenderingContext</li>
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+          <li>`INVALID_VALUE` -- if `textureTarget` is not `TEXTURE_2D` or one of `TEXTURE_CUBE_MAP_*`</li>
+          <li>`INVALID_MIP_LEVEL` -- if <code>miplevel &lt; 0 || miplevel &gt; q</code>, where `q` is as defined as in OpenGL ES 2.0</li>
+          <li>`INVALID_MIP_LEVEL` -- if <code>miplevel &gt; 0</code> and creating from non-zero mipmap levels is not supported</li>
+          <li>`INVALID_GL_OBJECT` -- if `texture` is not a valid WebGLTexture, or does not match the given `textureTarget`</li>
+          <li>`INVALID_GL_OBJECT` -- if the specified `miplevel` is not defined for `texture`, or has zero width or height</li>
+          <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if the internal format of `texture` does not map to a supported WebCL image format</li>
+        </dl>
+      </dd>
+
+        <dt class="idl-code">void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
+          optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
+          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
+            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueAcquireGLObjects.html">man page</a>)</span>
+        </dt>
+        <dd>
+          <dl class="exceptions">
+            <dt>Exceptions:</dt>
+            <li>`INVALID_CONTEXT` -- if the WebCLContext of this command queue was not created with a shared WebGLRenderingContext</li>
+          </dl>
+        </dd>
+
+        <dt class="idl-code">void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
+          optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
+          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
+            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReleaseGLObjects.html">man page</a>)</span>
+        </dt>
+        <dd>
+          <dl class="exceptions">
+            <dt>Exceptions:</dt>
+            <li>`INVALID_CONTEXT` -- if the WebCLContext of this command queue was not created with a shared WebGLRenderingContext</li>
+          </dl>
+        </dd>
+
+      <dt class="idl-code">WebCLGLObjectInfo getGLObjectInfo()</dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_CONTEXT` -- if the WebCLContext of this memory object was not created with a shared WebGLRenderingContext</li>
+        </dl>
+
+        WebCLGLObjectInfo is defined as the following dictionary:
+        <pre class="idl" id="WEBCLGLOBJECTINFO">
+dictionary <dfn>WebCLGLObjectInfo</dfn> {
+  CLenum type;   // type of GL object attached to this memory object
+  any glObject;  // The GL object used to create this memory object
+};
+        </pre>
+      </dd>
+
+     <dt class="idl-code">GLint getGLTextureInfo(CLenum paramName)</dt>
+     <dd>
+       Returns the values passed in to `createFromGLTexture` when
+       creating this WebCLImage from a WebGL texture.
+       <dl class="exceptions">
+         <dt>Exceptions:</dt>
+         <li>`INVALID_CONTEXT` -- if the WebCLContext of this memory object was not created with a shared WebGLRenderingContext</li>
+       </dl>
+     </dd>
+
+    </dl>
+</div>
+<!-- ======================================================================================================= -->
 
     <h2>Security and Robustness</h2>
 
@@ -2096,8 +2145,6 @@ interface <dfn>WebCLEvent</dfn> {
 
     <h2>Interoperability with HTML Canvas, Image and Video Elements</h2>
 
-<div class="strawman">
-
     <p>
       This section proposes mechanisms for transferring pixel data
       between WebCL memory objects and HTML media elements.
@@ -2182,11 +2229,6 @@ dictionary <dfn>WebCLVideoDescriptor</dfn> : WebCLImageDescriptor {
     </p>
 
     <h3>Reading and writing HTML elements</h3>
-<div class="strawman">
-<p>[bug 8812] if WebCLRegion is removed, all these methods must be rewritten to follow OpenCL
-signature, as proposed in WebCLCommandQueue section.</p>
-</div>
-
 <pre class="idl">
 partial interface WebCLCommandQueue {
 
@@ -2195,101 +2237,164 @@ partial interface WebCLCommandQueue {
   // Writing to WebCLBuffer
   //
 
-  void enqueueWriteBuffer(WebCLRegion dstBuffer,
-                          ImageData srcPixels,
-                          CLboolean blockingWrite,
-                          optional WebCLEvent[]? eventWaitList,
-                          optional WebCLEvent? event);
+  void enqueueWriteBuffer(
+                    WebCLBuffer             buffer,
+                    CLboolean               blockingWrite,
+                    CLuint                  offset,
+                    CLuint                  sizeInBytes,
+                    ImageData               srcPixels,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
 
-  void enqueueWriteBuffer(WebCLRegion dstBuffer,
-                          HTMLCanvasElement srcCanvas,
-                          CLboolean blockingWrite,
-                          optional WebCLEvent[]? eventWaitList,
-                          optional WebCLEvent? event);
+  void enqueueWriteBuffer(
+                    WebCLBuffer             buffer,
+                    CLboolean               blockingWrite,
+                    CLuint                  offset,
+                    CLuint                  sizeInBytes,
+                    HTMLCanvasElement       srcCanvas,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
 
-  void enqueueWriteBuffer(WebCLRegion dstBuffer,
-                          HTMLImageElement srcImage,
-                          CLboolean blockingWrite,
-                          optional WebCLEvent[]? eventWaitList,
-                          optional WebCLEvent? event);
+  void enqueueWriteBuffer(
+                    WebCLBuffer             buffer,
+                    CLboolean               blockingWrite,
+                    CLuint                  offset,
+                    CLuint                  sizeInBytes,
+                    HTMLImageElement        srcImage,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
 
-  void enqueueWriteBufferRect(WebCLRegion dstBuffer,
-                              ImageData srcPixels,
-                              WebCLRegion srcRegion,
-                              CLboolean blockingWrite,
-                              optional WebCLEvent[]? eventWaitList,
-                              optional WebCLEvent? event);
+  void enqueueWriteBufferRect(
+                    WebCLBuffer             buffer,
+                    CLboolean               blockingWrite,
+                    CLuint[3]               bufferOrigin,
+                    CLuint[3]               hostOrigin,
+                    CLuint[3]               region,
+                    CLuint                  bufferRowPitch,
+                    CLuint                  bufferSlicePitch,
+                    CLuint                  hostRowPitch,
+                    CLuint                  hostSlicePitch,
+                    ImageData               srcPixels,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
 
-  void enqueueWriteBufferRect(WebCLRegion dstBuffer,
-                              HTMLCanvasElement srcCanvas,
-                              WebCLRegion srcRegion,
-                              CLboolean blockingWrite,
-                              optional WebCLEvent[]? eventWaitList,
-                              optional WebCLEvent? event);
+  void enqueueWriteBufferRect(
+                    WebCLBuffer             buffer,
+                    CLboolean               blockingWrite,
+                    CLuint[3]               bufferOrigin,
+                    CLuint[3]               hostOrigin,
+                    CLuint[3]               region,
+                    CLuint                  bufferRowPitch,
+                    CLuint                  bufferSlicePitch,
+                    CLuint                  hostRowPitch,
+                    CLuint                  hostSlicePitch,
+                    HTMLCanvasElement       srcCanvas,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
 
-  void enqueueWriteBufferRect(WebCLRegion dstBuffer,
-                              HTMLImageElement srcCanvas,
-                              WebCLRegion srcRegion,
-                              CLboolean blockingWrite,
-                              optional WebCLEvent[]? eventWaitList,
-                              optional WebCLEvent? event);
+  void enqueueWriteBufferRect(
+                    WebCLBuffer             buffer,
+                    CLboolean               blockingWrite,
+                    CLuint[3]               bufferOrigin,
+                    CLuint[3]               hostOrigin,
+                    CLuint[3]               region,
+                    CLuint                  bufferRowPitch,
+                    CLuint                  bufferSlicePitch,
+                    CLuint                  hostRowPitch,
+                    CLuint                  hostSlicePitch,
+                    HTMLImageElement        srcImage,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
 
   //////////////////////////////////////////////////////////////////////
   //
   // Writing to WebCLImage
   //
 
-  void enqueueWriteImage(WebCLRegion dstImage,
-                         ImageData srcPixels,
-                         CLboolean blockingWrite,
-                         optional WebCLEvent[]? eventWaitList,
-                         optional WebCLEvent? event);
+  void enqueueWriteImage(
+                    WebCLImage              image,
+                    CLboolean               blockingWrite,
+                    CLuint[3]               origin,
+                    CLuint[3]               region,
+                    CLuint                  inputRowPitch,
+                    CLuint                  inputSlicePitch,
+                    ImageData               srcPixels,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
 
-  void enqueueWriteImage(WebCLRegion dstImage,
-                         HTMLCanvasElement srcCanvas,
-                         CLboolean blockingWrite,
-                         optional WebCLEvent[]? eventWaitList,
-                         optional WebCLEvent? event);
+  void enqueueWriteImage(
+                    WebCLImage              image,
+                    CLboolean               blockingWrite,
+                    CLuint[3]               origin,
+                    CLuint[3]               region,
+                    CLuint                  inputRowPitch,
+                    CLuint                  inputSlicePitch,
+                    HTMLCanvasElement       srcCanvas,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
 
-  void enqueueWriteImage(WebCLRegion dstImage,
-                         HTMLImageElement srcImage,
-                         CLboolean blockingWrite,
-                         optional WebCLEvent[]? eventWaitList,
-                         optional WebCLEvent? event);
+  void enqueueWriteImage(
+                    WebCLImage              image,
+                    CLboolean               blockingWrite,
+                    CLuint[3]               origin,
+                    CLuint[3]               region,
+                    CLuint                  inputRowPitch,
+                    CLuint                  inputSlicePitch,
+                    HTMLImageElement        srcImage,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
 
-  void enqueueWriteImage(WebCLRegion dstImage,
-                         HTMLVideoElement srcVideo,
-                         CLboolean blockingWrite,
-                         optional WebCLEvent[]? eventWaitList,
-                         optional WebCLEvent? event);
+  void enqueueWriteImage(
+                    WebCLImage              image,
+                    CLboolean               blockingWrite,
+                    CLuint[3]               origin,
+                    CLuint[3]               region,
+                    CLuint                  inputRowPitch,
+                    CLuint                  inputSlicePitch,
+                    HTMLVideoElement        srcVideo,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
 
   //////////////////////////////////////////////////////////////////////
   //
   // Reading from WebCL
   //
 
-  void enqueueReadBuffer(WebCLRegion srcBuffer,
-                         HTMLCanvasElement dstCanvas,
-                         CLboolean blockingRead,
-                         optional WebCLEvent[]? eventWaitList,
-                         optional WebCLEvent? event);
+  void enqueueReadBuffer(
+                    WebCLBuffer             buffer,
+                    CLboolean               blockingRead,
+                    CLuint                  offset,
+                    CLuint                  sizeInBytes,
+                    HTMLCanvasElement       dstCanvas,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
 
-  void enqueueReadBufferRect(WebCLRegion srcBuffer,
-                             HTMLCanvasElement dstCanvas,
-                             WebCLRegion dstCanvasRegion,
-                             CLboolean blockingRead,
-                             optional WebCLEvent[]? eventWaitList,
-                             optional WebCLEvent? event);
+  void enqueueReadBufferRect(
+                    WebCLBuffer             buffer,
+                    CLboolean               blockingRead,
+                    CLuint[3]               bufferOrigin,
+                    CLuint[3]               hostOrigin,
+                    CLuint[3]               region,
+                    CLuint                  bufferRowPitch,
+                    CLuint                  bufferSlicePitch,
+                    CLuint                  hostRowPitch,
+                    CLuint                  hostSlicePitch,
+                    HTMLCanvasElement       dstCanvas,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
 
-  void enqueueReadImage(WebCLRegion srcImage,
-                        HTMLCanvasElement dstCanvas,
-                        CLboolean blockingRead,
-                        optional WebCLEvent[]? eventWaitList,
-                        optional WebCLEvent? event);
+  void enqueueReadImage(
+                    WebCLImage              image,
+                    CLboolean               blockingRead,
+                    CLuint[3]               origin,
+                    CLuint[3]               region,
+                    CLuint                  rowPitch,
+                    CLuint                  slicePitch,
+                    HTMLCanvasElement       dstCanvas,
+                    optional WebCLEvent[]?  eventWaitList,
+                    optional WebCLEvent?    event);
 };
 </pre>
-
-</div> <!-- strawman -->
 
 <!-- ======================================================================================================= -->
 
