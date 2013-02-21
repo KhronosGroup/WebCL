@@ -1014,16 +1014,16 @@ void enqueueCopyBuffer(
                     WebCLBuffer             dstBuffer,
                     CLuint                  srcOffset,
                     CLuint                  dstOffset,
-                    CLuint                  sizeInBytes,
+                    CLuint                  numBytes,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
 void enqueueCopyBufferRect(
                     WebCLBuffer             srcBuffer,
                     WebCLBuffer             dstBuffer,
-                    CLuint[2]               srcOrigin,
-                    CLuint[2]               dstOrigin,
-                    CLuint[2]               region,
+                    CLuint[3]               srcOrigin,
+                    CLuint[3]               dstOrigin,
+                    CLuint[3]               region,
                     CLuint                  srcRowPitch,
                     CLuint                  srcSlicePitch,
                     CLuint                  dstRowPitch,
@@ -1044,7 +1044,7 @@ void enqueueCopyImageToBuffer(
                     WebCLImage              srcImage,
                     WebCLBuffer             dstBuffer,
                     CLuint[2]               srcOrigin,
-                    CLuint[2]               region,
+                    CLuint[2]               srcRegion,
                     CLuint                  dstOffset,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -1054,7 +1054,7 @@ void enqueueCopyBufferToImage(
                     WebCLImage              dstImage,
                     CLuint                  srcOffset,
                     CLuint[2]               dstOrigin,
-                    CLuint[2]               region,
+                    CLuint[2]               dstRegion,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
@@ -1066,23 +1066,23 @@ void enqueueCopyBufferToImage(
 void enqueueReadBuffer(
                     WebCLBuffer             buffer,
                     CLboolean               blockingRead,
-                    CLuint                  offset,
-                    CLuint                  sizeInBytes,
-                    ArrayBuffer             ptr,
+                    CLuint                  bufferOffset,
+                    CLuint                  numBytes,
+                    ArrayBuffer             hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
 void enqueueReadBufferRect(
                     WebCLBuffer             buffer,
                     CLboolean               blockingRead,
-                    CLuint[2]               bufferOrigin,
-                    CLuint[2]               hostOrigin,
-                    CLuint[2]               region,
+                    CLuint[3]               bufferOrigin,
+                    CLuint[3]               hostOrigin,
+                    CLuint[3]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
                     CLuint                  hostRowPitch,
                     CLuint                  hostSlicePitch,
-                    ArrayBuffer             ptr,
+                    ArrayBuffer             hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
@@ -1091,9 +1091,8 @@ void enqueueReadImage(
                     CLboolean               blockingRead,
                     CLuint[2]               origin,
                     CLuint[2]               region,
-                    CLuint                  rowPitch,
-                    CLuint                  slicePitch,
-                    ArrayBuffer             ptr,
+                    CLuint                  hostRowPitch,
+                    ArrayBuffer             hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
@@ -1105,23 +1104,23 @@ void enqueueReadImage(
 void enqueueWriteBuffer(
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
-                    CLuint                  offset,
-                    CLuint                  sizeInBytes,
-                    ArrayBuffer             ptr,
+                    CLuint                  bufferOffset,
+                    CLuint                  numBytes,
+                    ArrayBuffer             hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
 void enqueueWriteBufferRect(
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
-                    CLuint[2]               bufferOrigin,
-                    CLuint[2]               hostOrigin,
-                    CLuint[2]               region,
+                    CLuint[3]               bufferOrigin,
+                    CLuint[3]               hostOrigin,
+                    CLuint[3]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
                     CLuint                  hostRowPitch,
                     CLuint                  hostSlicePitch,
-                    ArrayBuffer             ptr,
+                    ArrayBuffer             hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
@@ -1130,9 +1129,8 @@ void enqueueWriteImage(
                     CLboolean               blockingWrite,
                     CLuint[2]               origin,
                     CLuint[2]               region,
-                    CLuint                  inputRowPitch,
-                    CLuint                  inputSlicePitch,
-                    ArrayBuffer             ptr,
+                    CLuint                  hostRowPitch,
+                    ArrayBuffer             hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
@@ -1142,7 +1140,7 @@ void enqueueWriteImage(
   //
 
   void enqueueNDRangeKernel(WebCLKernel kernel,
-                            CLuint[3]? offsets, CLuint[3]? globals, CLuint[3]? locals,
+                            CLuint[3]? globalWorkOffset, CLuint[3]? globalWorkSize, CLuint[3]? localWorkSize,
                             optional WebCLEvent[]? eventWaitList,
                             optional WebCLEvent? event);
 
@@ -1183,11 +1181,11 @@ void enqueueWriteImage(
                     WebCLBuffer             dstBuffer,
                     CLuint                  srcOffset,
                     CLuint                  dstOffset,
-                    CLuint                  sizeInBytes,
+                    CLuint                  numBytes,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferRect.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBuffer.html">man page</a>)</span>
         </dt>
             <dd>
             </dd>
@@ -1211,7 +1209,7 @@ void enqueueWriteImage(
                     WebCLImage              dstImage,
                     CLuint                  srcOffset,
                     CLuint[2]               dstOrigin,
-                    CLuint[2]               region,
+                    CLuint[2]               dstRegion,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
@@ -1224,7 +1222,7 @@ void enqueueWriteImage(
                     WebCLImage              srcImage,
                     WebCLBuffer             dstBuffer,
                     CLuint[2]               srcOrigin,
-                    CLuint[2]               region,
+                    CLuint[2]               srcRegion,
                     CLuint                  dstOffset,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event)
@@ -1237,9 +1235,9 @@ void enqueueWriteImage(
         <dt class="idl-code">void enqueueReadBuffer(
                     WebCLBuffer             buffer,
                     CLboolean               blockingRead,
-                    CLuint                  offset,
-                    CLuint                  sizeInBytes,
-                    ArrayBuffer             ptr,
+                    CLuint                  bufferOffset,
+                    CLuint                  numBytes,
+                    ArrayBuffer             hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
@@ -1253,9 +1251,8 @@ void enqueueWriteImage(
                     CLboolean               blockingRead,
                     CLuint[2]               origin,
                     CLuint[2]               region,
-                    CLuint                  rowPitch,
-                    CLuint                  slicePitch,
-                    ArrayBuffer             ptr,
+                    CLuint                  hostRowPitch,
+                    ArrayBuffer             hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
@@ -1267,14 +1264,14 @@ void enqueueWriteImage(
         <dt class="idl-code">void enqueueReadBufferRect(
                     WebCLBuffer             buffer,
                     CLboolean               blockingRead,
-                    CLuint[2]               bufferOrigin,
-                    CLuint[2]               hostOrigin,
-                    CLuint[2]               region,
+                    CLuint[3]               bufferOrigin,
+                    CLuint[3]               hostOrigin,
+                    CLuint[3]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
                     CLuint                  hostRowPitch,
                     CLuint                  hostSlicePitch,
-                    ArrayBuffer             ptr,
+                    ArrayBuffer             hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
@@ -1286,9 +1283,9 @@ void enqueueWriteImage(
         <dt class="idl-code">void enqueueWriteBuffer(
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
-                    CLuint                  offset,
-                    CLuint                  sizeInBytes,
-                    ArrayBuffer             ptr,
+                    CLuint                  bufferOffset,
+                    CLuint                  numBytes,
+                    ArrayBuffer             hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
@@ -1302,9 +1299,8 @@ void enqueueWriteImage(
                     CLboolean               blockingWrite,
                     CLuint[2]               origin,
                     CLuint[2]               region,
-                    CLuint                  inputRowPitch,
-                    CLuint                  inputSlicePitch,
-                    ArrayBuffer             ptr,
+                    CLuint                  hostRowPitch,
+                    ArrayBuffer             hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
@@ -1316,14 +1312,14 @@ void enqueueWriteImage(
         <dt class="idl-code">void enqueueWriteBufferRect(
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
-                    CLuint[2]               bufferOrigin,
-                    CLuint[2]               hostOrigin,
-                    CLuint[2]               region,
+                    CLuint[3]               bufferOrigin,
+                    CLuint[3]               hostOrigin,
+                    CLuint[3]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
                     CLuint                  hostRowPitch,
                     CLuint                  hostSlicePitch,
-                    ArrayBuffer             ptr,
+                    ArrayBuffer             hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
@@ -1332,57 +1328,60 @@ void enqueueWriteImage(
         <dd>
         </dd>
 
-        <dt class="idl-code">void enqueueNDRangeKernel(WebCLKernel kernel, CLuint[3] offsets, CLuint[3] globals,
-          CLuint[3] locals, optional WebCLEvent[]? eventWaitList = null,
+        <dt class="idl-code">void enqueueNDRangeKernel(WebCLKernel kernel, CLuint[3]? globalWorkOffset, CLuint[3]? globalWorkSize,
+          CLuint[3]? localWorkSize, optional WebCLEvent[]? eventWaitList = null,
           optional WebCLEvent? event = null)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueNDRangeKernel.html">man page</a>)</span>
+          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
+            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueNDRangeKernel.html">man page</a>)</span>
         </dt>
-            <dd>
-            Offsets, globals, locals contain 1, 2, or 3 NDRange values. The number of dimensions is determined by the number of elements in globals.
-            </dd>
+        <dd>
+          The `globalWorkOffset`, `globalWorkSize` and
+          `localWorkSize` arrays contain 1, 2, or 3 NDRange values.
+          The number of NDRange dimensions is determined by the
+          number of elements in `globalWorkSize`.
+        </dd>
 
         <dt class="idl-code">void enqueueTask(WebCLKernel kernel, optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueTask.html">man page</a>)</span>
+          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
+            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueTask.html">man page</a>)</span>
         </dt>
-            <dd>
-            </dd>
+        <dd>
+        </dd>
 
         <dt class="idl-code">void enqueueMarker(optional WebCLEvent? event = null)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueMarker.html">man page</a>)</span>
+          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
+            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueMarker.html">man page</a>)</span>
         </dt>
-            <dd>
-            </dd>
+        <dd>
+        </dd>
 
         <dt class="idl-code">void enqueueBarrier()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueBarrier.html">man page</a>)</span>
+          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
+            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueBarrier.html">man page</a>)</span>
         </dt>
-            <dd>
-            </dd>
+        <dd>
+        </dd>
 
         <dt class="idl-code">void enqueueWaitForEvents (optional WebCLEvent[]? eventWaitList);
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWaitForEvents.html">man page</a>)</span>
+          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
+            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWaitForEvents.html">man page</a>)</span>
         </dt>
-            <dd>
-            </dd>
+        <dd>
+        </dd>
 
         <dt class="idl-code">void finish()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFinish.html">man page</a>)</span>
+          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
+            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFinish.html">man page</a>)</span>
         </dt>
-            <dd>
-            </dd>
+        <dd>
+        </dd>
 
         <dt class="idl-code">void flush()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFlush.html">man page</a>)</span>
+          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
+            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFlush.html">man page</a>)</span>
         </dt>
-            <dd>
-            </dd>
+        <dd>
+        </dd>
 
         <dt class="idl-code">any getInfo(CLenum name)
           <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.1">OpenCL 1.1 §5.1</a>,
@@ -1404,15 +1403,15 @@ void enqueueWriteImage(
         </dd>
 
         <dt class="idl-code">void release()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=53">OpenCL 1.1 §5.1</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseCommandQueue.html">man page</a>)</span>
+          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=53">OpenCL 1.1 §5.1</a>,
+            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseCommandQueue.html">man page</a>)</span>
         </dt>
-            <dd>
-            Decrement the native command queue reference count. After
-            the command queue reference count becomes zero and all
-            commands queued to this command queued have finished, the
-            command queue is deleted.
-            </dd>
+        <dd>
+          Decrement the native command queue reference count. After
+          the command queue reference count becomes zero and all
+          commands queued to this command queued have finished, the
+          command queue is deleted.
+        </dd>
     </dl>
 
 <pre class="example">
@@ -2318,7 +2317,7 @@ partial interface WebCLCommandQueue {
   void enqueueWriteBuffer(
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
-                    CLuint                  offset,
+                    CLuint                  bufferOffset,
                     ImageData               srcPixels,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2326,7 +2325,7 @@ partial interface WebCLCommandQueue {
   void enqueueWriteBuffer(
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
-                    CLuint                  offset,
+                    CLuint                  bufferOffset,
                     HTMLCanvasElement       srcCanvas,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2334,7 +2333,7 @@ partial interface WebCLCommandQueue {
   void enqueueWriteBuffer(
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
-                    CLuint                  offset,
+                    CLuint                  bufferOffset,
                     HTMLImageElement        srcImage,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2343,10 +2342,9 @@ partial interface WebCLCommandQueue {
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
                     CLuint[2]               bufferOrigin,
-                    CLuint[2]               hostOrigin,
+                    CLuint[2]               srcOrigin,
                     CLuint[2]               region,
                     CLuint                  bufferRowPitch,
-                    CLuint                  bufferSlicePitch,
                     ImageData               srcPixels,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2355,10 +2353,9 @@ partial interface WebCLCommandQueue {
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
                     CLuint[2]               bufferOrigin,
-                    CLuint[2]               hostOrigin,
+                    CLuint[2]               srcOrigin,
                     CLuint[2]               region,
                     CLuint                  bufferRowPitch,
-                    CLuint                  bufferSlicePitch,
                     HTMLCanvasElement       srcCanvas,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2367,10 +2364,9 @@ partial interface WebCLCommandQueue {
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
                     CLuint[2]               bufferOrigin,
-                    CLuint[2]               hostOrigin,
+                    CLuint[2]               srcOrigin,
                     CLuint[2]               region,
                     CLuint                  bufferRowPitch,
-                    CLuint                  bufferSlicePitch,
                     HTMLImageElement        srcImage,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2424,8 +2420,8 @@ partial interface WebCLCommandQueue {
   void enqueueReadBuffer(
                     WebCLBuffer             buffer,
                     CLboolean               blockingRead,
-                    CLuint                  offset,
-                    CLuint                  sizeInBytes,
+                    CLuint                  bufferOffset,
+                    CLuint                  numBytes,
                     HTMLCanvasElement       dstCanvas,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2434,10 +2430,9 @@ partial interface WebCLCommandQueue {
                     WebCLBuffer             buffer,
                     CLboolean               blockingRead,
                     CLuint[2]               bufferOrigin,
-                    CLuint[2]               hostOrigin,
+                    CLuint[2]               dstOrigin,
                     CLuint[2]               region,
                     CLuint                  bufferRowPitch,
-                    CLuint                  bufferSlicePitch,
                     HTMLCanvasElement       dstCanvas,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
