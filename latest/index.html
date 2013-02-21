@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">February 6, 2013</h2>
+    <h2 class="no-toc">February 21, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -1004,9 +1004,9 @@ void enqueueCopyBuffer(
 void enqueueCopyBufferRect(
                     WebCLBuffer             srcBuffer,
                     WebCLBuffer             dstBuffer,
-                    CLuint[3]               srcOrigin,
-                    CLuint[3]               dstOrigin,
-                    CLuint[3]               region,
+                    CLuint[2]               srcOrigin,
+                    CLuint[2]               dstOrigin,
+                    CLuint[2]               region,
                     CLuint                  srcRowPitch,
                     CLuint                  srcSlicePitch,
                     CLuint                  dstRowPitch,
@@ -1017,17 +1017,17 @@ void enqueueCopyBufferRect(
 void enqueueCopyImage(
                     WebCLImage              srcImage,
                     WebCLImage              dstImage,
-                    CLuint[3]               srcOrigin,
-                    CLuint[3]               dstOrigin,
-                    CLuint[3]               region,
+                    CLuint[2]               srcOrigin,
+                    CLuint[2]               dstOrigin,
+                    CLuint[2]               region,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
 void enqueueCopyImageToBuffer(
                     WebCLImage              srcImage,
                     WebCLBuffer             dstBuffer,
-                    CLuint[3]               srcOrigin,
-                    CLuint[3]               region,
+                    CLuint[2]               srcOrigin,
+                    CLuint[2]               region,
                     CLuint                  dstOffset,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -1036,8 +1036,8 @@ void enqueueCopyBufferToImage(
                     WebCLBuffer             srcBuffer,
                     WebCLImage              dstImage,
                     CLuint                  srcOffset,
-                    CLuint[3]               dstOrigin,
-                    CLuint[3]               region,
+                    CLuint[2]               dstOrigin,
+                    CLuint[2]               region,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
@@ -1058,9 +1058,9 @@ void enqueueReadBuffer(
 void enqueueReadBufferRect(
                     WebCLBuffer             buffer,
                     CLboolean               blockingRead,
-                    CLuint[3]               bufferOrigin,
-                    CLuint[3]               hostOrigin,
-                    CLuint[3]               region,
+                    CLuint[2]               bufferOrigin,
+                    CLuint[2]               hostOrigin,
+                    CLuint[2]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
                     CLuint                  hostRowPitch,
@@ -1072,8 +1072,8 @@ void enqueueReadBufferRect(
 void enqueueReadImage(
                     WebCLImage              image,
                     CLboolean               blockingRead,
-                    CLuint[3]               origin,
-                    CLuint[3]               region,
+                    CLuint[2]               origin,
+                    CLuint[2]               region,
                     CLuint                  rowPitch,
                     CLuint                  slicePitch,
                     ArrayBuffer             ptr,
@@ -1097,9 +1097,9 @@ void enqueueWriteBuffer(
 void enqueueWriteBufferRect(
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
-                    CLuint[3]               bufferOrigin,
-                    CLuint[3]               hostOrigin,
-                    CLuint[3]               region,
+                    CLuint[2]               bufferOrigin,
+                    CLuint[2]               hostOrigin,
+                    CLuint[2]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
                     CLuint                  hostRowPitch,
@@ -1111,8 +1111,8 @@ void enqueueWriteBufferRect(
 void enqueueWriteImage(
                     WebCLImage              image,
                     CLboolean               blockingWrite,
-                    CLuint[3]               origin,
-                    CLuint[3]               region,
+                    CLuint[2]               origin,
+                    CLuint[2]               region,
                     CLuint                  inputRowPitch,
                     CLuint                  inputSlicePitch,
                     ArrayBuffer             ptr,
@@ -1125,7 +1125,7 @@ void enqueueWriteImage(
   //
 
   void enqueueNDRangeKernel(WebCLKernel kernel,
-                            CLuint[]? offsets, CLuint[]? globals, CLuint[]? locals,
+                            CLuint[3]? offsets, CLuint[3]? globals, CLuint[3]? locals,
                             optional WebCLEvent[]? eventWaitList,
                             optional WebCLEvent? event);
 
@@ -1178,9 +1178,9 @@ void enqueueWriteImage(
         <dt class="idl-code">void enqueueCopyImage(
                     WebCLImage              srcImage,
                     WebCLImage              dstImage,
-                    CLuint[3]               srcOrigin,
-                    CLuint[3]               dstOrigin,
-                    CLuint[3]               region,
+                    CLuint[2]               srcOrigin,
+                    CLuint[2]               dstOrigin,
+                    CLuint[2]               region,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
@@ -1193,8 +1193,8 @@ void enqueueWriteImage(
                     WebCLBuffer             srcBuffer,
                     WebCLImage              dstImage,
                     CLuint                  srcOffset,
-                    CLuint[3]               dstOrigin,
-                    CLuint[3]               region,
+                    CLuint[2]               dstOrigin,
+                    CLuint[2]               region,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
@@ -1206,8 +1206,8 @@ void enqueueWriteImage(
         <dt class="idl-code">void enqueueCopyImageToBuffer(
                     WebCLImage              srcImage,
                     WebCLBuffer             dstBuffer,
-                    CLuint[3]               srcOrigin,
-                    CLuint[3]               region,
+                    CLuint[2]               srcOrigin,
+                    CLuint[2]               region,
                     CLuint                  dstOffset,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event)
@@ -1234,8 +1234,8 @@ void enqueueWriteImage(
         <dt class="idl-code">void enqueueReadImage(
                     WebCLImage              image,
                     CLboolean               blockingRead,
-                    CLuint[3]               origin,
-                    CLuint[3]               region,
+                    CLuint[2]               origin,
+                    CLuint[2]               region,
                     CLuint                  rowPitch,
                     CLuint                  slicePitch,
                     ArrayBuffer             ptr,
@@ -1250,9 +1250,9 @@ void enqueueWriteImage(
         <dt class="idl-code">void enqueueReadBufferRect(
                     WebCLBuffer             buffer,
                     CLboolean               blockingRead,
-                    CLuint[3]               bufferOrigin,
-                    CLuint[3]               hostOrigin,
-                    CLuint[3]               region,
+                    CLuint[2]               bufferOrigin,
+                    CLuint[2]               hostOrigin,
+                    CLuint[2]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
                     CLuint                  hostRowPitch,
@@ -1283,8 +1283,8 @@ void enqueueWriteImage(
         <dt class="idl-code">void enqueueWriteImage(
                     WebCLImage              image,
                     CLboolean               blockingWrite,
-                    CLuint[3]               origin,
-                    CLuint[3]               region,
+                    CLuint[2]               origin,
+                    CLuint[2]               region,
                     CLuint                  inputRowPitch,
                     CLuint                  inputSlicePitch,
                     ArrayBuffer             ptr,
@@ -1299,9 +1299,9 @@ void enqueueWriteImage(
         <dt class="idl-code">void enqueueWriteBufferRect(
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
-                    CLuint[3]               bufferOrigin,
-                    CLuint[3]               hostOrigin,
-                    CLuint[3]               region,
+                    CLuint[2]               bufferOrigin,
+                    CLuint[2]               hostOrigin,
+                    CLuint[2]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
                     CLuint                  hostRowPitch,
@@ -2263,9 +2263,9 @@ partial interface WebCLCommandQueue {
   void enqueueWriteBufferRect(
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
-                    CLuint[3]               bufferOrigin,
-                    CLuint[3]               hostOrigin,
-                    CLuint[3]               region,
+                    CLuint[2]               bufferOrigin,
+                    CLuint[2]               hostOrigin,
+                    CLuint[2]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
                     CLuint                  hostRowPitch,
@@ -2277,9 +2277,9 @@ partial interface WebCLCommandQueue {
   void enqueueWriteBufferRect(
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
-                    CLuint[3]               bufferOrigin,
-                    CLuint[3]               hostOrigin,
-                    CLuint[3]               region,
+                    CLuint[2]               bufferOrigin,
+                    CLuint[2]               hostOrigin,
+                    CLuint[2]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
                     CLuint                  hostRowPitch,
@@ -2291,9 +2291,9 @@ partial interface WebCLCommandQueue {
   void enqueueWriteBufferRect(
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
-                    CLuint[3]               bufferOrigin,
-                    CLuint[3]               hostOrigin,
-                    CLuint[3]               region,
+                    CLuint[2]               bufferOrigin,
+                    CLuint[2]               hostOrigin,
+                    CLuint[2]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
                     CLuint                  hostRowPitch,
@@ -2310,8 +2310,8 @@ partial interface WebCLCommandQueue {
   void enqueueWriteImage(
                     WebCLImage              image,
                     CLboolean               blockingWrite,
-                    CLuint[3]               origin,
-                    CLuint[3]               region,
+                    CLuint[2]               origin,
+                    CLuint[2]               region,
                     CLuint                  inputRowPitch,
                     CLuint                  inputSlicePitch,
                     ImageData               srcPixels,
@@ -2321,8 +2321,8 @@ partial interface WebCLCommandQueue {
   void enqueueWriteImage(
                     WebCLImage              image,
                     CLboolean               blockingWrite,
-                    CLuint[3]               origin,
-                    CLuint[3]               region,
+                    CLuint[2]               origin,
+                    CLuint[2]               region,
                     CLuint                  inputRowPitch,
                     CLuint                  inputSlicePitch,
                     HTMLCanvasElement       srcCanvas,
@@ -2332,8 +2332,8 @@ partial interface WebCLCommandQueue {
   void enqueueWriteImage(
                     WebCLImage              image,
                     CLboolean               blockingWrite,
-                    CLuint[3]               origin,
-                    CLuint[3]               region,
+                    CLuint[2]               origin,
+                    CLuint[2]               region,
                     CLuint                  inputRowPitch,
                     CLuint                  inputSlicePitch,
                     HTMLImageElement        srcImage,
@@ -2343,8 +2343,8 @@ partial interface WebCLCommandQueue {
   void enqueueWriteImage(
                     WebCLImage              image,
                     CLboolean               blockingWrite,
-                    CLuint[3]               origin,
-                    CLuint[3]               region,
+                    CLuint[2]               origin,
+                    CLuint[2]               region,
                     CLuint                  inputRowPitch,
                     CLuint                  inputSlicePitch,
                     HTMLVideoElement        srcVideo,
@@ -2368,9 +2368,9 @@ partial interface WebCLCommandQueue {
   void enqueueReadBufferRect(
                     WebCLBuffer             buffer,
                     CLboolean               blockingRead,
-                    CLuint[3]               bufferOrigin,
-                    CLuint[3]               hostOrigin,
-                    CLuint[3]               region,
+                    CLuint[2]               bufferOrigin,
+                    CLuint[2]               hostOrigin,
+                    CLuint[2]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
                     CLuint                  hostRowPitch,
@@ -2382,8 +2382,8 @@ partial interface WebCLCommandQueue {
   void enqueueReadImage(
                     WebCLImage              image,
                     CLboolean               blockingRead,
-                    CLuint[3]               origin,
-                    CLuint[3]               region,
+                    CLuint[2]               origin,
+                    CLuint[2]               region,
                     CLuint                  rowPitch,
                     CLuint                  slicePitch,
                     HTMLCanvasElement       dstCanvas,
