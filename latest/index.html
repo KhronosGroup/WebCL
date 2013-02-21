@@ -2267,6 +2267,7 @@ partial interface WebCLContext {
     <p>
       If the ImageData or HTMLImageElement object is not fully loaded then createBuffer() and createImage() throw INVALID_HOST_PTR.
     </p>
+
     <h3>Binding with HTMLVideoElement</h3>
 
     <p>
@@ -2305,6 +2306,7 @@ dictionary <dfn>WebCLVideoDescriptor</dfn> : WebCLImageDescriptor {
     </p>
 
     <h3>Reading and writing HTML elements</h3>
+
 <pre class="idl">
 partial interface WebCLCommandQueue {
 
@@ -2317,7 +2319,6 @@ partial interface WebCLCommandQueue {
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
                     CLuint                  offset,
-                    CLuint                  sizeInBytes,
                     ImageData               srcPixels,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2326,7 +2327,6 @@ partial interface WebCLCommandQueue {
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
                     CLuint                  offset,
-                    CLuint                  sizeInBytes,
                     HTMLCanvasElement       srcCanvas,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2335,7 +2335,6 @@ partial interface WebCLCommandQueue {
                     WebCLBuffer             buffer,
                     CLboolean               blockingWrite,
                     CLuint                  offset,
-                    CLuint                  sizeInBytes,
                     HTMLImageElement        srcImage,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2348,8 +2347,6 @@ partial interface WebCLCommandQueue {
                     CLuint[2]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
-                    CLuint                  hostRowPitch,
-                    CLuint                  hostSlicePitch,
                     ImageData               srcPixels,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2362,8 +2359,6 @@ partial interface WebCLCommandQueue {
                     CLuint[2]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
-                    CLuint                  hostRowPitch,
-                    CLuint                  hostSlicePitch,
                     HTMLCanvasElement       srcCanvas,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2376,8 +2371,6 @@ partial interface WebCLCommandQueue {
                     CLuint[2]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
-                    CLuint                  hostRowPitch,
-                    CLuint                  hostSlicePitch,
                     HTMLImageElement        srcImage,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2392,8 +2385,6 @@ partial interface WebCLCommandQueue {
                     CLboolean               blockingWrite,
                     CLuint[2]               origin,
                     CLuint[2]               region,
-                    CLuint                  inputRowPitch,
-                    CLuint                  inputSlicePitch,
                     ImageData               srcPixels,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2403,8 +2394,6 @@ partial interface WebCLCommandQueue {
                     CLboolean               blockingWrite,
                     CLuint[2]               origin,
                     CLuint[2]               region,
-                    CLuint                  inputRowPitch,
-                    CLuint                  inputSlicePitch,
                     HTMLCanvasElement       srcCanvas,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2414,8 +2403,6 @@ partial interface WebCLCommandQueue {
                     CLboolean               blockingWrite,
                     CLuint[2]               origin,
                     CLuint[2]               region,
-                    CLuint                  inputRowPitch,
-                    CLuint                  inputSlicePitch,
                     HTMLImageElement        srcImage,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2425,8 +2412,6 @@ partial interface WebCLCommandQueue {
                     CLboolean               blockingWrite,
                     CLuint[2]               origin,
                     CLuint[2]               region,
-                    CLuint                  inputRowPitch,
-                    CLuint                  inputSlicePitch,
                     HTMLVideoElement        srcVideo,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2453,8 +2438,6 @@ partial interface WebCLCommandQueue {
                     CLuint[2]               region,
                     CLuint                  bufferRowPitch,
                     CLuint                  bufferSlicePitch,
-                    CLuint                  hostRowPitch,
-                    CLuint                  hostSlicePitch,
                     HTMLCanvasElement       dstCanvas,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
@@ -2464,8 +2447,6 @@ partial interface WebCLCommandQueue {
                     CLboolean               blockingRead,
                     CLuint[2]               origin,
                     CLuint[2]               region,
-                    CLuint                  rowPitch,
-                    CLuint                  slicePitch,
                     HTMLCanvasElement       dstCanvas,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
