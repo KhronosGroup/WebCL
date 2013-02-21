@@ -634,7 +634,7 @@ dictionary <dfn>WebCLContextProperties</dfn> {
         given type, and creates a context that spans all of those
         devices.
 
-        <table class="foo">
+        <table class="enumtable">
           <tr><th>deviceType</th><th>Description</th></tr>
           <tr><td>DEVICE_TYPE_CPU</td><td>A single-core or multi-core CPU, typically the host processor.</td></tr>
           <tr><td>DEVICE_TYPE_GPU</td><td>A graphics processing unit, typically also used by WebGL.</td></tr>
@@ -721,7 +721,7 @@ interface <dfn>WebCLPlatform</dfn> {
         WebCLPlatform and match the given device type. The valid
         device types are listed in the table below.  Omitting the
         device type is equivalent to specifying `DEVICE_TYPE_DEFAULT`.
-        <table class="foo">
+        <table class="enumtable">
           <tr><th>deviceType</th><th>description</th></tr>
           <tr><td>DEVICE_TYPE_CPU</td><td>A single-core or multi-core CPU, typically the host processor.</td></tr>
           <tr><td>DEVICE_TYPE_GPU</td><td>A graphics processing unit, typically also used by WebGL.</td></tr>
@@ -729,6 +729,11 @@ interface <dfn>WebCLPlatform</dfn> {
           <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device on this platform.</td></tr>
           <tr><td>DEVICE_TYPE_ALL</td><td>All devices available on this platform.</td></tr>
         </table>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `deviceType` is given, but is not one of the valid enumerated values listed in the table above</li>
+          <li>`DEVICE_NOT_FOUND` -- if there is no WebCLDevice available that matches the given `deviceType`</li>
+        </dl>
       </dd>
 
       <dt class="idl-code">any getInfo(CLenum name)
@@ -738,7 +743,11 @@ interface <dfn>WebCLPlatform</dfn> {
       <dd>
         Retrieves information about this WebCLPlatform. The available
         query parameters are listed
-        in <a href="#getPlatformInfoEnums">Chapter 4</a>.
+        in <a href="#getPlatformInfoEnums">Chapter 6</a>.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values</li>
+        </dl>
       </dd>
 
       <dt class="idl-code">sequence&lt;DOMString&gt; getSupportedExtensions()
@@ -792,7 +801,11 @@ interface <dfn>WebCLDevice</dfn> {
       <dd>
         Retrieves information about this WebCLDevice. The available
         query parameters are listed
-        in <a href="#getDeviceInfoEnums">Chapter 4</a>.
+        in <a href="#getDeviceInfoEnums">Chapter 6</a>.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values</li>
+        </dl>
       </dd>
 
       <dt class="idl-code">sequence&lt;DOMString&gt; getSupportedExtensions()
@@ -949,12 +962,16 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
       <dd>
         Returns the value for the passed name. The type returned is the natural type for the
         requested name, as given in the following table:
-        <table class="foo">
+        <table class="enumtable">
           <tr><th>name</th><th>return type</th></tr>
           <tr><td>CONTEXT_NUM_DEVICES</td><td>CLuint</td></tr>
           <tr><td>CONTEXT_DEVICES</td><td>WebCLDevice[]</td></tr>
           <tr><td>CONTEXT_PROPERTIES</td><td>WebCLContextProperties</td></tr>
         </table><br>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </dl>
       </dd>
       <dt class="idl-code">sequence&lt;WebCLImageDescriptor&gt; getSupportedImageFormats(CLenum memFlags)</dt>
       <dd>
@@ -1368,25 +1385,33 @@ void enqueueWriteImage(
             </dd>
 
         <dt class="idl-code">any getInfo(CLenum name)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.1">OpenCL 1.1 §5.1</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetCommandQueueInfo.html">man page</a>)</span>
+          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.1">OpenCL 1.1 §5.1</a>,
+            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetCommandQueueInfo.html">man page</a>)</span>
         </dt>
-            <dd>
-            Return the value for the passed name. The type returned is the natural type for the
-            requested name, as given in the following table:
-            <table class="foo">
-                <tr><th>name</th><th>return type</th></tr>
-                <tr><td>QUEUE_CONTEXT</td><td>WebCLContext</td></tr>
-                <tr><td>QUEUE_DEVICE</td><td>WebCLDevice</td></tr>
-                <tr><td>QUEUE_PROPERTIES</td><td>CLenum</td></tr>
-            </table><br>
-            </dd>
+        <dd>
+          Return the value for the passed name. The type returned is the natural type for the
+          requested name, as given in the following table:
+          <table class="enumtable">
+            <tr><th>name</th><th>return type</th></tr>
+            <tr><td>QUEUE_CONTEXT</td><td>WebCLContext</td></tr>
+            <tr><td>QUEUE_DEVICE</td><td>WebCLDevice</td></tr>
+            <tr><td>QUEUE_PROPERTIES</td><td>CLenum</td></tr>
+          </table><br>
+          <dl class="exceptions">
+            <dt>Exceptions:</dt>
+            <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+          </dl>
+        </dd>
+
         <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=53">OpenCL 1.1 §5.1</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseCommandQueue.html">man page</a>)</span>
         </dt>
             <dd>
-            Decrement the native command queue reference count. After the command queue reference count becomes zero and all commands queued to this command queued have finished, the command queue is deleted.
+            Decrement the native command queue reference count. After
+            the command queue reference count becomes zero and all
+            commands queued to this command queued have finished, the
+            command queue is deleted.
             </dd>
     </dl>
 
@@ -1429,8 +1454,8 @@ function copyBufferToImage(srcBuffer, dstImage) {
 
   // Extract the dimensions of the image.
 
-  var imgWidth = dstImage.getInfo(WebCL.IMAGE_WIDTH);
-  var imgHeight = dstImage.getInfo(WebCL.IMAGE_HEIGHT);
+  var imgWidth = dstImage.getInfo().width;
+  var imgHeight = dstImage.getInfo().height;
 
   // The source buffer region can be specified with just the buffer,
   // because only the 'origin' field is needed, and we are fine with
@@ -1475,7 +1500,7 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
       <dd>
         Returns the value for the passed name. The type returned is the natural type for the
         requested name, as given in the following table:
-        <table class="foo">
+        <table class="enumtable">
           <tr><th>name</th><th>return type</th><th>return value</th></tr>
           <tr><td>`MEM_TYPE`</td><td>`CLenum`</td><td>`MEM_OBJECT_BUFFER` or `MEM_OBJECT_IMAGE2D`</td></tr>
           <tr><td>`MEM_FLAGS`</td><td>`CLenum`</td><td>The `memFlags` as specified at construction time</td></tr>
@@ -1487,6 +1512,10 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
           <tr><td>`MEM_OFFSET`</td><td>`CLuint`</td><td>The offset given to `createSubBuffer`,
               or zero if this buffer was not created using `createSubBuffer`</td></tr>
         </table><br>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </dl>
       </dd>
 
       <dt class="idl-code">void release()
@@ -1561,7 +1590,6 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
 interface <dfn>WebCLSampler</dfn> {
     any getInfo(CLenum name);
     void release();
-
 };
 </pre>
 
@@ -1573,20 +1601,28 @@ interface <dfn>WebCLSampler</dfn> {
       <dd>
         Return the value for the passed name. The type returned is the natural type for the
         requested name, as given in the following table:
-        <table class="foo">
+        <table class="enumtable">
           <tr><th>name</th><th>return type</th></tr>
           <tr><td>SAMPLER_CONTEXT</td><td>WebCLContext</td></tr>
           <tr><td>SAMPLER_NORMALIZED_COORDS</td><td>CLboolean</td></tr>
           <tr><td>SAMPLER_ADDRESSING_MODE</td><td>CLenum</td></tr>
           <tr><td>SAMPLER_FILTER_MODE</td><td>CLenum</td></tr>
         </table><br>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </dl>
       </dd>
+
       <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=107">OpenCL 1.1 §5.5.1</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseSampler.html">man page</a>)</span>
       </dt>
       <dd>
-        Decrement the native sampler reference count. The sampler object is deleted after the reference count becomes zero and commands queued for execution on a command-queue(s) that use sampler have finished.
+        Decrement the native sampler reference count. The sampler
+        object is deleted after the reference count becomes zero and
+        commands queued for execution on a command-queue(s) that use
+        sampler have finished.
       </dd>
     </dl>
 
@@ -1620,20 +1656,37 @@ interface <dfn>WebCLProgram</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetProgramInfo.html">man page</a>)</span>
       </dt>
       <dd>
-        Return the value for the passed name. The type returned is the natural type for the
-        requested name, as given in the following table:
-        <table class="foo">
+        <table class="enumtable">
           <tr><th>name</th><th>return type</th></tr>
           <tr><td>PROGRAM_CONTEXT</td><td>WebCLContext</td></tr>
           <tr><td>PROGRAM_NUM_DEVICES</td><td>CLuint</td></tr>
           <tr><td>PROGRAM_DEVICES</td><td>WebCLDevice[]</td></tr>
           <tr><td>PROGRAM_SOURCE</td><td>DOMString</td></tr>
         </table><br>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </dl>
       </dd>
-      <dt class="idl-code">any getBuildInfo(WebCLDevice device, CLenum name)</dt>
+
+      <dt class="idl-code">any getBuildInfo(WebCLDevice device, CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=122">OpenCL 1.1 §5.6.5</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetProgramBuildInfo.html">man page</a>)</span>
+      </dt>
       <dd>
-        return Integer or DOMString depending on name queried.
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>PROGRAM_BUILD_STATUS</td><td>CLenum</td></tr>
+          <tr><td>PROGRAM_BUILD_OPTIONS</td><td>DOMString</td></tr>
+          <tr><td>PROGRAM_BUILD_LOG</td><td>DOMString</td></tr>
+        </table><br>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_DEVICE` -- if `device` is not associated with this WebCLProgram</li>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </dl>
       </dd>
+
       <dt class="idl-code">void build(WebCLDevice[] devices,
         optional DOMString? options,
         optional WebCLCallback whenFinished,
@@ -1643,12 +1696,15 @@ interface <dfn>WebCLProgram</dfn> {
         asynchronous callback method may be provided with
         optional userdata.
       </dd>
+
       <dt class="idl-code">WebCLKernel createKernel(DOMString name)</dt>
       <dd>
       </dd>
+
       <dt class="idl-code">sequence&lt;WebCLKernel&gt; createKernelsInProgram()</dt>
       <dd>
       </dd>
+
       <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=113">OpenCL 1.1 §5.6.1</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseProgram.html">man page</a>)</span>
@@ -1722,19 +1778,41 @@ interface <dfn>WebCLKernelArgumentTypes</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetKernelInfo.html">man page</a>)</span>
       </dt>
       <dd>
-        Return the value for the passed name. The type returned is the natural type for the
+        Returns the value for the passed name. The type returned is the natural type for the
         requested name, as given in the following table:
-        <table class="foo">
+        <table class="enumtable">
           <tr><th>name</th><th>return type</th></tr>
           <tr><td>KERNEL_FUNCTION_NAME</td><td>DOMString</td></tr>
           <tr><td>KERNEL_NUM_ARGS</td><td>CLuint</td></tr>
           <tr><td>KERNEL_CONTEXT</td><td>WebCLContext</td></tr>
           <tr><td>KERNEL_PROGRAM</td><td>WebCLProgram</td></tr>
         </table><br>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </dl>
       </dd>
-      <dt class="idl-code">any getWorkGroupInfo(CLenum name)</dt>
+
+      <dt class="idl-code">any getWorkGroupInfo(WebCLDevice device, CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=130">OpenCL 1.1 §5.7.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetKernelWorkGroupInfo.html">man page</a>)</span>
+      </dt>
       <dd>
-        return an Integer or Integer[1..3] depending on the name queried.
+        Returns the value corresponding to the the passed `name` and `device`.
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>KERNEL_WORK_GROUP_SIZE</td><td>CLuint</td></tr>
+          <tr><td>KERNEL_COMPILE_WORK_GROUP_SIZE</td><td>CLuint[3]</td></tr>
+          <tr><td>KERNEL_LOCAL_MEM_SIZE</td><td>CLuint</td></tr>
+          <tr><td>KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE</td><td>CLuint</td></tr>
+          <tr><td>KERNEL_PRIVATE_MEM_SIZE</td><td>CLuint</td></tr>
+        </table><br>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_DEVICE` -- if `device` is not associated with this WebCLKernel</li>
+          <li>`INVALID_DEVICE` -- if `device` is `null` but there is more than one WebCLDevice associated with this WebCLKernel</li>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </dl>
       </dd>
 
       <dt class="idl-code">void setArg(CLuint index, any value, optional CLtype type)
@@ -1825,15 +1903,17 @@ interface <dfn>WebCLEvent</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventInfo.html">man page</a>)</span>
       </dt>
       <dd>
-        Return the value for the passed name. The type returned is the natural type for the
-        requested name, as given in the following table:
-        <table class="foo">
+        <table class="enumtable">
           <tr><th>name</th><th>return type</th></tr>
           <tr><td>EVENT_COMMAND_QUEUE</td><td>WebCLCommandQueue</td></tr>
           <tr><td>EVENT_CONTEXT</td><td>WebCLContext</td></tr>
           <tr><td>EVENT_COMMAND_TYPE</td><td>CLenum</td></tr>
           <tr><td>EVENT_COMMAND_EXECUTION_STATUS</td><td>CLenum</td></tr>
         </table><br>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </dl>
       </dd>
 
       <dt class="idl-code">any getProfilingInfo(CLenum name)
@@ -1841,15 +1921,20 @@ interface <dfn>WebCLEvent</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventProfilingInfo.html">man page</a>)</span>
       </dt>
       <dd>
-        Return the value for the passed name. The type returned is the natural type for the
-        requested name, as given in the following table:
-        <table class="foo">
+        <table class="enumtable">
           <tr><th>name</th><th>return type</th></tr>
           <tr><td>PROFILING_COMMAND_QUEUED</td><td>CLuint</td></tr>
           <tr><td>PROFILING_COMMAND_SUBMIT</td><td>CLuint</td></tr>
           <tr><td>PROFILING_COMMAND_START</td><td>CLuint</td></tr>
           <tr><td>PROFILING_COMMAND_END</td><td>CLuint</td></tr>
         </table><br>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`PROFILING_INFO_NOT_AVAILABLE` -- if the `QUEUE_PROFILING_ENABLE` flag is not set for this WebCLCommandQueue</li>
+          <li>`PROFILING_INFO_NOT_AVAILABLE` -- if the execution status of this WebCLEvent is not `COMPLETE`</li>
+          <li>`PROFILING_INFO_NOT_AVAILABLE` -- if this WebCLEvent is a user event object</li>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </dl>
       </dd>
 
       <dt class="idl-code">void setUserEventStatus(CLenum executionStatus)
@@ -1868,6 +1953,7 @@ interface <dfn>WebCLEvent</dfn> {
         this WebCLEvent reaches the given `executionStatus`
         (`COMPLETE`, `RUNNING`, `SUBMITTED`, or `QUEUED`).
       </dd>
+
       <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=149">OpenCL 1.1 §5.9</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseEvent.html">man page</a>)</span>
@@ -2179,7 +2265,7 @@ partial interface WebCLContext {
     </ul>
 
     <p>
-      If the ImageData or HTMLImageElement object is not fully loaded then createBuffer() and createImage() throw CL_INVALID_HOST_PTR.
+      If the ImageData or HTMLImageElement object is not fully loaded then createBuffer() and createImage() throw INVALID_HOST_PTR.
     </p>
     <h3>Binding with HTMLVideoElement</h3>
 
@@ -2415,81 +2501,81 @@ partial interface WebCLCommandQueue {
     </p>
 
     <p>
-      <table id="getPlatformInfoEnums">
+      <table class="enumtable" id="getPlatformInfoEnums">
         <tr><th>Platform Info: clGetPlatformInfo Parameter</th><th>OpenCL 1.1 Embedded Profile</th><th>WebCL</th></tr>
 
-        <tr><td>CL_PLATFORM_PROFILE</td><td>"EMBEDDED_PROFILE"</td><td>"WEBCL_PROFILE"</td></tr>
-        <tr><td>CL_PLATFORM_VERSION</td><td>"OpenCL 1.1" + optional vendor string</td><td>"WebCL 1.0"</td></tr>
-        <tr><td>CL_PLATFORM_NAME</td><td>Not Specified</td><td>Not Visible</td></tr>
-        <tr><td>CL_PLATFORM_VENDOR</td><td>Not Specified</td><td>Not Visible</td></tr>
-        <tr><td>CL_PLATFORM_EXTENSIONS</td><td>Extension String</td><td>Not Visible</td></tr>
+        <tr><td>PLATFORM_PROFILE</td><td>"EMBEDDED_PROFILE"</td><td>"WEBCL_PROFILE"</td></tr>
+        <tr><td>PLATFORM_VERSION</td><td>"OpenCL 1.1" + optional vendor string</td><td>"WebCL 1.0"</td></tr>
+        <tr><td>PLATFORM_NAME</td><td>Not Specified</td><td>Not Visible</td></tr>
+        <tr><td>PLATFORM_VENDOR</td><td>Not Specified</td><td>Not Visible</td></tr>
+        <tr><td>PLATFORM_EXTENSIONS</td><td>Extension String</td><td>Not Visible</td></tr>
       </table>
     </p>
 
     <p>
-      <table id="getDeviceInfoEnums">
+      <table class="enumtable" id="getDeviceInfoEnums">
         <tr><th>Device Info: clGetDeviceInfo Parameter</th><th>OpenCL 1.1 Embedded Profile</th><th>WebCL</th></tr>
-        <tr><td>CL_DEVICE_TYPE</td><td>CL_DEVICE_TYPE_CPU;
-                                       CL_DEVIDE_TYPE_GPU;
-                                       CL_DEVICE_TYPE_ACCELERATOR;
-                                       CL_DEVICE_TYPE_DEFAULT;
+        <tr><td>DEVICE_TYPE</td><td>DEVICE_TYPE_CPU;
+                                       DEVIDE_TYPE_GPU;
+                                       DEVICE_TYPE_ACCELERATOR;
+                                       DEVICE_TYPE_DEFAULT;
                                        (Or a combination of the above)</td><td>Visible</td></tr>
-        <tr><td>CL_DEVICE_VENDOR_ID</td><td>Not Specified</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_MAX_COMPUTE_UNITS</td><td> &gt;=1 </td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS</td><td> &gt;=3 </td><td> &gt;=3 </td></tr>
-        <tr><td>CL_DEVICE_MAX_WORK_ITEM_SIZES</td><td>&gt;=(1, 1, 1)</td><td>&gt;=(1, 1, 1)</td></tr>
-        <tr><td>CL_DEVICE_MAX_WORK_GROUP_SIZE</td><td>&gt;=1</td><td>&gt;=1</td></tr>
-        <tr><td>CL_DEVICE_PREFERRED_VECTOR_WIDTH_* (*=CHAR, SHORT, INT, LONG, FLOAT, DOUBLE, HALF)
+        <tr><td>DEVICE_VENDOR_ID</td><td>Not Specified</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_MAX_COMPUTE_UNITS</td><td> &gt;=1 </td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_MAX_WORK_ITEM_DIMENSIONS</td><td> &gt;=3 </td><td> &gt;=3 </td></tr>
+        <tr><td>DEVICE_MAX_WORK_ITEM_SIZES</td><td>&gt;=(1, 1, 1)</td><td>&gt;=(1, 1, 1)</td></tr>
+        <tr><td>DEVICE_MAX_WORK_GROUP_SIZE</td><td>&gt;=1</td><td>&gt;=1</td></tr>
+        <tr><td>DEVICE_PREFERRED_VECTOR_WIDTH_* (*=CHAR, SHORT, INT, LONG, FLOAT, DOUBLE, HALF)
                                                     </td><td>cl_uint</td><td>Visible</td></tr>
-        <tr><td>CL_DEVICE_NATIVE_VECTOR_WIDTH_*</td><td>cl_uint</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_MAX_CLOCK_FREQUENCY</td><td>cl_uint</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_ADDRESS_BITS</td><td>32 or 64 bits</td><td>Visible</td></tr>
-        <tr><td>CL_DEVICE_MAX_MEM_ALLOC_SIZE</td><td> &gt;= max of CL_DEVICE_GLOBAL_MEM_SIZE/
+        <tr><td>DEVICE_NATIVE_VECTOR_WIDTH_*</td><td>cl_uint</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_MAX_CLOCK_FREQUENCY</td><td>cl_uint</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_ADDRESS_BITS</td><td>32 or 64 bits</td><td>Visible</td></tr>
+        <tr><td>DEVICE_MAX_MEM_ALLOC_SIZE</td><td> &gt;= max of DEVICE_GLOBAL_MEM_SIZE/
             4,128, 1024, 1024</td><td>Visible</td></tr>
-        <tr><td>CL_DEVICE_IMAGE_SUPPORT</td><td>cl_bool</td><td>CL_TRUE</td></tr>
-        <tr><td>CL_DEVICE_MAX_READ_IMAGE_ARGS</td><td>&gt;=8 (if image support)</td><td> &gt;=8 </td></tr>
-        <tr><td>CL_DEVICE_MAX_WRITE_IMAGE_ARGS</td><td>&gt;=1 (if image support)</td><td> &gt;=1 </td></tr>
-        <tr><td>CL_DEVICE_IMAGE2D_MAX_WIDTH</td><td>&gt;=2048 (if image support)</td><td> &gt;=2048 </td></tr>
-        <tr><td>CL_DEVICE_IMAGE2D_MAX_HEIGHT</td><td>&gt;=2048 (if image support)</td><td> &gt;=2048 </td></tr>
-        <tr><td>CL_DEVICE_IMAGE3D_MAX_WIDTH</td><td>&gt;=2048 (if 3D image support)</td><td>
+        <tr><td>DEVICE_IMAGE_SUPPORT</td><td>cl_bool</td><td>TRUE</td></tr>
+        <tr><td>DEVICE_MAX_READ_IMAGE_ARGS</td><td>&gt;=8 (if image support)</td><td> &gt;=8 </td></tr>
+        <tr><td>DEVICE_MAX_WRITE_IMAGE_ARGS</td><td>&gt;=1 (if image support)</td><td> &gt;=1 </td></tr>
+        <tr><td>DEVICE_IMAGE2D_MAX_WIDTH</td><td>&gt;=2048 (if image support)</td><td> &gt;=2048 </td></tr>
+        <tr><td>DEVICE_IMAGE2D_MAX_HEIGHT</td><td>&gt;=2048 (if image support)</td><td> &gt;=2048 </td></tr>
+        <tr><td>DEVICE_IMAGE3D_MAX_WIDTH</td><td>&gt;=2048 (if 3D image support)</td><td>
             No 3D support in WebCL 1.0</td></tr>
-        <tr><td>CL_DEVICE_IMAGE3D_MAX_HEIGHT</td><td>&gt;=2048 (if 3D image support)</td><td>
+        <tr><td>DEVICE_IMAGE3D_MAX_HEIGHT</td><td>&gt;=2048 (if 3D image support)</td><td>
             No 3D support in WebCL 1.0</td></tr>
-        <tr><td>CL_DEVICE_IMAGE3D_MAX_DEPTH</td><td>&gt;=2048 (if 3D image support)</td><td>
+        <tr><td>DEVICE_IMAGE3D_MAX_DEPTH</td><td>&gt;=2048 (if 3D image support)</td><td>
             No 3D support in WebCL 1.0</td></tr>
-        <tr><td>CL_DEVICE_MAX_SAMPLERS</td><td>&gt;=8 (if image support)</td><td>&gt;=8</td></tr>
-        <tr><td>CL_DEVICE_MAX_PARAMETER_SIZE</td><td>&gt;=256</td><td>&gt;=256</td></tr>
-        <tr><td>CL_DEVICE_MEM_BASE_ADDR_ALIGN</td><td>&gt;= num bits(int16)</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_MIN_DATA_TYPE_ALIGN_SIZE</td><td>&gt;=sizeof(int16)</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_SINGLE_FP_CONFIG</td><td>CL_FP_ROUND_TO_NEAREST; CL_FP_INF_NAN
+        <tr><td>DEVICE_MAX_SAMPLERS</td><td>&gt;=8 (if image support)</td><td>&gt;=8</td></tr>
+        <tr><td>DEVICE_MAX_PARAMETER_SIZE</td><td>&gt;=256</td><td>&gt;=256</td></tr>
+        <tr><td>DEVICE_MEM_BASE_ADDR_ALIGN</td><td>&gt;= num bits(int16)</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_MIN_DATA_TYPE_ALIGN_SIZE</td><td>&gt;=sizeof(int16)</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_SINGLE_FP_CONFIG</td><td>FP_ROUND_TO_NEAREST; FP_INF_NAN
             (others optional)</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_GLOBAL_MEM_CACHE_TYPE</td><td>CL_NONE; CL_READ_ONLY_CACHE; CL_READ_WRITE_CACHE
+        <tr><td>DEVICE_GLOBAL_MEM_CACHE_TYPE</td><td>NONE; READ_ONLY_CACHE; READ_WRITE_CACHE
           </td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_GLOBAL_MEM_CACHE_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_GLOBAL_MEM_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE </td><td>&gt;=1 KB</td><td>&gt;=1</td></tr>
-        <tr><td>CL_DEVICE_CONSTANT_ARGS</td><td>&gt;=4</td><td>&gt;=4</td></tr>
-        <tr><td>CL_DEVICE_LOCAL_MEM_TYPE</td><td>CL_LOCAL; CL_GLOBAL</td><td>Visible</td></tr>
-        <tr><td>CL_DEVICE_LOCAL_MEM_SIZE</td><td>&gt;=1 KB</td><td>&gt;=1 KB</td></tr>
-        <tr><td>CL_DEVICE_ERROR_CORRECTION_SUPPORT</td><td>cl_bool</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_HOST_UNIFIED_MEMORY</td><td>cl_bool</td><td>Visible</td></tr>
-        <tr><td>CL_DEVICE_PROFILING_TIMER_RESOLUTION</td><td>size_t</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_ENDIAN_LITTLE</td><td>cl_bool</td><td>Visible</td></tr>
-        <tr><td>CL_DEVICE_AVAILABLE</td><td>cl_bool</td><td>Visible</td></tr>
-        <tr><td>CL_DEVICE_COMPILER_AVAILABLE</td><td>cl_bool</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_EXECUTION_CAPABILITIES</td><td>CL_EXEC_KERNEL;
-                                                         CL_EXEC_NATIVE_KERNEL</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_QUEUE_PROPERTIES</td><td>CL_QUEUE_PROFILING_ENABLE;
-                CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE (optional)</td><td>Visible</td></tr>
-        <tr><td>CL_DEVICE_PLATFORM</td><td>cl_platform_id</td><td>WebCLPlatform Object</td></tr>
-        <tr><td>CL_DEVICE_NAME</td><td>Not Specified</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_VENDOR</td><td>Not Specified</td><td>Not Visible</td></tr>
-        <tr><td>CL_DRIVER_VERSION</td><td>Version String</td><td>Not Visible</td></tr>
-        <tr><td>CL_DEVICE_PROFILE</td><td>"EMBEDDED_PROFILE"</td><td>"WEBCL_PROFILE"</td></tr>
-        <tr><td>CL_DEVICE_VERSION</td><td>Version String</td><td>"WebCL 1.0"</td></tr>
-        <tr><td>CL_DEVICE_OPENCL_C_VERSION</td><td>Version String</td><td>Visible</td></tr>
-        <tr><td>CL_DEVICE_EXTENSIONS</td><td>Extension String</td><td>Visible</td></tr>
+        <tr><td>DEVICE_GLOBAL_MEM_CACHELINE_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_GLOBAL_MEM_CACHE_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_GLOBAL_MEM_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_MAX_CONSTANT_BUFFER_SIZE </td><td>&gt;=1 KB</td><td>&gt;=1</td></tr>
+        <tr><td>DEVICE_CONSTANT_ARGS</td><td>&gt;=4</td><td>&gt;=4</td></tr>
+        <tr><td>DEVICE_LOCAL_MEM_TYPE</td><td>LOCAL; GLOBAL</td><td>Visible</td></tr>
+        <tr><td>DEVICE_LOCAL_MEM_SIZE</td><td>&gt;=1 KB</td><td>&gt;=1 KB</td></tr>
+        <tr><td>DEVICE_ERROR_CORRECTION_SUPPORT</td><td>cl_bool</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_HOST_UNIFIED_MEMORY</td><td>cl_bool</td><td>Visible</td></tr>
+        <tr><td>DEVICE_PROFILING_TIMER_RESOLUTION</td><td>size_t</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_ENDIAN_LITTLE</td><td>cl_bool</td><td>Visible</td></tr>
+        <tr><td>DEVICE_AVAILABLE</td><td>cl_bool</td><td>Visible</td></tr>
+        <tr><td>DEVICE_COMPILER_AVAILABLE</td><td>cl_bool</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_EXECUTION_CAPABILITIES</td><td>EXEC_KERNEL;
+                                                         EXEC_NATIVE_KERNEL</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_QUEUE_PROPERTIES</td><td>QUEUE_PROFILING_ENABLE;
+                QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE (optional)</td><td>Visible</td></tr>
+        <tr><td>DEVICE_PLATFORM</td><td>cl_platform_id</td><td>WebCLPlatform Object</td></tr>
+        <tr><td>DEVICE_NAME</td><td>Not Specified</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_VENDOR</td><td>Not Specified</td><td>Not Visible</td></tr>
+        <tr><td>DRIVER_VERSION</td><td>Version String</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_PROFILE</td><td>"EMBEDDED_PROFILE"</td><td>"WEBCL_PROFILE"</td></tr>
+        <tr><td>DEVICE_VERSION</td><td>Version String</td><td>"WebCL 1.0"</td></tr>
+        <tr><td>DEVICE_OPENCL_C_VERSION</td><td>Version String</td><td>Visible</td></tr>
+        <tr><td>DEVICE_EXTENSIONS</td><td>Extension String</td><td>Visible</td></tr>
 
       </table>
     </p>
@@ -2500,7 +2586,7 @@ partial interface WebCLCommandQueue {
         formats and image data types allowed by OpenCL 1.1 Embedded
         Profile</a>. Browsers may provide extensions to support other
       formats.
-      <table id="WebCL_image_formats">
+      <table class="enumtable">
         <tr><th>channelOrder</th><th>channelType</th></tr>
         <tr><td valign="center">RGBA</td>
           <td>UNORM_INT8<br>
