@@ -1176,242 +1176,283 @@ void enqueueWriteImage(
 
     <dl class="methods">
 
-        <dt class="idl-code">void enqueueCopyBuffer(
-                    WebCLBuffer             srcBuffer,
-                    WebCLBuffer             dstBuffer,
-                    CLuint                  srcOffset,
-                    CLuint                  dstOffset,
-                    CLuint                  numBytes,
-                    optional WebCLEvent[]?  eventWaitList,
-                    optional WebCLEvent?    event)
+      <dt class="idl-code">void enqueueCopyBuffer(
+        WebCLBuffer             srcBuffer,
+        WebCLBuffer             dstBuffer,
+        CLuint                  srcOffset,
+        CLuint                  dstOffset,
+        CLuint                  numBytes,
+        optional WebCLEvent[]?  eventWaitList,
+        optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBuffer.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
 
-        <dt class="idl-code">void enqueueCopyImage(
-                    WebCLImage              srcImage,
-                    WebCLImage              dstImage,
-                    CLuint[2]               srcOrigin,
-                    CLuint[2]               dstOrigin,
-                    CLuint[2]               region,
-                    optional WebCLEvent[]?  eventWaitList,
-                    optional WebCLEvent?    event)
+      <dt class="idl-code">void enqueueCopyBufferRect(
+        WebCLBuffer             srcBuffer,
+        WebCLBuffer             dstBuffer,
+        CLuint[3]               srcOrigin,
+        CLuint[3]               dstOrigin,
+        CLuint[3]               region,
+        CLuint                  srcRowPitch,
+        CLuint                  srcSlicePitch,
+        CLuint                  dstRowPitch,
+        CLuint                  dstSlicePitch,
+        optional WebCLEvent[]?  eventWaitList,
+        optional WebCLEvent?    event);
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImage.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferRect.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `srcBuffer` and `dstBuffer`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+          <li>`INVALID_MEM_OBJECT` -- if `srcBuffer` and `dstBuffer` are not valid WebCLBuffer objects</li>
+          <li>`INVALID_VALUE` -- if the `origin`, `region` and `pitch`
+            values would require accessing elements outside the
+            `srcBuffer` or `dstBuffer` objects</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`MEM_COPY_OVERLAP` -- if `srcBuffer` and `dstBuffer` are
+            the same WebCLBuffer object and the source and destination
+            regions overlap</li>
+        </dl>
+      </dd>
 
-        <dt class="idl-code">void enqueueCopyBufferToImage(
-                    WebCLBuffer             srcBuffer,
-                    WebCLImage              dstImage,
-                    CLuint                  srcOffset,
-                    CLuint[2]               dstOrigin,
-                    CLuint[2]               dstRegion,
-                    optional WebCLEvent[]?  eventWaitList,
-                    optional WebCLEvent?    event)
+      <dt class="idl-code">void enqueueCopyImage(
+        WebCLImage              srcImage,
+        WebCLImage              dstImage,
+        CLuint[2]               srcOrigin,
+        CLuint[2]               dstOrigin,
+        CLuint[2]               region,
+        optional WebCLEvent[]?  eventWaitList,
+        optional WebCLEvent?    event)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImage.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
+
+      <dt class="idl-code">void enqueueCopyBufferToImage(
+        WebCLBuffer             srcBuffer,
+        WebCLImage              dstImage,
+        CLuint                  srcOffset,
+        CLuint[2]               dstOrigin,
+        CLuint[2]               dstRegion,
+        optional WebCLEvent[]?  eventWaitList,
+        optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferToImage.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferToImage.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
 
-        <dt class="idl-code">void enqueueCopyImageToBuffer(
-                    WebCLImage              srcImage,
-                    WebCLBuffer             dstBuffer,
-                    CLuint[2]               srcOrigin,
-                    CLuint[2]               srcRegion,
-                    CLuint                  dstOffset,
-                    optional WebCLEvent[]?  eventWaitList,
-                    optional WebCLEvent?    event)
+      <dt class="idl-code">void enqueueCopyImageToBuffer(
+        WebCLImage              srcImage,
+        WebCLBuffer             dstBuffer,
+        CLuint[2]               srcOrigin,
+        CLuint[2]               srcRegion,
+        CLuint                  dstOffset,
+        optional WebCLEvent[]?  eventWaitList,
+        optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImageToBuffer.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImageToBuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
 
-        <dt class="idl-code">void enqueueReadBuffer(
-                    WebCLBuffer             buffer,
-                    CLboolean               blockingRead,
-                    CLuint                  bufferOffset,
-                    CLuint                  numBytes,
-                    ArrayBuffer             hostPtr,
-                    optional WebCLEvent[]?  eventWaitList,
-                    optional WebCLEvent?    event)
+      <dt class="idl-code">void enqueueReadBuffer(
+        WebCLBuffer             buffer,
+        CLboolean               blockingRead,
+        CLuint                  bufferOffset,
+        CLuint                  numBytes,
+        ArrayBuffer             hostPtr,
+        optional WebCLEvent[]?  eventWaitList,
+        optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBuffer.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
 
-        <dt class="idl-code">void enqueueReadImage(
-                    WebCLImage              image,
-                    CLboolean               blockingRead,
-                    CLuint[2]               origin,
-                    CLuint[2]               region,
-                    CLuint                  hostRowPitch,
-                    ArrayBuffer             hostPtr,
-                    optional WebCLEvent[]?  eventWaitList,
-                    optional WebCLEvent?    event)
+      <dt class="idl-code">void enqueueReadBufferRect(
+        WebCLBuffer             buffer,
+        CLboolean               blockingRead,
+        CLuint[3]               bufferOrigin,
+        CLuint[3]               hostOrigin,
+        CLuint[3]               region,
+        CLuint                  bufferRowPitch,
+        CLuint                  bufferSlicePitch,
+        CLuint                  hostRowPitch,
+        CLuint                  hostSlicePitch,
+        ArrayBuffer             hostPtr,
+        optional WebCLEvent[]?  eventWaitList,
+        optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadImage.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBufferRect.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
 
-        <dt class="idl-code">void enqueueReadBufferRect(
-                    WebCLBuffer             buffer,
-                    CLboolean               blockingRead,
-                    CLuint[3]               bufferOrigin,
-                    CLuint[3]               hostOrigin,
-                    CLuint[3]               region,
-                    CLuint                  bufferRowPitch,
-                    CLuint                  bufferSlicePitch,
-                    CLuint                  hostRowPitch,
-                    CLuint                  hostSlicePitch,
-                    ArrayBuffer             hostPtr,
-                    optional WebCLEvent[]?  eventWaitList,
-                    optional WebCLEvent?    event)
+      <dt class="idl-code">void enqueueReadImage(
+        WebCLImage              image,
+        CLboolean               blockingRead,
+        CLuint[2]               origin,
+        CLuint[2]               region,
+        CLuint                  hostRowPitch,
+        ArrayBuffer             hostPtr,
+        optional WebCLEvent[]?  eventWaitList,
+        optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBufferRect.html">man page</a>)</span>
-        </dt>
-        <dd>
-        </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadImage.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `image`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+          <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
+          <li>`INVALID_VALUE` -- if any part of the region being read, specified by `origin` and `region`, is out of bounds of `image`</li>
+          <li>`INVALID_VALUE` -- if any part of the region being written, specified by `region`and `hostRowPitch`, is out of bounds of `hostPtr`</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingRead` is `true` and the execution status of any of the events
+            in `eventWaitList`is a negative integer value</li>
+          <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of `image` are not supported by this WebCLCommandQueue</li>
+        </dl>
+      </dd>
 
-        <dt class="idl-code">void enqueueWriteBuffer(
-                    WebCLBuffer             buffer,
-                    CLboolean               blockingWrite,
-                    CLuint                  bufferOffset,
-                    CLuint                  numBytes,
-                    ArrayBuffer             hostPtr,
-                    optional WebCLEvent[]?  eventWaitList,
-                    optional WebCLEvent?    event)
+      <dt class="idl-code">void enqueueWriteBuffer(
+        WebCLBuffer             buffer,
+        CLboolean               blockingWrite,
+        CLuint                  bufferOffset,
+        CLuint                  numBytes,
+        ArrayBuffer             hostPtr,
+        optional WebCLEvent[]?  eventWaitList,
+        optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBuffer.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
 
-        <dt class="idl-code">void enqueueWriteImage(
-                    WebCLImage              image,
-                    CLboolean               blockingWrite,
-                    CLuint[2]               origin,
-                    CLuint[2]               region,
-                    CLuint                  hostRowPitch,
-                    ArrayBuffer             hostPtr,
-                    optional WebCLEvent[]?  eventWaitList,
-                    optional WebCLEvent?    event)
+      <dt class="idl-code">void enqueueWriteBufferRect(
+        WebCLBuffer             buffer,
+        CLboolean               blockingWrite,
+        CLuint[3]               bufferOrigin,
+        CLuint[3]               hostOrigin,
+        CLuint[3]               region,
+        CLuint                  bufferRowPitch,
+        CLuint                  bufferSlicePitch,
+        CLuint                  hostRowPitch,
+        CLuint                  hostSlicePitch,
+        ArrayBuffer             hostPtr,
+        optional WebCLEvent[]?  eventWaitList,
+        optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteImage.html">man page</a>)</span>
-        </dt>
-            <dd>
-            </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBufferRect.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
 
-        <dt class="idl-code">void enqueueWriteBufferRect(
-                    WebCLBuffer             buffer,
-                    CLboolean               blockingWrite,
-                    CLuint[3]               bufferOrigin,
-                    CLuint[3]               hostOrigin,
-                    CLuint[3]               region,
-                    CLuint                  bufferRowPitch,
-                    CLuint                  bufferSlicePitch,
-                    CLuint                  hostRowPitch,
-                    CLuint                  hostSlicePitch,
-                    ArrayBuffer             hostPtr,
-                    optional WebCLEvent[]?  eventWaitList,
-                    optional WebCLEvent?    event)
+      <dt class="idl-code">void enqueueWriteImage(
+        WebCLImage              image,
+        CLboolean               blockingWrite,
+        CLuint[2]               origin,
+        CLuint[2]               region,
+        CLuint                  hostRowPitch,
+        ArrayBuffer             hostPtr,
+        optional WebCLEvent[]?  eventWaitList,
+        optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBufferRect.html">man page</a>)</span>
-        </dt>
-        <dd>
-        </dd>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteImage.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
 
-        <dt class="idl-code">void enqueueNDRangeKernel(WebCLKernel kernel, CLuint[3]? globalWorkOffset, CLuint[3]? globalWorkSize,
-          CLuint[3]? localWorkSize, optional WebCLEvent[]? eventWaitList = null,
-          optional WebCLEvent? event = null)
-          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
-            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueNDRangeKernel.html">man page</a>)</span>
-        </dt>
-        <dd>
-          The `globalWorkOffset`, `globalWorkSize` and
-          `localWorkSize` arrays contain 1, 2, or 3 NDRange values.
-          The number of NDRange dimensions is determined by the
-          number of elements in `globalWorkSize`.
-        </dd>
+      <dt class="idl-code">void enqueueNDRangeKernel(WebCLKernel kernel, CLuint[3]? globalWorkOffset, CLuint[3]? globalWorkSize,
+        CLuint[3]? localWorkSize, optional WebCLEvent[]? eventWaitList = null,
+        optional WebCLEvent? event = null)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueNDRangeKernel.html">man page</a>)</span>
+      </dt>
+      <dd>
+        The `globalWorkOffset`, `globalWorkSize` and
+        `localWorkSize` arrays contain 1, 2, or 3 NDRange values.
+        The number of NDRange dimensions is determined by the
+        number of elements in `globalWorkSize`.
+      </dd>
 
-        <dt class="idl-code">void enqueueTask(WebCLKernel kernel, optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null)
-          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
-            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueTask.html">man page</a>)</span>
-        </dt>
-        <dd>
-        </dd>
+      <dt class="idl-code">void enqueueTask(WebCLKernel kernel, optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueTask.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
 
-        <dt class="idl-code">void enqueueMarker(optional WebCLEvent? event = null)
-          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
-            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueMarker.html">man page</a>)</span>
-        </dt>
-        <dd>
-        </dd>
+      <dt class="idl-code">void enqueueMarker(optional WebCLEvent? event = null)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueMarker.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
 
-        <dt class="idl-code">void enqueueBarrier()
-          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
-            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueBarrier.html">man page</a>)</span>
-        </dt>
-        <dd>
-        </dd>
+      <dt class="idl-code">void enqueueBarrier()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueBarrier.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
 
-        <dt class="idl-code">void enqueueWaitForEvents (optional WebCLEvent[]? eventWaitList);
-          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
-            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWaitForEvents.html">man page</a>)</span>
-        </dt>
-        <dd>
-        </dd>
+      <dt class="idl-code">void enqueueWaitForEvents (optional WebCLEvent[]? eventWaitList);
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWaitForEvents.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
 
-        <dt class="idl-code">void finish()
-          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
-            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFinish.html">man page</a>)</span>
-        </dt>
-        <dd>
-        </dd>
+      <dt class="idl-code">void finish()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFinish.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
 
-        <dt class="idl-code">void flush()
-          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
-            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFlush.html">man page</a>)</span>
-        </dt>
-        <dd>
-        </dd>
+      <dt class="idl-code">void flush()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFlush.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
 
-        <dt class="idl-code">any getInfo(CLenum name)
-          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.1">OpenCL 1.1 §5.1</a>,
-            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetCommandQueueInfo.html">man page</a>)</span>
-        </dt>
-        <dd>
-          Return the value for the passed name. The type returned is the natural type for the
-          requested name, as given in the following table:
-          <table class="enumtable">
-            <tr><th>name</th><th>return type</th></tr>
-            <tr><td>QUEUE_CONTEXT</td><td>WebCLContext</td></tr>
-            <tr><td>QUEUE_DEVICE</td><td>WebCLDevice</td></tr>
-            <tr><td>QUEUE_PROPERTIES</td><td>CLenum</td></tr>
-          </table><br>
-          <dl class="exceptions">
-            <dt>Exceptions:</dt>
-            <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
-          </dl>
-        </dd>
+      <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.1">OpenCL 1.1 §5.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetCommandQueueInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>QUEUE_CONTEXT</td><td>WebCLContext</td></tr>
+          <tr><td>QUEUE_DEVICE</td><td>WebCLDevice</td></tr>
+          <tr><td>QUEUE_PROPERTIES</td><td>CLenum</td></tr>
+        </table><br>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </dl>
+      </dd>
 
-        <dt class="idl-code">void release()
-          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=53">OpenCL 1.1 §5.1</a>,
-            <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseCommandQueue.html">man page</a>)</span>
-        </dt>
-        <dd>
-          Decrement the native command queue reference count. After
-          the command queue reference count becomes zero and all
-          commands queued to this command queued have finished, the
-          command queue is deleted.
-        </dd>
+      <dt class="idl-code">void release()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=53">OpenCL 1.1 §5.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseCommandQueue.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Decrements the native command queue reference count. After the
+        command queue reference count becomes zero and all commands
+        queued to this command queued have finished, the command queue
+        is deleted.
+      </dd>
     </dl>
 
 <pre class="example">
@@ -1537,12 +1578,12 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
      </p>
 
 <pre class="idl">interface <dfn>WebCLBuffer</dfn> : WebCLMemoryObject {
-  WebCLBuffer createSubBuffer(CLenum flags, CLuint origin, CLuint size);
+  WebCLBuffer createSubBuffer(CLenum memFlags, CLuint origin, CLuint sizeInBytes);
 };
 </pre>
 
     <dl class="methods">
-      <dt class="idl-code">WebCLBuffer createSubBuffer(CLenum flags, CLuint origin, CLuint size)
+      <dt class="idl-code">WebCLBuffer createSubBuffer(CLenum memFlags, CLuint origin, CLuint sizeInBytes)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.1">OpenCL 1.1 §5.2.1</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateSubBuffer.html">man page</a>)</span>
       </dt>
@@ -1551,6 +1592,17 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
         WebCLBuffer. The two buffers reference the same area of global
         memory, so changes made into one are immediately reflected in
         the other.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_MEM_OBJECT` -- if this WebCLBuffer is already a sub-buffer object</li>
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+          <li>`INVALID_VALUE` -- if the region specified by (`origin`, `sizeInBytes`) is out of bounds in this WebCLBuffer</li>
+          <li>`MISALIGNED_SUB_BUFFER_OFFSET` -- if there is any
+            WebCLDevice in the WebCLContext associated with this
+            WebCLBuffer for which the given `origin` value would
+            result in an improperly aligned sub-buffer</li>
+        </dl>
+
       </dd>
     </dl>
 
