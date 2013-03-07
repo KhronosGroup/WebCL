@@ -2285,15 +2285,15 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
     <h3>Creating WebCL memory objects</h3>
 
     <p>
-      A newly created WebCLBuffer or WebCLImage can be initialized
-      from an ImageData, Canvas, or Image element.  This does not
+      A WebCLBuffer or WebCLImage can be initialized at construction
+      time from an ImageData, Canvas, or Image element.  This does not
       create a binding of any kind between the WebCL memory object and
       the data source.  The source pixel format is treated as 32-bit
       RGBA (8 bits per component) with non-premultiplied alpha,
-      regardless of the source.  The newly created WebCLImage will
-      have `channelOrder` equal to `RGBA`, `channelType` equal to
-      `UNORM_INT8`, and width and height equal to the source width
-      and height.
+      regardless of the source.  A newly created WebCLImage will have
+      `channelOrder` equal to `RGBA`, `channelType` equal to
+      `UNORM_INT8`, and width and height equal to the source width and
+      height.
     </p>
 
 <pre class="idl">
@@ -2319,16 +2319,20 @@ partial interface WebCLContext {
     </ul>
 
     <p>
-      If the ImageData or HTMLImageElement object is not fully loaded then createBuffer() and createImage() throw INVALID_HOST_PTR.
+      If the HTMLImageElement object is not fully loaded,
+      `createBuffer` and `createImage` will throw an
+      `INVALID_HOST_PTR` exception.
     </p>
 
     <h3>Binding with HTMLVideoElement</h3>
 
     <p>
-      A newly created WebCLImage can be permanently bound to an HTML
-      video element.  `enqueueWriteImage` from a video element is only
+      A WebCLImage can be permanently bound to an HTML Video element
+      at construction time.  The Video element does not have to be
+      fully loaded at that time, but its dimensions must be known.
+      Doing an `enqueueWriteImage` from a video element is only
       allowed when the video element is bound to the target
-      WebCLImage. Note that `memFlags` must be equal to
+      WebCLImage.  Note that `memFlags` must be equal to
       `MEM_READ_ONLY`.
     </p>
 
@@ -2502,6 +2506,15 @@ partial interface WebCLCommandQueue {
                     optional WebCLEvent?    event);
 };
 </pre>
+    
+    <dd>
+      The following exceptions apply to the above methods:
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+          <li>`INVALID_HOST_PTR` -- if `srcImage` is not fully loaded</li>
+          <li>`INVALID_HOST_PTR` -- if `srcVideo` is not bound to the given `buffer`</li>
+      </dl>
+    </dd>
 
 <!-- ======================================================================================================= -->
 
