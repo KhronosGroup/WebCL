@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">February 21, 2013</h2>
+    <h2 class="no-toc">March 7, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -979,6 +979,9 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
         WebCLContext with the given `memFlags`. For example, passing
         in `MEM_READ_WRITE` will return a list of image formats that
         are available for both reading and writing in kernel code.
+        The returned WebCLImageDescriptor objects will only have the
+        `channelOrder` and `channelType` fields filled in; the other
+        fields will have their default value (zero).
         <dl class="exceptions">
           <dt>Exceptions:</dt>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
