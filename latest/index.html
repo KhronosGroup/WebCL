@@ -322,10 +322,6 @@ interface <dfn>WebCL</dfn> {
   CLenum INVALID_GLOBAL_WORK_SIZE                  = -63;
   CLenum INVALID_PROPERTY                          = -64;
 
-  /* OpenCL Version */
-  CLenum VERSION_1_0                               = 1;
-  CLenum VERSION_1_1                               = 1;
-
   /* cl_bool */
   CLenum FALSE                                     = 0;
   CLenum TRUE                                      = 1;
@@ -2545,9 +2541,9 @@ partial interface WebCLCommandQueue {
     <h2>Implementation notes</h2>
 
     <p>
-      Although WebCL is based on OpenCL 1.1, it can also be
-      implemented on top of OpenCL 1.2, or any future version that
-      remains backwards compatible with OpenCL 1.1.
+      Although WebCL is based on OpenCL 1.1 (Embedded Profile), it can
+      also be implemented on top of OpenCL 1.2, or any future version
+      that remains backwards compatible with OpenCL 1.1.
     </p>
 
     <p>
