@@ -2166,6 +2166,32 @@ interface <dfn>WebCLEvent</dfn> {
       same object.
     </p>
 
+    <h3><a id="DOUBLE">Support for the 'double' datatype</a></h3>
+    <p>
+      Calling <code>getExtension("KHR_FP64")</code> returns an empty
+      object and enables the
+      <a href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/cl_khr_fp64.html">cl_khr_fp64</a>
+      extension.  This allows the following pragma to be used in any
+      subsequently compiled kernels:
+    </p>
+    <pre>
+      #pragma OPENCL EXTENSION cl_khr_fp64 : enable
+    </pre>
+
+
+    <h3><a id="HALF">Support for the 'half' datatype</a></h3>
+    <p>
+      Calling <code>getExtension("KHR_FP16")</code> returns an empty
+      object and enables the
+      <a href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/cl_khr_fp16.html">cl_khr_fp16</a>
+      extension.  This allows the following pragma to be used in any
+      subsequently compiled kernels:
+    </p>
+    <pre>
+      #pragma OPENCL EXTENSION cl_khr_fp16 : enable
+    </pre>
+
+
     <h3><a id="WEBCLGL">WebGL Resource Sharing</a></h3>
 
     <p>
@@ -2175,7 +2201,7 @@ interface <dfn>WebCLEvent</dfn> {
     </p>
 
     <p>
-      <code>WebCL.getExtension("CL_KHR_GL_SHARING")</code> returns a
+      Calling <code>getExtension("KHR_GL_SHARING")</code> returns a
       singleton WebCLGL object that extends the base WebCL interface
       with additional enums and changes the behavior of
       `createContext` such that it returns a WebCLGLContext object
