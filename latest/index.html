@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">March 18, 2013</h2>
+    <h2 class="no-toc">March 21, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -2213,7 +2213,7 @@ interface <dfn>WebCLEvent</dfn> {
 <pre class="idl">
 interface <dfn>WebCLGL</dfn> : WebCL {
 
-  WebCLGLContext? createContext(optional WebCLContextProperties properties);}
+  WebCLGLContext? createContext(optional WebCLContextProperties properties);
 
   /* Error Codes */
   CLenum INVALID_GL_OBJECT                         = -60;
@@ -2267,7 +2267,7 @@ interface <dfn>WebCLGLBuffer</dfn> : WebCLBuffer {
 
 <a id="WEBCLGLIMAGE"></a>
 interface <dfn>WebCLGLImage</dfn> : WebCLImage {
-  GLint getGLtextureInfo(CLenum paramName);
+  GLint getGLTextureInfo(CLenum paramName);
 };
 
 <a id="WEBCLGLOBJECTINFO"></a>
