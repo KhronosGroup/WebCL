@@ -626,7 +626,6 @@ dictionary <dfn>WebCLContextProperties</dfn> {
   WebCLPlatform?  platform = null;      // Default: let the implementation decide
   WebCLDevice[]?  devices = null;       // Default: let the implementation decide
   CLenum          deviceType = 0x1;     // 0x1 == WebCL.DEVICE_TYPE_DEFAULT
-  any             shareGroup = null;    // can only be a WebGL context
   DOMString[]?    hints = null;         // 'audio', 'video'
 };
 </pre>
@@ -668,15 +667,6 @@ dictionary <dfn>WebCLContextProperties</dfn> {
           <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device on this platform.</td></tr>
           <tr><td>DEVICE_TYPE_ALL</td><td>All devices available on this platform.</td></tr>
         </table>
-      </dd>
-
-      <dt class="idl-code">any shareGroup</dt>
-      <dd>
-        An array of resources to be shared with the newly created
-        WebCLContext.  Currently, resource sharing is only supported
-        with WebGL.  If resources are to be shared between WebGL and
-        WebCL, `shareGroup` must contain the WebGLRenderingContext
-        instance whose resources are to be shared.
       </dd>
 
       <dt class="idl-code">DOMString[] hints</dt>
@@ -2213,7 +2203,7 @@ interface <dfn>WebCLEvent</dfn> {
 <pre class="idl">
 interface <dfn>WebCLGL</dfn> : WebCL {
 
-  WebCLGLContext? createContext(optional WebCLContextProperties properties);
+  WebCLGLContext? createContext(optional WebCLGLContextProperties properties);
 
   /* Error Codes */
   CLenum INVALID_GL_OBJECT                         = -60;
@@ -2231,6 +2221,11 @@ interface <dfn>WebCLGL</dfn> : WebCL {
   /* cl_gl_texture_info */
   CLenum GL_TEXTURE_TARGET                         = 0x2004;
   CLenum GL_MIPMAP_LEVEL                           = 0x2005;
+};
+
+<a id="WEBCLGLCONTEXTPROPERTIES"></a>
+dictionary <dfn>WebCLGLContextProperties</dfn> : WebCLContextProperties {
+  <a href="http://www.khronos.org/registry/webgl/specs/latest/">WebGLRenderingContext</a> sharedContext = null;
 };
 
 <a id="WEBCLGLCONTEXT"></a>
@@ -2278,6 +2273,30 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
 </pre>
 
     <dl class="methods">
+    
+      <dt class="idl-code">WebCLGLContext? createContext(optional WebCLGLContextProperties properties)
+      </dt>
+      <dd>
+        Returns a newly created WebCLGL context with the given
+        properties, or `null` if a suitable context could not be
+        created.  The `properties` parameter can be omitted, in which
+        case the implementation will decide which platform and device
+        (or devices) to use.
+        
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`TODO`</li>
+        </dl>
+      </dd>
+      
+      <dt class="idl-code"><a href="http://www.khronos.org/registry/webgl/specs/latest/">WebGLRenderingContext</a> sharedContext</dt>
+      <dd>
+        The WebGLRenderingContext instance whose resources are to be
+        shared with the newly created WebCLGLContext.  If this field
+        is not specified, the implementation will decide which WebGL
+        context to use.
+      </dd>
+
       <dt class="idl-code">WebCLGLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=320">OpenCL 1.1 §9.8.2</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLBuffer.html">man page</a>)</span>
