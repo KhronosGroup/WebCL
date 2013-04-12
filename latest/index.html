@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">March 21, 2013</h2>
+    <h2 class="no-toc">April 12, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -224,7 +224,7 @@ exception <dfn>WebCLException</dfn> : DOMException {
 
     <h3><a id="WEBCL">WebCL</a></h3>
 
-      Window and WorkerUtils object MUST implement the WebCLEnvironment interface.
+      Window and WorkerUtils object must implement the WebCLEnvironment interface.
 
 <pre class="idl">
 Window implements <dfn>WebCLEnvironment</dfn>;
@@ -844,7 +844,7 @@ interface <dfn>WebCLContext</dfn> {
                              CLenum addressingMode,
                              CLenum filterMode);
 
-  WebCLEvent createUserEvent();
+  WebCLUserEvent createUserEvent();
 
   any getInfo(CLenum name);
 
@@ -935,7 +935,7 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
           <li>`INVALID_VALUE` -- if `addressingMode`, `filterMode`, or `normalizedCoords` or a combination of these argument values are not valid</li>
         </dl>
       </dd>
-      <dt class="idl-code">WebCLEvent createUserEvent()
+      <dt class="idl-code">WebCLUserEvent createUserEvent()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=142">OpenCL 1.1 §5.9</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateUserEvent.html">man page</a>)</span>
       </dt>
@@ -1636,7 +1636,7 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
 
 <!-- ======================================================================================================= -->
 
-    <h3><a id="WEBCLBUFFER">WebCLBuffer</a></h3>
+    <h4><a id="WEBCLBUFFER">WebCLBuffer</a></h4>
 
      <p>
      </p>
@@ -1672,7 +1672,7 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
 
  <!-- ======================================================================================================= -->
 
-    <h3><a id="WEBCLIMAGE">WebCLImage</a></h3>
+    <h4><a id="WEBCLIMAGE">WebCLImage</a></h4>
 
     <p>
     </p>
@@ -2020,8 +2020,6 @@ myKernel.setArg(2, 512, types.LOCAL_MEMORY_SIZE);             // reserve 512 byt
     <h3><a id="WEBCLEVENT">WebCLEvent</a></h3>
 
     <p>
-      OpenCL's Event and UserEvent are merged into this WebCLEvent
-      class.
     </p>
 
 <pre class="idl">
@@ -2032,7 +2030,6 @@ interface <dfn>WebCLEvent</dfn> {
 
   any   getInfo(CLenum name);
   any   getProfilingInfo(CLenum name);
-  void  setUserEventStatus(CLenum executionStatus);
   void  setCallback(CLenum executionStatus, WebCLCallback notify, optional any userdata);
   void  release();
 };
@@ -2078,17 +2075,6 @@ interface <dfn>WebCLEvent</dfn> {
         </dl>
       </dd>
 
-      <dt class="idl-code">void setUserEventStatus(CLenum executionStatus)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetUserEventStatus.html">man page</a>)</span>
-      </dt>
-      <dd>
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>`TODO`</li>
-        </dl>
-      </dd>
-
       <dt class="idl-code">void setCallback(CLenum executionStatus, WebCLCallback notify, optional any userdata)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetEventCallback.html">man page</a>)</span>
@@ -2110,6 +2096,25 @@ interface <dfn>WebCLEvent</dfn> {
       </dt>
       <dd>
         Releases the resources held up by this object and neuters it.
+      </dd>
+    </dl>
+
+<pre class="idl" id="WEBCLUSEREVENT">
+interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
+  void  setUserEventStatus(CLenum executionStatus);
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">void setUserEventStatus(CLenum executionStatus)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetUserEventStatus.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`TODO`</li>
+        </dl>
       </dd>
     </dl>
 
@@ -2222,58 +2227,9 @@ interface <dfn>WebCLGL</dfn> : WebCL {
   CLenum GL_TEXTURE_TARGET                         = 0x2004;
   CLenum GL_MIPMAP_LEVEL                           = 0x2005;
 };
-
-<a id="WEBCLGLCONTEXTPROPERTIES"></a>
-dictionary <dfn>WebCLGLContextProperties</dfn> : WebCLContextProperties {
-  <a href="http://www.khronos.org/registry/webgl/specs/latest/">WebGLRenderingContext</a> sharedContext = null;
-};
-
-<a id="WEBCLGLCONTEXT"></a>
-interface <dfn>WebCLGLContext</dfn> : WebCLContext {
-
-  WebCLGLCommandQueue createCommandQueue(optional WebCLDevice? device, optional CLenum properties);
-
-  WebCLGLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
-
-  WebCLGLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer);
-
-  WebCLGLImage createFromGLTexture(CLenum memFlags, 
-                                   GLenum textureTarget,
-                                   GLint miplevel,
-                                   WebGLTexture texture);
-};
-
-<a id="WEBCLGLCOMMANDQUEUE"></a>
-interface <dfn>WebCLGLCommandQueue</dfn> : WebCLCommandQueue {
-
-  void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
-                               optional WebCLEvent[]? eventWaitList,
-                               optional WebCLEvent? event);
-	
-  void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
-                               optional WebCLEvent[]? eventWaitList,
-                               optional WebCLEvent? event);
-};
-
-<a id="WEBCLGLBUFFER"></a>
-interface <dfn>WebCLGLBuffer</dfn> : WebCLBuffer {
-  WebCLGLObjectInfo getGLObjectInfo();
-};
-
-<a id="WEBCLGLIMAGE"></a>
-interface <dfn>WebCLGLImage</dfn> : WebCLImage {
-  GLint getGLTextureInfo(CLenum paramName);
-};
-
-<a id="WEBCLGLOBJECTINFO"></a>
-dictionary <dfn>WebCLGLObjectInfo</dfn> {
-  CLenum type;   // type of GL object attached to this memory object
-  any glObject;  // The GL object used to create this memory object
-};
 </pre>
 
     <dl class="methods">
-    
       <dt class="idl-code">WebCLGLContext? createContext(optional WebCLGLContextProperties properties)
       </dt>
       <dd>
@@ -2288,13 +2244,58 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
           <li>`TODO`</li>
         </dl>
       </dd>
-      
-      <dt class="idl-code"><a href="http://www.khronos.org/registry/webgl/specs/latest/">WebGLRenderingContext</a> sharedContext</dt>
+    </dl>
+       
+<pre class="idl" id="WEBCLGLCONTEXTPROPERTIES">
+dictionary <dfn>WebCLGLContextProperties</dfn> : WebCLContextProperties {
+  <a href="http://www.khronos.org/registry/webgl/specs/latest/">WebGLRenderingContext</a> sharedContext = null;
+};
+</pre>
+
+    <dl class="methods">
+     <dt class="idl-code"><a href="http://www.khronos.org/registry/webgl/specs/latest/">WebGLRenderingContext</a> sharedContext</dt>
       <dd>
         The WebGLRenderingContext instance whose resources are to be
         shared with the newly created WebCLGLContext.  If this field
         is not specified, the implementation will decide which WebGL
         context to use.
+      </dd>
+    </dl>
+
+<pre class="idl" id="WEBCLGLCONTEXT">
+interface <dfn>WebCLGLContext</dfn> : WebCLContext {
+
+  WebCLGLCommandQueue createCommandQueue(optional WebCLDevice? device, optional CLenum properties);
+
+  WebCLGLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
+
+  WebCLGLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer);
+
+  WebCLGLImage createFromGLTexture(CLenum memFlags, 
+                                   GLenum textureTarget,
+                                   GLint miplevel,
+                                   WebGLTexture texture);
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">WebCLGLCommandQueue createCommandQueue(optional WebCLDevice? device = null, optional CLenum properties = 0)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=51">OpenCL 1.1 §5.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateCommandQueue.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Creates a new command queue for the given device, with WebGL
+        sharing enabled.  If `device` is `null`, the WebCL
+        implementation will select any WebCLDevice that matches the
+        given `properties` and is covered by this WebCLGLContext.  If
+        `properties` is omitted, the command queue is created with
+        out-of-order execution disabled and profiling disabled.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_DEVICE` -- if `device` is invalid or not associated with this context</li>
+          <li>`INVALID_VALUE` -- if values specified in `properties` are not valid</li>
+          <li>`INVALID_QUEUE_PROPERTIES` -- if values specified in `properties` are valid but not supported by the device</li>
+        </dl>
       </dd>
 
       <dt class="idl-code">WebCLGLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer)
@@ -2304,12 +2305,11 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`INVALID_CONTEXT` -- if this WebCLContext was not created with a shared WebGLRenderingContext</li>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
           <li>`INVALID_GL_OBJECT` -- if `buffer` is not a valid WebGLBuffer</li>
         </dl>
       </dd>
-      
+
       <dt class="idl-code">WebCLGLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=325">OpenCL 1.1 §9.8.4</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLRenderbuffer.html">man page</a>)</span>
@@ -2317,7 +2317,6 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`INVALID_CONTEXT` -- if this WebCLContext was not created with a shared WebGLRenderingContext</li>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
           <li>`INVALID_GL_OBJECT` -- if `renderbuffer` is not a valid WebGLRenderbuffer, or has zero width or height</li>
           <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if the internal format of `renderbuffer` does not map to a supported WebCL image format</li>
@@ -2332,7 +2331,6 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`INVALID_CONTEXT` -- if this WebCLContext was not created with a shared WebGLRenderingContext</li>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
           <li>`INVALID_VALUE` -- if `textureTarget` is not `TEXTURE_2D` or one of `TEXTURE_CUBE_MAP_*`</li>
           <li>`INVALID_MIP_LEVEL` -- if <code>miplevel &lt; 0 || miplevel &gt; q</code>, where `q` is as defined in OpenGL ES 2.0</li>
@@ -2342,7 +2340,22 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
           <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if the internal format of `texture` does not map to a supported WebCL image format</li>
         </dl>
       </dd>
+    </dl>
 
+<pre class="idl" id="WEBCLGLCOMMANDQUEUE">
+interface <dfn>WebCLGLCommandQueue</dfn> : WebCLCommandQueue {
+
+  void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
+                               optional WebCLEvent[]? eventWaitList,
+                               optional WebCLEvent? event);
+	
+  void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
+                               optional WebCLEvent[]? eventWaitList,
+                               optional WebCLEvent? event);
+};
+</pre>
+
+    <dl class="methods">
       <dt class="idl-code">void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
         optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
@@ -2351,7 +2364,6 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`INVALID_CONTEXT` -- if the WebCLContext of this command queue was not created with a shared WebGLRenderingContext</li>
           <li>`TODO`</li>
         </dl>
       </dd>
@@ -2364,11 +2376,18 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`INVALID_CONTEXT` -- if the WebCLContext of this command queue was not created with a shared WebGLRenderingContext</li>
           <li>`TODO`</li>
         </dl>
       </dd>
+    </dl>
 
+<pre class="idl" id="WEBCLGLBUFFER">
+interface <dfn>WebCLGLBuffer</dfn> : WebCLBuffer {
+  WebCLGLObjectInfo getGLObjectInfo();
+};
+</pre>
+
+    <dl class="methods">
       <dt class="idl-code">WebCLGLObjectInfo getGLObjectInfo()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=326">OpenCL 1.1 §9.8.5</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetGLObjectInfo.html">man page</a>)</span>
@@ -2376,10 +2395,18 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`INVALID_CONTEXT` -- if the WebCLContext of this memory object was not created with a shared WebGLRenderingContext</li>
+          <li>None</li>
         </dl>
       </dd>
+    </dl>
 
+<pre class="idl" id="WEBCLGLIMAGE">
+interface <dfn>WebCLGLImage</dfn> : WebCLImage {
+  GLint getGLTextureInfo(CLenum paramName);
+};
+</pre>
+
+    <dl class="methods">
       <dt class="idl-code">GLint getGLTextureInfo(CLenum paramName)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=327">OpenCL 1.1 §9.8.5</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetGLTextureInfo.html">man page</a>)</span>
@@ -2389,12 +2416,19 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
         creating this WebCLImage from a WebGL texture.
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`INVALID_CONTEXT` -- if the WebCLContext of this memory object was not created with a shared WebGLRenderingContext</li>
           <li>`TODO`</li>
         </dl>
       </dd>
-
     </dl>
+
+<pre class="idl" id="WEBCLGLOBJECTINFO"></a>
+dictionary <dfn>WebCLGLObjectInfo</dfn> {
+  CLenum type;   // type of GL object attached to this memory object
+  any glObject;  // The GL object used to create this memory object
+};
+</pre>
+
+
 
 <!-- ======================================================================================================= -->
 
@@ -2419,10 +2453,12 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
     <h3>Cross-Origin Information Leakage</h3>
 
     <p>
-     WebCL will restrict the use of media, such as image and video, originating from
-     a different web site than the hosting web page.  WebCL will leverage provisions
-     such as Cross-Origin Resource Sharing (CORS) to help enforce the restriction on
-     the use of media by a web page different than the originating web site.
+     WebCL will restrict the use of media, such as image and video,
+     originating from a different web site than the hosting web page.
+     WebCL will leverage provisions such as Cross-Origin Resource
+     Sharing [<a href="#refsCORS">CORS</a>] to help enforce the
+     restriction on the use of media by a web page different than the
+     originating web site.
     </p>
 
 
@@ -2485,7 +2521,7 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
     <h2>Interoperability with HTML Canvas, Image and Video Elements</h2>
 
     <p>
-      This section proposes mechanisms for transferring pixel data
+      This section describes mechanisms for transferring pixel data
       between WebCL memory objects and HTML media elements.
       Server-side or Web Worker based implementations of WebCL will
       not be required to support these features.
@@ -2878,74 +2914,39 @@ partial interface WebCLCommandQueue {
     <h2>References</h2>
 
     <h3>Normative references</h3>
+
     <dl>
-
-        <dt id="refsASCII">[ASCII]</dt>
-        <dd><cite>International Standard ISO/IEC 646:1991. Information technology -
-            ISO 7-bit coded character set for information interchange</cite>
-        </dd>
-        <dt id="refsCANVAS">[CANVAS]</dt>
-        <dd><cite><a href="http://www.w3.org/TR/html5/the-canvas-element.html">
+      <dt id="refsCANVAS">[CANVAS]</dt>
+      <dd><cite><a href="http://www.w3.org/TR/html5/the-canvas-element.html">
             HTML5: The Canvas Element</a></cite>,
-            World Wide Web Consortium (W3C).
-        </dd>
-        <dt id="refsCORS">[CORS]</dt>
-        <dd><cite><a href="http://www.w3.org/TR/cors/">
+        World Wide Web Consortium (W3C).
+      </dd>
+      <dt id="refsCORS">[CORS]</dt>
+      <dd><cite><a href="http://www.w3.org/TR/cors/">
             Cross-Origin Resource Sharing</a></cite>,
-            A. van Kesteren, July 2010.
-        </dd>
-        <dt id="refsDOMSTRING">[DOMSTRING]</dt>
-        <dd><cite><a href="http://www.w3.org/TR/DOM-Level-2-Core/core.html#DOMString">
+        A. van Kesteren.
+      </dd>
+      <dt id="refsDOMSTRING">[DOMSTRING]</dt>
+      <dd><cite><a href="http://www.w3.org/TR/DOM-Level-2-Core/core.html#DOMString">
             Document Object Model Core: The DOMString type</a></cite>,
-            World Wide Web Consortium (W3C).
-        </dd>
-        <dt id="refsGLES20">[GLES20]</dt>
-        <dd><cite><a href="http://www.khronos.org/registry/gles/specs/2.0/es_full_spec_2.0.25.pdf">
-            OpenGL® ES Common Profile Specification Version 2.0.25</a></cite>,
-            A. Munshi, J. Leech, November 2010.
-        </dd>
-        <dt id="refsGLES20GLSL">[GLES20GLSL]</dt>
-        <dd><cite><a href="http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf">
-            The OpenGL® ES Shading Language Version 1.00</a></cite>,
-            R. Simpson, May 2009.
-        </dd>
-        <dt id="refsHTML">[HTML]</dt>
-        <dd><cite><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">
-            HTML</a></cite>,
-            I. Hickson, June 2011.
-        </dd>
-        <dt id="refsOPENCL">[OPENCL11]</dt>
-        <dd><cite><a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf">
-          OpenCL 1.1 Specification</a></cite>,
-          A. Munshi, January 2011.
-        </dd>
-        <dt id="refsREGISTRY">[REGISTRY]</dt>
-        <dd><cite><a href="http://www.khronos.org/registry/webcl/extensions/">
-            WebCL Extension Registry</a></cite>
-        </dd>
-        <dt id="refsRFC2119">[RFC2119]</dt>
-        <dd><cite><a href="http://www.ietf.org/rfc/rfc2119.txt">
-            Key words for use in RFCs to Indicate Requirement Levels</a></cite>,
-            S. Bradner. IETF, March 1997.
-        </dd>
-        <dt id="refsTYPEDARRAYS">[TYPEDARRAYS]</dt>
-        <dd><cite><a href="http://www.khronos.org/registry/typedarray/specs/latest/">
-            Typed Array Specification: Editor's Draft</a></cite>,
-            V. Vukicevic, K. Russell, May 2010.
-        </dd>
-        <dt id="refsWEBIDL">[WEBIDL]</dt>
-        <dd><cite><a href="http://dev.w3.org/2006/webapi/WebIDL/">
+        World Wide Web Consortium (W3C).
+      </dd>
+      <dt id="refsOPENCL">[OPENCL11]</dt>
+      <dd><cite><a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf">
+            OpenCL 1.1 Specification</a></cite>,
+        A. Munshi.
+      </dd>
+      <dt id="refsWEBIDL">[WEBIDL]</dt>
+      <dd><cite><a href="http://dev.w3.org/2006/webapi/WebIDL/">
             Web IDL: W3C Editor’s Draft</a></cite>,
-            C. McCormack, September 2009.
-        </dd>
-        <dt id="refsWEBGL">[WEBGL]</dt>
-        <dd><cite><a href="https://www.khronos.org/registry/webgl/specs/1.0/">
-          WebGL 1.0 Specification</a></cite>,
-          C. Marrin, February 2011.
-        </dd>
+        C. McCormack.
+      </dd>
+      <dt id="refsWEBGL">[WEBGL]</dt>
+      <dd><cite><a href="https://www.khronos.org/registry/webgl/specs/1.0/">
+            WebGL 1.0 Specification</a></cite>,
+        C. Marrin.
+      </dd>
     </dl>
-
-    <h3>Other references</h3>
 
 <!-- ======================================================================================================= -->
 
