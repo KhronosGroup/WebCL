@@ -2373,18 +2373,18 @@ interface <dfn>WebCLGLContext</dfn> : WebCLContext {
 <pre class="idl" id="WEBCLGLCOMMANDQUEUE">
 interface <dfn>WebCLGLCommandQueue</dfn> : WebCLCommandQueue {
 
-  void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
+  void enqueueAcquireGLObjects(WebCLGLMemoryObject[] memObjects,
                                optional WebCLEvent[]? eventWaitList,
                                optional WebCLEvent? event);
 	
-  void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
+  void enqueueReleaseGLObjects(WebCLGLMemoryObject[] memObjects,
                                optional WebCLEvent[]? eventWaitList,
                                optional WebCLEvent? event);
 };
 </pre>
 
     <dl class="methods">
-      <dt class="idl-code">void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
+      <dt class="idl-code">void enqueueAcquireGLObjects(WebCLGLMemoryObject[] memObjects,
         optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueAcquireGLObjects.html">man page</a>)</span>
@@ -2396,7 +2396,7 @@ interface <dfn>WebCLGLCommandQueue</dfn> : WebCLCommandQueue {
         </dl>
       </dd>
 
-      <dt class="idl-code">void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
+      <dt class="idl-code">void enqueueReleaseGLObjects(WebCLGLMemoryObject[] memObjects,
         optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReleaseGLObjects.html">man page</a>)</span>
@@ -2409,8 +2409,8 @@ interface <dfn>WebCLGLCommandQueue</dfn> : WebCLCommandQueue {
       </dd>
     </dl>
 
-<pre class="idl" id="WEBCLGLBUFFER">
-interface <dfn>WebCLGLBuffer</dfn> : WebCLBuffer {
+<pre class="idl" id="WEBCLGLMEMORYOBJECT">
+interface <dfn>WebCLGLMemoryObject</dfn> : WebCLMemoryObject {
   WebCLGLObjectInfo getGLObjectInfo();
 };
 </pre>
@@ -2428,8 +2428,13 @@ interface <dfn>WebCLGLBuffer</dfn> : WebCLBuffer {
       </dd>
     </dl>
 
+<pre class="idl" id="WEBCLGLBUFFER">
+interface <dfn>WebCLGLBuffer</dfn> : WebCLGLMemoryObject {
+};
+</pre>
+
 <pre class="idl" id="WEBCLGLIMAGE">
-interface <dfn>WebCLGLImage</dfn> : WebCLImage {
+interface <dfn>WebCLGLImage</dfn> : WebCLGLMemoryObject {
   GLint getGLTextureInfo(CLenum paramName);
 };
 </pre>
