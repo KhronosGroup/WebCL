@@ -2231,6 +2231,8 @@ interface <dfn>WebCLGL</dfn> : WebCL {
 
     <dl class="methods">
       <dt class="idl-code">WebCLGLContext? createContext(optional WebCLGLContextProperties properties)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=45">OpenCL 1.1 §4.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
       </dt>
       <dd>
         Returns a newly created WebCLGL context with the given
@@ -2275,6 +2277,8 @@ interface <dfn>WebCLGLContext</dfn> : WebCLContext {
                                    GLenum textureTarget,
                                    GLint miplevel,
                                    WebGLTexture texture);
+
+  any getInfo(CLenum name);
 };
 </pre>
 
@@ -2338,6 +2342,25 @@ interface <dfn>WebCLGLContext</dfn> : WebCLContext {
           <li>`INVALID_GL_OBJECT` -- if `texture` is not a valid WebGLTexture, or does not match the given `textureTarget`</li>
           <li>`INVALID_GL_OBJECT` -- if the specified `miplevel` is not defined for `texture`, or has zero width or height</li>
           <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if the internal format of `texture` does not map to a supported WebCL image format</li>
+        </dl>
+      </dd>
+
+      <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=49">OpenCL 1.1 §4.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetContextInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Returns the value for the passed name. The type returned is the natural type for the
+        requested name, as given in the following table:
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>CONTEXT_NUM_DEVICES</td><td>CLuint</td></tr>
+          <tr><td>CONTEXT_DEVICES</td><td>WebCLDevice[]</td></tr>
+          <tr><td>CONTEXT_PROPERTIES</td><td>WebCLGLContextProperties</td></tr>
+        </table><br>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
         </dl>
       </dd>
     </dl>
