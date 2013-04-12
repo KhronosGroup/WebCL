@@ -206,7 +206,12 @@ callback <dfn>WebCLCallback</dfn> = void (WebCLEvent event, any userdata);
       are listed in that method's documentation.  Additionally, all
       methods may throw the `OUT_OF_RESOURCES` and
       `OUT_OF_HOST_MEMORY` exceptions, so they are not listed
-      separately.
+      separately.  Furthermore, calling any function on an object that
+      has been neutered (released) will
+      throw <code>INVALID_<i>TYPE</i></code>, where <i>`TYPE`</i> is
+      `CONTEXT`, `COMMAND_QUEUE`, `MEM_OBJECT`, `SAMPLER`, `PROGRAM`,
+      `KERNEL`, or `EVENT`. These are also not listed separately in
+      the method descriptions.
     </p>
 
 <pre class="idl">
@@ -984,7 +989,7 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">man page</a>)</span>
       </dt>
       <dd>
-        Releases the resources held up by this object and neuters it.
+        Releases the resources held up by this object and neuters it. 
       </dd>
     </dl>
 
