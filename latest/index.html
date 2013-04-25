@@ -175,29 +175,6 @@ typedef unsigned long CLtype;     // Used in WebCLKernelArgumentTypes
 </pre>
 
 
-    <h4><a id="WEBCLCALLBACK">Callbacks</a></h4>
-
-    <p>
-      WebCL allows certain long-running functions to be executed
-      either synchronously or asynchronously. The asynchronous mode is
-      used if a user-defined callback function is given as an argument
-      to such functions. The signature of the callback is defined by
-      WebCLCallback.
-    </p>
-
-<pre class="idl">
-callback <dfn>WebCLCallback</dfn> = void (WebCLEvent event, any userdata);
-</pre>
-
-    <p>
-      Any WebCL callback function can call arbitrary
-      JavaScript functions, including both blocking and non-blocking
-      APIs.  The following diagram is non-normative, but describes a
-      possible implementation.
-    </p>
-
-    <img alt="callback" src="resources/callback.png" height="420" width="780"/>
-
     <h4><a id="WEBCLEXCEPTION">Exceptions</a></h4>
 
     <p>
@@ -207,11 +184,12 @@ callback <dfn>WebCLCallback</dfn> = void (WebCLEvent event, any userdata);
       methods may throw the `OUT_OF_RESOURCES` and
       `OUT_OF_HOST_MEMORY` exceptions, so they are not listed
       separately.  Furthermore, calling any function on an object that
-      has been neutered (released) will
+      has been released (either explicitly, or implicitly by releasing
+      any of its parent objects), will
       throw <code>INVALID_<i>TYPE</i></code>, where <i>`TYPE`</i> is
       `CONTEXT`, `COMMAND_QUEUE`, `MEM_OBJECT`, `SAMPLER`, `PROGRAM`,
-      `KERNEL`, or `EVENT`. These are also not listed separately in
-      the method descriptions.
+      `KERNEL`, or `EVENT`. These exceptions are also not listed
+      separately in the method descriptions.
     </p>
 
 <pre class="idl">
@@ -226,6 +204,31 @@ exception <dfn>WebCLException</dfn> : DOMException {
       WebCLException thrown by the implementation, but the message may
       be `null`.
     </p>
+
+    <h4><a id="WEBCLCALLBACK">Callbacks</a></h4>
+
+    <p>
+      WebCL allows certain long-running functions to be executed
+      either synchronously or asynchronously. The asynchronous mode is
+      used if a user-defined callback function is given as an argument
+      to such functions.  If a callback function is associated with a
+      WebCL object that is subsequently released, the callback will no
+      longer be invoked.  The signature of the callback function must
+      be as follows:
+    </p>
+
+<pre class="idl">
+callback <dfn>WebCLCallback</dfn> = void (WebCLEvent event, any userdata);
+</pre>
+
+    <p>
+      The callback function can call arbitrary JavaScript functions,
+      including both blocking and non-blocking APIs.  The following
+      diagram is non-normative, but describes a possible
+      implementation.
+    </p>
+
+    <img alt="callback" src="resources/callback.png" height="420" width="780"/>
 
     <h3><a id="WEBCL">WebCL</a></h3>
 
@@ -618,7 +621,14 @@ interface <dfn>WebCL</dfn> {
         Waits until the given events have completed. See WebCLEvent for more information.
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+	        <li>`INVALID_VALUE` -- if `eventWaitList` is `null` or empty</li>
+	        <li>`INVALID_CONTEXT` -- if events specified in
+	          `eventWaitList` do not belong to the same context</li>
+          <li>`INVALID_EVENT` -- if any event in `eventWaitList` is
+            not a valid event object</li>
+          <li>`INVALID_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` --
+            if the execution status of any of the events in
+            `eventWaitList` is a negative integer value</li>
         </dl>
       </dd>
 
@@ -1187,7 +1197,32 @@ interface <dfn>WebCLCommandQueue</dfn> {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as `srcBuffer` and
+	          `dstBuffer`</li>
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as all events in
+	          `eventWaitList`</li>
+	        <li>`INVALID_MEM_OBJECT` -- if `srcBuffer` and `dstBuffer`
+	          are not valid WebCLBuffer objects</li>
+	        <li>`INVALID_VALUE` -- if `srcOffset`, `dstOffset`,
+	          `numBytes`, `srcOffset`+`numBytes`, or
+	          `dstOffset`+`numBytes` require accessing elements outside
+	          the `srcBuffer` and `dstBuffer` buffer objects
+	          respectively
+	        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
+	          `eventWaitList` is invalid</li>
+	        <li>`MEM_COPY_OVERLAP` -- if `srcBuffer` and `dstBuffer` are
+	          the same WebCLBuffer object and the source and destination
+	          regions overlap</li>
+	        <li>`MISALIGNED_SUB_BUFFER_OFFSET` -- if `srcBuffer` or
+	          `dstBuffer` is a sub-buffer object and the offset
+	          specified when the sub-buffer object was created is not
+	          aligned to the `DEVICE_MEM_BASE_ADDR_ALIGN` value for the
+	          device associated with this WebCLCommandQueue</li>
+	        <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure
+	          to allocate memory for data store associated with
+	          `srcBuffer` or `dstBuffer`</li>
         </dl>
       </dd>
 
@@ -1215,10 +1250,16 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_VALUE` -- if the `origin`, `region` and `pitch`
             values would require accessing elements outside the
             `srcBuffer` or `dstBuffer` objects</li>
-          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
+          `eventWaitList` is invalid</li>
           <li>`MEM_COPY_OVERLAP` -- if `srcBuffer` and `dstBuffer` are
             the same WebCLBuffer object and the source and destination
             regions overlap</li>
+	        <li>`MISALIGNED_SUB_BUFFER_OFFSET` -- if `srcBuffer` or
+	          `dstBuffer` is a sub-buffer object and the offset
+	          specified when the sub-buffer object was created is not
+	          aligned to the `DEVICE_MEM_BASE_ADDR_ALIGN` value for the
+	          device associated with this WebCLCommandQueue</li>
         </dl>
       </dd>
 
@@ -1236,6 +1277,12 @@ interface <dfn>WebCLCommandQueue</dfn> {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as `srcImage` and
+	          `dstImage`</li>
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as all events in
+	          `eventWaitList` or</li>
           <li>`TODO`</li>
         </dl>
       </dd>
