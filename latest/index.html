@@ -1283,7 +1283,26 @@ interface <dfn>WebCLCommandQueue</dfn> {
 	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
 	          associated with the same WebCLContext as all events in
 	          `eventWaitList` or</li>
-          <li>`TODO`</li>
+	        <li> `INVALID_MEM_OBJECT` -- if `srcImage` or `dstImage` is
+	          not a valid image object</li>
+	        <li>`IMAGE_FORMAT_MISMATCH` -- if `srcImage` and `dstImage`
+	          do not use the same image format</li>
+	        <li>`INVALID_VALUE` -- if the rectangular region specified
+	          by `srcImage` and `srcImage`+`region` refers to a region
+	          outside of `srcImage`, or if the rectangular region
+	          specified by `dstImage` and `dstImage`+`region` refers to
+	          a region outside of `dstImage`</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
+            `eventWaitList` is invalid</li>
+	        <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of
+            `srcImage` or `dstImage` are not supported by the device
+            associated with this WebCLCommandQueue</li>
+	        <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure
+	          to allocate memory for data store associated with
+	          `srcBuffer` or `dstBuffer`</li>
+	        <li>`MEM_COPY_OVERLAP` -- if `srcImage` and `dstImage` are
+	          the same WebCLImage object and the source and destination
+	          regions overlap</li>
         </dl>
       </dd>
 
