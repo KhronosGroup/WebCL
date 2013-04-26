@@ -2439,18 +2439,18 @@ interface <dfn>WebCLGLContext</dfn> : WebCLContext {
 <pre class="idl" id="WEBCLGLCOMMANDQUEUE">
 interface <dfn>WebCLGLCommandQueue</dfn> : WebCLCommandQueue {
 
-  void enqueueAcquireGLObjects(WebCLGLMemoryObject[] memObjects,
+  void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
                                optional WebCLEvent[]? eventWaitList,
                                optional WebCLEvent? event);
 	
-  void enqueueReleaseGLObjects(WebCLGLMemoryObject[] memObjects,
+  void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
                                optional WebCLEvent[]? eventWaitList,
                                optional WebCLEvent? event);
 };
 </pre>
 
     <dl class="methods">
-      <dt class="idl-code">void enqueueAcquireGLObjects(WebCLGLMemoryObject[] memObjects,
+      <dt class="idl-code">void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
         optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueAcquireGLObjects.html">man page</a>)</span>
@@ -2462,7 +2462,7 @@ interface <dfn>WebCLGLCommandQueue</dfn> : WebCLCommandQueue {
         </dl>
       </dd>
 
-      <dt class="idl-code">void enqueueReleaseGLObjects(WebCLGLMemoryObject[] memObjects,
+      <dt class="idl-code">void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
         optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null);
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReleaseGLObjects.html">man page</a>)</span>
@@ -2475,8 +2475,8 @@ interface <dfn>WebCLGLCommandQueue</dfn> : WebCLCommandQueue {
       </dd>
     </dl>
 
-<pre class="idl" id="WEBCLGLMEMORYOBJECT">
-interface <dfn>WebCLGLMemoryObject</dfn> : WebCLMemoryObject {
+<pre class="idl" id="WEBCLGLBUFFER">
+interface <dfn>WebCLGLBuffer</dfn> : WebCLBuffer {
   WebCLGLObjectInfo getGLObjectInfo();
 };
 </pre>
@@ -2494,18 +2494,24 @@ interface <dfn>WebCLGLMemoryObject</dfn> : WebCLMemoryObject {
       </dd>
     </dl>
 
-<pre class="idl" id="WEBCLGLBUFFER">
-interface <dfn>WebCLGLBuffer</dfn> : WebCLGLMemoryObject {
-};
-</pre>
-
 <pre class="idl" id="WEBCLGLIMAGE">
-interface <dfn>WebCLGLImage</dfn> : WebCLGLMemoryObject {
+interface <dfn>WebCLGLImage</dfn> : WebCLImage {
+  WebCLGLObjectInfo getGLObjectInfo();
   GLint getGLTextureInfo(CLenum paramName);
 };
 </pre>
 
     <dl class="methods">
+      <dt class="idl-code">WebCLGLObjectInfo getGLObjectInfo()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=326">OpenCL 1.1 §9.8.5</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetGLObjectInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>None</li>
+        </dl>
+      </dd>
       <dt class="idl-code">GLint getGLTextureInfo(CLenum paramName)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=327">OpenCL 1.1 §9.8.5</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetGLTextureInfo.html">man page</a>)</span>
