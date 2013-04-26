@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">April 12, 2013</h2>
+    <h2 class="no-toc">April 26, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -203,6 +203,37 @@ exception <dfn>WebCLException</dfn> : DOMException {
       Both the `type` and `message` fields are present in any
       WebCLException thrown by the implementation, but the message may
       be `null`.
+    </p>
+
+    <h4><a id="RELEASE">Resource management</a></h4>
+
+    <p>
+      All dynamically created WebCL objects contain a `release`
+      method that releases the memory and other resources consumed by
+      that object, as well as the resources of its descendant objects
+      (if any).  This is illustrated in the following example:
+    </p>
+
+<pre>
+  var ctx1 = WebCL.createContext(...);
+  var ctx2 = WebCL.createContext(...);
+  var A = ctx1.createBuffer(...);
+  var B = ctx2.createBuffer(...);
+  var C = A;
+  var D = B;
+  A.release();     // releases A and C
+  ctx2.release();  // releases ctx2, B, and D
+</pre>
+
+    <p>
+      After releasing a WebCL object, it can no longer be used, and
+      trying to do so will throw an exception.  The application is
+      strongly recommended to explicitly release all WebCL objects as
+      soon as they are no longer needed, instead of relying on the
+      JavaScript garbage collector.  This is necessary because garbage
+      collectors typically do not give any guarantees on when (or
+      indeed if) they will reclaim the objects that are no longer in
+      scope.
     </p>
 
     <h4><a id="WEBCLCALLBACK">Callbacks</a></h4>
@@ -999,7 +1030,8 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">man page</a>)</span>
       </dt>
       <dd>
-        Releases the resources held up by this object and neuters it. 
+        Releases the resources held up by this object and its
+        descendants, if any.
       </dd>
     </dl>
 
@@ -1598,7 +1630,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseCommandQueue.html">man page</a>)</span>
       </dt>
       <dd>
-        Releases the resources held up by this object and neuters it.
+        Releases the resources held up by this object and its
+        descendants, if any.
       </dd>
     </dl>
 
@@ -1701,7 +1734,8 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseMemObject.html">man page</a>)</span>
       </dt>
       <dd>
-        Releases the resources held up by this object and neuters it.
+        Releases the resources held up by this object and its
+        descendants, if any.
       </dd>
     </dl>
 
@@ -1805,7 +1839,8 @@ interface <dfn>WebCLSampler</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseSampler.html">man page</a>)</span>
       </dt>
       <dd>
-        Releases the resources held up by this object and neuters it.
+        Releases the resources held up by this object and its
+        descendants, if any.
       </dd>
     </dl>
 
@@ -1918,7 +1953,8 @@ interface <dfn>WebCLProgram</dfn> {
       </dt>
       <dd>
       <dd>
-        Releases the resources held up by this object and neuters it.
+        Releases the resources held up by this object and its
+        descendants, if any.
       </dd>
     </dl>
 
@@ -2074,7 +2110,8 @@ interface <dfn>WebCLKernelArgumentTypes</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseKernel.html">man page</a>)</span>
       </dt>
       <dd>
-        Releases the resources held up by this object and neuters it.
+        Releases the resources held up by this object and its
+        descendants, if any.
       </dd>
     </dl>
 
@@ -2166,7 +2203,8 @@ interface <dfn>WebCLEvent</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseEvent.html">man page</a>)</span>
       </dt>
       <dd>
-        Releases the resources held up by this object and neuters it.
+        Releases the resources held up by this object and its
+        descendants, if any.
       </dd>
     </dl>
 
@@ -2692,26 +2730,13 @@ partial interface WebCLContext {
 };
 </pre>
 
-    <p>
-      To allow the application to query information from a WebCLImage
-      that is bound to an HTMLVideoElement, the WebCLImageDescriptor
-      dictionary is extended as follows:
-    </p>
-
-<pre class="idl">
-dictionary <dfn>WebCLVideoDescriptor</dfn> : WebCLImageDescriptor {
-  CLint framesPerSecond = -1;         // video frame rate, -1 if unknown
-  CLint currentEnqueuedFrame = -1;    // -1, 0 to totalFrames-1
-  CLint totalFrames = -1;             // -1 if unknown or "live" / streaming
-};
-</pre>
-
-    <p>
-      The `currentEnqueuedFrame` field is set by each invocation of
-      `enqueueWriteImage`. It indicates which frame is scheduled to be
-      written into the WebCLImage. If the value is -1, then no frame
-      is scheduled.
-    </p>
+<p>
+      The source video pixel format is treated as 32-bit RGBA (8 bits
+      per component) with non-premultiplied alpha.  The newly created
+      WebCLImage will have `channelOrder` equal to `RGBA`,
+      `channelType` equal to `UNORM_INT8`, and width and height equal
+      to the source video width and height.
+</p>
 
     <h3>Reading and writing HTML elements</h3>
 
