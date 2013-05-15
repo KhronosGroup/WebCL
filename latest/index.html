@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">April 26, 2013</h2>
+    <h2 class="no-toc">May 14, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -2306,16 +2306,16 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
 
     <p>
       Calling <code>getExtension("KHR_GL_SHARING")</code> returns a
-      singleton WebCLGL object that extends the base WebCL interface
-      with additional enums and changes the behavior of
-      `createContext` such that it returns a WebCLGLContext object
-      instead of a regular WebCLContext.  The extended context allows
-      creating command queues, buffers, and images that are similarly
-      extended with new methods to support WebGL resource sharing.
+      singleton WebCLGL object that adds a number of new enums, as
+      well as a new variant of `createContext` that returns a
+      WebCLGLContext object instead of a regular WebCLContext.  The
+      extended context allows creating command queues, buffers, and
+      images that are similarly extended with new methods to support
+      WebGL resource sharing.
     </p>
 
 <pre class="idl">
-interface <dfn>WebCLGL</dfn> : WebCL {
+interface <dfn>WebCLGL</dfn> {
 
   WebCLGLContext? createContext(optional WebCLGLContextProperties properties);
 
