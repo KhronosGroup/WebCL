@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">May 14, 2013</h2>
+    <h2 class="no-toc">June 6, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -386,7 +386,6 @@ interface <dfn>WebCL</dfn> {
   CLenum DEVICE_PREFERRED_VECTOR_WIDTH_INT         = 0x1008;
   CLenum DEVICE_PREFERRED_VECTOR_WIDTH_LONG        = 0x1009;
   CLenum DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT       = 0x100A;
-  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE      = 0x100B;
   CLenum DEVICE_ADDRESS_BITS                       = 0x100D;
   CLenum DEVICE_MAX_READ_IMAGE_ARGS                = 0x100E;
   CLenum DEVICE_MAX_WRITE_IMAGE_ARGS               = 0x100F;
@@ -406,7 +405,6 @@ interface <dfn>WebCL</dfn> {
   CLenum DEVICE_PROFILE                            = 0x102E;
   CLenum DEVICE_VERSION                            = 0x102F;
   CLenum DEVICE_PLATFORM                           = 0x1031;
-  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_HALF        = 0x1034;
   CLenum DEVICE_HOST_UNIFIED_MEMORY                = 0x1035;
   CLenum DEVICE_OPENCL_C_VERSION                   = 0x103D;
 
@@ -1999,8 +1997,6 @@ interface <dfn>WebCLKernelArgumentTypes</dfn> {
   CLtype LONG   = 6;
   CLtype ULONG  = 7;
   CLtype FLOAT  = 8;
-  CLtype HALF   = 9;    // not supported in all implementations
-  CLtype DOUBLE = 10;   // not supported in all implementations
 
   // Vector types; must be bitwise-OR'ed with a scalar type
 
@@ -2272,8 +2268,8 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
 
     <h3><a id="DOUBLE">Support for the 'double' datatype</a></h3>
     <p>
-      Calling <code>getExtension("KHR_FP64")</code> returns an empty
-      object and enables the
+      Calling <code>getExtension("KHR_FP64")</code> returns a
+      singleton WebCLFP64 object and enables the
       <a href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/cl_khr_fp64.html">cl_khr_fp64</a>
       extension.  This allows the following pragma to be used in any
       subsequently compiled kernels:
@@ -2282,11 +2278,20 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
       #pragma OPENCL EXTENSION cl_khr_fp64 : enable
     </pre>
 
+<pre class="idl">
+interface <dfn>WebCLFP64</dfn> {
+  /* WebCLDevice getInfo() */
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE = 0x100B;
+
+  /* WebCLKernelArgumentTypes */
+  CLtype DOUBLE = 10;
+};
+</pre>
 
     <h3><a id="HALF">Support for the 'half' datatype</a></h3>
     <p>
-      Calling <code>getExtension("KHR_FP16")</code> returns an empty
-      object and enables the
+      Calling <code>getExtension("KHR_FP16")</code> returns a
+      singleton WebCLFP16 object and enables the
       <a href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/cl_khr_fp16.html">cl_khr_fp16</a>
       extension.  This allows the following pragma to be used in any
       subsequently compiled kernels:
@@ -2295,6 +2300,15 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
       #pragma OPENCL EXTENSION cl_khr_fp16 : enable
     </pre>
 
+<pre class="idl">
+interface <dfn>WebCLFP16</dfn> {
+  /* WebCLDevice getInfo() */
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_HALF = 0x1034;
+
+  /* WebCLKernelArgumentTypes */
+  CLtype HALF = 9;
+};
+</pre>
 
     <h3><a id="WEBCLGL">WebGL Resource Sharing</a></h3>
 
