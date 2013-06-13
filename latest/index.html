@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">June 6, 2013</h2>
+    <h2 class="no-toc">June 13, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -2933,13 +2933,18 @@ partial interface WebCLCommandQueue {
     </p>
 
     <ul>
-      <li>Kernel identifiers must be less than 256 characters</li>
       <li>2D image support is required</li>
       <li>3D images are not supported</li>
-      <li>WebGL interoperability is supported (optionally)</li>
-      <li>Structures are not supported as kernel arguments</li>
       <li>Mapping of CL memory objects into host memory space is not supported</li>
       <li>Program binaries are not supported</li>
+      <li>Structures are not supported as kernel arguments</li>
+      <li>Identifiers in OpenCL C must be less than 256 characters</li>
+      <li>The following OpenCL C built-in functions are not supported:</li>
+      <ul>
+        <li>`async_work_group_copy`</li>
+        <li>`async_work_group_strided_copy`</li>
+        <li>`wait_group_events`</li>
+      </ul>
     </ul>
 
     <p>
