@@ -2600,6 +2600,22 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
       identified the following security requirements for WebCL.
     </p>
 
+    <h3>Out-of-Bounds Memory Access</h3>
+
+    <p>
+      WebCL kernel code must not be able to access unauthorized areas
+      of memory, regardless of address space (private, local, global,
+      or constant).  The WebCL implementation must guarantee that
+      out-of-bounds (OOB) read operations will return zero, and that
+      OOB writes are discarded.  For purposes of bounds checking, the
+      implementation may combine all `private` variables into one
+      contiguous block of memory, and similarly for `local` variables,
+      instead of enforcing the bounds of each variable separately. For
+      example, in a kernel program containing two `private` arrays, an
+      OOB read from the first array may return a value from the second
+      array, rather than zero.
+    </p>
+
     <h3>Undefined Behavior</h3>
       Behavior left undefined in OpenCL will be defined by the WebCL specification
       where possible, to ensure the authoring of strong conformance tests, and to
@@ -2616,15 +2632,6 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
      Sharing [<a href="#refsCORS">CORS</a>] to help enforce the
      restriction on the use of media by a web page different than the
      originating web site.
-    </p>
-
-
-    <h3>Out-of-Range Memory Accesses</h3>
-
-    <p>
-     To ensure that all accessed indices are valid, protections will be provided
-     against out of bounds memory writes.  Out of bounds memory reads should not
-     return any uninitialized value.
     </p>
 
 
