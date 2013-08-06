@@ -670,7 +670,6 @@ dictionary <dfn>WebCLContextProperties</dfn> {
   WebCLPlatform?  platform = null;      // Default: let the implementation decide
   WebCLDevice[]?  devices = null;       // Default: let the implementation decide
   CLenum          deviceType = 0x1;     // 0x1 == WebCL.DEVICE_TYPE_DEFAULT
-  DOMString[]?    hints = null;         // 'audio', 'video'
 };
 </pre>
 
@@ -711,13 +710,6 @@ dictionary <dfn>WebCLContextProperties</dfn> {
           <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device on this platform.</td></tr>
           <tr><td>DEVICE_TYPE_ALL</td><td>All devices available on this platform.</td></tr>
         </table>
-      </dd>
-
-      <dt class="idl-code">DOMString[] hints</dt>
-      <dd>
-        An optional array of hints to allow the implementation to find
-        an appropriate WebCLContext suitable for audio-visual content.
-        There is no guarantee implementations support these hints.
       </dd>
 
     </dl>
