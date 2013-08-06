@@ -866,13 +866,13 @@ interface <dfn>WebCLDevice</dfn> {
     <pre class="idl">
 interface <dfn>WebCLContext</dfn> {
 
-  WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer hostPtr);
+  WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBufferView hostPtr);
 
   WebCLCommandQueue createCommandQueue(optional WebCLDevice? device, optional CLenum properties);
 
   WebCLImage createImage(CLenum memFlags,
                          WebCLImageDescriptor descriptor,
-                         optional ArrayBuffer hostPtr);
+                         optional ArrayBufferView hostPtr);
 
   WebCLProgram createProgram(DOMString source);
 
@@ -900,13 +900,13 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
 </pre>
 
     <dl class="methods">
-      <dt class="idl-code">WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer hostPtr)
+      <dt class="idl-code">WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBufferView hostPtr)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=56">OpenCL 1.1 §5.2.1</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateBuffer.html">man page</a>)</span>
       </dt>
       <dd>
         Creates a new WebCLBuffer with a capacity of `sizeInBytes`,
-        and optionally fills it with data from the given ArrayBuffer.
+        and optionally fills it with data from the given ArrayBufferView.
         <dl class="exceptions">
           <dt>Exceptions:</dt>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
@@ -932,14 +932,14 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
           <li>`INVALID_QUEUE_PROPERTIES` -- if values specified in `properties` are valid but not supported by the device</li>
         </dl>
       </dd>
-      <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBuffer hostPtr)
+      <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBufferView hostPtr)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=76">OpenCL 1.1 §5.3.1</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateImage2D.html">man page</a>)</span>
       </dt>
       <dd>
         Creates a new WebCLImage with the width and height specified
         in `descriptor`, and optionally fills it with data from the
-        given ArrayBuffer.
+        given ArrayBufferView.
         <dl class="exceptions">
           <dt>Exceptions:</dt>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
@@ -1096,7 +1096,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
                     CLboolean               blockingRead,
                     CLuint                  bufferOffset,
                     CLuint                  numBytes,
-                    ArrayBuffer             hostPtr,
+                    ArrayBufferView         hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
@@ -1110,7 +1110,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
                     CLuint                  bufferSlicePitch,
                     CLuint                  hostRowPitch,
                     CLuint                  hostSlicePitch,
-                    ArrayBuffer             hostPtr,
+                    ArrayBufferView         hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
@@ -1120,7 +1120,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
                     CLuint[2]               origin,
                     CLuint[2]               region,
                     CLuint                  hostRowPitch,
-                    ArrayBuffer             hostPtr,
+                    ArrayBufferView         hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
@@ -1134,7 +1134,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
                     CLboolean               blockingWrite,
                     CLuint                  bufferOffset,
                     CLuint                  numBytes,
-                    ArrayBuffer             hostPtr,
+                    ArrayBufferView         hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
@@ -1148,7 +1148,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
                     CLuint                  bufferSlicePitch,
                     CLuint                  hostRowPitch,
                     CLuint                  hostSlicePitch,
-                    ArrayBuffer             hostPtr,
+                    ArrayBufferView         hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
@@ -1158,7 +1158,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
                     CLuint[2]               origin,
                     CLuint[2]               region,
                     CLuint                  hostRowPitch,
-                    ArrayBuffer             hostPtr,
+                    ArrayBufferView         hostPtr,
                     optional WebCLEvent[]?  eventWaitList,
                     optional WebCLEvent?    event);
 
@@ -1369,7 +1369,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         CLboolean               blockingRead,
         CLuint                  bufferOffset,
         CLuint                  numBytes,
-        ArrayBuffer             hostPtr,
+        ArrayBufferView         hostPtr,
         optional WebCLEvent[]?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
@@ -1392,7 +1392,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         CLuint                  bufferSlicePitch,
         CLuint                  hostRowPitch,
         CLuint                  hostSlicePitch,
-        ArrayBuffer             hostPtr,
+        ArrayBufferView         hostPtr,
         optional WebCLEvent[]?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
@@ -1423,7 +1423,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         CLuint[2]               origin,
         CLuint[2]               region,
         CLuint                  hostRowPitch,
-        ArrayBuffer             hostPtr,
+        ArrayBufferView         hostPtr,
         optional WebCLEvent[]?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
@@ -1449,7 +1449,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         CLboolean               blockingWrite,
         CLuint                  bufferOffset,
         CLuint                  numBytes,
-        ArrayBuffer             hostPtr,
+        ArrayBufferView         hostPtr,
         optional WebCLEvent[]?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
@@ -1472,7 +1472,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         CLuint                  bufferSlicePitch,
         CLuint                  hostRowPitch,
         CLuint                  hostSlicePitch,
-        ArrayBuffer             hostPtr,
+        ArrayBufferView         hostPtr,
         optional WebCLEvent[]?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
@@ -1503,7 +1503,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         CLuint[2]               origin,
         CLuint[2]               region,
         CLuint                  hostRowPitch,
-        ArrayBuffer             hostPtr,
+        ArrayBufferView         hostPtr,
         optional WebCLEvent[]?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
@@ -1637,15 +1637,15 @@ queue.enqueueNDRangeKernel(kernel3, null, globals, null, eventWaitList);
 
 <pre class="example">
 // This example reads the entire contents of a WebCL buffer object
-// into a newly created ArrayBuffer in host memory.
+// into a newly created Uint8Array in host memory.
 
 function readBufferToHost(srcBuffer) {
 
  // Query the number of bytes in the source buffer, create a new
- // ArrayBuffer of that size, then fill it with a blocking read.
+ // Uint8Array of that size, then fill it with a blocking read.
 
  var numBytes = srcBuffer.getInfo(WebCL.MEM_SIZE);
- var dstArray = new ArrayBuffer(numBytes);
+ var dstArray = new Uint8Array(numBytes);
  queue.enqueueReadBuffer(srcBuffer, true, 0, numBytes, dstArray);
 
  return dstArray;
