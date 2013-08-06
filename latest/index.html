@@ -2078,11 +2078,9 @@ interface <dfn>WebCLKernelArgumentTypes</dfn> {
         </p>
         <p>
           Numbers are converted to the given or implied scalar type by
-          rounding and clamping to the available range and precision.
-          For example, if the `UCHAR` type is given, the values 254.9
-          and 1000 will both be mapped to 255. <b>(Q: Should we use
-          standard C-style type casting instead, i.e., modulo
-          arithmetic instead of clamping?)</b>
+          C-style type casting from `double` to the target type. For
+          example, if the `UCHAR` type is given, the value 254.9 will
+          be converted to 254, and 1000.0 to 232.
         </p>
         <p>
           If `value` is an array, and `type` does not specify a vector
