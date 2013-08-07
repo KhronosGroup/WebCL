@@ -726,7 +726,7 @@ dictionary <dfn>WebCLContextProperties</dfn> {
 <pre class="idl">
 interface <dfn>WebCLPlatform</dfn> {
   any getInfo(CLenum name);
-  sequence&lt;WebCLDevice&gt; getDevices(CLenum deviceType);
+  sequence&lt;WebCLDevice&gt; getDevices(optional CLenum deviceType);
   sequence&lt;DOMString&gt; getSupportedExtensions();
   object? getExtension(DOMString extensionName);
 };
