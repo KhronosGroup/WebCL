@@ -180,8 +180,8 @@ typedef unsigned long CLtype;     // Used in WebCLKernelArgumentTypes
     <p>
       WebCL methods throw exceptions instead of returning error codes
       as return values.  Exceptions that may be thrown by each method
-      are listed in that method's documentation.  Additionally, all
-      methods may throw the `OUT_OF_RESOURCES` and
+      are listed in that method's documentation.  Additionally, almost
+      all methods may throw the `OUT_OF_RESOURCES` and
       `OUT_OF_HOST_MEMORY` exceptions, so they are not listed
       separately.  Furthermore, calling any function on an object that
       has been released (either explicitly, or implicitly by releasing
@@ -613,7 +613,11 @@ interface <dfn>WebCL</dfn> {
 
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+	        <li>`INVALID_PLATFORM` -- if `properties.platform` is non-`null`, but is not a valid platform object</li>
+	        <li>`INVALID_DEVICE` -- if `properties.devices` is non-`null`, but is not an array of valid device objects</li>
+	        <li>`INVALID_DEVICE` -- if `properties.devices` contains a device that is not on the requested `platform`</li>
+	        <li>`DEVICE_NOT_AVAILABLE` -- if a device in `properties.devices` is currently not available</li>
+          <li>`TODO double-check against OpenCL`</li>
         </dl>
       </dd>
 
@@ -1305,15 +1309,13 @@ interface <dfn>WebCLCommandQueue</dfn> {
 	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
 	          associated with the same WebCLContext as all events in
 	          `eventWaitList` or</li>
-	        <li> `INVALID_MEM_OBJECT` -- if `srcImage` or `dstImage` is
+	        <li>`INVALID_MEM_OBJECT` -- if `srcImage` or `dstImage` is
 	          not a valid image object</li>
 	        <li>`IMAGE_FORMAT_MISMATCH` -- if `srcImage` and `dstImage`
-	          do not use the same image format</li>
-	        <li>`INVALID_VALUE` -- if the rectangular region specified
-	          by `srcImage` and `srcImage`+`region` refers to a region
-	          outside of `srcImage`, or if the rectangular region
-	          specified by `dstImage` and `dstImage`+`region` refers to
-	          a region outside of `dstImage`</li>
+	          do not have the same image format</li>
+	        <li>`INVALID_VALUE` -- if the `srcOrigin`, `dstOrigin` and
+            `region` values would require accessing elements outside
+            the boundaries of `srcImage` or `dstImage`</li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
             `eventWaitList` is invalid</li>
 	        <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of
@@ -1321,7 +1323,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
             associated with this WebCLCommandQueue</li>
 	        <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure
 	          to allocate memory for data store associated with
-	          `srcBuffer` or `dstBuffer`</li>
+	          `srcImage` or `dstImage`</li>
 	        <li>`MEM_COPY_OVERLAP` -- if `srcImage` and `dstImage` are
 	          the same WebCLImage object and the source and destination
 	          regions overlap</li>
@@ -1342,7 +1344,27 @@ interface <dfn>WebCLCommandQueue</dfn> {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as `srcBuffer` and
+	          `dstImage`</li>
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as all events in
+	          `eventWaitList`</li>
+	        <li>`INVALID_MEM_OBJECT` -- if `srcBuffer` is not a valid
+            buffer object or `dstImage` is not a valid image
+            object</li>
+	        <li>`INVALID_VALUE` -- if the `srcOffset`, `dstOrigin` and
+            `dstRegion` values would require accessing elements
+            outside the boundaries of `srcBuffer` or `dstImage`</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
+            `eventWaitList` is invalid</li>
+	        <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of
+            `dstImage` are not supported by the device associated with
+            this WebCLCommandQueue</li>
+	        <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure
+	          to allocate memory for data store associated with
+	          `srcBuffer` or `dstImage`</li>
+          <li>`TODO` double-check against OpenCL</li>
         </dl>
       </dd>
 
@@ -1360,7 +1382,27 @@ interface <dfn>WebCLCommandQueue</dfn> {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as `srcImage` and
+	          `dstBuffer`</li>
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as all events in
+	          `eventWaitList`</li>
+	        <li>`INVALID_MEM_OBJECT` -- if `srcImage` is not a valid
+            image object or `dstBuffer` is not a valid buffer
+            object</li>
+	        <li>`INVALID_VALUE` -- if the `srcOrigin`, `srcRegion` and
+            `dstOffset` values would require accessing elements
+            outside the boundaries of `srcImage` or `dstBuffer`</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
+            `eventWaitList` is invalid</li>
+	        <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of
+            `srcImage` are not supported by the device associated with
+            this WebCLCommandQueue</li>
+	        <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure
+	          to allocate memory for data store associated with
+	          `srcImage` or `dstBuffer`</li>
+          <li>`TODO` double-check against OpenCL</li>
         </dl>
       </dd>
 
@@ -1378,7 +1420,23 @@ interface <dfn>WebCLCommandQueue</dfn> {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+            associated with the same WebCLContext as `buffer`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+            associated with the same WebCLContext as all events in
+            `eventWaitList`</li>
+          <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid
+            buffer object</li>
+          <li>`INVALID_VALUE` -- if any part of the region being read,
+            specified by `bufferOffset` and `numBytes`, is out of
+            bounds of `buffer`</li>
+          <li>`INVALID_VALUE` -- if any part of the region being
+            written, specified by `hostPtr` and `numBytes` is out of
+            bounds of `hostPtr`</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
+            `blockingRead` is `true` and the execution status of any
+            event in `eventWaitList` is a negative integer value</li>
         </dl>
       </dd>
 
@@ -1458,7 +1516,23 @@ interface <dfn>WebCLCommandQueue</dfn> {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+            associated with the same WebCLContext as `buffer`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+            associated with the same WebCLContext as all events in
+            `eventWaitList`</li>
+          <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid
+            buffer object</li>
+          <li>`INVALID_VALUE` -- if any part of the region being
+            written, specified by `bufferOffset` and `numBytes`, is
+            out of bounds of `buffer`</li>
+          <li>`INVALID_VALUE` -- if any part of the region being read,
+            specified by `hostPtr` and `numBytes`, is out of bounds of
+            `hostPtr`</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
+            `blockingWrite` is `true` and the execution status of any
+            event in `eventWaitList` is a negative integer value</li>
         </dl>
       </dd>
 
