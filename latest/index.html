@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">August 6, 2013</h2>
+    <h2 class="no-toc">August 8, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -3048,7 +3048,7 @@ partial interface WebCLCommandQueue {
                                        DEVICE_TYPE_DEFAULT;
                                        (Or a combination of the above)</td><td>Visible</td></tr>
         <tr><td>DEVICE_VENDOR_ID</td><td>Not Specified</td><td>Not Visible</td></tr>
-        <tr><td>DEVICE_MAX_COMPUTE_UNITS</td><td> &gt;=1 </td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_MAX_COMPUTE_UNITS</td><td> &gt;=1 </td><td>Visible</td></tr>
         <tr><td>DEVICE_MAX_WORK_ITEM_DIMENSIONS</td><td> &gt;=3 </td><td> &gt;=3 </td></tr>
         <tr><td>DEVICE_MAX_WORK_ITEM_SIZES</td><td>&gt;=(1, 1, 1)</td><td>&gt;=(1, 1, 1)</td></tr>
         <tr><td>DEVICE_MAX_WORK_GROUP_SIZE</td><td>&gt;=1</td><td>&gt;=1</td></tr>
@@ -3072,15 +3072,15 @@ partial interface WebCLCommandQueue {
             No 3D support in WebCL 1.0</td></tr>
         <tr><td>DEVICE_MAX_SAMPLERS</td><td>&gt;=8 (if image support)</td><td>&gt;=8</td></tr>
         <tr><td>DEVICE_MAX_PARAMETER_SIZE</td><td>&gt;=256</td><td>&gt;=256</td></tr>
-        <tr><td>DEVICE_MEM_BASE_ADDR_ALIGN</td><td>&gt;= num bits(int16)</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_MEM_BASE_ADDR_ALIGN</td><td>&gt;= num bits(int16)</td><td>Visible</td></tr>
         <tr><td>DEVICE_MIN_DATA_TYPE_ALIGN_SIZE</td><td>&gt;=sizeof(int16)</td><td>Not Visible</td></tr>
         <tr><td>DEVICE_SINGLE_FP_CONFIG</td><td>FP_ROUND_TO_NEAREST; FP_INF_NAN
-            (others optional)</td><td>Not Visible</td></tr>
+            (others optional)</td><td>Visible</td></tr>
         <tr><td>DEVICE_GLOBAL_MEM_CACHE_TYPE</td><td>NONE; READ_ONLY_CACHE; READ_WRITE_CACHE
           </td><td>Not Visible</td></tr>
         <tr><td>DEVICE_GLOBAL_MEM_CACHELINE_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
         <tr><td>DEVICE_GLOBAL_MEM_CACHE_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
-        <tr><td>DEVICE_GLOBAL_MEM_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_GLOBAL_MEM_SIZE</td><td>cl_uint</td><td>Visible</td></tr>
         <tr><td>DEVICE_MAX_CONSTANT_BUFFER_SIZE </td><td>&gt;=1 KB</td><td>&gt;=1</td></tr>
         <tr><td>DEVICE_MAX_CONSTANT_ARGS</td><td>&gt;=4</td><td>&gt;=4</td></tr>
         <tr><td>DEVICE_LOCAL_MEM_TYPE</td><td>LOCAL; GLOBAL</td><td>Visible</td></tr>
@@ -3090,7 +3090,7 @@ partial interface WebCLCommandQueue {
         <tr><td>DEVICE_PROFILING_TIMER_RESOLUTION</td><td>size_t</td><td>Not Visible</td></tr>
         <tr><td>DEVICE_ENDIAN_LITTLE</td><td>cl_bool</td><td>Visible</td></tr>
         <tr><td>DEVICE_AVAILABLE</td><td>cl_bool</td><td>Visible</td></tr>
-        <tr><td>DEVICE_COMPILER_AVAILABLE</td><td>cl_bool</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_COMPILER_AVAILABLE</td><td>cl_bool</td><td>Visible</td></tr>
         <tr><td>DEVICE_EXECUTION_CAPABILITIES</td><td>EXEC_KERNEL;
                                                          EXEC_NATIVE_KERNEL</td><td>Not Visible</td></tr>
         <tr><td>DEVICE_QUEUE_PROPERTIES</td><td>QUEUE_PROFILING_ENABLE;
