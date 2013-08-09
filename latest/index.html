@@ -249,7 +249,7 @@ exception <dfn>WebCLException</dfn> : DOMException {
     </p>
 
 <pre class="idl">
-callback <dfn>WebCLCallback</dfn> = void (WebCLEvent event, any userdata);
+callback <dfn>WebCLCallback</dfn> = void (WebCLEvent event);
 </pre>
 
     <p>
@@ -308,8 +308,7 @@ interface <dfn>WebCL</dfn> {
   object? getExtension(DOMString extensionName);
 
   void waitForEvents(WebCLEvent[] eventWaitList,
-                     optional WebCLCallback whenFinished,
-                     optional any userdata);
+                     optional WebCLCallback whenFinished);
 
   // Enums
 
@@ -617,7 +616,6 @@ interface <dfn>WebCL</dfn> {
 	        <li>`INVALID_DEVICE` -- if `properties.devices` is non-`null`, but is not an array of valid device objects</li>
 	        <li>`INVALID_DEVICE` -- if `properties.devices` contains a device that is not on the requested `platform`</li>
 	        <li>`DEVICE_NOT_AVAILABLE` -- if a device in `properties.devices` is currently not available</li>
-          <li>`TODO double-check against OpenCL`</li>
         </dl>
       </dd>
 
@@ -646,7 +644,7 @@ interface <dfn>WebCL</dfn> {
         with the same extension string must return the same object.
       </dd>
 
-      <dt class="idl-code">void waitForEvents(WebCLEvent[] eventWaitList, optional WebCLCallback whenFinished, optional any userdata)
+      <dt class="idl-code">void waitForEvents(WebCLEvent[] eventWaitList, optional WebCLCallback whenFinished)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=141">OpenCL 1.1 §5.9</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clWaitForEvents.html">man page</a>)</span>
       </dt>
@@ -1173,7 +1171,9 @@ interface <dfn>WebCLCommandQueue</dfn> {
 
   void enqueueNDRangeKernel(
                     WebCLKernel kernel,
-                    CLuint[3]? globalWorkOffset, CLuint[3]? globalWorkSize, CLuint[3]? localWorkSize,
+                    CLuint[3]? globalWorkOffset, 
+                    CLuint[3] globalWorkSize,
+                    CLuint[3]? localWorkSize,
                     optional WebCLEvent[]? eventWaitList,
                     optional WebCLEvent? event);
 
@@ -1364,7 +1364,6 @@ interface <dfn>WebCLCommandQueue</dfn> {
 	        <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure
 	          to allocate memory for data store associated with
 	          `srcBuffer` or `dstImage`</li>
-          <li>`TODO` double-check against OpenCL</li>
         </dl>
       </dd>
 
@@ -1402,7 +1401,6 @@ interface <dfn>WebCLCommandQueue</dfn> {
 	        <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure
 	          to allocate memory for data store associated with
 	          `srcImage` or `dstBuffer`</li>
-          <li>`TODO` double-check against OpenCL</li>
         </dl>
       </dd>
 
@@ -1599,7 +1597,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         </dl>
       </dd>
 
-      <dt class="idl-code">void enqueueNDRangeKernel(WebCLKernel kernel, CLuint[3]? globalWorkOffset, CLuint[3]? globalWorkSize,
+      <dt class="idl-code">void enqueueNDRangeKernel(WebCLKernel kernel, CLuint[3]? globalWorkOffset, CLuint[3] globalWorkSize,
         CLuint[3]? localWorkSize, optional WebCLEvent[]? eventWaitList = null,
         optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
@@ -1613,7 +1611,34 @@ interface <dfn>WebCLCommandQueue</dfn> {
 
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `kernel`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+          <li>`INVALID_KERNEL` -- if `kernel` is not a valid WebCLKernel object</li>
+          <li>`INVALID_PROGRAM_EXECUTABLE` -- if there is no
+            successfully built program executable of `kernel`
+            available for the device associated with this
+            WebCLCommandQueue</li>
+          <li>`INVALID_KERNEL_ARGS` -- if any kernel argument values have not been specified for `kernel`</li>
+          <li>`INVALID_WORK_DIMENSION` -- if `globalWorkSize` is null, empty, or has more than three elements</li>
+          <li>`INVALID_GLOBAL_WORK_SIZE` -- if <code>globalWorkSize[i] &gt; 2<small><sup>32</sup></small>-1</code> for any `i`</li>
+          <li>`INVALID_GLOBAL_OFFSET` -- if <code>globalWorkSize[i] + globalWorkOffset[i] &gt; 2<small><sup>32</sup></small>-1</code> for any `i`</li>
+          <li>`INVALID_WORK_GROUP_SIZE` -- if <code>globalWorkSize[i] % localWorkSize[i] !== 0</code> for any `i`</li>
+          <li>`INVALID_WORK_GROUP_SIZE` -- if <code>localWorkSize[i] !== requiredSize[i]</code> for any `i`, where
+            `requiredSize` is specified using the `reqd_work_group_size` qualifier in kernel source</li>
+          <li>`INVALID_WORK_GROUP_SIZE` -- if `localWorkSize` is
+            `null` and the `reqd_work_group_size` qualifier is given
+            in kernel source</li>
+          <li>`INVALID_WORK_GROUP_SIZE` -- if the total number of
+            work-items in a work-group (that is, the product of all
+            elements in `localWorkSize`) is greater than the value of
+            `DEVICE_MAX_WORK_GROUP_SIZE` queried from the device
+            associated with this queue</li>
+          <li>`INVALID_WORK_ITEM_SIZE` -- if <code>localWorkSize[i] &gt; DEVICE_MAX_WORK_ITEM_SIZES[i]</code> for any `i`</li>
+          <li>`INVALID_IMAGE_SIZE` -- if an image object is specified as an argument to `kernel`, and the image dimensions
+            (width, height, pitch) are not supported by the device associated with this queue</li>
+          <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure to allocate memory for data store associated with
+            image or buffer objects specified as arguments to `kernel`</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
         </dl>
       </dd>
 
@@ -1919,10 +1944,9 @@ interface <dfn>WebCLProgram</dfn> {
 
   any getBuildInfo(WebCLDevice device, CLenum name);
 
-  void build(WebCLDevice[] devices,
+  void build(optional WebCLDevice[]? devices,
              optional DOMString? options,
-             optional WebCLCallback whenFinished,
-             optional any userdata);
+             optional WebCLCallback whenFinished);
 
   WebCLKernel createKernel(DOMString kernelName);
 
@@ -1969,22 +1993,32 @@ interface <dfn>WebCLProgram</dfn> {
         </dl>
       </dd>
 
-      <dt class="idl-code">void build(WebCLDevice[] devices,
+      <dt class="idl-code">void build(optional WebCLDevice[]? devices,
                                       optional DOMString? options,
-                                      optional WebCLCallback whenFinished,
-                                      optional any userdata)
+                                      optional WebCLCallback whenFinished)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=114">OpenCL 1.1 §5.6.2</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clBuildProgram.html">man page</a>)</span>
       </dt>
 
       <dd>
-        Compiles this WebCLProgram with optional compiler options.  An
-        asynchronous callback method may be provided with optional
-        userdata.
+        Compiles this WebCLProgram for the given list of devices, or
+        in absence of the list, for all devices associated with the
+        WebCLContext that this WebCLProgram was created from.  A
+        string of compiler options and an asynchronous callback
+        function to invoke when the build is completed can also be
+        provided.
 
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+          <li>`INVALID_DEVICE` -- if any element in `devices` is not a valid WebCLDevice</li>
+          <li>`INVALID_DEVICE` -- if any device in `devices` is not associated with the WebCLContext of this WebCLProgram</li>
+          <li>`INVALID_BUILD_OPTIONS` -- if the build options specified by `options` are invalid</li>
+          <li>`INVALID_OPERATION` -- if a previous build of this
+            WebCLProgram for any of the devices listed in `devices`
+            has not completed</li>
+          <li>`BUILD_PROGRAM_FAILURE` -- if there is a failure to build the program executable</li>
+          <li>`INVALID_OPERATION` -- if there are WebCLKernel objects
+            already attached to this WebCLProgram</li>
         </dl>
       </dd>
 
@@ -1996,7 +2030,12 @@ interface <dfn>WebCLProgram</dfn> {
         <dl class="exceptions">
           <dt>Exceptions:</dt>
           <li>`INVALID_PROGRAM_EXECUTABLE` -- if there is no successfully built executable for any device in this WebCLProgram</li>
-          <li>`TODO`</li>
+          <li>`INVALID_KERNEL_NAME` -- if a kernel by the given `name` is not found in this WebCLProgram</li>
+          <li>`INVALID_KERNEL_DEFINITION` -- if the function
+            definition of the given kernel function (`name`), such as
+            the number of arguments and the argument types, are not
+            the same for all devices for which the program executable
+            has been built</li>
         </dl>
       </dd>
 
@@ -2161,7 +2200,13 @@ interface <dfn>WebCLKernelArgumentTypes</dfn> {
 
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+          <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
+          <li>`INVALID_ARG_VALUE` -- if `value` is `null` for an
+            argument that is not declared with the `local` qualifier
+            or vice versa</li>
+          <li>`INVALID_MEM_OBJECT` -- if the argument at `index` is
+            declared to be a memory object and `value` is not a valid
+            WebCLMemoryObject</li>
         </dl>
       </dd>
 
@@ -2198,7 +2243,7 @@ interface <dfn>WebCLEvent</dfn> {
 
   any   getInfo(CLenum name);
   any   getProfilingInfo(CLenum name);
-  void  setCallback(CLenum executionStatus, WebCLCallback notify, optional any userdata);
+  void  setCallback(CLenum commandExecCallbackType, WebCLCallback notify);
   void  release();
 };
 </pre>
@@ -2243,18 +2288,19 @@ interface <dfn>WebCLEvent</dfn> {
         </dl>
       </dd>
 
-      <dt class="idl-code">void setCallback(CLenum executionStatus, WebCLCallback notify, optional any userdata)
+      <dt class="idl-code">void setCallback(CLenum commandExecCallbackType, WebCLCallback notify)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetEventCallback.html">man page</a>)</span>
       </dt>
       <dd>
-        Sets a WebCLCallback function `notify` to be called when
-        this WebCLEvent reaches the given `executionStatus`
-        (`COMPLETE`, `RUNNING`, `SUBMITTED`, or `QUEUED`).
+        Sets a WebCLCallback function `notify` to be called when this
+        WebCLEvent reaches the given `commandExecCallbackType` status
+        (`COMPLETE`, `RUNNING`, `SUBMITTED`, or `QUEUED`). In this
+        version of WebCL, only the `COMPLETE` status is supported.
 
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+          <li>`INVALID_VALUE` -- if `commandExecCallbackType` is not `COMPLETE`</li>
         </dl>
       </dd>
 
@@ -2282,7 +2328,10 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+          <li>`INVALID_VALUE` -- if `executionStatus` is not `COMPLETE` or a negative integer value</li>
+          <li>`INVALID_OPERATION` -- if the execution status of this
+            event has already been changed by a previous call to
+            `setUserEventStatus`</li>
         </dl>
       </dd>
     </dl>
@@ -3021,7 +3070,8 @@ partial interface WebCLCommandQueue {
     <p>
       To promote application portability, WebCL not only defines a
       certain set of minimum capabilities that the platform must
-      provide, but also hides certain query properties that would
+      provide (these are generally the same as in OpenCL 1.1 Embedded
+      Profile), but also hides certain query properties that might
       often be misused to target an application for specific hardware
       and software configurations. The baseline capabilities and the
       hidden properties are listed in the tables below.
@@ -3033,9 +3083,9 @@ partial interface WebCLCommandQueue {
 
         <tr><td>PLATFORM_PROFILE</td><td>"EMBEDDED_PROFILE"</td><td>"WEBCL_PROFILE"</td></tr>
         <tr><td>PLATFORM_VERSION</td><td>"OpenCL 1.1" + optional vendor string</td><td>"WebCL 1.0"</td></tr>
-        <tr><td>PLATFORM_NAME</td><td>Not Specified</td><td>Not Visible</td></tr>
-        <tr><td>PLATFORM_VENDOR</td><td>Not Specified</td><td>Not Visible</td></tr>
-        <tr><td>PLATFORM_EXTENSIONS</td><td>Extension String</td><td>Not Visible</td></tr>
+        <tr><td>PLATFORM_NAME</td><td>Not Specified</td><td>Hidden</td></tr>
+        <tr><td>PLATFORM_VENDOR</td><td>Not Specified</td><td>Hidden</td></tr>
+        <tr><td>PLATFORM_EXTENSIONS</td><td>Extension String</td><td>Hidden</td></tr>
       </table>
     </p>
 
@@ -3047,62 +3097,53 @@ partial interface WebCLCommandQueue {
                                        DEVICE_TYPE_ACCELERATOR;
                                        DEVICE_TYPE_DEFAULT;
                                        (Or a combination of the above)</td><td>Visible</td></tr>
-        <tr><td>DEVICE_VENDOR_ID</td><td>Not Specified</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_VENDOR_ID</td><td>Not Specified</td><td>Hidden</td></tr>
         <tr><td>DEVICE_MAX_COMPUTE_UNITS</td><td> &gt;=1 </td><td>Visible</td></tr>
-        <tr><td>DEVICE_MAX_WORK_ITEM_DIMENSIONS</td><td> &gt;=3 </td><td> &gt;=3 </td></tr>
-        <tr><td>DEVICE_MAX_WORK_ITEM_SIZES</td><td>&gt;=(1, 1, 1)</td><td>&gt;=(1, 1, 1)</td></tr>
-        <tr><td>DEVICE_MAX_WORK_GROUP_SIZE</td><td>&gt;=1</td><td>&gt;=1</td></tr>
-        <tr><td>DEVICE_PREFERRED_VECTOR_WIDTH_* (*=CHAR, SHORT, INT, LONG, FLOAT, DOUBLE, HALF)
-                                                    </td><td>cl_uint</td><td>Visible</td></tr>
-        <tr><td>DEVICE_NATIVE_VECTOR_WIDTH_*</td><td>cl_uint</td><td>Not Visible</td></tr>
-        <tr><td>DEVICE_MAX_CLOCK_FREQUENCY</td><td>cl_uint</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_MAX_WORK_ITEM_DIMENSIONS</td><td> &gt;=3 </td><td>Visible</td></tr>
+        <tr><td>DEVICE_MAX_WORK_ITEM_SIZES</td><td>&gt;=(1, 1, 1)</td><td>Visible</td></tr>
+        <tr><td>DEVICE_MAX_WORK_GROUP_SIZE</td><td>&gt;=1</td><td>Visible</td></tr>
+        <tr><td>DEVICE_PREFERRED_VECTOR_WIDTH_* (*=CHAR, SHORT, INT, LONG, FLOAT, DOUBLE, HALF)</td><td>cl_uint</td><td>Visible</td></tr>
+        <tr><td>DEVICE_NATIVE_VECTOR_WIDTH_*</td><td>cl_uint</td><td>Hidden</td></tr>
+        <tr><td>DEVICE_MAX_CLOCK_FREQUENCY</td><td>cl_uint</td><td>Hidden</td></tr>
         <tr><td>DEVICE_ADDRESS_BITS</td><td>32 or 64 bits</td><td>Visible</td></tr>
-        <tr><td>DEVICE_MAX_MEM_ALLOC_SIZE</td><td> &gt;= max of DEVICE_GLOBAL_MEM_SIZE/
-            4,128, 1024, 1024</td><td>Visible</td></tr>
+        <tr><td>DEVICE_MAX_MEM_ALLOC_SIZE</td><td> &gt;= max(DEVICE_GLOBAL_MEM_SIZE/4, 1 MB)</td><td>Visible</td></tr>
         <tr><td>DEVICE_IMAGE_SUPPORT</td><td>cl_bool</td><td>TRUE</td></tr>
-        <tr><td>DEVICE_MAX_READ_IMAGE_ARGS</td><td>&gt;=8 (if image support)</td><td> &gt;=8 </td></tr>
-        <tr><td>DEVICE_MAX_WRITE_IMAGE_ARGS</td><td>&gt;=1 (if image support)</td><td> &gt;=1 </td></tr>
-        <tr><td>DEVICE_IMAGE2D_MAX_WIDTH</td><td>&gt;=2048 (if image support)</td><td> &gt;=2048 </td></tr>
-        <tr><td>DEVICE_IMAGE2D_MAX_HEIGHT</td><td>&gt;=2048 (if image support)</td><td> &gt;=2048 </td></tr>
-        <tr><td>DEVICE_IMAGE3D_MAX_WIDTH</td><td>&gt;=2048 (if 3D image support)</td><td>
-            No 3D support in WebCL 1.0</td></tr>
-        <tr><td>DEVICE_IMAGE3D_MAX_HEIGHT</td><td>&gt;=2048 (if 3D image support)</td><td>
-            No 3D support in WebCL 1.0</td></tr>
-        <tr><td>DEVICE_IMAGE3D_MAX_DEPTH</td><td>&gt;=2048 (if 3D image support)</td><td>
-            No 3D support in WebCL 1.0</td></tr>
-        <tr><td>DEVICE_MAX_SAMPLERS</td><td>&gt;=8 (if image support)</td><td>&gt;=8</td></tr>
-        <tr><td>DEVICE_MAX_PARAMETER_SIZE</td><td>&gt;=256</td><td>&gt;=256</td></tr>
+        <tr><td>DEVICE_MAX_READ_IMAGE_ARGS</td><td>&gt;=8 (if image support)</td><td>Visible</td></tr>
+        <tr><td>DEVICE_MAX_WRITE_IMAGE_ARGS</td><td>&gt;=1 (if image support)</td><td>Visible</td></tr>
+        <tr><td>DEVICE_IMAGE2D_MAX_WIDTH</td><td>&gt;=2048 (if image support)</td><td>Visible</td></tr>
+        <tr><td>DEVICE_IMAGE2D_MAX_HEIGHT</td><td>&gt;=2048 (if image support)</td><td>Visible</td></tr>
+        <tr><td>DEVICE_IMAGE3D_MAX_WIDTH</td><td>&gt;=2048 (if 3D image support)</td><td>Hidden (not supported)</td></tr>
+        <tr><td>DEVICE_IMAGE3D_MAX_HEIGHT</td><td>&gt;=2048 (if 3D image support)</td><td>Hidden (not supported)</td></tr>
+        <tr><td>DEVICE_IMAGE3D_MAX_DEPTH</td><td>&gt;=2048 (if 3D image support)</td><td>Hidden (not supported)</td></tr>
+        <tr><td>DEVICE_MAX_SAMPLERS</td><td>&gt;=8 (if image support)</td><td>Visible</td></tr>
+        <tr><td>DEVICE_MAX_PARAMETER_SIZE</td><td>&gt;=256</td><td>Visible</td></tr>
         <tr><td>DEVICE_MEM_BASE_ADDR_ALIGN</td><td>&gt;= num bits(int16)</td><td>Visible</td></tr>
-        <tr><td>DEVICE_MIN_DATA_TYPE_ALIGN_SIZE</td><td>&gt;=sizeof(int16)</td><td>Not Visible</td></tr>
-        <tr><td>DEVICE_SINGLE_FP_CONFIG</td><td>FP_ROUND_TO_NEAREST; FP_INF_NAN
-            (others optional)</td><td>Visible</td></tr>
-        <tr><td>DEVICE_GLOBAL_MEM_CACHE_TYPE</td><td>NONE; READ_ONLY_CACHE; READ_WRITE_CACHE
-          </td><td>Not Visible</td></tr>
-        <tr><td>DEVICE_GLOBAL_MEM_CACHELINE_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
-        <tr><td>DEVICE_GLOBAL_MEM_CACHE_SIZE</td><td>cl_uint</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_MIN_DATA_TYPE_ALIGN_SIZE</td><td>&gt;=sizeof(int16)</td><td>Hidden</td></tr>
+        <tr><td>DEVICE_SINGLE_FP_CONFIG</td><td>FP_ROUND_TO_NEAREST; FP_INF_NAN (others optional)</td><td>Visible</td></tr>
+        <tr><td>DEVICE_GLOBAL_MEM_CACHE_TYPE</td><td>NONE; READ_ONLY_CACHE; READ_WRITE_CACHE</td><td>Hidden</td></tr>
+        <tr><td>DEVICE_GLOBAL_MEM_CACHELINE_SIZE</td><td>cl_uint</td><td>Hidden</td></tr>
+        <tr><td>DEVICE_GLOBAL_MEM_CACHE_SIZE</td><td>cl_uint</td><td>Hidden</td></tr>
         <tr><td>DEVICE_GLOBAL_MEM_SIZE</td><td>cl_uint</td><td>Visible</td></tr>
-        <tr><td>DEVICE_MAX_CONSTANT_BUFFER_SIZE </td><td>&gt;=1 KB</td><td>&gt;=1</td></tr>
-        <tr><td>DEVICE_MAX_CONSTANT_ARGS</td><td>&gt;=4</td><td>&gt;=4</td></tr>
+        <tr><td>DEVICE_MAX_CONSTANT_BUFFER_SIZE </td><td>&gt;=1 KB</td><td>Visible</td></tr>
+        <tr><td>DEVICE_MAX_CONSTANT_ARGS</td><td>&gt;=4</td><td>Visible</td></tr>
         <tr><td>DEVICE_LOCAL_MEM_TYPE</td><td>LOCAL; GLOBAL</td><td>Visible</td></tr>
-        <tr><td>DEVICE_LOCAL_MEM_SIZE</td><td>&gt;=1 KB</td><td>&gt;=1 KB</td></tr>
-        <tr><td>DEVICE_ERROR_CORRECTION_SUPPORT</td><td>cl_bool</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_LOCAL_MEM_SIZE</td><td>&gt;=1 KB</td><td>Visible</td></tr>
+        <tr><td>DEVICE_ERROR_CORRECTION_SUPPORT</td><td>cl_bool</td><td>Hidden</td></tr>
         <tr><td>DEVICE_HOST_UNIFIED_MEMORY</td><td>cl_bool</td><td>Visible</td></tr>
-        <tr><td>DEVICE_PROFILING_TIMER_RESOLUTION</td><td>size_t</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_PROFILING_TIMER_RESOLUTION</td><td>size_t</td><td>Hidden</td></tr>
         <tr><td>DEVICE_ENDIAN_LITTLE</td><td>cl_bool</td><td>Visible</td></tr>
         <tr><td>DEVICE_AVAILABLE</td><td>cl_bool</td><td>Visible</td></tr>
         <tr><td>DEVICE_COMPILER_AVAILABLE</td><td>cl_bool</td><td>Visible</td></tr>
-        <tr><td>DEVICE_EXECUTION_CAPABILITIES</td><td>EXEC_KERNEL;
-                                                         EXEC_NATIVE_KERNEL</td><td>Not Visible</td></tr>
-        <tr><td>DEVICE_QUEUE_PROPERTIES</td><td>QUEUE_PROFILING_ENABLE;
-                QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE (optional)</td><td>Visible</td></tr>
-        <tr><td>DEVICE_PLATFORM</td><td>cl_platform_id</td><td>WebCLPlatform Object</td></tr>
-        <tr><td>DEVICE_NAME</td><td>Not Specified</td><td>Not Visible</td></tr>
-        <tr><td>DEVICE_VENDOR</td><td>Not Specified</td><td>Not Visible</td></tr>
-        <tr><td>DRIVER_VERSION</td><td>Version String</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_EXECUTION_CAPABILITIES</td><td>EXEC_KERNEL; EXEC_NATIVE_KERNEL</td><td>EXEC_KERNEL</td></tr>
+        <tr><td>DEVICE_QUEUE_PROPERTIES</td><td>QUEUE_PROFILING_ENABLE; QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE (optional)</td><td>Visible</td></tr>
+        <tr><td>DEVICE_PLATFORM</td><td>cl_platform_id</td><td>Visible</td></tr>
+        <tr><td>DEVICE_NAME</td><td>Not Specified</td><td>Hidden</td></tr>
+        <tr><td>DEVICE_VENDOR</td><td>Not Specified</td><td>Hidden</td></tr>
+        <tr><td>DRIVER_VERSION</td><td>Version String</td><td>Hidden</td></tr>
         <tr><td>DEVICE_PROFILE</td><td>"EMBEDDED_PROFILE"</td><td>"WEBCL_PROFILE"</td></tr>
         <tr><td>DEVICE_VERSION</td><td>Version String</td><td>"WebCL 1.0"</td></tr>
         <tr><td>DEVICE_OPENCL_C_VERSION</td><td>Version String</td><td>Visible</td></tr>
-        <tr><td>DEVICE_EXTENSIONS</td><td>Extension String</td><td>Not Visible</td></tr>
+        <tr><td>DEVICE_EXTENSIONS</td><td>Extension String</td><td>Hidden</td></tr>
 
       </table>
     </p>
