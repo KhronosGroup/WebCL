@@ -1171,6 +1171,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
 
   void enqueueNDRangeKernel(
                     WebCLKernel kernel,
+                    CLuint workDim,
                     CLuint[3]? globalWorkOffset, 
                     CLuint[3] globalWorkSize,
                     CLuint[3]? localWorkSize,
@@ -1597,18 +1598,13 @@ interface <dfn>WebCLCommandQueue</dfn> {
         </dl>
       </dd>
 
-      <dt class="idl-code">void enqueueNDRangeKernel(WebCLKernel kernel, CLuint[3]? globalWorkOffset, CLuint[3] globalWorkSize,
+      <dt class="idl-code">void enqueueNDRangeKernel(WebCLKernel kernel, CLuint workDim, CLuint[3]? globalWorkOffset, CLuint[3] globalWorkSize,
         CLuint[3]? localWorkSize, optional WebCLEvent[]? eventWaitList = null,
         optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueNDRangeKernel.html">man page</a>)</span>
       </dt>
       <dd>
-        The `globalWorkOffset`, `globalWorkSize` and
-        `localWorkSize` arrays contain 1, 2, or 3 NDRange values.
-        The number of NDRange dimensions is determined by the
-        number of elements in `globalWorkSize`.
-
         <dl class="exceptions">
           <dt>Exceptions:</dt>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `kernel`</li>
@@ -1619,9 +1615,12 @@ interface <dfn>WebCLCommandQueue</dfn> {
             available for the device associated with this
             WebCLCommandQueue</li>
           <li>`INVALID_KERNEL_ARGS` -- if any kernel argument values have not been specified for `kernel`</li>
-          <li>`INVALID_WORK_DIMENSION` -- if `globalWorkSize` is null, empty, or has more than three elements</li>
+          <li>`INVALID_WORK_DIMENSION` -- if `workDim` is not equal to 1, 2, or 3</li>
+          <li>`INVALID_GLOBAL_WORK_SIZE` -- if <code>globalWorkSize.length != workDim</code></li>
           <li>`INVALID_GLOBAL_WORK_SIZE` -- if <code>globalWorkSize[i] &gt; 2<small><sup>32</sup></small>-1</code> for any `i`</li>
+          <li>`INVALID_GLOBAL_OFFSET` -- if <code>globalWorkOffset.length != workDim</code></li>
           <li>`INVALID_GLOBAL_OFFSET` -- if <code>globalWorkSize[i] + globalWorkOffset[i] &gt; 2<small><sup>32</sup></small>-1</code> for any `i`</li>
+          <li>`INVALID_WORK_GROUP_SIZE` -- if <code>localWorkSize.length != workDim</code></li>
           <li>`INVALID_WORK_GROUP_SIZE` -- if <code>globalWorkSize[i] % localWorkSize[i] !== 0</code> for any `i`</li>
           <li>`INVALID_WORK_GROUP_SIZE` -- if <code>localWorkSize[i] !== requiredSize[i]</code> for any `i`, where
             `requiredSize` is specified using the `reqd_work_group_size` qualifier in kernel source</li>
@@ -1633,6 +1632,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
             elements in `localWorkSize`) is greater than the value of
             `DEVICE_MAX_WORK_GROUP_SIZE` queried from the device
             associated with this queue</li>
+
           <li>`INVALID_WORK_ITEM_SIZE` -- if <code>localWorkSize[i] &gt; DEVICE_MAX_WORK_ITEM_SIZES[i]</code> for any `i`</li>
           <li>`INVALID_IMAGE_SIZE` -- if an image object is specified as an argument to `kernel`, and the image dimensions
             (width, height, pitch) are not supported by the device associated with this queue</li>
