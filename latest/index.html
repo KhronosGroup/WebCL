@@ -325,6 +325,7 @@ interface <dfn>WebCL</dfn> {
   CLenum IMAGE_FORMAT_MISMATCH                     = -9;
   CLenum IMAGE_FORMAT_NOT_SUPPORTED                = -10;
   CLenum BUILD_PROGRAM_FAILURE                     = -11;
+  //CLenum MAP_FAILURE                               = -12; // mapped buffers not supported
   CLenum MISALIGNED_SUB_BUFFER_OFFSET              = -13;
   CLenum EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST = -14;
   CLenum INVALID_VALUE                             = -30;
@@ -339,6 +340,7 @@ interface <dfn>WebCL</dfn> {
   CLenum INVALID_IMAGE_FORMAT_DESCRIPTOR           = -39;
   CLenum INVALID_IMAGE_SIZE                        = -40;
   CLenum INVALID_SAMPLER                           = -41;
+  //CLenum INVALID_BINARY                            = -42; // program binaries not supported
   CLenum INVALID_BUILD_OPTIONS                     = -43;
   CLenum INVALID_PROGRAM                           = -44;
   CLenum INVALID_PROGRAM_EXECUTABLE                = -45;
@@ -356,7 +358,9 @@ interface <dfn>WebCL</dfn> {
   CLenum INVALID_EVENT_WAIT_LIST                   = -57;
   CLenum INVALID_EVENT                             = -58;
   CLenum INVALID_OPERATION                         = -59;
+  //CLenum INVALID_GL_OBJECT                         = -60; // extension
   CLenum INVALID_BUFFER_SIZE                       = -61;
+  //CLenum INVALID_MIP_LEVEL                         = -62; // extension
   CLenum INVALID_GLOBAL_WORK_SIZE                  = -63;
   CLenum INVALID_PROPERTY                          = -64;
 
@@ -367,6 +371,9 @@ interface <dfn>WebCL</dfn> {
   /* cl_platform_info */
   CLenum PLATFORM_PROFILE                          = 0x0900;
   CLenum PLATFORM_VERSION                          = 0x0901;
+  //CLenum PLATFORM_NAME                             = 0x0902; // hidden
+  //CLenum PLATFORM_VENDOR                           = 0x0903; // hidden
+  //CLenum PLATFORM_EXTENSIONS                       = 0x0904; // hidden
 
   /* cl_device_type - bitfield */
   CLenum DEVICE_TYPE_DEFAULT                       = 0x1;
@@ -377,6 +384,8 @@ interface <dfn>WebCL</dfn> {
 
   /* cl_device_info */
   CLenum DEVICE_TYPE                               = 0x1000;
+  //CLenum DEVICE_VENDOR_ID                          = 0x1001; // hidden
+  CLenum DEVICE_MAX_COMPUTE_UNITS                  = 0x1002;
   CLenum DEVICE_MAX_WORK_ITEM_DIMENSIONS           = 0x1003;
   CLenum DEVICE_MAX_WORK_GROUP_SIZE                = 0x1004;
   CLenum DEVICE_MAX_WORK_ITEM_SIZES                = 0x1005;
@@ -385,26 +394,56 @@ interface <dfn>WebCL</dfn> {
   CLenum DEVICE_PREFERRED_VECTOR_WIDTH_INT         = 0x1008;
   CLenum DEVICE_PREFERRED_VECTOR_WIDTH_LONG        = 0x1009;
   CLenum DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT       = 0x100A;
+  //CLenum DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE      = 0x100B; // extension
+  //CLenum DEVICE_MAX_CLOCK_FREQUENCY                = 0x100C; // hidden
   CLenum DEVICE_ADDRESS_BITS                       = 0x100D;
   CLenum DEVICE_MAX_READ_IMAGE_ARGS                = 0x100E;
   CLenum DEVICE_MAX_WRITE_IMAGE_ARGS               = 0x100F;
   CLenum DEVICE_MAX_MEM_ALLOC_SIZE                 = 0x1010;
   CLenum DEVICE_IMAGE2D_MAX_WIDTH                  = 0x1011;
   CLenum DEVICE_IMAGE2D_MAX_HEIGHT                 = 0x1012;
+  //CLenum DEVICE_IMAGE3D_MAX_WIDTH                  = 0x1013; // 3d images not supported
+  //CLenum DEVICE_IMAGE3D_MAX_HEIGHT                 = 0x1014; // 3d images not supported
+  //CLenum DEVICE_IMAGE3D_MAX_DEPTH                  = 0x1015; // 3d images not supported
   CLenum DEVICE_IMAGE_SUPPORT                      = 0x1016;
   CLenum DEVICE_MAX_PARAMETER_SIZE                 = 0x1017;
   CLenum DEVICE_MAX_SAMPLERS                       = 0x1018;
+  CLenum DEVICE_MEM_BASE_ADDR_ALIGN                = 0x1019;
+  //CLenum DEVICE_MIN_DATA_TYPE_ALIGN_SIZE           = 0x101A; // deprecated in OpenCL 1.2
+  CLenum DEVICE_SINGLE_FP_CONFIG                   = 0x101B;
+  CLenum DEVICE_GLOBAL_MEM_CACHE_TYPE              = 0x101C;
+  CLenum DEVICE_GLOBAL_MEM_CACHELINE_SIZE          = 0x101D;
+  CLenum DEVICE_GLOBAL_MEM_CACHE_SIZE              = 0x101E;
+  CLenum DEVICE_GLOBAL_MEM_SIZE                    = 0x101F;
   CLenum DEVICE_MAX_CONSTANT_BUFFER_SIZE           = 0x1020;
   CLenum DEVICE_MAX_CONSTANT_ARGS                  = 0x1021;
   CLenum DEVICE_LOCAL_MEM_TYPE                     = 0x1022;
   CLenum DEVICE_LOCAL_MEM_SIZE                     = 0x1023;
+  CLenum DEVICE_ERROR_CORRECTION_SUPPORT           = 0x1024;
+  CLenum DEVICE_PROFILING_TIMER_RESOLUTION         = 0x1025;
   CLenum DEVICE_ENDIAN_LITTLE                      = 0x1026;
   CLenum DEVICE_AVAILABLE                          = 0x1027;
+  CLenum DEVICE_COMPILER_AVAILABLE                 = 0x1028;
+  CLenum DEVICE_EXECUTION_CAPABILITIES             = 0x1029;
   CLenum DEVICE_QUEUE_PROPERTIES                   = 0x102A;
+  //CLenum DEVICE_NAME                               = 0x102B; // hidden
+  //CLenum DEVICE_VENDOR                             = 0x102C; // hidden
+  //CLenum DRIVER_VERSION                            = 0x102D; // hidden
   CLenum DEVICE_PROFILE                            = 0x102E;
   CLenum DEVICE_VERSION                            = 0x102F;
+  //CLenum DEVICE_EXTENSIONS                         = 0x1030; // hidden
   CLenum DEVICE_PLATFORM                           = 0x1031;
+  //CLenum DEVICE_DOUBLE_FP_CONFIG                   = 0x1032; // extension
+  //CLenum DEVICE_HALF_FP_CONFIG                     = 0x1033; // extension
+  //CLenum DEVICE_PREFERRED_VECTOR_WIDTH_HALF        = 0x1034; // extension
   CLenum DEVICE_HOST_UNIFIED_MEMORY                = 0x1035;
+  //CLenum DEVICE_NATIVE_VECTOR_WIDTH_CHAR           = 0x1036; // hidden
+  //CLenum DEVICE_NATIVE_VECTOR_WIDTH_SHORT          = 0x1037; // hidden
+  //CLenum DEVICE_NATIVE_VECTOR_WIDTH_INT            = 0x1038; // hidden
+  //CLenum DEVICE_NATIVE_VECTOR_WIDTH_LONG           = 0x1039; // hidden
+  //CLenum DEVICE_NATIVE_VECTOR_WIDTH_FLOAT          = 0x103A; // hidden
+  //CLenum DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE         = 0x103B; // hidden
+  //CLenum DEVICE_NATIVE_VECTOR_WIDTH_HALF           = 0x103C; // hidden
   CLenum DEVICE_OPENCL_C_VERSION                   = 0x103D;
 
   /* cl_device_fp_config - bitfield */
@@ -427,12 +466,14 @@ interface <dfn>WebCL</dfn> {
 
   /* cl_device_exec_capabilities - bitfield */
   CLenum EXEC_KERNEL                               = 0x1;
+  //CLenum EXEC_NATIVE_KERNEL                        = 0x2; // native kernels not supported
 
   /* cl_command_queue_properties - bitfield */
   CLenum QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE       = 0x1;
   CLenum QUEUE_PROFILING_ENABLE                    = 0x2;
 
   /* cl_context_info  */
+  //CLenum CONTEXT_REFERENCE_COUNT                   = 0x1080; // reference counting not supported
   CLenum CONTEXT_DEVICES                           = 0x1081;
   CLenum CONTEXT_PROPERTIES                        = 0x1082;
   CLenum CONTEXT_NUM_DEVICES                       = 0x1083;
@@ -443,6 +484,7 @@ interface <dfn>WebCL</dfn> {
   /* cl_command_queue_info */
   CLenum QUEUE_CONTEXT                             = 0x1090;
   CLenum QUEUE_DEVICE                              = 0x1091;
+  //CLenum QUEUE_REFERENCE_COUNT                     = 0x1092; // reference counting not supported
   CLenum QUEUE_PROPERTIES                          = 0x1093;
 
   /* cl_mem_flags - bitfield */
@@ -485,11 +527,15 @@ interface <dfn>WebCL</dfn> {
   /* cl_mem_object_type */
   CLenum MEM_OBJECT_BUFFER                         = 0x10F0;
   CLenum MEM_OBJECT_IMAGE2D                        = 0x10F1;
+  //CLenum MEM_OBJECT_IMAGE3D                        = 0x10F2; // 3d images not supported
 
   /* cl_mem_info */
   CLenum MEM_TYPE                                  = 0x1100;
   CLenum MEM_FLAGS                                 = 0x1101;
   CLenum MEM_SIZE                                  = 0x1102;
+  //CLenum MEM_HOST_PTR                              = 0x1103; // mapped buffers not supported
+  //CLenum MEM_MAP_COUNT                             = 0x1104; // mapped buffers not supported
+  //CLenum MEM_REFERENCE_COUNT                       = 0x1105; // reference counting not supported
   CLenum MEM_CONTEXT                               = 0x1106;
   CLenum MEM_ASSOCIATED_MEMOBJECT                  = 0x1107;
   CLenum MEM_OFFSET                                = 0x1108;
@@ -513,20 +559,24 @@ interface <dfn>WebCL</dfn> {
   CLenum FILTER_LINEAR                             = 0x1141;
 
   /* cl_sampler_info */
+  //CLenum SAMPLER_REFERENCE_COUNT                   = 0x1150; // reference counting not supported
   CLenum SAMPLER_CONTEXT                           = 0x1151;
   CLenum SAMPLER_NORMALIZED_COORDS                 = 0x1152;
   CLenum SAMPLER_ADDRESSING_MODE                   = 0x1153;
   CLenum SAMPLER_FILTER_MODE                       = 0x1154;
 
   /* cl_map_flags - bitfield */
-  CLenum MAP_READ                                  = 0x1;
-  CLenum MAP_WRITE                                 = 0x2;
+  //CLenum MAP_READ                                  = 0x1; // mapped buffers not supported
+  //CLenum MAP_WRITE                                 = 0x2; // mapped buffers not supported
 
   /* cl_program_info */
+  //CLenum PROGRAM_REFERENCE_COUNT                   = 0x1160; // reference counting not supported
   CLenum PROGRAM_CONTEXT                           = 0x1161;
   CLenum PROGRAM_NUM_DEVICES                       = 0x1162;
   CLenum PROGRAM_DEVICES                           = 0x1163;
   CLenum PROGRAM_SOURCE                            = 0x1164;
+  //CLenum PROGRAM_BINARY_SIZES                      = 0x1165; // program binaries not supported
+  //CLenum PROGRAM_BINARIES                          = 0x1166; // program binaries not supported
 
   /* cl_program_build_info */
   CLenum PROGRAM_BUILD_STATUS                      = 0x1181;
@@ -542,6 +592,7 @@ interface <dfn>WebCL</dfn> {
   /* cl_kernel_info */
   CLenum KERNEL_FUNCTION_NAME                      = 0x1190;
   CLenum KERNEL_NUM_ARGS                           = 0x1191;
+  //CLenum KERNEL_REFERENCE_COUNT                    = 0x1192; // reference counting not supported
   CLenum KERNEL_CONTEXT                            = 0x1193;
   CLenum KERNEL_PROGRAM                            = 0x1194;
 
@@ -555,12 +606,14 @@ interface <dfn>WebCL</dfn> {
   /* cl_event_info  */
   CLenum EVENT_COMMAND_QUEUE                       = 0x11D0;
   CLenum EVENT_COMMAND_TYPE                        = 0x11D1;
+  //CLenum EVENT_REFERENCE_COUNT                     = 0x11D2; // reference counting not supported
   CLenum EVENT_COMMAND_EXECUTION_STATUS            = 0x11D3;
   CLenum EVENT_CONTEXT                             = 0x11D4;
 
   /* cl_command_type */
   CLenum COMMAND_NDRANGE_KERNEL                    = 0x11F0;
   CLenum COMMAND_TASK                              = 0x11F1;
+  //CLenum COMMAND_NATIVE_KERNEL                     = 0x11F2; // native kernels not supported
   CLenum COMMAND_READ_BUFFER                       = 0x11F3;
   CLenum COMMAND_WRITE_BUFFER                      = 0x11F4;
   CLenum COMMAND_COPY_BUFFER                       = 0x11F5;
@@ -569,7 +622,12 @@ interface <dfn>WebCL</dfn> {
   CLenum COMMAND_COPY_IMAGE                        = 0x11F8;
   CLenum COMMAND_COPY_IMAGE_TO_BUFFER              = 0x11F9;
   CLenum COMMAND_COPY_BUFFER_TO_IMAGE              = 0x11FA;
+  //CLenum COMMAND_MAP_BUFFER                        = 0x11FB; // mapped buffers not supported
+  //CLenum COMMAND_MAP_IMAGE                         = 0x11FC; // mapped buffers not supported
+  //CLenum COMMAND_UNMAP_MEM_OBJECT                  = 0x11FD; // mapped buffers not supported
   CLenum COMMAND_MARKER                            = 0x11FE;
+  //CLenum COMMAND_ACQUIRE_GL_OBJECTS                = 0x11FF; // extension
+  //CLenum COMMAND_RELEASE_GL_OBJECTS                = 0x1200; // extension
   CLenum COMMAND_READ_BUFFER_RECT                  = 0x1201;
   CLenum COMMAND_WRITE_BUFFER_RECT                 = 0x1202;
   CLenum COMMAND_COPY_BUFFER_RECT                  = 0x1203;
@@ -3133,17 +3191,17 @@ partial interface WebCLCommandQueue {
         <tr><td>DEVICE_MEM_BASE_ADDR_ALIGN</td><td>&gt;= num bits(int16)</td><td>Visible</td></tr>
         <tr><td>DEVICE_MIN_DATA_TYPE_ALIGN_SIZE</td><td>&gt;=sizeof(int16)</td><td>Hidden</td></tr>
         <tr><td>DEVICE_SINGLE_FP_CONFIG</td><td>FP_ROUND_TO_NEAREST; FP_INF_NAN (others optional)</td><td>Visible</td></tr>
-        <tr><td>DEVICE_GLOBAL_MEM_CACHE_TYPE</td><td>NONE; READ_ONLY_CACHE; READ_WRITE_CACHE</td><td>Hidden</td></tr>
-        <tr><td>DEVICE_GLOBAL_MEM_CACHELINE_SIZE</td><td>cl_uint</td><td>Hidden</td></tr>
-        <tr><td>DEVICE_GLOBAL_MEM_CACHE_SIZE</td><td>cl_uint</td><td>Hidden</td></tr>
+        <tr><td>DEVICE_GLOBAL_MEM_CACHE_TYPE</td><td>NONE; READ_ONLY_CACHE; READ_WRITE_CACHE</td><td>Visible</td></tr>
+        <tr><td>DEVICE_GLOBAL_MEM_CACHELINE_SIZE</td><td>cl_uint</td><td>Visible</td></tr>
+        <tr><td>DEVICE_GLOBAL_MEM_CACHE_SIZE</td><td>cl_uint</td><td>Visible</td></tr>
         <tr><td>DEVICE_GLOBAL_MEM_SIZE</td><td>cl_uint</td><td>Visible</td></tr>
         <tr><td>DEVICE_MAX_CONSTANT_BUFFER_SIZE </td><td>&gt;=1 KB</td><td>Visible</td></tr>
         <tr><td>DEVICE_MAX_CONSTANT_ARGS</td><td>&gt;=4</td><td>Visible</td></tr>
         <tr><td>DEVICE_LOCAL_MEM_TYPE</td><td>LOCAL; GLOBAL</td><td>Visible</td></tr>
         <tr><td>DEVICE_LOCAL_MEM_SIZE</td><td>&gt;=1 KB</td><td>Visible</td></tr>
-        <tr><td>DEVICE_ERROR_CORRECTION_SUPPORT</td><td>cl_bool</td><td>Hidden</td></tr>
+        <tr><td>DEVICE_ERROR_CORRECTION_SUPPORT</td><td>cl_bool</td><td>Visible</td></tr>
         <tr><td>DEVICE_HOST_UNIFIED_MEMORY</td><td>cl_bool</td><td>Visible</td></tr>
-        <tr><td>DEVICE_PROFILING_TIMER_RESOLUTION</td><td>size_t</td><td>Hidden</td></tr>
+        <tr><td>DEVICE_PROFILING_TIMER_RESOLUTION</td><td>size_t</td><td>Visible</td></tr>
         <tr><td>DEVICE_ENDIAN_LITTLE</td><td>cl_bool</td><td>Visible</td></tr>
         <tr><td>DEVICE_AVAILABLE</td><td>cl_bool</td><td>Visible</td></tr>
         <tr><td>DEVICE_COMPILER_AVAILABLE</td><td>cl_bool</td><td>Visible</td></tr>
