@@ -170,7 +170,7 @@
 typedef boolean       CLboolean;
 typedef long          CLint;
 typedef unsigned long CLuint;
-typedef long          CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
+typedef unsigned long CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
 typedef unsigned long CLtype;     // Used in WebCLKernelArgumentTypes
 </pre>
 
@@ -313,56 +313,56 @@ interface <dfn>WebCL</dfn> {
   // Enums
 
   /* Error Codes */
-  CLenum SUCCESS                                   = 0;
-  CLenum DEVICE_NOT_FOUND                          = -1;
-  CLenum DEVICE_NOT_AVAILABLE                      = -2;
-  CLenum COMPILER_NOT_AVAILABLE                    = -3;
-  CLenum MEM_OBJECT_ALLOCATION_FAILURE             = -4;
-  CLenum OUT_OF_RESOURCES                          = -5;
-  CLenum OUT_OF_HOST_MEMORY                        = -6;
-  CLenum PROFILING_INFO_NOT_AVAILABLE              = -7;
-  CLenum MEM_COPY_OVERLAP                          = -8;
-  CLenum IMAGE_FORMAT_MISMATCH                     = -9;
-  CLenum IMAGE_FORMAT_NOT_SUPPORTED                = -10;
-  CLenum BUILD_PROGRAM_FAILURE                     = -11;
-  //CLenum MAP_FAILURE                               = -12; // mapped buffers not supported
-  CLenum MISALIGNED_SUB_BUFFER_OFFSET              = -13;
-  CLenum EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST = -14;
-  CLenum INVALID_VALUE                             = -30;
-  CLenum INVALID_DEVICE_TYPE                       = -31;
-  CLenum INVALID_PLATFORM                          = -32;
-  CLenum INVALID_DEVICE                            = -33;
-  CLenum INVALID_CONTEXT                           = -34;
-  CLenum INVALID_QUEUE_PROPERTIES                  = -35;
-  CLenum INVALID_COMMAND_QUEUE                     = -36;
-  CLenum INVALID_HOST_PTR                          = -37;
-  CLenum INVALID_MEM_OBJECT                        = -38;
-  CLenum INVALID_IMAGE_FORMAT_DESCRIPTOR           = -39;
-  CLenum INVALID_IMAGE_SIZE                        = -40;
-  CLenum INVALID_SAMPLER                           = -41;
-  //CLenum INVALID_BINARY                            = -42; // program binaries not supported
-  CLenum INVALID_BUILD_OPTIONS                     = -43;
-  CLenum INVALID_PROGRAM                           = -44;
-  CLenum INVALID_PROGRAM_EXECUTABLE                = -45;
-  CLenum INVALID_KERNEL_NAME                       = -46;
-  CLenum INVALID_KERNEL_DEFINITION                 = -47;
-  CLenum INVALID_KERNEL                            = -48;
-  CLenum INVALID_ARG_INDEX                         = -49;
-  CLenum INVALID_ARG_VALUE                         = -50;
-  CLenum INVALID_ARG_SIZE                          = -51;
-  CLenum INVALID_KERNEL_ARGS                       = -52;
-  CLenum INVALID_WORK_DIMENSION                    = -53;
-  CLenum INVALID_WORK_GROUP_SIZE                   = -54;
-  CLenum INVALID_WORK_ITEM_SIZE                    = -55;
-  CLenum INVALID_GLOBAL_OFFSET                     = -56;
-  CLenum INVALID_EVENT_WAIT_LIST                   = -57;
-  CLenum INVALID_EVENT                             = -58;
-  CLenum INVALID_OPERATION                         = -59;
-  //CLenum INVALID_GL_OBJECT                         = -60; // extension
-  CLenum INVALID_BUFFER_SIZE                       = -61;
-  //CLenum INVALID_MIP_LEVEL                         = -62; // extension
-  CLenum INVALID_GLOBAL_WORK_SIZE                  = -63;
-  CLenum INVALID_PROPERTY                          = -64;
+  CLint SUCCESS                                   = 0;
+  CLint DEVICE_NOT_FOUND                          = -1;
+  CLint DEVICE_NOT_AVAILABLE                      = -2;
+  CLint COMPILER_NOT_AVAILABLE                    = -3;
+  CLint MEM_OBJECT_ALLOCATION_FAILURE             = -4;
+  CLint OUT_OF_RESOURCES                          = -5;
+  CLint OUT_OF_HOST_MEMORY                        = -6;
+  CLint PROFILING_INFO_NOT_AVAILABLE              = -7;
+  CLint MEM_COPY_OVERLAP                          = -8;
+  CLint IMAGE_FORMAT_MISMATCH                     = -9;
+  CLint IMAGE_FORMAT_NOT_SUPPORTED                = -10;
+  CLint BUILD_PROGRAM_FAILURE                     = -11;
+  //CLint MAP_FAILURE                               = -12; // mapped buffers not supported
+  CLint MISALIGNED_SUB_BUFFER_OFFSET              = -13;
+  CLint EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST = -14;
+  CLint INVALID_VALUE                             = -30;
+  CLint INVALID_DEVICE_TYPE                       = -31;
+  CLint INVALID_PLATFORM                          = -32;
+  CLint INVALID_DEVICE                            = -33;
+  CLint INVALID_CONTEXT                           = -34;
+  CLint INVALID_QUEUE_PROPERTIES                  = -35;
+  CLint INVALID_COMMAND_QUEUE                     = -36;
+  CLint INVALID_HOST_PTR                          = -37;
+  CLint INVALID_MEM_OBJECT                        = -38;
+  CLint INVALID_IMAGE_FORMAT_DESCRIPTOR           = -39;
+  CLint INVALID_IMAGE_SIZE                        = -40;
+  CLint INVALID_SAMPLER                           = -41;
+  //CLint INVALID_BINARY                            = -42; // program binaries not supported
+  CLint INVALID_BUILD_OPTIONS                     = -43;
+  CLint INVALID_PROGRAM                           = -44;
+  CLint INVALID_PROGRAM_EXECUTABLE                = -45;
+  CLint INVALID_KERNEL_NAME                       = -46;
+  CLint INVALID_KERNEL_DEFINITION                 = -47;
+  CLint INVALID_KERNEL                            = -48;
+  CLint INVALID_ARG_INDEX                         = -49;
+  CLint INVALID_ARG_VALUE                         = -50;
+  CLint INVALID_ARG_SIZE                          = -51;
+  CLint INVALID_KERNEL_ARGS                       = -52;
+  CLint INVALID_WORK_DIMENSION                    = -53;
+  CLint INVALID_WORK_GROUP_SIZE                   = -54;
+  CLint INVALID_WORK_ITEM_SIZE                    = -55;
+  CLint INVALID_GLOBAL_OFFSET                     = -56;
+  CLint INVALID_EVENT_WAIT_LIST                   = -57;
+  CLint INVALID_EVENT                             = -58;
+  CLint INVALID_OPERATION                         = -59;
+  //CLint INVALID_GL_OBJECT                         = -60; // extension
+  CLint INVALID_BUFFER_SIZE                       = -61;
+  //CLint INVALID_MIP_LEVEL                         = -62; // extension
+  CLint INVALID_GLOBAL_WORK_SIZE                  = -63;
+  CLint INVALID_PROPERTY                          = -64;
 
   /* cl_bool */
   CLenum FALSE                                     = 0;
@@ -584,10 +584,10 @@ interface <dfn>WebCL</dfn> {
   CLenum PROGRAM_BUILD_LOG                         = 0x1183;
 
   /* cl_build_status */
-  CLenum BUILD_SUCCESS                             = 0;
-  CLenum BUILD_NONE                                = -1;
-  CLenum BUILD_ERROR                               = -2;
-  CLenum BUILD_IN_PROGRESS                         = -3;
+  CLint BUILD_SUCCESS                             = 0;
+  CLint BUILD_NONE                                = -1;
+  CLint BUILD_ERROR                               = -2;
+  CLint BUILD_IN_PROGRESS                         = -3;
 
   /* cl_kernel_info */
   CLenum KERNEL_FUNCTION_NAME                      = 0x1190;
@@ -2033,6 +2033,21 @@ interface <dfn>WebCLProgram</dfn> {
         </dl>
       </dd>
 
+      <dt class="idl-code">any getValidationInfo(CLenum name)</dt>
+      <dd>
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>PROGRAM_VALIDATION_STATUS</td><td>CLenum</td></tr>
+          <tr><td>PROGRAM_VALIDATION_OPTIONS</td><td>DOMString</td></tr>
+          <tr><td>PROGRAM_VALIDATION_LOG</td><td>DOMString</td></tr>
+          <tr><td>PROGRAM_SOURCE_VALIDATED</td><td>DOMString</td></tr>
+        </table><br>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </dl>
+      </dd>
+
       <dt class="idl-code">any getBuildInfo(WebCLDevice device, CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=122">OpenCL 1.1 §5.6.5</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetProgramBuildInfo.html">man page</a>)</span>
@@ -2040,7 +2055,7 @@ interface <dfn>WebCLProgram</dfn> {
       <dd>
         <table class="enumtable">
           <tr><th>name</th><th>return type</th></tr>
-          <tr><td>PROGRAM_BUILD_STATUS</td><td>CLenum</td></tr>
+          <tr><td>PROGRAM_BUILD_STATUS</td><td>CLint</td></tr>
           <tr><td>PROGRAM_BUILD_OPTIONS</td><td>DOMString</td></tr>
           <tr><td>PROGRAM_BUILD_LOG</td><td>DOMString</td></tr>
         </table><br>
