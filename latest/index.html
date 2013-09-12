@@ -3130,6 +3130,18 @@ partial interface WebCLCommandQueue {
       <li>Program binaries are not supported</li>
       <li>Structures are not supported as kernel arguments</li>
       <li>Identifiers in OpenCL C must be less than 256 characters</li>
+      <li>The following OpenCL API functions are not supported:</li>
+      <ul>
+        <li>`clEnqueueTask`</li>
+        <li>`clEnqueueNativeKernel`</li>
+        <li>`clCreateImage3D`</li>
+        <li>`clCreateProgramWithBinary`</li>
+        <li>`clEnqueueMapBuffer`</li>
+        <li>`clEnqueueMapImage`</li>
+        <li>`clEnqueueUnmapMemObject`</li>
+        <li>`clSetMemObjectDestructorCallback`</li>
+        <li>`clUnloadCompiler`</li>
+      </ul>
       <li>The following OpenCL C built-in functions are not supported:</li>
       <ul>
         <li>`async_work_group_copy`</li>
