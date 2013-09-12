@@ -1236,10 +1236,6 @@ interface <dfn>WebCLCommandQueue</dfn> {
                     optional WebCLEvent[]? eventWaitList,
                     optional WebCLEvent? event);
 
-  void enqueueTask(WebCLKernel kernel,
-                   optional WebCLEvent[]? eventWaitList,
-                   optional WebCLEvent? event);
-
   ////////////////////////////////////////////////////////////////////////////
   //
   // Synchronization
@@ -1697,17 +1693,6 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure to allocate memory for data store associated with
             image or buffer objects specified as arguments to `kernel`</li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
-        </dl>
-      </dd>
-
-      <dt class="idl-code">void enqueueTask(WebCLKernel kernel, optional WebCLEvent[]? eventWaitList = null, optional WebCLEvent? event = null)
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueTask.html">man page</a>)</span>
-      </dt>
-      <dd>
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>`TODO`</li>
         </dl>
       </dd>
 
