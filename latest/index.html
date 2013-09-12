@@ -2006,7 +2006,32 @@ interface <dfn>WebCLProgram</dfn> {
         WebCLContext that this WebCLProgram was created from.  A
         string of compiler options and an asynchronous callback
         function to invoke when the build is completed can also be
-        provided.
+        provided. The available compiler options are listed in the
+        table below; any other option is considered invalid.
+
+        <table class="enumtable">
+          <tr><th>Build option</th><th>Description</th></tr>
+          <tr><td><i>-D name</i></td><td>Equivalent to <i>#define name</i> in OpenCL C.</td></tr>
+          <tr><td><i>-D name=definition</i></td><td>Equivalent to <i>#define name definition</i> in OpenCL C.</td></tr>
+          <tr><td><i>-cl-opt-disable</i></td><td>Disable all optimizations.</td></tr>
+          <tr><td><i>-cl-single-precision-constant</i></td><td>Treat double-precision constants as single-precision.</td></tr>
+          <tr><td><i>-cl-denorms-are-zero</i></td><td>Allow denormalized numbers to be flushed to zero.</td></tr>
+          <tr><td><i>-cl-mad-enable</i></td><td>Allow <i>a*b+c</i> to be computed with potentially reduced accuracy.</td></tr>
+          <tr><td><i>-cl-no-signed-zeros</i></td><td>Allow optimizations that ignore the signedness of zero.</td></tr>
+          <tr><td><i>-cl-unsafe-math-optimizations</i></td><td>Allow
+              optimizations that may violate IEEE 754 and OpenCL
+              numerical compliance requirements. This option
+              includes <i>-cl-no-signed-zeros</i>
+              and <i>cl-mad-enable</i>.</td></tr>
+          <tr><td><i>-cl-finite-math-only</i></td><td>Allow
+              optimizations that ignore NaNs and infinities.</td></tr>
+          <tr><td><i>-cl-fast-relaxed-math</i></td><td>Equivalent
+              to <i>-cl-finite-math-only</i>
+              and <i>-cl-unsafe-math-optimizations</i>.</td></tr>
+          <tr><td><i>-W</i></td><td>Inhibit all warning messages.</td></tr>
+          <tr><td><i>-Werror</i></td><td>Make all warnings into errors.</td></tr>
+          <tr><td><i>-cl-std=</i></td><td>Disallowed; implicitly set to <i>-cl-std=CL1.1</i>.</td></tr>
+        </table>
 
         <dl class="exceptions">
           <dt>Exceptions:</dt>
