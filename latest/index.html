@@ -171,7 +171,6 @@ typedef boolean       CLboolean;
 typedef long          CLint;
 typedef unsigned long CLuint;
 typedef unsigned long CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
-typedef unsigned long CLtype;     // Used in WebCLKernelArgumentTypes
 </pre>
 
 
@@ -2157,36 +2156,10 @@ interface <dfn>WebCLProgram</dfn> {
 interface <dfn>WebCLKernel</dfn> {
   any getInfo(CLenum name);
   any getWorkGroupInfo(WebCLDevice device, CLenum name);
-  void setArg(CLuint index, any value, optional CLtype type);
+  void setArg(CLuint index, WebCLMemoryObject value);
+  void setArg(CLuint index, WebCLSampler value);
+  void setArg(CLuint index, ArrayBufferView value);
   void release();
-};
-</pre>
-
-    <p id="WEBCLKERNELARGUMENTTYPES">
-      The following enumerated values are available for specifying the
-      `type` of kernel arguments in `setArg`.  The special type
-      `LOCAL_MEMORY_SIZE` is used to allocate memory for local
-      variables.
-    </p>
-
-<pre class="idl">
-interface <dfn>WebCLKernelArgumentTypes</dfn> {
-
-  // Numeric types
-
-  CLtype CHAR   = 0;
-  CLtype UCHAR  = 1;
-  CLtype SHORT  = 2;
-  CLtype USHORT = 3;
-  CLtype INT    = 4;
-  CLtype UINT   = 5;
-  CLtype LONG   = 6;
-  CLtype ULONG  = 7;
-  CLtype FLOAT  = 8;
-
-  // Special types
-
-  CLtype LOCAL_MEMORY_SIZE = 255;
 };
 </pre>
 
@@ -2233,7 +2206,45 @@ interface <dfn>WebCLKernelArgumentTypes</dfn> {
         </dl>
       </dd>
 
-      <dt class="idl-code">void setArg(CLuint index, any value, optional CLtype type)
+      <dt class="idl-code">void setArg(CLuint index, WebCLMemoryObject memObject)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.7.2">OpenCL 1.1 §5.7.2</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <p>
+          Sets the given `memObject` to the kernel argument at the
+          given `index`.  Legal values for `index` range from zero to
+          `N-1`, where `N` is the total number of arguments declared
+          by the kernel.
+        </p>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
+          <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a memory object</li>
+          <li>`INVALID_MEM_OBJECT` -- if `memObject` is not a valid WebCLMemoryObject</li>
+        </dl>
+      </dd>
+
+      <dt class="idl-code">void setArg(CLuint index, WebCLSampler sampler)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.7.2">OpenCL 1.1 §5.7.2</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <p>
+          Sets the given `sampler` to the kernel argument at the given
+          `index`.  Legal values for `index` range from zero to `N-1`,
+          where `N` is the total number of arguments declared by the
+          kernel.
+        </p>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
+          <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a sampler</li>
+          <li>`INVALID_SAMPLER` -- if `sampler` is not a valid WebCLSampler</li>
+        </dl>
+      </dd>
+
+      <dt class="idl-code">void setArg(CLuint index, ArrayBufferView value)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.7.2">OpenCL 1.1 §5.7.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">man page</a>)</span>
       </dt>
@@ -2242,42 +2253,26 @@ interface <dfn>WebCLKernelArgumentTypes</dfn> {
           Sets the given `value` to the kernel argument at the given
           `index`.  Legal values for `index` range from zero to `N-1`,
           where `N` is the total number of arguments declared by the
-          kernel.  The available values for the optional `type`
-          parameter are documented in
-          <a href="#WEBCLKERNELARGUMENTTYPES">WebCLKernelArgumentTypes</a>.
-          The `type` parameter is ignored if `value` is an instance of
-          WebCLBuffer, WebCLImage, or WebCLSampler.
+          kernel.
         </p>
         <p>
-          If `value` is a number, its `type` is taken to be `FLOAT` by
-          default.  If `value` is an array, the same applies for its
-          individual elements.  If `value` is an array, its length
-          must be equal to the vector width of the target kernel
-          argument. For example, if the kernel argument is of type
-          `float4`, then `value` must have exactly four elements.
-        </p>
-        <p>
-          Numbers are converted to the given or implied scalar type by
-          C-style type casting from `double` to the target type. For
-          example, if the `UCHAR` type is given, the value 254.9 will
-          be converted to 254, and 1000.0 to 232.
+          The type and length of `value` must match the base type and
+          vector width of the target kernel argument. For example, if
+          the kernel argument is of type `float4`, then `value` must
+          be a Float32Array of length 4.  Arguments with the `local`
+          address space qualifier must be set using a Uint32Array of
+          length 1, specifying the number of bytes to be allocated.
         </p>
 
         <dl class="exceptions">
           <dt>Exceptions:</dt>
           <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
-          <li>`INVALID_ARG_VALUE` -- if `value` is not a Number, an array of Numbers, or a WebCLMemoryObject</li>
-          <li>`INVALID_ARG_VALUE` -- if `value` is an array and its length is not 2, 3, 4, 8, or 16</li>
-          <li>`INVALID_ARG_VALUE` -- if `value` is an array, and a non-vector argument is expected by the kernel</li>
-          <li>`INVALID_ARG_VALUE` -- if `value` is not an array, and a vector argument is expected by the kernel</li>
+          <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a scalar, vector, or local memory size</li>
+          <li>`INVALID_ARG_VALUE` -- if `value.length` is not 1, 2, 3, 4, 8, or 16</li>
           <li>`INVALID_ARG_VALUE` -- if `value.length` is not equal to the vector width of the kernel argument at `index`</li>
           <li>`INVALID_ARG_VALUE` -- if the kernel argument at `index`
             has the `local` address space qualifier, and `value` is
-            not a positive integer</li>
-          <li>`INVALID_MEM_OBJECT` -- if the kernel argument at
-            `index` has the `global` or `constant` address space
-            qualifier, and `value` is not a valid
-            WebCLMemoryObject</li>
+            not a Uint32Array of length 1</li>
         </dl>
       </dd>
 
@@ -2292,10 +2287,11 @@ interface <dfn>WebCLKernelArgumentTypes</dfn> {
     </dl>
 
 <pre class="example">
-var types = WebCLKernelArgumentTypes;
-myKernel.setArg(0, 3.14159, types.FLOAT);                     // cast 3.14159 to FLOAT, then pass to kernel as arg #0
-myKernel.setArg(1, [1.23, 2.34], types.UINT);                 // cast the numbers to UINT, then pass to kernel as arg #1
-myKernel.setArg(2, 512, types.LOCAL_MEMORY_SIZE);             // reserve 512 bytes of local memory for arg #2
+myKernel.setArg(0, 3.14159);                                  // ERROR: Passing in a Number is not allowed
+myKernel.setArg(0, new Float32Array([3.14159]));              // cast 3.14159 to `float`, then pass to kernel as arg #0
+myKernel.setArg(1, new Uint32Array([1.23, 2.34]));            // cast the numbers to `uint2`, then pass to kernel as arg #1
+myKernel.setArg(2, new Uint32Array([512]));                   // reserve 512 bytes of local memory for arg #2
+myKernel.setArg(3, myImage);                                  // pass `myImage` to kernel as arg #3
 </pre>
     </dl>
 
@@ -2466,9 +2462,6 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
 interface <dfn>WebCLFP64</dfn> {
   /* WebCLDevice getInfo() */
   CLenum DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE = 0x100B;
-
-  /* WebCLKernelArgumentTypes */
-  CLtype DOUBLE = 10;
 };
 </pre>
 
@@ -2488,9 +2481,6 @@ interface <dfn>WebCLFP64</dfn> {
 interface <dfn>WebCLFP16</dfn> {
   /* WebCLDevice getInfo() */
   CLenum DEVICE_PREFERRED_VECTOR_WIDTH_HALF = 0x1034;
-
-  /* WebCLKernelArgumentTypes */
-  CLtype HALF = 9;
 };
 </pre>
 
