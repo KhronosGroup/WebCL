@@ -2265,13 +2265,21 @@ interface <dfn>WebCLKernel</dfn> {
           address space qualifier must be set using a Uint32Array of
           length 1, specifying the number of bytes to be allocated.
         </p>
+        <p>
+          Since there is no 64-bit integer variant of ArrayBufferView,
+          64-bit integers must be represented as pairs of 32-bit
+          unsigned integers. The low-order 32 bits are stored in the
+          first element of each pair, and the high-order 32 bits in
+          the second element.
+        </p>
 
         <dl class="exceptions">
           <dt>Exceptions:</dt>
           <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
           <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a scalar, vector, or local memory size</li>
-          <li>`INVALID_ARG_VALUE` -- if `value.length` is not 1, 2, 3, 4, 8, or 16</li>
-          <li>`INVALID_ARG_VALUE` -- if `value.length` is not equal to the vector width of the kernel argument at `index`</li>
+          <li>`INVALID_ARG_VALUE` -- if `value.length` is not 1, 2, 3, 4, 8, 16, or 32</li>
+          <li>`INVALID_ARG_VALUE` -- if `value.length` is not equal to the vector width of the kernel argument at `index`,
+                                     or twice the vector width in case of a 64-bit integer argument</li>
           <li>`INVALID_ARG_VALUE` -- if the kernel argument at `index`
             has the `local` address space qualifier, and `value` is
             not a Uint32Array of length 1</li>
