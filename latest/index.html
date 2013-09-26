@@ -547,7 +547,7 @@ interface <dfn>WebCL</dfn> {
   CLenum IMAGE_HEIGHT                              = 0x1115;
 
   /* cl_addressing_mode */
-  CLenum ADDRESS_NONE                              = 0x1130;
+  //CLenum ADDRESS_NONE                              = 0x1130; // disallowed
   CLenum ADDRESS_CLAMP_TO_EDGE                     = 0x1131;
   CLenum ADDRESS_CLAMP                             = 0x1132;
   CLenum ADDRESS_REPEAT                            = 0x1133;
@@ -1022,16 +1022,28 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
           <li>`INVALID_VALUE` -- if `source` is `null` or empty</li>
         </dl>
       </dd>
+
       <dt class="idl-code">WebCLSampler createSampler(CLboolean normalizedCoords, CLenum addressingMode, CLenum filterMode)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=106">OpenCL 1.1 §5.5.1</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateSampler.html">man page</a>)</span>
       </dt>
       <dd>
+        Creates a new WebCLSampler with the given coordinate mode,
+        addressing mode, and filtering mode.  The `ADDRESS_NONE` mode
+        is not available, due to its lack of bounds checking.
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`INVALID_VALUE` -- if `addressingMode`, `filterMode`, or `normalizedCoords` or a combination of these argument values are not valid</li>
+          <li>`INVALID_VALUE` -- if `addressingMode` is not
+            `ADDRESS_CLAMP`, `ADDRESS_CLAMP_TO_EDGE`,
+            `ADDRESS_REPEAT`, or `ADDRESS_MIRRORED_REPEAT`</li>
+          <li>`INVALID_VALUE` -- if `filterMode` is not
+            `FILTER_NEAREST` or `FILTER_LINEAR`</li>
+          <li>`INVALID_VALUE` -- if `normalizedCoords` is `false` and
+            `addressingMode` is `ADDRESS_REPEAT` or
+            `ADDRESS_MIRRORED_REPEAT`</li>
         </dl>
       </dd>
+
       <dt class="idl-code">WebCLUserEvent createUserEvent()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=142">OpenCL 1.1 §5.9</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateUserEvent.html">man page</a>)</span>
@@ -3126,6 +3138,7 @@ partial interface WebCLCommandQueue {
     <ul>
       <li>2D image support is required</li>
       <li>3D images are not supported</li>
+      <li>The `ADDRESS_NONE` sampler addressing mode is not supported</li>
       <li>Mapping of CL memory objects into host memory space is not supported</li>
       <li>Program binaries are not supported</li>
       <li>Structures are not supported as kernel arguments</li>
@@ -3227,7 +3240,6 @@ partial interface WebCLCommandQueue {
         <tr><td>DEVICE_VERSION</td><td>Version String</td><td>"WebCL 1.0"</td></tr>
         <tr><td>DEVICE_OPENCL_C_VERSION</td><td>Version String</td><td>Visible</td></tr>
         <tr><td>DEVICE_EXTENSIONS</td><td>Extension String</td><td>Hidden</td></tr>
-
       </table>
     </p>
 
