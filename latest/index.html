@@ -235,6 +235,12 @@ exception <dfn>WebCLException</dfn> : DOMException {
       scope.
     </p>
 
+    <p>
+      When the global `document` object goes out of scope, the WebCL
+      implementation must call `release` on all remaining WebCL
+      objects.
+    </p>
+
     <h4><a id="WEBCLCALLBACK">Callbacks</a></h4>
 
     <p>
@@ -304,7 +310,7 @@ interface <dfn>WebCL</dfn> {
 
   sequence&lt;DOMString&gt;? getSupportedExtensions();
 
-  object? getExtension(DOMString extensionName);
+  object? enableExtension(DOMString extensionName);
 
   void waitForEvents(sequence&lt;WebCLEvent&gt; eventWaitList,
                      optional WebCLCallback whenFinished);
@@ -682,12 +688,12 @@ interface <dfn>WebCL</dfn> {
       <dd>
         Returns an array of extension names that are supported by all
         WebCLPlatforms and WebCLDevices in this implementation.  Any
-        string in this list, when passed to `getExtension`, must
+        string in this list, when passed to `enableExtension`, must
         enable the corresponding extension and return a valid
         extension object.
       </dd>
 
-      <dt class="idl-code">object? getExtension(DOMString extensionName)</dt>
+      <dt class="idl-code">object? enableExtension(DOMString extensionName)</dt>
       <dd>
         Enables the given extension on all WebCLPlatforms and
         WebCLDevices.  Returns an object if the extension is
@@ -697,7 +703,7 @@ interface <dfn>WebCL</dfn> {
         by the extension, if any.  Even if the extension does not
         define any functions or constants, a valid object must still
         be returned.  That object is used to indicate that the
-        extension has been enabled.  Multiple calls to `getExtension`
+        extension has been enabled.  Multiple calls to `enableExtension`
         with the same extension string must return the same object.
       </dd>
 
@@ -789,7 +795,7 @@ interface <dfn>WebCLPlatform</dfn> {
   any getInfo(CLenum name);
   sequence&lt;WebCLDevice&gt; getDevices(optional CLenum deviceType);
   sequence&lt;DOMString&gt;? getSupportedExtensions();
-  object? getExtension(DOMString extensionName);
+  object? enableExtension(DOMString extensionName);
 };
 </pre>
 
@@ -839,12 +845,12 @@ interface <dfn>WebCLPlatform</dfn> {
       <dd>
         Returns an array of extension names that are supported by all
         WebCLDevices on this WebCLPlatform.  Any string in this list,
-        when passed to `getExtension` on this platform, or any device
+        when passed to `enableExtension` on this platform, or any device
         on this platform, must enable the corresponding extension and
         return a valid extension object.
       </dd>
 
-      <dt class="idl-code">object? getExtension(DOMString extensionName)</dt>
+      <dt class="idl-code">object? enableExtension(DOMString extensionName)</dt>
       <dd>
         Enables the given WebCL extension on this WebCLPlatform.
         Returns an object if the extension is supported by this
@@ -854,7 +860,7 @@ interface <dfn>WebCLPlatform</dfn> {
         extension, if any.  Even if the extension does not define any
         functions or constants, a valid object must still be returned.
         That object is used to indicate that the extension has been
-        enabled.  Multiple calls to `getExtension` with the same
+        enabled.  Multiple calls to `enableExtension` with the same
         extension string must return the same object.
       </dd>
     </dl>
@@ -870,7 +876,7 @@ interface <dfn>WebCLPlatform</dfn> {
 interface <dfn>WebCLDevice</dfn> {
   any getInfo(CLenum name);
   sequence&lt;DOMString&gt;? getSupportedExtensions();
-  object? getExtension(DOMString extensionName);
+  object? enableExtension(DOMString extensionName);
 };
 </pre>
 
@@ -898,11 +904,11 @@ interface <dfn>WebCLDevice</dfn> {
       <dd>
         Returns an array of extension names that are supported by this
         WebCLDevice. Any string in this list, when passed to
-        `getExtension`, must enable the corresponding extension and
+        `enableExtension`, must enable the corresponding extension and
         return a valid extension object.
       </dd>
 
-      <dt class="idl-code">object? getExtension(DOMString extensionName)</dt>
+      <dt class="idl-code">object? enableExtension(DOMString extensionName)</dt>
       <dd>
         Enables the given WebCL extension on this WebCLDevice.
         Returns an object if the extension is supported by this
@@ -912,7 +918,7 @@ interface <dfn>WebCLDevice</dfn> {
         extension, if any.  Even if the extension does not define any
         functions or constants, a valid object must still be returned.
         That object is used to indicate that the extension has been
-        enabled. Multiple calls to `getExtension` with the same
+        enabled. Multiple calls to `enableExtension` with the same
         extension string must return the same object.
       </dd>
     </dl>
@@ -2456,22 +2462,22 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
     </p>
 
     <p>
-      WebCL extensions can be enabled by calling `getExtension` with
+      WebCL extensions can be enabled by calling `enableExtension` with
       the name of the desired extension as a string parameter.  This
       returns a non-`null` object if the extension is supported, or
       `null` if the extension is not available.  The returned object
       may contain attributes and/or methods that are needed for using
-      the extended functionality.  Multiple calls to `getExtension` on
+      the extended functionality.  Multiple calls to `enableExtension` on
       the same platform or device with the same extension string must
-      return the same object.  Conversely, calling `getExtension` on
+      return the same object.  Conversely, calling `enableExtension` on
       different devices or platforms is not guaranteed to return the
       same object.
     </p>
 
     <h3><a id="DOUBLE">Support for the 'double' datatype</a></h3>
     <p>
-      Calling <code>getExtension("KHR_FP64")</code> returns a
-      singleton WebCLFP64 object and enables the
+      Calling <code>enableExtension("KHR_FP64")</code> returns a
+      singleton WebCLExtensionFP64 object and enables the
       <a href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/cl_khr_fp64.html">cl_khr_fp64</a>
       extension.  This allows the following pragma to be used in any
       subsequently compiled kernels:
@@ -2481,7 +2487,7 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
     </pre>
 
 <pre class="idl">
-interface <dfn>WebCLFP64</dfn> {
+interface <dfn>WebCLExtensionFP64</dfn> {
   /* WebCLDevice getInfo() */
   CLenum DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE = 0x100B;
 };
@@ -2489,8 +2495,8 @@ interface <dfn>WebCLFP64</dfn> {
 
     <h3><a id="HALF">Support for the 'half' datatype</a></h3>
     <p>
-      Calling <code>getExtension("KHR_FP16")</code> returns a
-      singleton WebCLFP16 object and enables the
+      Calling <code>enableExtension("KHR_FP16")</code> returns a
+      singleton WebCLExtensionFP16 object and enables the
       <a href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/cl_khr_fp16.html">cl_khr_fp16</a>
       extension.  This allows the following pragma to be used in any
       subsequently compiled kernels:
@@ -2500,7 +2506,7 @@ interface <dfn>WebCLFP64</dfn> {
     </pre>
 
 <pre class="idl">
-interface <dfn>WebCLFP16</dfn> {
+interface <dfn>WebCLExtensionFP16</dfn> {
   /* WebCLDevice getInfo() */
   CLenum DEVICE_PREFERRED_VECTOR_WIDTH_HALF = 0x1034;
 };
@@ -2515,17 +2521,17 @@ interface <dfn>WebCLFP16</dfn> {
     </p>
 
     <p>
-      Calling <code>getExtension("KHR_GL_SHARING")</code> returns a
-      singleton WebCLGL object that adds a number of new enums, as
-      well as a new variant of `createContext` that returns a
-      WebCLGLContext object instead of a regular WebCLContext.  The
-      extended context allows creating command queues, buffers, and
-      images that are similarly extended with new methods to support
-      WebGL resource sharing.
+      Calling <code>enableExtension("KHR_GL_SHARING")</code> returns a
+      singleton WebCLExtensionGLInterop object that adds a number of
+      new enums, as well as a new variant of `createContext` that
+      returns a WebCLGLContext object instead of a regular
+      WebCLContext.  The extended context allows creating command
+      queues, buffers, and images that are similarly extended with new
+      methods to support WebGL resource sharing.
     </p>
 
 <pre class="idl">
-interface <dfn>WebCLGL</dfn> {
+interface <dfn>WebCLExtensionGLInterop</dfn> {
 
   WebCLGLContext? createContext(optional WebCLGLContextProperties properties);
 
