@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">October 3, 2013</h2>
+    <h2 class="no-toc">October 9, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -2877,20 +2877,25 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
       identified the following security requirements for WebCL.
     </p>
 
-    <h3>Out-of-Bounds Memory Access</h3>
+    <h3>Out-of-Bounds Memory Accesses</h3>
 
     <p>
-      WebCL kernel code must not be able to access unauthorized areas
-      of memory, regardless of address space (private, local, global,
-      or constant).  The WebCL implementation must guarantee that
-      out-of-bounds (OOB) read operations will return zero, and that
-      OOB writes are discarded.  For purposes of bounds checking, the
-      implementation may combine all `private` variables into one
-      contiguous block of memory, and similarly for `local` variables,
-      instead of enforcing the bounds of each variable separately. For
-      example, in a kernel program containing two `private` arrays, an
-      OOB read from the first array may return a value from the second
-      array, rather than zero.
+      WebCL kernels must not be able to access unauthorized areas of
+      memory, regardless of address space (private, local, global, or
+      constant).  If detected during compilation, out-of-bounds (OOB)
+      accesses must generate a compiler error.  At runtime, OOB reads
+      must return zero and writes must be discarded.  Alternatively,
+      the kernel may be terminated and an exception be thrown.
+    </p>
+
+    <p>
+      For purposes of bounds checking, the implementation may treat
+      all `private` variables as one contiguous block of memory, and
+      similarly for `local` variables, instead of enforcing the bounds
+      of each variable separately. For example, in a kernel program
+      containing two `private` arrays, an OOB read from the first
+      array is allowed to return any value from either the first or
+      the second array, rather than zero.
     </p>
 
     <h3>Undefined Behavior</h3>
@@ -2912,13 +2917,13 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
     </p>
 
 
-    <h3> Memory Initialization</h3>
+    <h3>Memory Initialization</h3>
 
     <p>
      To prevent information leakage from un-initialized memory, all WebCL
      allocated memory objects (buffers and images), inclusive of private and
      local variables in kernel code, must be initialized at allocation time
-     (before the application will be allowed to use them).  To minimize the
+     (before the application is allowed to use them).  To minimize the
      performance burden on applications for initializing allocated memory to
      zeroes, WebCL implementations will ensure that memory is initialized
      to a pre-defined value at allocation time.
