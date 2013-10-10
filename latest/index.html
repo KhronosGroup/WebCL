@@ -207,17 +207,20 @@ exception <dfn>WebCLException</dfn> : DOMException {
     <h4><a id="RELEASE">Resource management</a></h4>
 
     <p>
-      All dynamically created WebCL objects have a `release` method
-      that releases the resources consumed by that object, as well as
-      a `releaseAll` method that also releases the descendants of that
-      object (if any). The usage and behavior of the release methods
-      is illustrated in the example below.
+      Each dynamically created WebCL object has a `release` method
+      that releases the resources consumed by that object.  This does
+      not cause the object to be deleted or garbage collected; it will
+      remain in place, but trying to use it will cause an exception.
+      Trying to release an object that has already been released will
+      be silently ignored.
     </p>
 
     <p>
-      After releasing a WebCL object, it can no longer be used, and
-      trying to do so will throw an exception.  Trying to release an
-      object that has already been released will be silently ignored.
+      For convenience, each WebCLContext object contains an additional
+      `releaseAll` function, which releases the context itself, as
+      well as all other WebCL objects created from it.  The usage and
+      behavior of the release methods are illustrated in the example
+      below.
     </p>
 
 <pre class="example">
@@ -243,8 +246,8 @@ exception <dfn>WebCLException</dfn> : DOMException {
 
     <p>
       When the global `document` object goes out of scope, the WebCL
-      implementation must call `release` on all remaining WebCL
-      objects.
+      implementation must implicitly call `release` on all remaining
+      WebCL objects.
     </p>
 
     <h4><a id="WEBCLCALLBACK">Callbacks</a></h4>
@@ -1115,8 +1118,8 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">man page</a>)</span>
       </dt>
       <dd>
-        Releases the resources held up by this object and its
-        descendants, if any.
+        Releases the resources held up by this WebCLContext and all
+        objects created from it, if any.
       </dd>
     </dl>
 
@@ -1294,8 +1297,6 @@ interface <dfn>WebCLCommandQueue</dfn> {
   any getInfo(CLenum name);
 
   void release();
-
-  void releaseAll();
 };
 </pre>
 
@@ -1802,15 +1803,6 @@ interface <dfn>WebCLCommandQueue</dfn> {
         Releases the resources held up by this object.
       </dd>
 
-      <dt class="idl-code">void releaseAll()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=53">OpenCL 1.1 §5.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseCommandQueue.html">man page</a>)</span>
-      </dt>
-      <dd>
-        Releases the resources held up by this object and its
-        descendants, if any.
-      </dd>
-
     </dl>
 
 <pre class="example">
@@ -1878,7 +1870,6 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
 <pre class="idl">interface <dfn>WebCLMemoryObject</dfn> : Transferable {
   any getInfo(CLenum name);
   void release();
-  void releaseAll();
 };
 </pre>
 
@@ -1914,15 +1905,6 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
       </dt>
       <dd>
         Releases the resources held up by this object.
-      </dd>
-
-      <dt class="idl-code">void releaseAll()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=99">OpenCL 1.1 §5.4.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseMemObject.html">man page</a>)</span>
-      </dt>
-      <dd>
-        Releases the resources held up by this object and its
-        descendants, if any.
       </dd>
 
     </dl>
@@ -1998,7 +1980,6 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
 interface <dfn>WebCLSampler</dfn> {
   any getInfo(CLenum name);
   void release();
-  void releaseAll();
 };
 </pre>
 
@@ -2030,15 +2011,6 @@ interface <dfn>WebCLSampler</dfn> {
       <dd>
         Releases the resources held up by this object.
       </dd>
-
-      <dt class="idl-code">void releaseAll()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=107">OpenCL 1.1 §5.5.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseSampler.html">man page</a>)</span>
-      </dt>
-      <dd>
-        Releases the resources held up by this object and its
-        descendants, if any.
-      </dd>
     </dl>
 
 <!-- ======================================================================================================= -->
@@ -2061,8 +2033,6 @@ interface <dfn>WebCLProgram</dfn> {
   sequence&lt;WebCLKernel&gt; createKernelsInProgram();
 
   void release();
-
-  void releaseAll();
 };
 </pre>
 
@@ -2209,15 +2179,6 @@ interface <dfn>WebCLProgram</dfn> {
         Releases the resources held up by this object.
       </dd>
 
-      <dt class="idl-code">void releaseAll()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=113">OpenCL 1.1 §5.6.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseProgram.html">man page</a>)</span>
-      </dt>
-      <dd>
-      <dd>
-        Releases the resources held up by this object and its
-        descendants, if any.
-      </dd>
     </dl>
 
 <!-- ======================================================================================================= -->
@@ -2237,7 +2198,6 @@ interface <dfn>WebCLKernel</dfn> {
   void setArg(CLuint index, WebCLSampler value);
   void setArg(CLuint index, ArrayBufferView value);
   void release();
-  void releaseAll();
 };
 </pre>
 
@@ -2370,14 +2330,6 @@ interface <dfn>WebCLKernel</dfn> {
         Releases the resources held up by this object.
       </dd>
 
-      <dt class="idl-code">void releaseAll()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=126">OpenCL 1.1 §5.7.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseKernel.html">man page</a>)</span>
-      </dt>
-      <dd>
-        Releases the resources held up by this object and its
-        descendants, if any.
-      </dd>
     </dl>
 
 <pre class="example">
@@ -2406,7 +2358,6 @@ interface <dfn>WebCLEvent</dfn> {
   any   getProfilingInfo(CLenum name);
   void  setCallback(CLenum commandExecCallbackType, WebCLCallback notify);
   void  release();
-  void  releaseAll();
 };
 </pre>
 
@@ -2474,14 +2425,6 @@ interface <dfn>WebCLEvent</dfn> {
         Releases the resources held up by this object.
       </dd>
 
-      <dt class="idl-code">void releaseAll()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=149">OpenCL 1.1 §5.9</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseEvent.html">man page</a>)</span>
-      </dt>
-      <dd>
-        Releases the resources held up by this object and its
-        descendants, if any.
-      </dd>
     </dl>
 
 <pre class="idl" id="WEBCLUSEREVENT">
