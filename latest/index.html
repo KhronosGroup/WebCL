@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">October 9, 2013</h2>
+    <h2 class="no-toc">October 10, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -2597,12 +2597,20 @@ interface <dfn>WebCLExtensionFP16</dfn> {
 
     <p>
       Calling <code>enableExtension("KHR_GL_SHARING")</code> returns a
-      singleton WebCLExtensionGLInterop object that adds a number of
-      new enums, as well as a new variant of `createContext` that
-      returns a WebCLGLContext object instead of a regular
-      WebCLContext.  The extended context allows creating command
-      queues, buffers, and images that are similarly extended with new
-      methods to support WebGL resource sharing.
+      new WebCLExtensionGLInterop instance that includes a number of
+      enums, as well as a new variant of `createContext` that returns
+      a WebCLGLContext object instead of a regular WebCLContext.  The
+      extended context allows creating command queues, buffers, and
+      images that are similarly extended with new methods to support
+      WebGL resource sharing.
+    </p>
+
+    <p>
+      Calling <code>enableExtension("KHR_GL_SHARING")</code> on a
+      WebCLPlatform or WebCLDevice, instead of the global WebCL
+      object, returns an extension object that is restricted to that
+      particular platform or device. Any other platform or device is
+      considered invalid by `createContext`.
     </p>
 
 <pre class="idl">
@@ -2613,6 +2621,7 @@ interface <dfn>WebCLExtensionGLInterop</dfn> {
   /* Error Codes */
   CLenum INVALID_GL_OBJECT                         = -60;
   CLenum INVALID_MIP_LEVEL                         = -62;
+  CLenum INVALID_GL_SHAREGROUP_REFERENCE_KHR       = TODO;
 
   /* cl_command_type */
   CLenum COMMAND_ACQUIRE_GL_OBJECTS                = 0x11FF;
@@ -2643,19 +2652,23 @@ interface <dfn>WebCLExtensionGLInterop</dfn> {
         
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+	        <li>`INVALID_PLATFORM` -- if `properties.platform` is not a valid WebCLPlatform, or `null`</li>
+	        <li>`INVALID_DEVICE` -- if `properties.devices` is not a valid (array of) WebCLDevice(s), or `null`</li>
+	        <li>`INVALID_DEVICE` -- if `properties.devices` contains a device that is not on the requested `platform`</li>
+          <li>`DEVICE_NOT_AVAILABLE` -- if a device in `properties.devices` is currently not available</li>
+          <li>`INVALID_GL_SHAREGROUP_REFERENCE_KHR` -- if `properties.gl` is not a valid WebGLRenderingContext</li>
         </dl>
       </dd>
     </dl>
-       
+
 <pre class="idl" id="WEBCLGLCONTEXTPROPERTIES">
 dictionary <dfn>WebCLGLContextProperties</dfn> : WebCLContextProperties {
-  <a href="http://www.khronos.org/registry/webgl/specs/latest/">WebGLRenderingContext</a> sharedContext = null;
+  <a href="http://www.khronos.org/registry/webgl/specs/latest/">WebGLRenderingContext</a> gl = null;
 };
 </pre>
 
     <dl class="methods">
-     <dt class="idl-code"><a href="http://www.khronos.org/registry/webgl/specs/latest/">WebGLRenderingContext</a> sharedContext</dt>
+     <dt class="idl-code"><a href="http://www.khronos.org/registry/webgl/specs/latest/">WebGLRenderingContext</a> gl</dt>
       <dd>
         The WebGLRenderingContext instance whose resources are to be
         shared with the newly created WebCLGLContext.  If this field
