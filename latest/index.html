@@ -275,6 +275,20 @@ callback <dfn>WebCLCallback</dfn> = void (WebCLEvent event);
 
     <img alt="callback" src="resources/callback.png" height="420" width="780"/>
 
+
+    <h4><a id="CONCURRENCY">Concurrency</a></h4>
+
+    <p>
+      Depending on the implementation, WebCL operations may be running
+      concurrently with JavaScript.  In particular, it may be possible
+      for the application to modify an ArrayBuffer while it's being
+      asynchronously copied to/from a WebCLMemoryObject.  To avoid
+      corrupting the contents of either buffer, applications should
+      not modify an ArrayBuffer that has been enqueued for async
+      read/write, until the relevant WebCL command queue has finished.
+    </p>
+
+
     <h3><a id="WEBCL">WebCL</a></h3>
 
       Window and WorkerUtils object must implement the WebCLEnvironment interface.
@@ -307,6 +321,7 @@ interface <dfn>WebCLEnvironment</dfn> {
       querying the available CL platforms and extensions. It also
       defines all enumerated types used in the API.
     </p>
+
 
 <pre class="idl">
 interface <dfn>WebCL</dfn> {
