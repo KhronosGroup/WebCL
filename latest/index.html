@@ -1380,6 +1380,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `srcBuffer` and `dstBuffer`</li>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
           <li>`INVALID_MEM_OBJECT` -- if `srcBuffer` and `dstBuffer` are not valid WebCLBuffer objects</li>
+          <li>`INVALID_VALUE` -- if `srcOrigin`, `dstOrigin`, or `region` does not have exactly two elements</li>
           <li>`INVALID_VALUE` -- if the `origin`, `region` and `pitch`
             values would require accessing elements outside the
             `srcBuffer` or `dstBuffer` objects</li>
@@ -1423,6 +1424,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
 	        <li>`INVALID_VALUE` -- if the `srcOrigin`, `dstOrigin` and
             `region` values would require accessing elements outside
             the boundaries of `srcImage` or `dstImage`</li>
+          <li>`INVALID_VALUE` -- if `srcOrigin`, `dstOrigin`, or
+            `region` does not have exactly two elements</li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
             `eventWaitList` is invalid</li>
 	        <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of
@@ -1460,6 +1463,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
 	        <li>`INVALID_MEM_OBJECT` -- if `srcBuffer` is not a valid
             buffer object or `dstImage` is not a valid image
             object</li>
+          <li>`INVALID_VALUE` -- if `dstOrigin` or `dstRegion` does
+            not have exactly two elements</li>
 	        <li>`INVALID_VALUE` -- if the `srcOffset`, `dstOrigin` and
             `dstRegion` values would require accessing elements
             outside the boundaries of `srcBuffer` or `dstImage`</li>
@@ -1497,6 +1502,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
 	        <li>`INVALID_MEM_OBJECT` -- if `srcImage` is not a valid
             image object or `dstBuffer` is not a valid buffer
             object</li>
+          <li>`INVALID_VALUE` -- if `srcOrigin` or `srcRegion` does
+            not have exactly two elements</li>
 	        <li>`INVALID_VALUE` -- if the `srcOrigin`, `srcRegion` and
             `dstOffset` values would require accessing elements
             outside the boundaries of `srcImage` or `dstBuffer`</li>
@@ -1567,6 +1574,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `buffer`</li>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
           <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
+          <li>`INVALID_VALUE` -- if `bufferOrigin`, `hostOrigin`, or
+            `region` does not have exactly three elements</li>
           <li>`INVALID_VALUE` -- if any part of the region being read,
           specified by `bufferOrigin`, `region`, `bufferRowPitch` and
           `bufferSlicePitch`, is out of bounds of `buffer`</li>
@@ -1599,6 +1608,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
           <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
           <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of `image` are not supported by this WebCLCommandQueue</li>
+          <li>`INVALID_VALUE` -- if `origin` or `region` does not have exactly two elements</li>
           <li>`INVALID_VALUE` -- if any part of the region being read, specified by `origin` and `region`, is out of bounds of `image`</li>
           <li>`INVALID_VALUE` -- if any part of the region being written, specified by `region` and `hostRowPitch`, is out of bounds of `hostPtr`</li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
@@ -1663,12 +1673,14 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `buffer`</li>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
           <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
+          <li>`INVALID_VALUE` -- if `bufferOrigin`, `hostOrigin`, or
+            `region` does not have exactly three elements</li>
           <li>`INVALID_VALUE` -- if any part of the region being written,
-          specified by `bufferOrigin`, `region`, `bufferRowPitch` and
-          `bufferSlicePitch`, is out of bounds of `buffer`</li>
+            specified by `bufferOrigin`, `region`, `bufferRowPitch` and
+            `bufferSlicePitch`, is out of bounds of `buffer`</li>
           <li>`INVALID_VALUE` -- if any part of the region being
-          read, specified by `hostOrigin`, `region`, `hostRowPitch`
-          and `hostSlicePitch`, is out of bounds of `hostPtr`</li>
+            read, specified by `hostOrigin`, `region`, `hostRowPitch`
+            and `hostSlicePitch`, is out of bounds of `hostPtr`</li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingWrite` is `true` and the execution status of any
@@ -1695,6 +1707,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
           <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
           <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of `image` are not supported by this WebCLCommandQueue</li>
+          <li>`INVALID_VALUE` -- if `origin` or `region` does not have exactly two elements</li>
           <li>`INVALID_VALUE` -- if any part of the region being read, specified by `origin` and `region`, is out of bounds of `image`</li>
           <li>`INVALID_VALUE` -- if any part of the region being written, specified by `region` and `hostRowPitch`, is out of bounds of `hostPtr`</li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
@@ -1704,8 +1717,13 @@ interface <dfn>WebCLCommandQueue</dfn> {
         </dl>
       </dd>
 
-      <dt class="idl-code">void enqueueNDRangeKernel(WebCLKernel kernel, CLuint workDim, sequence&lt;CLuint&gt;? globalWorkOffset, sequence&lt;CLuint&gt; globalWorkSize,
-        sequence&lt;CLuint&gt;? localWorkSize, optional sequence&lt;WebCLEvent&gt;? eventWaitList = null,
+      <dt class="idl-code">void enqueueNDRangeKernel( 
+        WebCLKernel kernel,
+        CLuint workDim,
+        sequence&lt;CLuint&gt;? globalWorkOffset,
+        sequence&lt;CLuint&gt; globalWorkSize,
+        sequence&lt;CLuint&gt;? localWorkSize,
+        optional sequence&lt;WebCLEvent&gt;? eventWaitList = null,
         optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueNDRangeKernel.html">man page</a>)</span>
