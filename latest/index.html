@@ -178,16 +178,17 @@ typedef unsigned long CLenum;     // Used for enumerated types, such as WebCL.DE
 
     <p>
       WebCL methods throw exceptions instead of returning error codes
-      as return values.  Exceptions that may be thrown by each method
-      are listed in that method's documentation.  Additionally, almost
-      all methods may throw the `OUT_OF_RESOURCES` and
-      `OUT_OF_HOST_MEMORY` exceptions, so they are not listed
+      as return values as in OpenCL.  Exceptions that may be thrown by
+      each method are listed in that method's documentation.
+      Additionally, almost all methods may throw `OUT_OF_RESOURCES`,
+      `OUT_OF_HOST_MEMORY`, or the WebCL-specific
+      `WEBCL_IMPLEMENTATION_FAILURE`, so these are not listed
       separately.  Furthermore, calling any function on an object that
       has been released (either explicitly, or implicitly by releasing
       any of its parent objects), will
       throw <code>INVALID_<i>TYPE</i></code>, where <i>`TYPE`</i> is
       `CONTEXT`, `COMMAND_QUEUE`, `MEM_OBJECT`, `SAMPLER`, `PROGRAM`,
-      `KERNEL`, or `EVENT`. These exceptions are also not listed
+      `KERNEL`, or `EVENT`.  These exceptions are also not listed
       separately in the method descriptions.
     </p>
 
