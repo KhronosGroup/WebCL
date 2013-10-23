@@ -3267,10 +3267,11 @@ partial interface WebCLCommandQueue {
       To promote application portability, WebCL not only defines a
       certain set of minimum capabilities that the platform must
       provide (these are generally the same as in OpenCL 1.1 Embedded
-      Profile), but also hides certain query properties that might
-      often be misused to target an application for specific hardware
-      and software configurations. The baseline capabilities and the
-      hidden properties are listed in the tables below.
+      Profile), but also allows implementations, at their discretion,
+      to hide certain query properties that might be misused to target
+      an application for specific hardware/software configurations.
+      The always available and optionally available query properties,
+      as well as their baseline values, are shown in the tables below.
     </p>
 
     <p>
@@ -3279,9 +3280,9 @@ partial interface WebCLCommandQueue {
 
         <tr><td>PLATFORM_PROFILE</td><td>"EMBEDDED_PROFILE"</td><td>"WEBCL_PROFILE"</td></tr>
         <tr><td>PLATFORM_VERSION</td><td>"OpenCL 1.1" + optional vendor string</td><td>"WebCL 1.0"</td></tr>
-        <tr><td>PLATFORM_NAME</td><td>Not Specified</td><td>Hidden</td></tr>
-        <tr><td>PLATFORM_VENDOR</td><td>Not Specified</td><td>Hidden</td></tr>
-        <tr><td>PLATFORM_EXTENSIONS</td><td>Extension String</td><td>Hidden</td></tr>
+        <tr><td>PLATFORM_NAME</td><td>Not Specified</td><td>Optionally Visible</td></tr>
+        <tr><td>PLATFORM_VENDOR</td><td>Not Specified</td><td>Optionally Visible</td></tr>
+        <tr><td>PLATFORM_EXTENSIONS</td><td>Extension String</td><td>Optionally Visible</td></tr>
       </table>
     </p>
 
@@ -3293,14 +3294,14 @@ partial interface WebCLCommandQueue {
                                        DEVICE_TYPE_ACCELERATOR;
                                        DEVICE_TYPE_DEFAULT;
                                        (Or a combination of the above)</td><td>Visible</td></tr>
-        <tr><td>DEVICE_VENDOR_ID</td><td>Not Specified</td><td>Hidden</td></tr>
+        <tr><td>DEVICE_VENDOR_ID</td><td>Not Specified</td><td>Optionally Visible</td></tr>
         <tr><td>DEVICE_MAX_COMPUTE_UNITS</td><td> &gt;=1 </td><td>Visible</td></tr>
         <tr><td>DEVICE_MAX_WORK_ITEM_DIMENSIONS</td><td> &gt;=3 </td><td>Visible</td></tr>
         <tr><td>DEVICE_MAX_WORK_ITEM_SIZES</td><td>&gt;=(1, 1, 1)</td><td>Visible</td></tr>
         <tr><td>DEVICE_MAX_WORK_GROUP_SIZE</td><td>&gt;=1</td><td>Visible</td></tr>
         <tr><td>DEVICE_PREFERRED_VECTOR_WIDTH_* (*=CHAR, SHORT, INT, LONG, FLOAT, DOUBLE, HALF)</td><td>cl_uint</td><td>Visible</td></tr>
-        <tr><td>DEVICE_NATIVE_VECTOR_WIDTH_*</td><td>cl_uint</td><td>Hidden</td></tr>
-        <tr><td>DEVICE_MAX_CLOCK_FREQUENCY</td><td>cl_uint</td><td>Hidden</td></tr>
+        <tr><td>DEVICE_NATIVE_VECTOR_WIDTH_*</td><td>cl_uint</td><td>Optionally Visible</td></tr>
+        <tr><td>DEVICE_MAX_CLOCK_FREQUENCY</td><td>cl_uint</td><td>Optionally Visible</td></tr>
         <tr><td>DEVICE_ADDRESS_BITS</td><td>32 or 64 bits</td><td>Visible</td></tr>
         <tr><td>DEVICE_MAX_MEM_ALLOC_SIZE</td><td> &gt;= max(DEVICE_GLOBAL_MEM_SIZE/4, 1 MB)</td><td>Visible</td></tr>
         <tr><td>DEVICE_IMAGE_SUPPORT</td><td>cl_bool</td><td>TRUE</td></tr>
@@ -3308,13 +3309,13 @@ partial interface WebCLCommandQueue {
         <tr><td>DEVICE_MAX_WRITE_IMAGE_ARGS</td><td>&gt;=1 (if image support)</td><td>Visible</td></tr>
         <tr><td>DEVICE_IMAGE2D_MAX_WIDTH</td><td>&gt;=2048 (if image support)</td><td>Visible</td></tr>
         <tr><td>DEVICE_IMAGE2D_MAX_HEIGHT</td><td>&gt;=2048 (if image support)</td><td>Visible</td></tr>
-        <tr><td>DEVICE_IMAGE3D_MAX_WIDTH</td><td>&gt;=2048 (if 3D image support)</td><td>Hidden (not supported)</td></tr>
-        <tr><td>DEVICE_IMAGE3D_MAX_HEIGHT</td><td>&gt;=2048 (if 3D image support)</td><td>Hidden (not supported)</td></tr>
-        <tr><td>DEVICE_IMAGE3D_MAX_DEPTH</td><td>&gt;=2048 (if 3D image support)</td><td>Hidden (not supported)</td></tr>
+        <tr><td>DEVICE_IMAGE3D_MAX_WIDTH</td><td>&gt;=2048 (if 3D image support)</td><td>0 (not supported)</td></tr>
+        <tr><td>DEVICE_IMAGE3D_MAX_HEIGHT</td><td>&gt;=2048 (if 3D image support)</td><td>0 (not supported)</td></tr>
+        <tr><td>DEVICE_IMAGE3D_MAX_DEPTH</td><td>&gt;=2048 (if 3D image support)</td><td>0 (not supported)</td></tr>
         <tr><td>DEVICE_MAX_SAMPLERS</td><td>&gt;=8 (if image support)</td><td>Visible</td></tr>
         <tr><td>DEVICE_MAX_PARAMETER_SIZE</td><td>&gt;=256</td><td>Visible</td></tr>
         <tr><td>DEVICE_MEM_BASE_ADDR_ALIGN</td><td>&gt;= num bits(int16)</td><td>Visible</td></tr>
-        <tr><td>DEVICE_MIN_DATA_TYPE_ALIGN_SIZE</td><td>&gt;=sizeof(int16)</td><td>Hidden</td></tr>
+        <tr><td>DEVICE_MIN_DATA_TYPE_ALIGN_SIZE</td><td>&gt;=sizeof(int16)</td><td>Removed</td></tr>
         <tr><td>DEVICE_SINGLE_FP_CONFIG</td><td>FP_ROUND_TO_NEAREST; FP_INF_NAN (others optional)</td><td>Visible</td></tr>
         <tr><td>DEVICE_GLOBAL_MEM_CACHE_TYPE</td><td>NONE; READ_ONLY_CACHE; READ_WRITE_CACHE</td><td>Visible</td></tr>
         <tr><td>DEVICE_GLOBAL_MEM_CACHELINE_SIZE</td><td>cl_uint</td><td>Visible</td></tr>
@@ -3333,13 +3334,13 @@ partial interface WebCLCommandQueue {
         <tr><td>DEVICE_EXECUTION_CAPABILITIES</td><td>EXEC_KERNEL; EXEC_NATIVE_KERNEL</td><td>EXEC_KERNEL</td></tr>
         <tr><td>DEVICE_QUEUE_PROPERTIES</td><td>QUEUE_PROFILING_ENABLE; QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE (optional)</td><td>Visible</td></tr>
         <tr><td>DEVICE_PLATFORM</td><td>cl_platform_id</td><td>Visible</td></tr>
-        <tr><td>DEVICE_NAME</td><td>Not Specified</td><td>Hidden</td></tr>
-        <tr><td>DEVICE_VENDOR</td><td>Not Specified</td><td>Hidden</td></tr>
-        <tr><td>DRIVER_VERSION</td><td>Version String</td><td>Hidden</td></tr>
+        <tr><td>DEVICE_NAME</td><td>Not Specified</td><td>Optionally Visible</td></tr>
+        <tr><td>DEVICE_VENDOR</td><td>Not Specified</td><td>Optionally Visible</td></tr>
+        <tr><td>DRIVER_VERSION</td><td>Version String</td><td>Optionally Visible</td></tr>
         <tr><td>DEVICE_PROFILE</td><td>"EMBEDDED_PROFILE"</td><td>"WEBCL_PROFILE"</td></tr>
         <tr><td>DEVICE_VERSION</td><td>Version String</td><td>"WebCL 1.0"</td></tr>
         <tr><td>DEVICE_OPENCL_C_VERSION</td><td>Version String</td><td>Visible</td></tr>
-        <tr><td>DEVICE_EXTENSIONS</td><td>Extension String</td><td>Hidden</td></tr>
+        <tr><td>DEVICE_EXTENSIONS</td><td>Extension String</td><td>Optionally Visible</td></tr>
       </table>
     </p>
 
