@@ -217,16 +217,17 @@ exception <dfn>WebCLException</dfn> : DOMException {
     </p>
 
     <p>
-      For convenience, each WebCLContext object contains an additional
-      `releaseAll` function, which releases the context itself, as
-      well as all other WebCL objects created from it.  The usage and
-      behavior of the release methods are illustrated in the example
-      below.
+      For convenience, the WebCL and WebCLContext classes contain an
+      additional `releaseAll` function, which releases the context(s),
+      as well as all other WebCL objects created from them.  The usage
+      and behavior of the release methods are illustrated in the
+      example below.
     </p>
 
 <pre class="example">
   var ctx1 = WebCL.createContext(...);
   var ctx2 = WebCL.createContext(...);
+  var ctx3 = WebCL.createContext(...);
   var A = ctx1.createBuffer(...);
   var B = ctx2.createBuffer(...);
   ctx1.release();                    // releases ctx1, but not buffer A
@@ -234,6 +235,7 @@ exception <dfn>WebCLException</dfn> : DOMException {
   A.release();                       // releases buffer A 
   B.release();                       // does nothing: B is already released
   var C = ctx1.createBuffer(...);    // EXCEPTION: ctx1 is no longer valid
+  WebCL.releaseAll();                // releases ctx3
 </pre>
 
     <p>
@@ -339,6 +341,8 @@ interface <dfn>WebCL</dfn> {
 
   void waitForEvents(sequence&lt;WebCLEvent&gt; eventWaitList,
                      optional WebCLCallback whenFinished);
+
+  void releaseAll();
 
   // Enums
 
@@ -749,6 +753,15 @@ interface <dfn>WebCL</dfn> {
             if the execution status of any of the events in
             `eventWaitList` is a negative integer value</li>
         </dl>
+      </dd>
+
+      <dt class="idl-code">void releaseAll()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=48">OpenCL 1.1 §4.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Releases the resources held up by all WebCLContext instances,
+        as well as their descendant objects, if any.
       </dd>
 
     </dl>
