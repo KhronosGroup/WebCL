@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">October 10, 2013</h2>
+    <h2 class="no-toc">October 23, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -665,28 +665,28 @@ interface <dfn>WebCL</dfn> {
 
       <dt class="idl-code">sequence&lt;WebCLPlatform&gt; getPlatforms()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=32">OpenCL 1.1 §4.1</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetPlatformIDs.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetPlatformIDs.html">man page</a>)</span>
       </dt>
       <dd>
         Retrieves all WebCL platforms that are available in this system.
       </dd>
 
-       <dt class="idl-code">WebCLContext? createContext(optional WebCLContextProperties properties)
-          <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=45">OpenCL 1.1 §4.3</a>,
+      <dt class="idl-code">WebCLContext? createContext(optional WebCLContextProperties properties)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=45">OpenCL 1.1 §4.3</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
-         </dt>
+      </dt>
       <dd>
         Returns a newly created WebCL context with the given
         properties, or `null` if a suitable context could not be
         created.  The `properties` parameter can be omitted, in which
         case the implementation will decide which platform and device
-        (or devices) to use.
+        to use.
 
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-	        <li>`INVALID_PLATFORM` -- if `properties.platform` is non-`null`, but is not a valid platform object</li>
 	        <li>`INVALID_DEVICE` -- if `properties.devices` is non-`null`, but is not an array of valid device objects</li>
-	        <li>`INVALID_DEVICE` -- if `properties.devices` contains a device that is not on the requested `platform`</li>
+	        <li>`INVALID_DEVICE` -- if any devices in `properties.devices` are on different platforms</li>
+	        <li>`INVALID_PLATFORM` -- if `properties.platform` is non-`null`, but is not a valid platform object</li>
 	        <li>`DEVICE_NOT_AVAILABLE` -- if a device in `properties.devices` is currently not available</li>
         </dl>
       </dd>
@@ -741,43 +741,41 @@ interface <dfn>WebCL</dfn> {
 
 <pre class="idl">
 dictionary <dfn>WebCLContextProperties</dfn> {
-  WebCLPlatform?          platform = null;      // Default: let the implementation decide
   sequence&lt;WebCLDevice&gt;?  devices = null;       // Default: let the implementation decide
+  WebCLPlatform?          platform = null;      // Default: let the implementation decide
   CLenum                  deviceType = 0x1;     // 0x1 == WebCL.DEVICE_TYPE_DEFAULT
 };
 </pre>
 
     <dl class="methods">
 
-      <dt class="idl-code">WebCLPlatform platform</dt>
-      <dd>
-        The platform to create a context for. If this is `null`, the
-        implementation will decide which platform to use. Note that in
-        typical systems, there is only one WebCLPlatform.
-      </dd>
-
       <dt class="idl-code">sequence&lt;WebCLDevice&gt; devices</dt>
       <dd>
-        An array of devices to create the context for. If this is
-        `null`, the implementation will decide which device (on the
-        given `platform`) to use.  If the array is not `null`, it must
-        not be empty, and must not contain elements of any other type
-        than WebCLDevice. The devices must be on the same platform,
-        and if the `platform` field is non-`null`, the devices must be
-        on that particular WebCLPlatform.
+        An array of devices to create the context for.  If the array
+        is not `null`, it must not be empty, and must not contain
+        elements of any other type than WebCLDevice.  The given
+        devices must be on the same platform.  If the array is `null`,
+        the implementation will decide which device (on the given
+        `platform` and/or with the given `deviceType`) to use.
+      </dd>
+
+      <dt class="idl-code">WebCLPlatform platform</dt>
+      <dd>
+        The platform to create a context for.  This field is ignored
+        if `devices` is non-`null`.  If this field is `null`, the
+        implementation will decide which platform to use.  Note that
+        in typical systems, there is only one WebCLPlatform.
       </dd>
 
       <dt class="idl-code">CLenum deviceType</dt>
       <dd>
-        The type of device to create a context for. The available
-        device types are specified in the table below.  This field is
+        The type of device to create a context for.  The available
+        device types are listed in the table below.  This field is
         ignored if `devices` is non-`null`.  If there is no device of
-        the given type in the system or on the given `platform`,
-        `createContext` will return `null`.  If `platform` and
-        `devices` are both `null`, the WebCL implementation will
-        select any platform that has one or more devices of the
-        given type, and creates a context that spans all of those
-        devices.
+        the given type on the given `platform`, `createContext` will
+        return `null`.  If `platform` is `null`, `createContext` will
+        select any device on any platform that matches the given type,
+        or failing that, will return `null`.
         <table class="enumtable">
           <tr><th>deviceType</th><th>Description</th></tr>
           <tr><td>DEVICE_TYPE_CPU</td><td>A single-core or multi-core CPU, typically the host processor.</td></tr>
@@ -2591,19 +2589,21 @@ interface <dfn>WebCLExtensionGLInterop</dfn> {
         properties, or `null` if a suitable context could not be
         created.  The `properties` parameter can be omitted, in which
         case the implementation will decide which platform and device
-        (or devices) to use.
+        to use.
         
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-	        <li>`INVALID_PLATFORM` -- if `properties.platform` is not a valid WebCLPlatform, or `null`</li>
-	        <li>`INVALID_DEVICE` -- if `properties.devices` is not a valid (array of) WebCLDevice(s), or `null`</li>
-	        <li>`INVALID_DEVICE` -- if `properties.devices` contains a device that is not on the requested `platform`</li>
-          <li>`DEVICE_NOT_AVAILABLE` -- if a device in `properties.devices` is currently not available</li>
-          <li>`INVALID_GL_SHAREGROUP_REFERENCE_KHR` -- if `properties.gl` is not a valid WebGLRenderingContext</li>
+	        <li>`INVALID_DEVICE` -- if `properties.devices` is non-`null`, but is not an array of valid device objects</li>
+	        <li>`INVALID_DEVICE` -- if any devices in `properties.devices` are on different platforms</li>
+	        <li>`INVALID_DEVICE` -- if any device in `properties.devices` is not compatible with `properties.gl`</li>
+	        <li>`INVALID_PLATFORM` -- if `properties.platform` is non-`null`, but is not a valid platform object</li>
+	        <li>`INVALID_PLATFORM` -- if no device on `properties.platform` is compatible with `properties.gl`</li>
+	        <li>`DEVICE_NOT_AVAILABLE` -- if a device in `properties.devices` is currently not available</li>
+          <li>`INVALID_GL_SHAREGROUP_REFERENCE_KHR` -- if `properties.gl` is not a valid WebGLRenderingContext, or `null`</li>
         </dl>
       </dd>
     </dl>
-
+    
 <pre class="idl" id="WEBCLGLCONTEXTPROPERTIES">
 dictionary <dfn>WebCLGLContextProperties</dfn> : WebCLContextProperties {
   <a href="http://www.khronos.org/registry/webgl/specs/latest/">WebGLRenderingContext</a> gl = null;
