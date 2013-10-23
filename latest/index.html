@@ -1899,7 +1899,7 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
 
     <h3><a id="WEBCLMEMORYOBJECT">WebCLMemoryObject</a></h3>
 
-<pre class="idl">interface <dfn>WebCLMemoryObject</dfn> : Transferable {
+<pre class="idl">interface <dfn>WebCLMemoryObject</dfn> {
   any getInfo(CLenum name);
   void release();
 };
@@ -2665,7 +2665,7 @@ interface <dfn>WebCLGLContext</dfn> : WebCLContext {
 
   WebCLGLImage createFromGLTexture(CLenum memFlags, 
                                    GLenum textureTarget,
-                                   GLint miplevel,
+                                   CLint miplevel,
                                    WebGLTexture texture);
 
   any getInfo(CLenum name);
@@ -2718,7 +2718,7 @@ interface <dfn>WebCLGLContext</dfn> : WebCLContext {
         </dl>
       </dd>
       
-      <dt class="idl-code">WebCLGLImage createFromGLTexture(CLenum memFlags, GLenum textureTarget, GLint miplevel, WebGLTexture texture)
+      <dt class="idl-code">WebCLGLImage createFromGLTexture(CLenum memFlags, GLenum textureTarget, CLint miplevel, WebGLTexture texture)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=321">OpenCL 1.1 §9.8.34</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLTexture2D.html">man page</a>)</span>
       </dt>
@@ -2816,7 +2816,7 @@ interface <dfn>WebCLGLBuffer</dfn> : WebCLBuffer {
 <pre class="idl" id="WEBCLGLIMAGE">
 interface <dfn>WebCLGLImage</dfn> : WebCLImage {
   WebCLGLObjectInfo getGLObjectInfo();
-  GLint getGLTextureInfo(CLenum paramName);
+  any getGLTextureInfo(CLenum name);
 };
 </pre>
 
@@ -2831,24 +2831,35 @@ interface <dfn>WebCLGLImage</dfn> : WebCLImage {
           <li>None</li>
         </dl>
       </dd>
-      <dt class="idl-code">GLint getGLTextureInfo(CLenum paramName)
+      <dt class="idl-code">any getGLTextureInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=327">OpenCL 1.1 §9.8.5</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetGLTextureInfo.html">man page</a>)</span>
       </dt>
       <dd>
-        Returns the values passed in to `createFromGLTexture` when
-        creating this WebCLImage from a WebGL texture.
+        Returns the value corresponding to the given `name`.  The type
+        returned is the natural type for the requested name, as given
+        in the table below.  The values returned are the same that
+        were passed in to `createFromGLTexture` when creating this
+        WebCLImage from a WebGLTexture.  An exception is thrown if
+        this WebCLImage was created from a renderbuffer rather than a
+        texture.
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>GL_TEXTURE_TARGET</td><td>GLenum</td></tr>
+          <tr><td>GL_MIPMAP_LEVEL</td><td>CLint</td></tr>
+        </table><br>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values</li>
+          <li>`INVALID_GL_OBJECT` -- if there is no texture associated with this WebCLImage</li>
         </dl>
       </dd>
     </dl>
 
 <pre class="idl" id="WEBCLGLOBJECTINFO"></a>
 dictionary <dfn>WebCLGLObjectInfo</dfn> {
-  CLenum type;   // type of GL object attached to this memory object
-  any glObject;  // The GL object used to create this memory object
+  any glObject;          // the GL object used to create this memory object
+  CLenum type;           // the type of GL object attached to this memory object
 };
 </pre>
 
