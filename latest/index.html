@@ -987,7 +987,7 @@ interface <dfn>WebCLContext</dfn> {
 
   any getInfo(CLenum name);
 
-  sequence&lt;WebCLImageDescriptor&gt;? getSupportedImageFormats(CLenum memFlags);
+  sequence&lt;WebCLImageDescriptor&gt;? getSupportedImageFormats(optional CLenum memFlags = MEM_READ_WRITE);
 
   void release();
 
@@ -2644,8 +2644,13 @@ interface <dfn>WebCLExtensionGLInterop</dfn> {
       <dd>
         Returns a newly created WebCLGL context with the given
         properties, or `null` if a suitable context could not be
-        created.  The `properties` parameter can be omitted, in which
-        case the implementation will decide which platform and device
+        created.  If the `gl` property is given, and there are more
+        than one WebCLDevices that can interoperate with it and that
+        satisfy the constraints of the `devices`, `platform` and
+        `deviceType` fields, the implementation will choose the
+        WebCLDevice that it deems best suited for interoperating with
+        the given WebGLRenderingContext.  If `properties` is omitted,
+        the implementation will choose which device and WebGL context
         to use.
         
         <dl class="exceptions">
