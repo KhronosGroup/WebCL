@@ -1558,6 +1558,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_VALUE` -- if any part of the region being
             written, specified by `hostPtr` and `numBytes` is out of
             bounds of `hostPtr`</li>
+          <li>`INVALID_VALUE` -- if <code>numBytes %
+            hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingRead` is `true` and the execution status of any
@@ -1590,11 +1592,13 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_VALUE` -- if `bufferOrigin`, `hostOrigin`, or
             `region` does not have exactly three elements</li>
           <li>`INVALID_VALUE` -- if any part of the region being read,
-          specified by `bufferOrigin`, `region`, `bufferRowPitch` and
-          `bufferSlicePitch`, is out of bounds of `buffer`</li>
+            specified by `bufferOrigin`, `region`, `bufferRowPitch` and
+            `bufferSlicePitch`, is out of bounds of `buffer`</li>
           <li>`INVALID_VALUE` -- if any part of the region being
-          written, specified by `hostOrigin`, `region`, `hostRowPitch`
-          and `hostSlicePitch`, is out of bounds of `hostPtr`</li>
+            written, specified by `hostOrigin`, `region`, `hostRowPitch`
+            and `hostSlicePitch`, is out of bounds of `hostPtr`</li>
+          <li>`INVALID_VALUE` -- if <code>host{Row,Slice}Pitch %
+            hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingRead` is `true` and the execution status of any
@@ -1624,6 +1628,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_VALUE` -- if `origin` or `region` does not have exactly two elements</li>
           <li>`INVALID_VALUE` -- if any part of the region being read, specified by `origin` and `region`, is out of bounds of `image`</li>
           <li>`INVALID_VALUE` -- if any part of the region being written, specified by `region` and `hostRowPitch`, is out of bounds of `hostPtr`</li>
+          <li>`INVALID_VALUE` -- if <code>hostRowPitch % hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingRead` is `true` and the execution status of any event
             in `eventWaitList`is a negative integer value</li>
@@ -1657,6 +1662,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_VALUE` -- if any part of the region being read,
             specified by `hostPtr` and `numBytes`, is out of bounds of
             `hostPtr`</li>
+          <li>`INVALID_VALUE` -- if <code>numBytes %
+            hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingWrite` is `true` and the execution status of any
@@ -1694,6 +1701,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_VALUE` -- if any part of the region being
             read, specified by `hostOrigin`, `region`, `hostRowPitch`
             and `hostSlicePitch`, is out of bounds of `hostPtr`</li>
+          <li>`INVALID_VALUE` -- if <code>host{Row,Slice}Pitch %
+            hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingWrite` is `true` and the execution status of any
@@ -1723,6 +1732,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_VALUE` -- if `origin` or `region` does not have exactly two elements</li>
           <li>`INVALID_VALUE` -- if any part of the region being read, specified by `origin` and `region`, is out of bounds of `image`</li>
           <li>`INVALID_VALUE` -- if any part of the region being written, specified by `region` and `hostRowPitch`, is out of bounds of `hostPtr`</li>
+          <li>`INVALID_VALUE` -- if <code>hostRowPitch % hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingWrite` is `true` and the execution status of any
