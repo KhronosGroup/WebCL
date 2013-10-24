@@ -1105,7 +1105,7 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
         <table class="enumtable">
           <tr><th>name</th><th>return type</th></tr>
           <tr><td>CONTEXT_NUM_DEVICES</td><td>CLuint</td></tr>
-          <tr><td>CONTEXT_DEVICES</td><td>WebCLDevice&gt;</td></tr>
+          <tr><td>CONTEXT_DEVICES</td><td>sequence&lt;WebCLDevice&gt;</td></tr>
           <tr><td>CONTEXT_PROPERTIES</td><td>WebCLContextProperties</td></tr>
         </table><br>
         <dl class="exceptions">
@@ -2101,7 +2101,7 @@ interface <dfn>WebCLProgram</dfn> {
           <tr><th>name</th><th>return type</th></tr>
           <tr><td>PROGRAM_CONTEXT</td><td>WebCLContext</td></tr>
           <tr><td>PROGRAM_NUM_DEVICES</td><td>CLuint</td></tr>
-          <tr><td>PROGRAM_DEVICES</td><td>WebCLDevice&gt;</td></tr>
+          <tr><td>PROGRAM_DEVICES</td><td>sequence&lt;WebCLDevice&gt;</td></tr>
           <tr><td>PROGRAM_SOURCE</td><td>DOMString</td></tr>
         </table><br>
         <dl class="exceptions">
@@ -2587,6 +2587,8 @@ interface <dfn>WebCLExtensionFP16</dfn> {
 };
 </pre>
 
+<!-- ======================================================================================================= -->
+
     <h3><a id="WEBCLGL">WebGL Resource Sharing</a></h3>
 
     <p>
@@ -2775,7 +2777,7 @@ interface <dfn>WebCLGLContext</dfn> : WebCLContext {
         <table class="enumtable">
           <tr><th>name</th><th>return type</th></tr>
           <tr><td>CONTEXT_NUM_DEVICES</td><td>CLuint</td></tr>
-          <tr><td>CONTEXT_DEVICES</td><td>WebCLDevice&gt;</td></tr>
+          <tr><td>CONTEXT_DEVICES</td><td>sequence&lt;WebCLDevice&gt;</td></tr>
           <tr><td>CONTEXT_PROPERTIES</td><td>WebCLGLContextProperties</td></tr>
         </table><br>
         <dl class="exceptions">
@@ -2893,7 +2895,220 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
 };
 </pre>
 
+<!-- ======================================================================================================= -->
 
+<div class="strawman">
+
+    <h3><a id="WEBCLGL">WebGL Resource Sharing (Alternative Design)</a></h3>
+
+    <p>
+      The WebGL Resource Sharing extension allows applications to use
+      WebGL buffers, renderbuffers and textures as WebCL memory
+      objects.  The extension is enabled by
+      calling <code>enableExtension("KHR_GL_SHARING")</code>, after
+      which the application may create a new WebCLContext that is tied
+      to a given WebGLRenderingContext.
+    </p>
+
+<pre class="idl">
+partial interface <dfn>WebCLContext</dfn> {
+
+  WebCLContext? createContext(optional WebCLContextProperties properties);
+
+  /* Error Codes */
+  CLenum INVALID_GL_OBJECT                         = -60;
+  CLenum INVALID_MIP_LEVEL                         = -62;
+  CLenum INVALID_GL_SHAREGROUP_REFERENCE_KHR       = TODO;
+
+  /* cl_command_type */
+  CLenum COMMAND_ACQUIRE_GL_OBJECTS                = 0x11FF;
+  CLenum COMMAND_RELEASE_GL_OBJECTS                = 0x1200;
+
+  /* cl_gl_object_type */
+  CLenum GL_OBJECT_BUFFER                          = 0x2000;
+  CLenum GL_OBJECT_TEXTURE2D                       = 0x2001;
+  CLenum GL_OBJECT_RENDERBUFFER                    = 0x2003;
+	
+  /* cl_gl_texture_info */
+  CLenum GL_TEXTURE_TARGET                         = 0x2004;
+  CLenum GL_MIPMAP_LEVEL                           = 0x2005;
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">WebCLContext? createContext(optional WebCLContextProperties properties)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=45">OpenCL 1.1 §4.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Returns a newly created WebCLContext with the given
+        properties, or `null` if a suitable context could not be
+        created.  If the `gl` property is given, and there are more
+        than one WebCLDevices that can interoperate with it and that
+        satisfy the constraints of the `devices`, `platform` and
+        `deviceType` fields, the implementation will choose the
+        WebCLDevice that it deems best suited for interoperating with
+        the given WebGLRenderingContext.  If `properties` is omitted,
+        the implementation will choose which device and WebGL context
+        to use.
+        
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+	        <li>`INVALID_DEVICE` -- if `properties.devices` is non-`null`, but is not an array of valid device objects</li>
+	        <li>`INVALID_DEVICE` -- if any devices in `properties.devices` are on different platforms</li>
+	        <li>`INVALID_DEVICE` -- if any device in `properties.devices` is not compatible with `properties.gl`</li>
+	        <li>`INVALID_PLATFORM` -- if `properties.platform` is non-`null`, but is not a valid platform object</li>
+	        <li>`INVALID_PLATFORM` -- if no device on `properties.platform` is compatible with `properties.gl`</li>
+	        <li>`DEVICE_NOT_AVAILABLE` -- if a device in `properties.devices` is currently not available</li>
+          <li>`INVALID_GL_SHAREGROUP_REFERENCE_KHR` -- if `properties.gl` is not a valid WebGLRenderingContext, or `null`</li>
+        </dl>
+      </dd>
+    </dl>
+    
+<pre class="idl" id="WEBCLGLCONTEXTPROPERTIES">
+partial dictionary WebCLContextProperties {
+  <a href="http://www.khronos.org/registry/webgl/specs/latest/">WebGLRenderingContext</a> gl = null;
+};
+</pre>
+
+    <dl class="methods">
+     <dt class="idl-code"><a href="http://www.khronos.org/registry/webgl/specs/latest/">WebGLRenderingContext</a> gl</dt>
+      <dd>
+        The WebGLRenderingContext instance whose resources are to be
+        shared with the newly created WebCLContext.  If this field is
+        not specified, the implementation will decide which WebGL
+        context to use.
+      </dd>
+    </dl>
+
+<pre class="idl" id="WEBCLGLCONTEXT">
+partial interface WebCLContext {
+
+  WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
+
+  WebCLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer);
+
+  WebCLImage createFromGLTexture(CLenum memFlags, 
+                                 GLenum textureTarget,
+                                 CLint miplevel,
+                                 WebGLTexture texture);
+};
+</pre>
+
+    <dl class="methods">
+
+      <dt class="idl-code">WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=320">OpenCL 1.1 §9.8.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLBuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+          <li>`INVALID_GL_OBJECT` -- if `buffer` is not a valid WebGLBuffer</li>
+        </dl>
+      </dd>
+
+      <dt class="idl-code">WebCLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=325">OpenCL 1.1 §9.8.4</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLRenderbuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+          <li>`INVALID_GL_OBJECT` -- if `renderbuffer` is not a valid WebGLRenderbuffer, or has zero width or height</li>
+          <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if the internal format of `renderbuffer` does not map to a supported WebCL image format</li>
+          <li>`INVALID_OPERATION` -- if `renderbuffer` is a multi-sample WebGLRenderbuffer object</li>
+        </dl>
+      </dd>
+      
+      <dt class="idl-code">WebCLImage createFromGLTexture(CLenum memFlags, GLenum textureTarget, CLint miplevel, WebGLTexture texture)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=321">OpenCL 1.1 §9.8.34</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLTexture2D.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+          <li>`INVALID_VALUE` -- if `textureTarget` is not `TEXTURE_2D` or one of `TEXTURE_CUBE_MAP_*`</li>
+          <li>`INVALID_MIP_LEVEL` -- if <code>miplevel &lt; 0 || miplevel &gt; q</code>, where `q` is as defined in OpenGL ES 2.0</li>
+          <li>`INVALID_MIP_LEVEL` -- if <code>miplevel &gt; 0</code> and creating from non-zero mipmap levels is not supported</li>
+          <li>`INVALID_GL_OBJECT` -- if `texture` is not a valid WebGLTexture, or does not match the given `textureTarget`</li>
+          <li>`INVALID_GL_OBJECT` -- if the specified `miplevel` is not defined for `texture`, or has zero width or height</li>
+          <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if the internal format of `texture` does not map to a supported WebCL image format</li>
+        </dl>
+      </dd>
+
+    </dl>
+
+<pre class="idl" id="WEBCLGLCOMMANDQUEUE">
+partial interface WebCLCommandQueue {
+
+  void enqueueAcquireGLObjects(sequence&lt;WebCLMemoryObject&gt; memObjects,
+                               optional sequence&lt;WebCLEvent&gt;? eventWaitList,
+                               optional WebCLEvent? event);
+	
+  void enqueueReleaseGLObjects(sequence&lt;WebCLMemoryObject&gt; memObjects,
+                               optional sequence&lt;WebCLEvent&gt;? eventWaitList,
+                               optional WebCLEvent? event);
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">void enqueueAcquireGLObjects(sequence&lt;WebCLMemoryObject&gt; memObjects,
+        optional sequence&lt;WebCLEvent&gt;? eventWaitList = null, optional WebCLEvent? event = null);
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueAcquireGLObjects.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`TODO`</li>
+        </dl>
+      </dd>
+
+      <dt class="idl-code">void enqueueReleaseGLObjects(sequence&lt;WebCLMemoryObject&gt; memObjects,
+        optional sequence&lt;WebCLEvent&gt;? eventWaitList = null, optional WebCLEvent? event = null);
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReleaseGLObjects.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`TODO`</li>
+        </dl>
+      </dd>
+    </dl>
+
+<pre class="idl" id="WEBCLGLBUFFER">
+partial interface WebCLMemoryObject {
+  WebCLGLObjectInfo getGLObjectInfo();
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">WebCLGLObjectInfo getGLObjectInfo()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=326">OpenCL 1.1 §9.8.5</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetGLObjectInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>None</li>
+        </dl>
+      </dd>
+
+<pre class="idl" id="WEBCLGLOBJECTINFO"></a>
+dictionary <dfn>WebCLGLObjectInfo</dfn> {
+  any glObject;          // the GL object used to create this memory object
+  CLenum type;           // the type of GL object attached to this memory object
+  GLenum textureTarget;  // 'undefined' if there is no texture associated
+  CLint mipmapLevel;     // 'undefined' if there is no texture associated
+};
+</pre>
+
+</div> <!-- strawman -->
 
 <!-- ======================================================================================================= -->
 
