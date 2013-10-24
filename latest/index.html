@@ -2819,10 +2819,6 @@ interface <dfn>WebCLGLBuffer</dfn> : WebCLBuffer {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetGLObjectInfo.html">man page</a>)</span>
       </dt>
       <dd>
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>None</li>
-        </dl>
       </dd>
     </dl>
 
@@ -2839,10 +2835,6 @@ interface <dfn>WebCLGLImage</dfn> : WebCLImage {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetGLObjectInfo.html">man page</a>)</span>
       </dt>
       <dd>
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>None</li>
-        </dl>
       </dd>
       <dt class="idl-code">any getGLTextureInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=327">OpenCL 1.1 §9.8.5</a>,
@@ -3074,10 +3066,6 @@ partial interface WebCLMemoryObject {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetGLObjectInfo.html">man page</a>)</span>
       </dt>
       <dd>
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>None</li>
-        </dl>
       </dd>
 
 <pre class="idl" id="WEBCLGLOBJECTINFO"></a>
@@ -3127,27 +3115,15 @@ partial interface <dfn>WebCLProgram</dfn> {
 
       <dt class="idl-code">CLint getValidationStatus()</dt>
       <dd>
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	        <li>None</li>
-        </dl>
       </dd>
 
 
       <dt class="idl-code">DOMString? getValidatedSource()</dt>
       <dd>
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	        <li>None</li>
-        </dl>
       </dd>
 
       <dt class="idl-code">DOMString? getValidationLog()</dt>
       <dd>
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	        <li>None</li>
-        </dl>
       </dd>
     </dl>
 
@@ -3165,11 +3141,6 @@ partial interface <dfn>WebCLKernel</dfn> {
       <dd>
         Returns `null` if `index` is not a valid argument index for
         this WebCLKernel, or if argument info is not available.
-
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	        <li>None</li>
-        </dl>
       </dd>
 
 <pre class="idl" id="WEBCLKERNELARGINFO">
