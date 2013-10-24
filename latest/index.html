@@ -2788,18 +2788,18 @@ interface <dfn>WebCLGLContext</dfn> : WebCLContext {
 <pre class="idl" id="WEBCLGLCOMMANDQUEUE">
 interface <dfn>WebCLGLCommandQueue</dfn> : WebCLCommandQueue {
 
-  void enqueueAcquireGLObjects(WebCLMemoryObject&gt; memObjects,
+  void enqueueAcquireGLObjects(sequence&lt;WebCLMemoryObject&gt; memObjects,
                                optional sequence&lt;WebCLEvent&gt;? eventWaitList,
                                optional WebCLEvent? event);
 	
-  void enqueueReleaseGLObjects(WebCLMemoryObject&gt; memObjects,
+  void enqueueReleaseGLObjects(sequence&lt;WebCLMemoryObject&gt; memObjects,
                                optional sequence&lt;WebCLEvent&gt;? eventWaitList,
                                optional WebCLEvent? event);
 };
 </pre>
 
     <dl class="methods">
-      <dt class="idl-code">void enqueueAcquireGLObjects(WebCLMemoryObject&gt; memObjects,
+      <dt class="idl-code">void enqueueAcquireGLObjects(sequence&lt;WebCLMemoryObject&gt; memObjects,
         optional sequence&lt;WebCLEvent&gt;? eventWaitList = null, optional WebCLEvent? event = null);
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueAcquireGLObjects.html">man page</a>)</span>
@@ -2811,7 +2811,7 @@ interface <dfn>WebCLGLCommandQueue</dfn> : WebCLCommandQueue {
         </dl>
       </dd>
 
-      <dt class="idl-code">void enqueueReleaseGLObjects(WebCLMemoryObject&gt; memObjects,
+      <dt class="idl-code">void enqueueReleaseGLObjects(sequence&lt;WebCLMemoryObject&gt; memObjects,
         optional sequence&lt;WebCLEvent&gt;? eventWaitList = null, optional WebCLEvent? event = null);
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReleaseGLObjects.html">man page</a>)</span>
