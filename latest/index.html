@@ -2389,11 +2389,7 @@ myKernel.setArg(3, myImage);                                  // pass `myImage` 
     </p>
 
 <pre class="idl">
-[Constructor]
 interface <dfn>WebCLEvent</dfn> {
-  readonly attribute CLenum status;
-  readonly attribute WebCLMemoryObject buffer;
-
   any   getInfo(CLenum name);
   any   getProfilingInfo(CLenum name);
   void  setCallback(CLenum commandExecCallbackType, WebCLCallback notify);
