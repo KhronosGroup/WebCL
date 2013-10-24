@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">October 23, 2013</h2>
+    <h2 class="no-toc">October 24, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -2079,7 +2079,7 @@ interface <dfn>WebCLProgram</dfn> {
 
   any getBuildInfo(WebCLDevice device, CLenum name);
 
-  void build(optional WebCLDevice&gt;? devices,
+  void build(optional sequence&lt;WebCLDevice&gt;? devices,
              optional DOMString? options,
              optional WebCLCallback whenFinished);
 
@@ -2110,21 +2110,6 @@ interface <dfn>WebCLProgram</dfn> {
         </dl>
       </dd>
 
-      <dt class="idl-code">any getValidationInfo(CLenum name)</dt>
-      <dd>
-        <table class="enumtable">
-          <tr><th>name</th><th>return type</th></tr>
-          <tr><td>PROGRAM_VALIDATION_STATUS</td><td>CLenum</td></tr>
-          <tr><td>PROGRAM_VALIDATION_OPTIONS</td><td>DOMString</td></tr>
-          <tr><td>PROGRAM_VALIDATION_LOG</td><td>DOMString</td></tr>
-          <tr><td>PROGRAM_SOURCE_VALIDATED</td><td>DOMString</td></tr>
-        </table><br>
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
-        </dl>
-      </dd>
-
       <dt class="idl-code">any getBuildInfo(WebCLDevice device, CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=122">OpenCL 1.1 §5.6.5</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetProgramBuildInfo.html">man page</a>)</span>
@@ -2143,7 +2128,7 @@ interface <dfn>WebCLProgram</dfn> {
         </dl>
       </dd>
 
-      <dt class="idl-code">void build(optional WebCLDevice&gt;? devices,
+      <dt class="idl-code">void build(optional sequence&lt;WebCLDevice&gt;? devices,
                                       optional DOMString? options,
                                       optional WebCLCallback whenFinished)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=114">OpenCL 1.1 §5.6.2</a>,
@@ -3109,6 +3094,98 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
 </pre>
 
 </div> <!-- strawman -->
+
+<!-- ======================================================================================================= -->
+
+    <h3><a id="VALIDATION">Validation Info Query</a></h3>
+
+    <p>
+      The Validation Info Query extension allows applications to
+      retrieve information about kernel validation, including error
+      messages, warnings, logs, instrumented source code, and kernel
+      argument info.  This information becomes available after
+      building (or attempting to build) a WebCLProgram.  The extension
+      is enabled by
+      <code>enableExtension("WEBCL_VALIDATION_INFO")</code>.  Calling
+      the info query functions without first enabling the extension
+      will cause an exception.
+    </p>
+
+<pre class="idl">
+partial interface <dfn>WebCLProgram</dfn> {
+   void validate(optional DOMString? options);  // trigger manual validation (otherwise done at build())
+   CLint getValidationStatus();                 // 0 = success, negative value = error
+   DOMString? getValidatedSource();             // returns null if not yet validated
+   DOMString? getValidationLog();               // returns null if no log/not validated
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">void validate(CLuint index)</dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+	        <li>`TODO`</li>
+        </dl>
+      </dd>
+
+      <dt class="idl-code">CLint getValidationStatus()</dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+	        <li>None</li>
+        </dl>
+      </dd>
+
+
+      <dt class="idl-code">DOMString? getValidatedSource()</dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+	        <li>None</li>
+        </dl>
+      </dd>
+
+      <dt class="idl-code">DOMString? getValidationLog()</dt>
+      <dd>
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+	        <li>None</li>
+        </dl>
+      </dd>
+    </dl>
+
+<pre class="idl">
+partial interface <dfn>WebCLKernel</dfn> {
+  WebCLKernelArgInfo getArgInfo(CLuint index);
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">WebCLKernelArgInfo? getArgInfo(CLuint index)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.2.pdf#page=167">OpenCL 1.2 §5.7.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/clGetKernelArgInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Returns `null` if `index` is not a valid argument index for
+        this WebCLKernel, or if argument info is not available.
+
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+	        <li>None</li>
+        </dl>
+      </dd>
+
+<pre class="idl" id="WEBCLKERNELARGINFO">
+dictionary <dfn>WebCLKernelArgInfo</dfn> {
+  DOMString name;
+  DOMString typeName;         // 'char', 'float', 'uint4', 'image2d', 'sampler', etc.
+  DOMString addressQualifier; // 'global', 'local', 'constant', or 'private'
+  DOMString accessQualifier;  // 'read_only', 'write_only', 'read_write', or 'none'
+};
+</pre>
+
+    </dl>
 
 <!-- ======================================================================================================= -->
 
