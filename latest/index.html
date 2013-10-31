@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">October 30, 2013</h2>
+    <h2 class="no-toc">October 31, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -2879,14 +2879,14 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
       WebGL buffers, renderbuffers and textures as WebCL memory
       objects.  The extension is enabled by
       calling <code>enableExtension("KHR_GL_SHARING")</code>, after
-      which the application may create a new WebCLContext that is tied
-      to a given WebGLRenderingContext.
+      which the application may create a WebCLContext that can share
+      resources with a given WebGLRenderingContext.
     </p>
 
 <pre class="idl">
 partial interface <dfn>WebCLContext</dfn> {
 
-  WebCLContext? createContext(optional WebCLContextProperties properties);
+  WebCLContext? createContext(<a href="http://www.khronos.org/registry/webgl/specs/latest/1.0/">WebGLRenderingContext</a> gl, optional WebCLContextProperties properties);
 
   /* Error Codes */
   CLenum INVALID_GL_OBJECT                         = -60;
@@ -2909,22 +2909,22 @@ partial interface <dfn>WebCLContext</dfn> {
 </pre>
 
     <dl class="methods">
-      <dt class="idl-code">WebCLContext? createContext(WebGLRenderingContext gl, optional WebCLContextProperties properties)
+      <dt class="idl-code">WebCLContext? 
+        createContext(<a href="http://www.khronos.org/registry/webgl/specs/latest/1.0/">WebGLRenderingContext</a> gl, 
+        optional WebCLContextProperties properties)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=45">OpenCL 1.1 §4.3</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
       </dt>
       <dd>
-        Returns a newly created WebCLContext that can interoperate
-        with the given WebGLRenderingContext and satisfies the given
-        `properties`, or `null` if such a context could not be
-        created.  If there are multiple WebCLDevices that can
-        interoperate with the given GL context and that satisfy the
-        constraints of the `devices`, `platform`, and `deviceType`
-        fields, the implementation will choose the WebCLDevice that it
-        deems best suited for interoperating with the given GL
-        context.  The `properties` parameter can be omitted, in which
-        case the implementation will decide which platform and device
-        to use.
+        Returns a newly created WebCLContext that is able to
+        interoperate with the given WebGLRenderingContext, or `null`
+        if such a context could not be created.  If there are multiple
+        WebCLDevices that can interoperate with the given GL context
+        and that satisfy the constraints of the given `properties`,
+        the implementation will choose the WebCLDevice that it deems
+        best suited for interoperating with the given GL context.  The
+        `properties` parameter can be omitted, in which case the
+        implementation will decide which platform and device to use.
         
         <dl class="exceptions">
           <dt>Exceptions:</dt>
@@ -2962,6 +2962,7 @@ partial interface WebCLContext {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
+          <li>`INVALID_CONTEXT` -- if this WebCLContext is not associated with a WebGLRenderingContext</li>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
           <li>`INVALID_GL_OBJECT` -- if `buffer` is not a valid WebGLBuffer</li>
         </dl>
@@ -2974,6 +2975,7 @@ partial interface WebCLContext {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
+          <li>`INVALID_CONTEXT` -- if this WebCLContext is not associated with a WebGLRenderingContext</li>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
           <li>`INVALID_GL_OBJECT` -- if `renderbuffer` is not a valid WebGLRenderbuffer, or has zero width or height</li>
           <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if the internal format of `renderbuffer` does not map to a supported WebCL image format</li>
@@ -2988,6 +2990,7 @@ partial interface WebCLContext {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
+          <li>`INVALID_CONTEXT` -- if this WebCLContext is not associated with a WebGLRenderingContext</li>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
           <li>`INVALID_VALUE` -- if `textureTarget` is not `TEXTURE_2D` or one of `TEXTURE_CUBE_MAP_*`</li>
           <li>`INVALID_MIP_LEVEL` -- if <code>miplevel &lt; 0 || miplevel &gt; q</code>, where `q` is as defined in OpenGL ES 2.0</li>
@@ -3022,7 +3025,9 @@ partial interface WebCLCommandQueue {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with a WebGLRenderingContext</li>
+          <li>`INVALID_GL_OBJECT` -- if any element in `memObjects` was not created from a GL object</li>
+	        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
         </dl>
       </dd>
 
@@ -3034,7 +3039,9 @@ partial interface WebCLCommandQueue {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`TODO`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with a WebGLRenderingContext</li>
+          <li>`INVALID_GL_OBJECT` -- if any element in `memObjects` was not created from a GL object</li>
+	        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
         </dl>
       </dd>
     </dl>
@@ -3055,8 +3062,8 @@ partial interface WebCLMemoryObject {
 
 <pre class="idl" id="WEBCLGLOBJECTINFO"></a>
 dictionary <dfn>WebCLGLObjectInfo</dfn> {
-  any glObject;          // the GL object used to create this memory object
-  CLenum type;           // the type of GL object attached to this memory object
+  any glObject;          // the GL object used to create this memory object, 'undefined' if none
+  CLenum type;           // the type of GL object attached to this memory object, 'undefined' if none
   GLenum textureTarget;  // 'undefined' if there is no texture associated
   CLint mipmapLevel;     // 'undefined' if there is no texture associated
 };
