@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">October 31, 2013</h2>
+    <h2 class="no-toc">November 6, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -2777,59 +2777,120 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
     <h3><a id="VALIDATION">Validation Info Query</a></h3>
 
     <p>
-      The Validation Info Query extension allows applications to
-      retrieve information about kernel validation, including error
-      messages, warnings, logs, instrumented source code, and kernel
-      argument info.  This information becomes available after
-      building (or attempting to build) a WebCLProgram.  The extension
-      is enabled by
-      <code>enableExtension("WEBCL_VALIDATION_INFO")</code>.  Calling
-      the info query functions without first enabling the extension
-      will cause an exception.
+      The Validation Info Query extension, enabled by
+      <code>enableExtension("WEBCL_VALIDATION_INFO")</code>, allows
+      applications to retrieve the results of kernel program
+      validation, including error messages, warnings, logs, and
+      instrumented source code.  The results become available after
+      building (or attempting to build) a WebCLProgram.  Validation
+      can also be triggered manually by calling the `validate` method
+      provided in this extension.
     </p>
 
 <pre class="idl">
 partial interface <dfn>WebCLProgram</dfn> {
-   void validate(optional DOMString? options);  // trigger manual validation (otherwise done at build())
-   CLint getValidationStatus();                 // 0 = success, negative value = error
-   DOMString? getValidatedSource();             // returns null if not yet validated
-   DOMString? getValidationLog();               // returns null if no log/not validated
+
+  void validate(optional sequence&lt;WebCLDevice&gt; devices,
+                optional DOMString? options,
+                optional WebCLCallback whenFinished);
+
+  CLint getValidationStatus();
+  DOMString? getValidationErrors();
+  DOMString? getValidationWarnings();
+  DOMString? getValidationInfo();
+  DOMString? getValidatedSource();
 };
 </pre>
 
     <dl class="methods">
-      <dt class="idl-code">void validate(optional DOMString? options)</dt>
+      <dt class="idl-code">void validate(optional sequence&lt;WebCLDevice&gt; devices,
+                                         optional DOMString? options,
+                                         optional WebCLCallback whenFinished)</dt>
       <dd>
+        Validates this WebCLProgram for the given list of devices,
+        or in absence of the list, for all devices associated with
+        the WebCLContext that this WebCLProgram was created from.  A
+        string of validator options and an asynchronous callback
+        function to invoke when the validation is completed can also
+        be provided. The available validator options are listed in
+        the table below; any other option is considered invalid.
+
+        <table class="enumtable">
+          <tr><th>Validator option</th><th>Description</th></tr>
+          <tr><td><i>-D name</i></td><td>Equivalent to <i>#define name</i> in OpenCL C.</td></tr>
+          <tr><td><i>-D name=definition</i></td><td>Equivalent to <i>#define name definition</i> in OpenCL C.</td></tr>
+          <tr><td><i>-cl-opt-disable</i></td><td>Disable all optimizations.</td></tr>
+          <tr><td><i>-W</i></td><td>Inhibit all warning messages.</td></tr>
+          <tr><td><i>-Werror</i></td><td>Make all warnings into errors.</td></tr>
+        </table>
+
         <dl class="exceptions">
           <dt>Exceptions:</dt>
           <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_VALIDATION_INFO` extension has not been enabled</li>
+          <li>`INVALID_DEVICE` -- if any element in `devices` is not a valid WebCLDevice</li>
+          <li>`INVALID_DEVICE` -- if any device in `devices` is not associated with the WebCLContext of this WebCLProgram</li>
+          <li>`INVALID_BUILD_OPTIONS` -- if the validator options specified by `options` are invalid</li>
+          <li>`INVALID_OPERATION` -- if a previous validation of this
+            WebCLProgram for any of the devices listed in `devices`
+            has not completed</li>
+          <li>`BUILD_PROGRAM_FAILURE` -- if there is a failure to validate the program</li>
         </dl>
       </dd>
 
       <dt class="idl-code">CLint getValidationStatus()</dt>
       <dd>
+        Returns the validation status of this WebCLProgram.  Zero
+        indicates that the program is successfully validated (but only
+        for the given devices and with the given options).  Negative
+        values indicate implementation-specific error conditions that
+        are documented elsewhere.
         <dl class="exceptions">
           <dt>Exceptions:</dt>
           <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_VALIDATION_INFO` extension has not been enabled</li>
         </dl>
       </dd>
 
+      <dt class="idl-code">DOMString? getValidationErrors()</dt>
+      <dd>
+        Returns the error messages from the most recent validation of
+        this WebCLProgram, or null if there are no errors.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_VALIDATION_INFO` extension has not been enabled</li>
+        </dl>
+      </dd>
+
+      <dt class="idl-code">DOMString? getValidationWarnings()</dt>
+      <dd>
+        Returns the warning messages from the most recent validation
+        of this WebCLProgram, or null if there are no warnings.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_VALIDATION_INFO` extension has not been enabled</li>
+        </dl>
+      </dd>
+
+      <dt class="idl-code">DOMString? getValidationInfo()</dt>
+      <dd>
+        Returns informational messages from the most recent validation
+        of this WebCLProgram, or null if there are no such messages.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_VALIDATION_INFO` extension has not been enabled</li>
+        </dl>
+      </dd>
 
       <dt class="idl-code">DOMString? getValidatedSource()</dt>
       <dd>
+        Returns the validated source code from the most recent
+        validation of this WebCLProgram, or null if no source code is
+        available due to unsuccessful validation or any other reason.
         <dl class="exceptions">
           <dt>Exceptions:</dt>
           <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_VALIDATION_INFO` extension has not been enabled</li>
         </dl>
       </dd>
 
-      <dt class="idl-code">DOMString? getValidationLog()</dt>
-      <dd>
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_VALIDATION_INFO` extension has not been enabled</li>
-        </dl>
-      </dd>
     </dl>
 
 <!-- ======================================================================================================= -->
