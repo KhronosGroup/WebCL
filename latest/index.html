@@ -70,7 +70,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">November 6, 2013</h2>
+    <h2 class="no-toc">November 7, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -2523,9 +2523,9 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
       and `false` if not.
     </p>
 
-    <h3><a id="DOUBLE">Support for the 'double' datatype</a></h3>
+    <h3><a id="KHR_fp64">Support for the 'double' datatype</a></h3>
     <p>
-      Calling <code>enableExtension("KHR_FP64")</code> enables the
+      Calling <code>enableExtension("KHR_fp64")</code> enables the
       <a href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/cl_khr_fp64.html">cl_khr_fp64</a>
       extension.  This allows the following pragma to be used in any
       subsequently compiled kernels:
@@ -2542,9 +2542,9 @@ partial interface <dfn>WebCL</dfn> {
 };
 </pre>
 
-    <h3><a id="HALF">Support for the 'half' datatype</a></h3>
+    <h3><a id="KHR_fp16">Support for the 'half' datatype</a></h3>
     <p>
-      Calling <code>enableExtension("KHR_FP16")</code> enables the
+      Calling <code>enableExtension("KHR_fp16")</code> enables the
       <a href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/cl_khr_fp16.html">cl_khr_fp16</a>
       extension.  This allows the following pragma to be used in any
       subsequently compiled kernels:
@@ -2563,13 +2563,13 @@ partial interface <dfn>WebCL</dfn> {
 
 <!-- ======================================================================================================= -->
 
-    <h3><a id="WEBCLGL">WebGL Resource Sharing</a></h3>
+    <h3><a id="KHR_gl_sharing">WebGL Resource Sharing</a></h3>
 
     <p>
       The WebGL Resource Sharing extension allows applications to use
       WebGL buffers, renderbuffers and textures as WebCL memory
       objects.  The extension is enabled by
-      calling <code>enableExtension("KHR_GL_SHARING")</code>, after
+      calling <code>enableExtension("KHR_gl_sharing")</code>, after
       which the application may create a WebCLContext that can share
       resources with a given WebGLRenderingContext.
     </p>
@@ -2619,7 +2619,7 @@ partial interface <dfn>WebCLContext</dfn> {
         
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_GL_SHARING` extension has not been enabled</li>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
 	        <li>`INVALID_DEVICE` -- if `properties.devices` is non-`null`, but is not an array of valid device objects</li>
 	        <li>`INVALID_DEVICE` -- if any devices in `properties.devices` are on different platforms</li>
 	        <li>`INVALID_DEVICE` -- if any device in `properties.devices` is not compatible with `gl`</li>
@@ -2654,7 +2654,7 @@ partial interface WebCLContext {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_GL_SHARING` extension has not been enabled</li>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
           <li>`INVALID_CONTEXT` -- if this WebCLContext is not associated with a WebGLRenderingContext</li>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
           <li>`INVALID_GL_OBJECT` -- if `buffer` is not a valid WebGLBuffer</li>
@@ -2668,7 +2668,7 @@ partial interface WebCLContext {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_GL_SHARING` extension has not been enabled</li>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
           <li>`INVALID_CONTEXT` -- if this WebCLContext is not associated with a WebGLRenderingContext</li>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
           <li>`INVALID_GL_OBJECT` -- if `renderbuffer` is not a valid WebGLRenderbuffer, or has zero width or height</li>
@@ -2684,7 +2684,7 @@ partial interface WebCLContext {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_GL_SHARING` extension has not been enabled</li>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
           <li>`INVALID_CONTEXT` -- if this WebCLContext is not associated with a WebGLRenderingContext</li>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
           <li>`INVALID_VALUE` -- if `textureTarget` is not `TEXTURE_2D` or one of `TEXTURE_CUBE_MAP_*`</li>
@@ -2720,7 +2720,7 @@ partial interface WebCLCommandQueue {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_GL_SHARING` extension has not been enabled</li>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with a WebGLRenderingContext</li>
           <li>`INVALID_GL_OBJECT` -- if any element in `memObjects` was not created from a GL object</li>
 	        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
@@ -2735,7 +2735,7 @@ partial interface WebCLCommandQueue {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_GL_SHARING` extension has not been enabled</li>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with a WebGLRenderingContext</li>
           <li>`INVALID_GL_OBJECT` -- if any element in `memObjects` was not created from a GL object</li>
 	        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
@@ -2757,7 +2757,7 @@ partial interface WebCLMemoryObject {
       <dd>
         <dl class="exceptions">
           <dt>Exceptions:</dt>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_GL_SHARING` extension has not been enabled</li>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
         </dl>
       </dd>
 
@@ -2774,235 +2774,18 @@ dictionary <dfn>WebCLGLObjectInfo</dfn> {
 
 <!-- ======================================================================================================= -->
 
-    <h3><a id="VALIDATION">Validation Info Query</a></h3>
+    <h3><a id="WEBCL_html_sharing">HTML Resource Sharing</a></h3>
 
     <p>
-      The Validation Info Query extension, enabled by
-      <code>enableExtension("WEBCL_VALIDATION_INFO")</code>, allows
-      applications to retrieve the results of kernel program
-      validation, including error messages, warnings, logs, and
-      instrumented source code.  The results become available after
-      building (or attempting to build) a WebCLProgram.  Validation
-      can also be triggered manually by calling the `validate` method
-      provided in this extension.
+      The HTML Resource Sharing extension makes it more convenient and
+      potentially faster for applications to transfer image data from
+      HTML Image/Canvas/Video elements to WebCL memory objects, and
+      vice versa.  The extension is enabled by
+      calling <code>enableExtension("WEBCL_html_sharing")</code>, after
+      which the application may call the functions specified below.
     </p>
 
-<pre class="idl">
-partial interface <dfn>WebCLProgram</dfn> {
-
-  void validate(optional sequence&lt;WebCLDevice&gt; devices,
-                optional DOMString? options,
-                optional WebCLCallback whenFinished);
-
-  CLint getValidationStatus();
-  DOMString? getValidationErrors();
-  DOMString? getValidationWarnings();
-  DOMString? getValidationInfo();
-  DOMString? getValidatedSource();
-};
-</pre>
-
-    <dl class="methods">
-      <dt class="idl-code">void validate(optional sequence&lt;WebCLDevice&gt; devices,
-                                         optional DOMString? options,
-                                         optional WebCLCallback whenFinished)</dt>
-      <dd>
-        Validates this WebCLProgram for the given list of devices,
-        or in absence of the list, for all devices associated with
-        the WebCLContext that this WebCLProgram was created from.  A
-        string of validator options and an asynchronous callback
-        function to invoke when the validation is completed can also
-        be provided. The available validator options are listed in
-        the table below; any other option is considered invalid.
-
-        <table class="enumtable">
-          <tr><th>Validator option</th><th>Description</th></tr>
-          <tr><td><i>-D name</i></td><td>Equivalent to <i>#define name</i> in OpenCL C.</td></tr>
-          <tr><td><i>-D name=definition</i></td><td>Equivalent to <i>#define name definition</i> in OpenCL C.</td></tr>
-          <tr><td><i>-cl-opt-disable</i></td><td>Disable all optimizations.</td></tr>
-          <tr><td><i>-W</i></td><td>Inhibit all warning messages.</td></tr>
-          <tr><td><i>-Werror</i></td><td>Make all warnings into errors.</td></tr>
-        </table>
-
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_VALIDATION_INFO` extension has not been enabled</li>
-          <li>`INVALID_DEVICE` -- if any element in `devices` is not a valid WebCLDevice</li>
-          <li>`INVALID_DEVICE` -- if any device in `devices` is not associated with the WebCLContext of this WebCLProgram</li>
-          <li>`INVALID_BUILD_OPTIONS` -- if the validator options specified by `options` are invalid</li>
-          <li>`INVALID_OPERATION` -- if a previous validation of this
-            WebCLProgram for any of the devices listed in `devices`
-            has not completed</li>
-          <li>`BUILD_PROGRAM_FAILURE` -- if there is a failure to validate the program</li>
-        </dl>
-      </dd>
-
-      <dt class="idl-code">CLint getValidationStatus()</dt>
-      <dd>
-        Returns the validation status of this WebCLProgram.  Zero
-        indicates that the program is successfully validated (but only
-        for the given devices and with the given options).  Negative
-        values indicate implementation-specific error conditions that
-        are documented elsewhere.
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_VALIDATION_INFO` extension has not been enabled</li>
-        </dl>
-      </dd>
-
-      <dt class="idl-code">DOMString? getValidationErrors()</dt>
-      <dd>
-        Returns the error messages from the most recent validation of
-        this WebCLProgram, or null if there are no errors.
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_VALIDATION_INFO` extension has not been enabled</li>
-        </dl>
-      </dd>
-
-      <dt class="idl-code">DOMString? getValidationWarnings()</dt>
-      <dd>
-        Returns the warning messages from the most recent validation
-        of this WebCLProgram, or null if there are no warnings.
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_VALIDATION_INFO` extension has not been enabled</li>
-        </dl>
-      </dd>
-
-      <dt class="idl-code">DOMString? getValidationInfo()</dt>
-      <dd>
-        Returns informational messages from the most recent validation
-        of this WebCLProgram, or null if there are no such messages.
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_VALIDATION_INFO` extension has not been enabled</li>
-        </dl>
-      </dd>
-
-      <dt class="idl-code">DOMString? getValidatedSource()</dt>
-      <dd>
-        Returns the validated source code from the most recent
-        validation of this WebCLProgram, or null if no source code is
-        available due to unsuccessful validation or any other reason.
-        <dl class="exceptions">
-          <dt>Exceptions:</dt>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_VALIDATION_INFO` extension has not been enabled</li>
-        </dl>
-      </dd>
-
-    </dl>
-
-<!-- ======================================================================================================= -->
-
-    <h2>Security and Robustness</h2>
-
-    <p>
-      To promote robustness of the WebCL standard, the working group
-      is actively working on identifying and remediating potential
-      vulnerabilities.  Depending upon the nature of the issue, the
-      remediation may need to be addressed by the OpenCL Working Group
-      or the WebCL Working Group, or both.  The working group has
-      identified the following security requirements for WebCL.
-    </p>
-
-    <h3>Out-of-Bounds Memory Accesses</h3>
-
-    <p>
-      WebCL kernels must not be able to access unauthorized areas of
-      memory, regardless of address space (private, local, global, or
-      constant).  If detected during compilation, out-of-bounds (OOB)
-      accesses must generate a compiler error.  At runtime, OOB reads
-      must return zero and writes must be discarded.  Alternatively,
-      the kernel may be terminated and an exception be thrown.
-    </p>
-
-    <p>
-      For purposes of bounds checking, the implementation may treat
-      all `private` variables as one contiguous block of memory, and
-      similarly for `local` variables, instead of enforcing the bounds
-      of each variable separately. For example, in a kernel program
-      containing two `private` arrays, an OOB read from the first
-      array is allowed to return any value from either the first or
-      the second array, rather than zero.
-    </p>
-
-    <h3>Undefined Behavior</h3>
-      Behavior left undefined in OpenCL will be defined by the WebCL specification
-      where possible, to ensure the authoring of strong conformance tests, and to
-      prevent the potential introduction of security vulnerabilities resulting
-      from undefined behavior.
-    </h3>
-
-    <h3>Cross-Origin Information Leakage</h3>
-
-    <p>
-     WebCL will restrict the use of media, such as image and video,
-     originating from a different web site than the hosting web page.
-     WebCL will leverage provisions such as Cross-Origin Resource
-     Sharing [<a href="#refsCORS">CORS</a>] to help enforce the
-     restriction on the use of media by a web page different than the
-     originating web site.
-    </p>
-
-
-    <h3>Memory Initialization</h3>
-
-    <p>
-     To prevent information leakage from un-initialized memory, all WebCL
-     allocated memory objects (buffers and images), inclusive of private and
-     local variables in kernel code, must be initialized at allocation time
-     (before the application is allowed to use them).  To minimize the
-     performance burden on applications for initializing allocated memory to
-     zeroes, WebCL implementations will ensure that memory is initialized
-     to a pre-defined value at allocation time.
-    </p>
-
-
-    <h3>Cross-Context Information Leakage</h3>
-
-    <p>
-     WebCL implementations must ensure that no information can leak
-     from one WebCL/OpenCL context to another. It must not be
-     possible for WebCL kernels or host code to access arbitrary
-     system memory, or memory from another OpenCL/WebCL context.
-    </p>
-
-
-    <h3>Denial of Service (DoS)</h3>
-
-    <p>
-     Long running and/or computationally intensive kernels may cause the
-     system to become unresponsive, and can lead to denial of
-     service. It is not acceptable for content downloaded over the
-     internet to lock up the browser.
-
-     To prevent bugs/issues in unknown and untrusted code from monopolizing
-     an OpenCL device and making it unresponsive, WebCL implementations need to
-     be able to:
-    </p>
-
-    <ul>
-    <li> Detect offending kernels.  A kernel is considered "offending"
-         if it runs for an excessively long time, or disproportionately
-         consumes system resources.
-    <li> Terminate contexts associated with long-running malicious or
-         erroneous kernels, before they render the OpenCL device
-         unresponsive, and result in potential device reset.
-    </ul>
-
-<!-- ======================================================================================================= -->
-
-    <h2>Interoperability with HTML Canvas, Image and Video Elements</h2>
-
-    <p>
-      This section describes mechanisms for transferring pixel data
-      between WebCL memory objects and HTML media elements.
-      Server-side or Web Worker based implementations of WebCL will
-      not be required to support these features.
-    </p>
-
-    <h3>Creating WebCL memory objects</h3>
+    <h4>Creating WebCL memory objects</h4>
 
     <p>
       A WebCLBuffer or WebCLImage can be initialized at construction
@@ -3044,7 +2827,7 @@ partial interface WebCLContext {
       `INVALID_HOST_PTR` exception.
     </p>
 
-    <h3>Binding with HTMLVideoElement</h3>
+    <h4>Binding with HTMLVideoElement</h4>
 
     <p>
       A WebCLImage can be permanently bound to an HTML Video element
@@ -3070,7 +2853,7 @@ partial interface WebCLContext {
       to the source video width and height.
 </p>
 
-    <h3>Reading and writing HTML elements</h3>
+    <h4>Reading and writing HTML elements</h4>
 
 <pre class="idl">
 partial interface WebCLCommandQueue {
@@ -3219,9 +3002,228 @@ partial interface WebCLCommandQueue {
       <dl class="exceptions">
         <dt>Exceptions:</dt>
           <li>`INVALID_HOST_PTR` -- if `srcImage` is not fully loaded</li>
-          <li>`INVALID_HOST_PTR` -- if `srcVideo` is not bound to the given `buffer`</li>
+          <li>`INVALID_HOST_PTR` -- if `srcVideo` is not bound to the given `image`</li>
       </dl>
     </dd>
+
+<!-- ======================================================================================================= -->
+
+    <h3><a id="WEBCL_validation_info">Validation Info Query</a></h3>
+
+    <p>
+      The Validation Info Query extension, enabled by
+      <code>enableExtension("WEBCL_validation_info")</code>, allows
+      applications to retrieve the results of kernel program
+      validation, including error messages, warnings, logs, and
+      instrumented source code.  The results become available after
+      building (or attempting to build) a WebCLProgram.  Validation
+      can also be triggered manually by calling the `validate` method
+      provided in this extension.
+    </p>
+
+<pre class="idl">
+partial interface <dfn>WebCLProgram</dfn> {
+
+  void validate(optional sequence&lt;WebCLDevice&gt; devices,
+                optional DOMString? options,
+                optional WebCLCallback whenFinished);
+
+  CLint getValidationStatus();
+  DOMString? getValidationErrors();
+  DOMString? getValidationWarnings();
+  DOMString? getValidationInfo();
+  DOMString? getValidatedSource();
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">void validate(optional sequence&lt;WebCLDevice&gt; devices,
+                                         optional DOMString? options,
+                                         optional WebCLCallback whenFinished)</dt>
+      <dd>
+        Validates this WebCLProgram for the given list of devices,
+        or in absence of the list, for all devices associated with
+        the WebCLContext that this WebCLProgram was created from.  A
+        string of validator options and an asynchronous callback
+        function to invoke when the validation is completed can also
+        be provided. The available validator options are listed in
+        the table below; any other option is considered invalid.
+
+        <table class="enumtable">
+          <tr><th>Validator option</th><th>Description</th></tr>
+          <tr><td><i>-D name</i></td><td>Equivalent to <i>#define name</i> in OpenCL C.</td></tr>
+          <tr><td><i>-D name=definition</i></td><td>Equivalent to <i>#define name definition</i> in OpenCL C.</td></tr>
+          <tr><td><i>-cl-opt-disable</i></td><td>Disable all optimizations.</td></tr>
+          <tr><td><i>-W</i></td><td>Inhibit all warning messages.</td></tr>
+          <tr><td><i>-Werror</i></td><td>Make all warnings into errors.</td></tr>
+        </table>
+
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
+          <li>`INVALID_DEVICE` -- if any element in `devices` is not a valid WebCLDevice</li>
+          <li>`INVALID_DEVICE` -- if any device in `devices` is not associated with the WebCLContext of this WebCLProgram</li>
+          <li>`INVALID_BUILD_OPTIONS` -- if the validator options specified by `options` are invalid</li>
+          <li>`INVALID_OPERATION` -- if a previous validation of this
+            WebCLProgram for any of the devices listed in `devices`
+            has not completed</li>
+          <li>`BUILD_PROGRAM_FAILURE` -- if there is a failure to validate the program</li>
+        </dl>
+      </dd>
+
+      <dt class="idl-code">CLint getValidationStatus()</dt>
+      <dd>
+        Returns the validation status of this WebCLProgram.  Zero
+        indicates that the program is successfully validated (but only
+        for the given devices and with the given options).  Negative
+        values indicate implementation-specific error conditions that
+        are documented elsewhere.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
+        </dl>
+      </dd>
+
+      <dt class="idl-code">DOMString? getValidationErrors()</dt>
+      <dd>
+        Returns the error messages from the most recent validation of
+        this WebCLProgram, or null if there are no errors.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
+        </dl>
+      </dd>
+
+      <dt class="idl-code">DOMString? getValidationWarnings()</dt>
+      <dd>
+        Returns the warning messages from the most recent validation
+        of this WebCLProgram, or null if there are no warnings.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
+        </dl>
+      </dd>
+
+      <dt class="idl-code">DOMString? getValidationInfo()</dt>
+      <dd>
+        Returns informational messages from the most recent validation
+        of this WebCLProgram, or null if there are no such messages.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
+        </dl>
+      </dd>
+
+      <dt class="idl-code">DOMString? getValidatedSource()</dt>
+      <dd>
+        Returns the validated source code from the most recent
+        validation of this WebCLProgram, or null if no source code is
+        available due to unsuccessful validation or any other reason.
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
+        </dl>
+      </dd>
+
+    </dl>
+
+<!-- ======================================================================================================= -->
+
+    <h2>Security and Robustness</h2>
+
+    <p>
+      To promote robustness of the WebCL standard, the working group
+      is actively working on identifying and remediating potential
+      vulnerabilities.  Depending upon the nature of the issue, the
+      remediation may need to be addressed by the OpenCL Working Group
+      or the WebCL Working Group, or both.  The working group has
+      identified the following security requirements for WebCL.
+    </p>
+
+    <h3>Out-of-Bounds Memory Accesses</h3>
+
+    <p>
+      WebCL kernels must not be able to access unauthorized areas of
+      memory, regardless of address space (private, local, global, or
+      constant).  If detected during compilation, out-of-bounds (OOB)
+      accesses must generate a compiler error.  At runtime, OOB reads
+      must return zero and writes must be discarded.  Alternatively,
+      the kernel may be terminated and an exception be thrown.
+    </p>
+
+    <p>
+      For purposes of bounds checking, the implementation may treat
+      all `private` variables as one contiguous block of memory, and
+      similarly for `local` variables, instead of enforcing the bounds
+      of each variable separately. For example, in a kernel program
+      containing two `private` arrays, an OOB read from the first
+      array is allowed to return any value from either the first or
+      the second array, rather than zero.
+    </p>
+
+    <h3>Undefined Behavior</h3>
+      Behavior left undefined in OpenCL will be defined by the WebCL specification
+      where possible, to ensure the authoring of strong conformance tests, and to
+      prevent the potential introduction of security vulnerabilities resulting
+      from undefined behavior.
+    </h3>
+
+    <h3>Cross-Origin Information Leakage</h3>
+
+    <p>
+     WebCL will restrict the use of media, such as image and video,
+     originating from a different web site than the hosting web page.
+     WebCL will leverage provisions such as Cross-Origin Resource
+     Sharing [<a href="#refsCORS">CORS</a>] to help enforce the
+     restriction on the use of media by a web page different than the
+     originating web site.
+    </p>
+
+
+    <h3>Memory Initialization</h3>
+
+    <p>
+     To prevent information leakage from un-initialized memory, all WebCL
+     allocated memory objects (buffers and images), inclusive of private and
+     local variables in kernel code, must be initialized at allocation time
+     (before the application is allowed to use them).  To minimize the
+     performance burden on applications for initializing allocated memory to
+     zeroes, WebCL implementations will ensure that memory is initialized
+     to a pre-defined value at allocation time.
+    </p>
+
+
+    <h3>Cross-Context Information Leakage</h3>
+
+    <p>
+     WebCL implementations must ensure that no information can leak
+     from one WebCL/OpenCL context to another. It must not be
+     possible for WebCL kernels or host code to access arbitrary
+     system memory, or memory from another OpenCL/WebCL context.
+    </p>
+
+
+    <h3>Denial of Service (DoS)</h3>
+
+    <p>
+     Long running and/or computationally intensive kernels may cause the
+     system to become unresponsive, and can lead to denial of
+     service. It is not acceptable for content downloaded over the
+     internet to lock up the browser.
+
+     To prevent bugs/issues in unknown and untrusted code from monopolizing
+     an OpenCL device and making it unresponsive, WebCL implementations need to
+     be able to:
+    </p>
+
+    <ul>
+    <li> Detect offending kernels.  A kernel is considered "offending"
+         if it runs for an excessively long time, or disproportionately
+         consumes system resources.
+    <li> Terminate contexts associated with long-running malicious or
+         erroneous kernels, before they render the OpenCL device
+         unresponsive, and result in potential device reset.
+    </ul>
 
 <!-- ======================================================================================================= -->
 
