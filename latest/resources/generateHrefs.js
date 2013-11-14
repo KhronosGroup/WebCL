@@ -18,14 +18,20 @@ function generateHrefs(typeDefs, elements)
     var classPlainRegExp = new RegExp(className+" ", "g");
     var classNullableRegExp = new RegExp(className+"\\?", "g");
     var classArrayRegExp = new RegExp(className+"\\[", "g");
+<<<<<<< HEAD
     var classSequenceRegExp = new RegExp(className+"&gt;", "g");
+=======
+>>>>>>> a07346375aac2bb001ee4cc15bcca92fe6e324bf
     var classLink = "<a href='#" + className.toUpperCase() + "'>" + className + "<\/a>";
     elements.each(function() {
       if (this.innerHTML.indexOf(className) !== -1) {
         this.innerHTML = this.innerHTML.replace(classPlainRegExp, classLink+" ");
         this.innerHTML = this.innerHTML.replace(classNullableRegExp, classLink+"?");
         this.innerHTML = this.innerHTML.replace(classArrayRegExp, classLink+"[");
+<<<<<<< HEAD
         this.innerHTML = this.innerHTML.replace(classSequenceRegExp, classLink+"&gt;");
+=======
+>>>>>>> a07346375aac2bb001ee4cc15bcca92fe6e324bf
       }
     });
   });

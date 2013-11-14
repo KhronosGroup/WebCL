@@ -647,7 +647,11 @@ dt { font-weight: bold }
 
 pre, code { font-size: 1.2em; font-family: monospace; } /* navigator 4 requires this */
 
+<<<<<<< HEAD
 pre.idl { font-size: small; border: solid thin; background: #EEEEEE; color: black; padding: 0.5em 1em; min-width: 61em;}
+=======
+pre.idl { border: solid thin; background: #EEEEEE; color: black; padding: 0.5em 1em; min-width: 61em;}
+>>>>>>> a07346375aac2bb001ee4cc15bcca92fe6e324bf
 pre.idl :link, pre.idl :visited { color: inherit; color: green; text-decoration: none; background: transparent;  }
 pre.idl :hover { text-decoration: underline; }
 
@@ -659,6 +663,7 @@ dl.methods {
     background: #EEEEFF;
 }
 
+<<<<<<< HEAD
 dl.exceptions {
     font-size: small;
 }
@@ -667,6 +672,8 @@ table.enumtable {
     font-size: small;
 }
 
+=======
+>>>>>>> a07346375aac2bb001ee4cc15bcca92fe6e324bf
 .methods dt {
     padding-top: 1em;
 }
