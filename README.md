@@ -8,7 +8,7 @@ as a web page at http://www.khronos.org/registry/webcl/.
 
 FAQ
 ---
-Q: <Any WebCL programming related question>
+Q: &lt;Any WebCL programming related question&gt;
 A: Please use [stackoverflow](http://stackoverflow.com/questions/tagged/webcl),
    and tag the question with "webcl".
 
