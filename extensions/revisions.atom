@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+ 
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>WebCL Extension Registry Revisions</title>
+  <link href="http://www.khronos.org/registry/webcl/extensions/index.atom"
+        rel="self" type="application/atom+xml" />
+  <link href="http://www.khronos.org/registry/webcl/extensions/"
+        rel="alternate" type="text/html" />
+  <id>http://www.khronos.org/registry/webcl/extensions/index.atom</id>
+  <updated /><!-- auto-populated -->
+  <author>
+    <name>WebCL Working Group</name>
+    <email>public_webcl@khronos.org</email>
+  </author>
+</feed>

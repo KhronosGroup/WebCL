@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proposal href="proposals/WEBCL_OPTIONALLY_VISIBLE_INFO/">
+  <name>WEBCL_OPTIONALLY_VISIBLE_INFO</name>
+
+  <contact> <a href="https://www.khronos.org/webcl/public-mailing-list/">WebCL
+  working group</a> (public_webcl 'at' khronos.org) </contact>
+
+  <contributors>
+    <contributor>Steven Eliuk, Samsung Electronics.</contributor>
+    <contributor>Members of the WebCL working group</contributor>
+  </contributors>
+
+  <number>NN</number>
+
+  <depends>
+    <api version="1.0"/>
+  </depends>
+
+  <overview>
+    Allows the exposure of additional properties that are hidden in WebCL Core Specification.
+    <features>
+      <feature>
+        Allows applications to query additional properties. Given that they are optionally visible, there is no
+guarantee that the info is available if the extension is implemented. All the extension guarantees is at least one additional property is available.
+      </feature>
+    </features>
+  </overview>
+
+  <idl xml:space="preserve">
+
+    interface WEBCL_OPTIONALLY_VISIBLE_INFO {
+      //Platform Properties  
+      const CLenum PLATFORM_NAME                             = 0x0902;
+      const CLenum PLATFORM_VENDOR                           = 0x0903;
+      const CLenum PLATFORM_EXTENSIONS                       = 0x0904;
+      
+      //Device Properties
+      const CLenum DEVICE_VENDOR_ID                          = 0x1001;
+      const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_CHAR        = 0x1006;
+      const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_SHORT       = 0x1007;
+      const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_INT         = 0x1008;
+      const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_LONG        = 0x1009;
+      const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT       = 0x100A;
+      const CLenum DEVICE_MAX_CLOCK_FREQUENCY                = 0x100C;
+      const CLenum DEVICE_NAME                               = 0x102B;
+      const CLenum DEVICE_VENDOR                             = 0x102C;
+      const CLenum DEVICE_VERSION                            = 0x102F;
+      const CLenum DEVICE_EXTENSIONS                         = 0x1030;
+    };
+  </idl>
+
+
+  <issues>
+    <ol>
+      <li>
+        <p>
+         N/A
+        </p>
+      </li>
+    </ol>
+  </issues>
+
+  <samplecode xml:space="preserve">
+    <pre>
+      
+      var platforms = WebCL.getPlatforms();
+      //no platforms
+      if (platforms.length === 0) {
+        return null;
+      } 
+      var platform = platforms[0];
+      var isEnabledOnPlatform = platform.enableExtension("WEBCL_OPTIONALLY_VISIBLE_EXTENSION");
+
+      //get platform level info
+      if(isEnabledOnPlatform){
+         var platformName = platform.getInfo(WebCL.PLATFORM_NAME);
+      }
+
+      var devices = platform.getDevices();
+
+      //no devices
+      if (devices.length === 0) {
+        return null;
+      }
+      var device = devices[0];
+      
+      var isEnabledOnDevice = device.enableExtension("WEBCL_OPTIONALLY_VISIBLE_EXTENSION");
+      //get device level info
+      if(isEnabledOnDevice){
+         var maxFreq = device.getInfo(WebCL.DEVICE_MAX_CLOCK_FREQUENCY);
+      }
+    </pre>
+  </samplecode>
+
+  <history>
+    <revision date="2013/11/15">
+      <change>Initial revision.</change>
+    </revision>
+  </history>
+</proposal>
