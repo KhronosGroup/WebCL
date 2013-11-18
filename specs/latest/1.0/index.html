@@ -512,8 +512,8 @@ interface <dfn>WebCL</dfn> {
   CLenum CONTEXT_PROPERTIES                        = 0x1082;
   CLenum CONTEXT_NUM_DEVICES                       = 0x1083;
 
-  /* cl_context_info + cl_context_properties */
-  CLenum CONTEXT_PLATFORM                          = 0x1084;
+  /* cl_context_properties */
+  //CLenum CONTEXT_PLATFORM                          = 0x1084; // disallowed; superceded by WebCLContextProperties
 
   /* cl_command_queue_info */
   CLenum QUEUE_CONTEXT                             = 0x1090;
