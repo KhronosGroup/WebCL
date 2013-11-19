@@ -6,8 +6,9 @@
   working group</a> (public_webcl 'at' khronos.org) </contact>
 
   <contributors>
-    <contributor>Steven Eliuk, Samsung Electronics.</contributor>
-    <contributor>Members of the WebCL working group</contributor>
+    <contributor>Steven Eliuk, Samsung Electronics,</contributor>
+    <contributor>Tomi Aarnio, Nokia Research,</contributor>
+    <contributor>Members of the WebCL working group.</contributor>
   </contributors>
 
   <number>NN</number>

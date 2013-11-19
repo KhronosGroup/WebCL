@@ -8,6 +8,7 @@
 
   <contributors>
     <contributor>Tomi Aarnio, Nokia Research</contributor>
+    <contributor>Steven Eliuk, Samsung Electronics</contributor>
     <contributor>Members of the WebCL working group</contributor>
   </contributors>
 
@@ -230,6 +231,82 @@ dictionary WebCLGLObjectInfo {
       </dl>
     </function>
   </newfun>
+
+   <samplecode xml:space="preserve">
+    <pre>
+      
+      var platforms = WebCL.getPlatforms();
+      //no platforms
+      if (platforms.length === 0) {
+        return null;
+      } 
+      var platform = platforms[0];
+      var isEnabledOnPlatform = platform.enableExtension("KHR_gl_sharing");
+
+      //get platform level info
+      if(isEnabledOnPlatform){
+        console.log("Info: KHR_gl_sharing was successfully enable on platform 0");
+      }
+      else{
+         console.error("Error: KHR_gl_sharing was NOT eneabled on platform 0");
+	 return null;
+      }
+
+      var devices = platform.getDevices();
+
+      //no devices
+      if (devices.length === 0) {
+        return null;
+      }
+      var device = devices[0];
+      
+      var isEnabledOnDevice = device.enableExtension("KHR_gl_sharing");
+      //get device level info
+      if(isEnabledOnDevice){
+         console.log("Info: KHR_gl_sharing was successfully enable on device 0");
+      }
+      else{
+         console.error("Error: KHR_gl_sharing was NOT eneabled on device 0");
+	 return null;
+      }
+      
+      var gl = canvas.getContext("experimental-webgl");
+      if(gl === null){
+         console.error("Error: WebGL is not Available");
+	 return null;
+      }
+      //pass in the WebGL context associated with the canvas
+      var context = WebCL.createContext(gl, {device:device[0], platform: platform[0], deviceType: WebCL.DEVICE_TYPE_DEFAULT});
+      
+      if(context === null){
+        console.error("Error: WebCL createContext() failed to create a shared cl-gl context.");
+	return null;
+      }
+      
+      //create a new cl buffer based on the contents of a gl buffer
+      var aBuffer = context.createFromGLBuffer(WebCL.MEM_READ_WRITE, 'some gl buffer');
+      if(aBuffer === null){
+        console.error("Error: WebCL createFromGLBuffer() failed to create buffer from gl-buffer.");
+	return null;
+      }
+      //create a WebCL commandqueue where extension was enabled
+      queue = context.createCommandQueue(device, null);
+      ... 
+      
+      //aquire the GL object
+      queue.enqueueAcquiredGLObjects([aBuffer]);
+      
+      //update the buffer
+      queue.enqueueWriteBuffer(aBuffer, true, 0, 'a buffer size', 'some gl buffer');
+
+      //release the hold on the GL object
+      queue.enqueueReleaseGLObjects([aBuffer]);
+      
+      //wait for commands to finish
+      queue.finish();
+      
+    </pre>
+  </samplecode>
 
   <history>
     <revision date="2013/11/19">

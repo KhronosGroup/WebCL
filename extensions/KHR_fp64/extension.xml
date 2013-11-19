@@ -8,6 +8,7 @@
 
   <contributors>
     <contributor>Tomi Aarnio, Nokia Research</contributor>
+    <contributor>Steven Eliuk, Samsung Electronics</contributor>
     <contributor>Members of the WebCL working group</contributor>
   </contributors>
 
@@ -40,6 +41,48 @@ partial interface WebCL {
   CLenum DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE    = 0x103B;
 };
   </idl>
+
+  <samplecode xml:space="preserve">
+    <pre>
+      
+      var platforms = WebCL.getPlatforms();
+      //no platforms
+      if (platforms.length === 0) {
+        return null;
+      } 
+      var platform = platforms[0];
+      var isEnabledOnPlatform = platform.enableExtension("KHR_fp64");
+
+      //get platform level info
+      if(isEnabledOnPlatform){
+        console.log("Info: KHR_fp64 was successfully enable on platform 0");
+	console.log("Info: Verify '#pragma OPENCL EXTENSION cl_khr_fp64 : enable' is included in the kernel.");
+      }
+      else{
+         console.error("Error: KHR_fp64 was NOT eneabled on platform 0");
+      }
+
+      var devices = platform.getDevices();
+
+      //no devices
+      if (devices.length === 0) {
+        return null;
+      }
+      var device = devices[0];
+      
+      var isEnabledOnDevice = device.enableExtension("KHR_fp64");
+      //get device level info
+      if(isEnabledOnDevice){
+         console.log("Info: KHR_fp64 was successfully enable on device 0");
+	 console.log("Info: Verify '#pragma OPENCL EXTENSION cl_khr_fp64 : enable' is included in the kernel.");
+      }
+      else{
+         console.error("Error: KHR_fp64 was NOT eneabled on device 0");
+      }
+      
+      
+    </pre>
+  </samplecode>
 
   <history>
     <revision date="2013/11/19">
