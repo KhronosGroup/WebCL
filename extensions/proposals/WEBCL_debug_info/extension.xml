@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<proposal href="proposals/WEBCL_OPTIONALLY_VISIBLE_INFO/">
-  <name>WEBCL_OPTIONALLY_VISIBLE_INFO</name>
+<proposal href="proposals/WEBCL_debug_info/">
+  <name>WEBCL_debug_info</name>
 
   <contact> <a href="https://www.khronos.org/webcl/public-mailing-list/">WebCL
   working group</a> (public_webcl 'at' khronos.org) </contact>
@@ -17,7 +17,7 @@
   </depends>
 
   <overview>
-    <p>There are some info-items that are hidden in WebCL 1.0 core specification because they could be misused to target an application to a particular hardware / software configurations or share info of the hosting device. As per <a href="http://www.w3.org/TR/api-perms/"> W3C Permissions for Device API Access Specification</a> access to private, or sensitive data from the hosting device, are meant to be discoverable, as well as disabled, or enabled, on a site-by-site, or application-by-application basis, depending on the security context <a href="http://www.w3.org/TR/api-perms/"> [0]</a>. For these reasons, it is advised that an implementation request permission from the user to expose this information, but ultimately this behavior is left up to the discretion of the implementation.</p> The <code>WEBCL_OPTIONALLY_VISIBLE_INFO</code> extension allows the exposure of additional properties that are hidden in the WebCL 1.0 core specification. There is the ability to query for this info at the <code> WebCLPlatform &amp; WebCLDevice </code> levels through the <code> getInfo(CLenum name) </code> API.
+    <p>There are some info-items that are hidden in WebCL 1.0 core specification because they could be misused to target an application to a particular hardware / software configurations or share info of the hosting device. As per <a href="http://www.w3.org/TR/api-perms/"> W3C Permissions for Device API Access Specification</a> access to private, or sensitive data from the hosting device, are meant to be discoverable, as well as disabled, or enabled, on a site-by-site, or application-by-application basis, depending on the security context <a href="http://www.w3.org/TR/api-perms/"> [0]</a>. For these reasons, it is advised that an implementation request permission from the user to expose this information, but ultimately this behavior is left up to the discretion of the implementation.</p> The <code>WEBCL_debug_info</code> extension allows the exposure of additional properties that are hidden in the WebCL 1.0 core specification. There is the ability to query for this info at the <code> WebCLPlatform &amp; WebCLDevice </code> levels through the <code> getInfo(CLenum name) </code> API.
     <features>
       <feature>
         Allows applications to query additional properties. Given that they are optionally visible, there is no
@@ -29,7 +29,7 @@ guarantee that the info is available if the extension is implemented. All the ex
 
   <idl xml:space="preserve">
 
-    interface WEBCL_OPTIONALLY_VISIBLE_INFO {
+    partial interface WEBCL_debug_info {
       //Platform Properties  
       const CLenum PLATFORM_NAME                             = 0x0902;
       const CLenum PLATFORM_VENDOR                           = 0x0903;
