@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<extension href="KHR_gl_sharing/">
+  <name>KHR_gl_sharing</name>
+
+  <contact> <a href="https://www.khronos.org/webcl/public-mailing-list/">WebCL
+  working group</a> (public_webcl 'at' khronos.org) </contact>
+
+  <contributors>
+    <contributor>Tomi Aarnio, Nokia Research</contributor>
+    <contributor>Members of the WebCL working group</contributor>
+  </contributors>
+
+  <number>3</number>
+
+  <depends>
+    <api version="1.0"/>
+  </depends>
+
+  <overview>
+    <mirrors href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/gl_sharing.html" name="cl_khr_gl_sharing"/>
+    <p>
+      The WebGL Resource Sharing extension allows applications to use
+      WebGL buffers, renderbuffers and textures as WebCL memory
+      objects. The extension is enabled by
+      calling <code>enableExtension("KHR_gl_sharing")</code>, after
+      which the application may create a WebCLContext that can share
+      resources with a given WebGLRenderingContext.
+    </p>
+    <features>
+      <feature>
+        The application may create a WebCLContext that is able to
+        share resources with the given WebGLRenderingContext.
+      </feature>
+    </features>
+  </overview>
+  
+  <idl xml:space="preserve">
+partial interface WebCL {
+
+  WebCLContext? createContext(<a href="http://www.khronos.org/registry/webgl/specs/latest/1.0/">WebGLRenderingContext</a> gl, optional WebCLContextProperties? properties = null);
+
+  /* Error Codes */
+  CLenum INVALID_GL_OBJECT                         = -60;
+  CLenum INVALID_MIP_LEVEL                         = -62;
+  CLenum INVALID_GL_SHAREGROUP_REFERENCE_KHR       = TODO;
+
+  /* cl_command_type */
+  CLenum COMMAND_ACQUIRE_GL_OBJECTS                = 0x11FF;
+  CLenum COMMAND_RELEASE_GL_OBJECTS                = 0x1200;
+
+  /* cl_gl_object_type */
+  CLenum GL_OBJECT_BUFFER                          = 0x2000;
+  CLenum GL_OBJECT_TEXTURE2D                       = 0x2001;
+  CLenum GL_OBJECT_RENDERBUFFER                    = 0x2003;
+	
+  /* cl_gl_texture_info */
+  CLenum GL_TEXTURE_TARGET                         = 0x2004;
+  CLenum GL_MIPMAP_LEVEL                           = 0x2005;
+};
+
+
+partial interface WebCLContext {
+
+  WebGLRenderingContext getGLContext();
+
+  WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
+
+  WebCLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer);
+
+  WebCLImage createFromGLTexture(CLenum memFlags, 
+                                 GLenum textureTarget,
+                                 CLint miplevel,
+                                 WebGLTexture texture);
+};
+
+
+partial interface WebCLCommandQueue {
+
+  void enqueueAcquireGLObjects(sequence&lt;WebCLMemoryObject&gt; memObjects,
+                               optional sequence&lt;WebCLEvent&gt;? eventWaitList,
+                               optional WebCLEvent? event = null);
+	
+  void enqueueReleaseGLObjects(sequence&lt;WebCLMemoryObject&gt; memObjects,
+                               optional sequence&lt;WebCLEvent&gt;? eventWaitList,
+                               optional WebCLEvent? event = null);
+};
+
+
+partial interface WebCLMemoryObject {
+  WebCLGLObjectInfo getGLObjectInfo();
+};
+
+
+dictionary WebCLGLObjectInfo {
+  any glObject;          // the GL object used to create this memory object, 'undefined' if none
+  CLenum type;           // the type of GL object attached to this memory object, 'undefined' if none
+  GLenum textureTarget;  // 'undefined' if there is no texture associated
+  CLint mipmapLevel;     // 'undefined' if there is no texture associated
+};
+  </idl>
+
+  <newfun>
+    <function name="createContext" type="WebCLContext?">
+      <param name="gl" type="WebGLRenderingContext"/>
+      <param name="properties" type="optional WebCLContextProperties?"/>
+      <p>
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=311">OpenCL 1.1 §9.7</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
+      </p>
+      Returns a newly created WebCLContext that is able to
+      interoperate with the given WebGLRenderingContext, or `null`
+      if such a context could not be created.  If there are multiple
+      WebCLDevices that can interoperate with the given GL context
+      and that satisfy the constraints of the given `properties`,
+      the implementation will choose the WebCLDevice that it deems
+      best suited for interoperating with the given GL context.  The
+      `properties` parameter can be omitted, in which case the
+      implementation will decide which platform and device to use.
+
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
+        <li>`INVALID_DEVICE` -- if `properties.devices` is non-`null`, but is not an array of valid device objects</li>
+        <li>`INVALID_DEVICE` -- if any devices in `properties.devices` are on different platforms</li>
+        <li>`INVALID_DEVICE` -- if any device in `properties.devices` is not compatible with `gl`</li>
+        <li>`INVALID_PLATFORM` -- if `properties.platform` is non-`null`, but is not a valid platform object</li>
+        <li>`INVALID_PLATFORM` -- if no device on `properties.platform` is compatible with `gl`</li>
+        <li>`DEVICE_NOT_AVAILABLE` -- if a device in `properties.devices` is currently not available</li>
+        <li>`INVALID_GL_SHAREGROUP_REFERENCE_KHR` -- if `gl` is not a valid WebGLRenderingContext</li>
+      </dl>
+    </function>
+
+    <function name="getGLContext" type="WebGLRenderingContext">
+      Returns the WebGLRenderingContext instance that this
+      WebCLContext is associated with.
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
+      </dl>
+    </function>
+
+    <function name="createFromGLBuffer" type="WebCLBuffer">
+      <param name="memFlags" type="CLenum"/>
+      <param name="buffer" type="WebGLBuffer"/>
+      <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=320">OpenCL 1.1 §9.8.2</a>,
+      <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLBuffer.html">man page</a>)</span>
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLContext is not associated with a WebGLRenderingContext</li>
+        <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+        <li>`INVALID_GL_OBJECT` -- if `buffer` is not a valid WebGLBuffer</li>
+      </dl>
+    </function>
+
+    <function name="createFromGLRenderbuffer" type="WebCLImage">
+      <param name="memFlags" type="CLenum"/>
+      <param name="renderbuffer" type="WebGLRenderbuffer"/>
+      <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=325">OpenCL 1.1 §9.8.4</a>,
+      <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLRenderbuffer.html">man page</a>)</span>
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLContext is not associated with a WebGLRenderingContext</li>
+        <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+        <li>`INVALID_GL_OBJECT` -- if `renderbuffer` is not a valid WebGLRenderbuffer, or has zero width or height</li>
+        <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if the internal format of `renderbuffer` does not map to a supported WebCL image format</li>
+        <li>`INVALID_OPERATION` -- if `renderbuffer` is a multi-sample WebGLRenderbuffer object</li>
+      </dl>
+    </function>
+
+    <function name="createFromGLTexture" type="WebCLImage">
+      <param name="memFlags" type="CLenum"/>
+      <param name="textureTarget" type="GLenum"/>
+      <param name="miplevel" type="CLint"/>
+      <param name="texture" type="WebGLTexture"/>
+      <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=321">OpenCL 1.1 §9.8.34</a>,
+      <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateFromGLTexture2D.html">man page</a>)</span>
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLContext is not associated with a WebGLRenderingContext</li>
+        <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+        <li>`INVALID_VALUE` -- if `textureTarget` is not `TEXTURE_2D` or one of `TEXTURE_CUBE_MAP_*`</li>
+        <li>`INVALID_MIP_LEVEL` -- if <code>miplevel &lt; 0 || miplevel &gt; q</code>, where `q` is as defined in OpenGL ES 2.0</li>
+        <li>`INVALID_MIP_LEVEL` -- if <code>miplevel &gt; 0</code> and creating from non-zero mipmap levels is not supported</li>
+        <li>`INVALID_GL_OBJECT` -- if `texture` is not a valid WebGLTexture, or does not match the given `textureTarget`</li>
+        <li>`INVALID_GL_OBJECT` -- if the specified `miplevel` is not defined for `texture`, or has zero width or height</li>
+        <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if the internal format of `texture` does not map to a supported WebCL image format</li>
+      </dl>
+    </function>
+
+    <function name="enqueueAcquireGLObjects" type="void">
+      <param name="memObjects" type="sequence&lt;WebCLMemoryObject&gt;"/>
+      <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;?"/>
+      <param name="event" type="optional WebCLEvent?"/>
+      <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
+      <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueAcquireGLObjects.html">man page</a>)</span>
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with a WebGLRenderingContext</li>
+        <li>`INVALID_GL_OBJECT` -- if any element in `memObjects` was not created from a GL object</li>
+        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+      </dl>
+    </function>
+
+    <function name="enqueueReleaseGLObjects" type="void">
+      <param name="memObjects" type="sequence&lt;WebCLMemoryObject&gt;"/>
+      <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;?"/>
+      <param name="event" type="optional WebCLEvent?"/>
+      <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9.8.6">OpenCL 1.1 §9.8.6</a>,
+      <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReleaseGLObjects.html">man page</a>)</span>
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with a WebGLRenderingContext</li>
+        <li>`INVALID_GL_OBJECT` -- if any element in `memObjects` was not created from a GL object</li>
+        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+      </dl>
+    </function>
+
+    <function name="getGLObjectInfo" type="WebCLGLObjectInfo">
+      <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=326">OpenCL 1.1 §9.8.5</a>,
+      <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetGLObjectInfo.html">man page</a>)</span>
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
+      </dl>
+    </function>
+  </newfun>
+
+  <history>
+    <revision date="2013/11/19">
+      <change>Migrated from the WebCL Working Draft.</change>
+    </revision>
+  </history>
+</extension>

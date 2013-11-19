@@ -19,10 +19,10 @@
 <h6> WebCL Core API Specification, IDL, and Documentation </h6>
 
 <ul>
-<li> <a href="specs/latest">WebCL current draft specification</a>.
+<li> <a href="specs/latest/1.0">WebCL current draft specification</a>.
      </li>
-<li> <a href="specs/latest/webcl.idl"> webcl.idl </a>
-     WebIDL description of the WebCL API. </li>
+<!-- <li> <a href="specs/latest/1.0/webcl.idl"> webcl.idl </a>
+     WebIDL description of the WebCL API. </li> -->
 </ul>
 
 <h6> <a name="otherextspecs"></a>

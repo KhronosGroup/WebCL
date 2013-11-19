@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<extension href="KHR_fp64/">
+  <name>KHR_fp64</name>
+
+  <contact> <a href="https://www.khronos.org/webcl/public-mailing-list/">WebCL
+  working group</a> (public_webcl 'at' khronos.org) </contact>
+
+  <contributors>
+    <contributor>Tomi Aarnio, Nokia Research</contributor>
+    <contributor>Members of the WebCL working group</contributor>
+  </contributors>
+
+  <number>1</number>
+
+  <depends>
+    <api version="1.0"/>
+  </depends>
+
+  <overview>
+    <mirrors href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/cl_khr_fp64.html" name="cl_khr_fp64"/>
+    <features>
+      <feature>
+        The <code>getInfo</code> member function in WebCLDevice will
+        accept the additional enums specified in the IDL below.
+      </feature>
+      <feature>
+        The <code>build</code> member function in WebCLProgram will
+        accept programs containing <code>#pragma OPENCL EXTENSION
+        cl_khr_fp64 : enable</code>.
+      </feature>
+      The <code>double<i>N</i></code> datatypes can be used in WebCL
+      kernel code.
+    </features>
+  </overview>
+  
+  <idl xml:space="preserve">
+partial interface WebCL {
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE = 0x100B;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE    = 0x103B;
+};
+  </idl>
+
+  <history>
+    <revision date="2013/11/19">
+      <change>Migrated from the WebCL Working Draft.</change>
+    </revision>
+  </history>
+</extension>
