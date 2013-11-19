@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<extension href="KHR_fp16/">
+  <name>KHR_fp16</name>
+
+  <contact> <a href="https://www.khronos.org/webcl/public-mailing-list/">WebCL
+  working group</a> (public_webcl 'at' khronos.org) </contact>
+
+  <contributors>
+    <contributor>Tomi Aarnio, Nokia Research</contributor>
+    <contributor>Members of the WebCL working group</contributor>
+  </contributors>
+
+  <number>2</number>
+
+  <depends>
+    <api version="1.0"/>
+  </depends>
+
+  <overview>
+    <mirrors href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/cl_khr_fp16.html" name="cl_khr_fp16"/>
+    <features>
+      <feature>
+        The <code>getInfo</code> member function in WebCLDevice will
+        accept the additional enums specified in the IDL below.
+      </feature>
+      <feature>
+        The <code>build</code> member function in WebCLProgram will
+        accept programs containing <code>#pragma OPENCL EXTENSION
+        cl_khr_fp16 : enable</code>.
+      </feature>
+    </features>
+  </overview>
+  
+  <idl xml:space="preserve">
+partial interface WebCL {
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_HALF = 0x1034;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_HALF    = 0x103C;
+};
+  </idl>
+
+  <history>
+    <revision date="2013/11/19">
+      <change>Migrated from the WebCL Working Draft.</change>
+    </revision>
+  </history>
+</extension>
