@@ -280,7 +280,7 @@ dictionary WebCLGLObjectInfo {
 	 return null;
       }
       //pass in the WebGL context associated with the canvas
-      var context = WebCL.createContext(gl, {device:device[0], platform: platform[0], deviceType: WebCL.DEVICE_TYPE_DEFAULT});
+      var context = WebCL.createContext(gl, {devices:device[0], platform: platform[0], deviceType: WebCL.DEVICE_TYPE_DEFAULT});
       
       if(context === null){
         console.error("Error: WebCL createContext() failed to create a shared cl-gl context.");

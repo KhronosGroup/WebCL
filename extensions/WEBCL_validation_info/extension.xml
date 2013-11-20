@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<draft href="WEBCL_validation_info/">
+  <name>WEBCL_validation_info</name>
+
+  <contact> <a href="https://www.khronos.org/webcl/public-mailing-list/">WebCL
+  working group</a> (public_webcl 'at' khronos.org) </contact>
+
+  <contributors>
+    <contributor>Steven Eliuk, Samsung Electronics,</contributor>
+    <contributor>Tomi Aarnio, Nokia Research,</contributor>
+    <contributor>Members of the WebCL working group.</contributor>
+  </contributors>
+
+  <number>4</number>
+
+  <depends>
+    <api version="1.0"/>
+  </depends>
+
+  <overview>
+<script src="../../resources/jquery-1.3.2.min.js" type="text/javascript">do not remove this text</script>
+    <script src="../../resources/preprocessHTML.js" type="text/javascript">do not remove this text</script>
+
+    <p>
+      The Validation Info Query extension, enabled by
+      <code>enableExtension("WEBCL_validation_info")</code>, allows
+      applications to retrieve the results of kernel program
+      validation, including error messages, warnings, logs, and
+      instrumented source code.  The results become available after
+      building (or attempting to build) a WebCLProgram.  Validation
+      can also be triggered manually by calling the `validate` method
+      provided in this extension.
+    </p>
+    <features>
+      <feature>
+        Allows applications to query additional properties. Given that they are optionally visible, there is no
+guarantee that the info is available if the extension is implemented. All the extension guarantees is at least one additional property / info item is available.
+      </feature>
+    </features>
+  </overview>
+
+  <idl xml:space="preserve">
+  partial interface <dfn>WebCLProgram</dfn> {
+
+    void validate(optional sequence&lt;WebCLDevice&gt; devices,
+                  optional DOMString? options,
+                  optional WebCLCallback whenFinished);
+
+    CLint getValidationStatus();
+    DOMString? getValidationErrors();
+    DOMString? getValidationWarnings();
+    DOMString? getValidationInfo();
+    DOMString? getValidatedSource();
+  };
+  </idl>
+   <newfun>
+     <function name="validate" type="void">
+        <param name="devices" type="optional sequence&lt;WebCLDevice&gt;"/>
+        <param name="options" type="optional DOMString?"/>
+	<param name="whenFinished" type="optional WebCLCallback"/>
+     
+        Validates this WebCLProgram for the given list of devices,
+        or in absence of the list, for all devices associated with
+        the WebCLContext that this WebCLProgram was created from.  A
+        string of validator options and an asynchronous callback
+        function to invoke when the validation is completed can also
+        be provided. The available validator options are listed in
+        the table below; any other option is considered invalid.
+
+        <table class="enumtable">
+          <tr><th>Validator option</th><th>Description</th></tr>
+          <tr><td><i>-D name</i></td><td>Equivalent to <i>#define name</i> in OpenCL C.</td></tr>
+          <tr><td><i>-D name=definition</i></td><td>Equivalent to <i>#define name definition</i> in OpenCL C.</td></tr>
+          <tr><td><i>-cl-opt-disable</i></td><td>Disable all optimizations.</td></tr>
+          <tr><td><i>-W</i></td><td>Inhibit all warning messages.</td></tr>
+          <tr><td><i>-Werror</i></td><td>Make all warnings into errors.</td></tr>
+        </table>
+
+        <dl class="exceptions">
+          <dt>Exceptions:</dt>
+          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
+          <li>`INVALID_DEVICE` -- if any element in `devices` is not a valid WebCLDevice</li>
+          <li>`INVALID_DEVICE` -- if any device in `devices` is not associated with the WebCLContext of this WebCLProgram</li>
+          <li>`INVALID_BUILD_OPTIONS` -- if the validator options specified by `options` are invalid</li>
+          <li>`INVALID_OPERATION` -- if a previous validation of this
+            WebCLProgram for any of the devices listed in `devices`
+            has not completed</li>
+          <li>`BUILD_PROGRAM_FAILURE` -- if there is a failure to validate the program</li>
+        </dl>
+    </function>
+    
+    <function name="getValidationStatus" type="CLint">
+      Returns the validation status of this WebCLProgram.  Zero
+      indicates that the program is successfully validated (but only
+      for the given devices and with the given options).  Negative
+      values indicate implementation-specific error conditions that
+      are documented elsewhere.
+      <dl class="exceptions">
+	<dt>Exceptions:</dt>
+	<li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
+      </dl>
+    </function>
+    
+    <function name="getValidationErrors" type="DOMString?">
+      Returns the error messages from the most recent validation of
+      this WebCLProgram, or null if there are no errors.
+      <dl class="exceptions">
+	<dt>Exceptions:</dt>
+	<li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
+      </dl>
+    </function>
+
+    <function name="getValidatorWarnings" type="DOMString?">
+      Returns the warning messages from the most recent validation
+      of this WebCLProgram, or null if there are no warnings.
+      <dl class="exceptions">
+	<dt>Exceptions:</dt>
+	<li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
+      </dl>
+    </function>
+
+    <function name="getValidationInfo" type="DOMString?">
+      Returns informational messages from the most recent validation
+      of this WebCLProgram, or null if there are no such messages.
+      <dl class="exceptions">
+	<dt>Exceptions:</dt>
+	<li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
+      </dl>
+    </function>
+
+    <function name="getValidatedSource" type="DOMString?">
+      Returns the validated source code from the most recent
+      validation of this WebCLProgram, or null if no source code is
+      available due to unsuccessful validation or any other reason.
+      <dl class="exceptions">
+	<dt>Exceptions:</dt>
+	<li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
+      </dl>
+    </function>
+  </newfun>
+
+  <issues>
+    <ol>
+      <li>
+        <p>
+         N/A
+        </p>
+      </li>
+    </ol>
+  </issues>
+
+  <samplecode xml:space="preserve">
+    <pre class="example">
+      
+      var platforms = WebCL.getPlatforms();
+      //no platforms
+      if (platforms.length === 0) {
+        return null;
+      } 
+      var platform = platforms[0];
+      var isEnabledOnPlatform = platform.enableExtension("WEBCL_validation_info");
+      
+      if (!isEnabledOnPlatform){
+         console.error("Error: The WEBCL_validation_info extension was not enabled on platform 0."
+      }
+      
+   
+      var devices = platform.getDevices();
+
+      //no devices
+      if (devices.length === 0) {
+        return null;
+      }
+      var device = devices[0];
+      
+      var isEnabledOnDevice = device.enableExtension("WEBCL_validation_info");
+      
+      if (!isEnabledOnDevice){
+         console.error("Error: The WEBCL_validation_info extension was not enabled on device 0."
+      }
+
+      var context = WebCL.createContext({devices:device, platform:platform, deviceType: WebCL.DEVICE_TYPE_DEFAULT});
+     
+      //verify context created
+      if(context === null) {
+         return null;
+      }      
+
+      var kernelSource = "__kernel void aBasicKernel(__global const float* a, __global const float* b, 
+                                                     int size, float x, __global float* c){
+				int index = get_global_id(0); 
+				if(index > size) return; 
+				c[index] = (a[index]*x) + b[index];
+				}";
+				
+      var program = context.createProgram(kernelSource);
+      //verify createProgram
+      if(program === null){
+         return null;
+      }
+      
+      program.build([device]);
+      
+      var validationErrors = program.getValidationErrors();      
+
+
+    </pre>
+  </samplecode>
+
+  <history>
+    <revision date="2013/11/20">
+      <change>Migrated from WebCL Working Draft and sample code added.</change>
+    </revision>
+  </history>
+</draft>
