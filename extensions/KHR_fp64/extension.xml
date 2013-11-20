@@ -47,45 +47,29 @@ partial interface WebCL {
   </idl>
 
   <samplecode xml:space="preserve">
-    <pre>
-      
-      var platforms = WebCL.getPlatforms();
-      //no platforms
-      if (platforms.length === 0) {
-        return null;
-      } 
-      var platform = platforms[0];
-      var isEnabledOnPlatform = platform.enableExtension("KHR_fp64");
+<pre class="example">
+// Enables KHR_fp64 on all devices that support it, and
+// returns those devices in an array.  If there are no
+// such devices, an empty array is returned.
 
-      //get platform level info
-      if(isEnabledOnPlatform){
-        console.log("Info: KHR_fp64 was successfully enable on platform 0");
-	console.log("Info: Verify '#pragma OPENCL EXTENSION cl_khr_fp64 : enable' is included in the kernel.");
-      }
-      else{
-         console.error("Error: KHR_fp64 was NOT eneabled on platform 0");
-      }
+function getFP64Devices() {
+  var devices = [];
+  WebCL.getPlatforms().forEach(function(plat) {
+    plat.getDevices().forEach(function(dev) {
+      var isSupported = dev.enableExtension("KHR_fp64");
+      if (isSupported) devices.push(dev);
+    }
+  }
 
-      var devices = platform.getDevices();
-
-      //no devices
-      if (devices.length === 0) {
-        return null;
-      }
-      var device = devices[0];
-      
-      var isEnabledOnDevice = device.enableExtension("KHR_fp64");
-      //get device level info
-      if(isEnabledOnDevice){
-         console.log("Info: KHR_fp64 was successfully enable on device 0");
-	 console.log("Info: Verify '#pragma OPENCL EXTENSION cl_khr_fp64 : enable' is included in the kernel.");
-      }
-      else{
-         console.error("Error: KHR_fp64 was NOT eneabled on device 0");
-      }
-      
-      
-    </pre>
+  if (devices.length === 0) {
+    console.error("Your system does not support KHR_fp64.");
+  } else {
+    console.info("Enabled KHR_fp64 on "+devices.length+" devices.");
+    console.info("Make sure to include '#pragma OPENCL EXTENSION cl_khr_fp64 : enable' in your kernel code.");
+  }
+  return devices;
+}
+</pre>
   </samplecode>
 
   <history>
