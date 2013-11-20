@@ -19,14 +19,18 @@
   </depends>
 
   <overview>
+
+    <script src="../../resources/jquery-1.3.2.min.js" type="text/javascript">do not remove this text</script>
+    <script src="../../resources/preprocessHTML.js" type="text/javascript">do not remove this text</script>
+
     <mirrors href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/cl_khr_fp16.html" name="cl_khr_fp16"/>
     <features>
       <feature>
-        The <code>getInfo</code> member function in WebCLDevice will
+        The `getInfo` member function in WebCLDevice will
         accept the additional enums specified in the IDL below.
       </feature>
       <feature>
-        The <code>build</code> member function in WebCLProgram will
+        The `build` member function in WebCLProgram will
         accept programs containing <code>#pragma OPENCL EXTENSION
         cl_khr_fp16 : enable</code>.
       </feature>

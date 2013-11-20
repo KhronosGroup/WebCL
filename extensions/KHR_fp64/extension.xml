@@ -19,6 +19,10 @@
   </depends>
 
   <overview>
+
+    <script src="../../resources/jquery-1.3.2.min.js" type="text/javascript">do not remove this text</script>
+    <script src="../../resources/preprocessHTML.js" type="text/javascript">do not remove this text</script>
+
     <mirrors href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/cl_khr_fp64.html" name="cl_khr_fp64"/>
     <features>
       <feature>
