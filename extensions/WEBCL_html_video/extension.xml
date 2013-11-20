@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<draft href="WEBCL_html_video/">
+  <name>WEBCL_html_video</name>
+
+  <contact> <a href="https://www.khronos.org/webcl/public-mailing-list/">WebCL
+  working group</a> (public_webcl 'at' khronos.org) </contact>
+
+  <contributors>
+    <contributor>Tomi Aarnio, Nokia Research</contributor>
+    <contributor>Members of the WebCL working group</contributor>
+  </contributors>
+
+  <number>5</number>
+
+  <depends>
+    <api version="1.0"/>
+  </depends>
+
+  <overview>
+
+    <script src="../../resources/jquery-1.3.2.min.js" type="text/javascript">do not remove this text</script>
+    <script src="../../resources/preprocessHTML.js" type="text/javascript">do not remove this text</script>
+
+    <p>
+      This extension makes it more convenient and potentially faster
+      for applications to transfer image data from an HTMLVideoElement
+      to a WebCLImage.
+    </p>
+
+    <features>
+      <feature>
+        The application may create a WebCLImage that is permanently
+        bound to an HTMLVideoElement.  The source video pixel format
+        is treated as 32-bit RGBA (8 bits per component) with
+        non-premultiplied alpha.
+      </feature>
+    </features>
+
+  </overview>
+  
+  <idl xml:space="preserve">
+partial interface WebCLContext {
+
+  WebCLImage createImage(CLenum memFlags,
+                         WebCLImageDescriptor descriptor,
+                         HTMLVideoElement srcVideo);
+};
+
+
+partial interface WebCLCommandQueue {
+
+  void enqueueWriteImage(
+                    WebCLImage                            image,
+                    CLboolean                             blockingWrite,
+                    HTMLVideoElement                      srcVideo,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+};
+  </idl>
+
+  <newfun>
+    <function name="createImage" type="WebCLImage">
+      <param name="memFlags" type="CLenum"/>
+      <param name="descriptor" type="WebCLImageDescriptor"/>
+      <param name="srcVideo" type="HTMLVideoElement"/>
+      Creates a new WebCLImage with the given pixel format, and binds
+      the image permanently to the given HTMLVideoElement.  The video
+      element does not have to be fully loaded, but its dimensions
+      must be known.  The newly created WebCLImage will have width and
+      height equal to the source video width and height.  The width
+      and height given in `descriptor` are ignored.
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_video` extension has not been enabled</li>
+        <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_ONLY`</li>
+        <li>`INVALID_IMAGE_SIZE` -- if <code>srcVideo.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code></li>
+        <li>`INVALID_IMAGE_SIZE` -- if <code>srcVideo.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code></li>
+        <li>`INVALID_HOST_PTR` -- if `srcVideo` has unknown dimensions, or is otherwise not valid</li>
+        <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if `descriptor.channelOrder` or `descriptor.channelType` 
+          is not valid</li>
+        <li>`IMAGE_FORMAT_NOT_SUPPORTED` -- if the given combination
+          of `channelOrder` and `channelType` is not supported for `srcVideo`</li>
+      </dl>
+    </function>
+
+    <function name="enqueueWriteImage" type="void">
+      <param name="image" type="WebCLImage"/>
+      <param name="blockingWrite" type="CLboolean"/>
+      <param name="srcVideo" type="HTMLVideoElement"/>
+      <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;?"/>
+      <param name="event" type="optional WebCLEvent?"/>
+      Enqueues a command to write the current frame of `srcVideo` to
+      the given WebCLImage.  The WebCLImage must already be bound to
+      `srcVideo`.  If `blockingWrite` is `true`, the video frame is
+      extracted immediately and then enqueued for writing.  If
+      `blockingWrite` is `false`, the frame is extracted later, when
+      the enqueued write command is actually executed.
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_video` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `image`</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+        <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
+        <li>`INVALID_MEM_OBJECT` -- if `image` is not bound to `srcVideo`</li>
+        <li>`INVALID_IMAGE_SIZE` -- if the dimensions of `image` are not supported by this WebCLCommandQueue</li>
+        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+      </dl>
+    </function>
+  </newfun>
+
+  <samplecode xml:space="preserve">
+<pre class="example">
+var ok = device.enableExtension("WEBCL_html_video");
+if (ok) {
+  var ctx = WebCL.createContext({ devices: [device] });
+  var queue = ctx.createCommandQueue();
+  var format = { channelOrder: WebCL.RGBA, channelType: WebCL.UNORM_INT8 };
+  var videoImage = ctx.createImage(WebCL.MEM_READ_ONLY, format, videoElement);
+  var kernel = ctx.createProgram(kernelSource).createKernelsInProgram()[0];
+  for (/* each frame */) {
+    queue.enqueueWriteImage(videoImage, false, videoElement);
+    queue.enqueueNDRangeKernel(/* process the frame with kernel */);
+    queue.enqueueReadImage(videoImage, false, processedPixels);
+    queue.finish();
+    doSomething(processedPixels);
+  }
+  ctx.release();
+}
+</pre>
+  </samplecode>
+
+  <issues>
+    <ol>
+
+      <li>Should we have both blocking and non-blocking forms of
+      `enqueueWriteImage`?</li>
+      <p>TBD.</p>
+
+      <li>Should we have a way to get the timestamp of the 
+      extracted frame?</li>
+      <p>TBD.</p>
+
+      <li>Should we allow for extracting a sub-region of full
+      frame?</li>
+      <p>TBD.</p>
+
+      <li>Should we specify at least one channelOrder/channelType
+      combination that is guaranteed to work on any implementation?</li>
+      <p>TBD (that would probably be RGBA/UNORM_INT8).</p>
+
+    </ol>
+  </issues>
+
+  <history>
+    <revision date="2013/11/20">
+      <change>Migrated from the WebCL Working Draft.</change>
+    </revision>
+  </history>
+
+</draft>
