@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<proposal href="proposals/WEBCL_debug_info/">
+<draft href="WEBCL_debug_info/">
   <name>WEBCL_debug_info</name>
 
   <contact> <a href="https://www.khronos.org/webcl/public-mailing-list/">WebCL
@@ -11,13 +11,17 @@
     <contributor>Members of the WebCL working group.</contributor>
   </contributors>
 
-  <number>NN</number>
+  <number>6</number>
 
   <depends>
     <api version="1.0"/>
   </depends>
 
   <overview>
+    
+    <script src="../../resources/jquery-1.3.2.min.js" type="text/javascript">do not remove this text</script>
+    <script src="../../resources/preprocessHTML.js" type="text/javascript">do not remove this text</script>
+
     <p>There are some info-items that are hidden in WebCL 1.0 core specification because they could be misused to target an application to a particular hardware / software configurations or share info of the hosting device. As per <a href="http://www.w3.org/TR/api-perms/"> W3C Permissions for Device API Access Specification</a> access to private, or sensitive data from the hosting device, are meant to be discoverable, as well as disabled, or enabled, on a site-by-site, or application-by-application basis, depending on the security context <a href="http://www.w3.org/TR/api-perms/"> [0]</a>. For these reasons, it is advised that an implementation request permission from the user to expose this information, but ultimately this behavior is left up to the discretion of the implementation.</p> The <code>WEBCL_debug_info</code> extension allows the exposure of additional properties that are hidden in the WebCL 1.0 core specification. There is the ability to query for this info at the <code> WebCLPlatform &amp; WebCLDevice </code> levels through the <code> getInfo(CLenum name) </code> API.
     <features>
       <feature>
@@ -63,7 +67,7 @@ guarantee that the info is available if the extension is implemented. All the ex
   </issues>
 
   <samplecode xml:space="preserve">
-    <pre>
+    <pre class="example">
       
       var platforms = WebCL.getPlatforms();
       //no platforms
@@ -71,7 +75,7 @@ guarantee that the info is available if the extension is implemented. All the ex
         return null;
       } 
       var platform = platforms[0];
-      var isEnabledOnPlatform = platform.enableExtension("WEBCL_OPTIONALLY_VISIBLE_EXTENSION");
+      var isEnabledOnPlatform = platform.enableExtension("WEBCL_debug_info");
 
       //get platform level info
       if(isEnabledOnPlatform){
@@ -86,7 +90,7 @@ guarantee that the info is available if the extension is implemented. All the ex
       }
       var device = devices[0];
       
-      var isEnabledOnDevice = device.enableExtension("WEBCL_OPTIONALLY_VISIBLE_EXTENSION");
+      var isEnabledOnDevice = device.enableExtension("WEBCL_debug_info");
       //get device level info
       if(isEnabledOnDevice){
          var maxFreq = device.getInfo(WebCL.DEVICE_MAX_CLOCK_FREQUENCY);
@@ -99,4 +103,4 @@ guarantee that the info is available if the extension is implemented. All the ex
       <change>Initial revision.</change>
     </revision>
   </history>
-</proposal>
+</draft>
