@@ -23,7 +23,7 @@ function preprocessHTML() {
 
   // Generate a hyperlinked Table of Contents
 
-  if (generateTOC) {
+  if (window.generateTOC) {
     generateTOC(document.querySelector('#toc'));
   }
 
