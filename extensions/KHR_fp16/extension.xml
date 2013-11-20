@@ -56,8 +56,8 @@ function getFP16Devices() {
     plat.getDevices().forEach(function(dev) {
       var isSupported = dev.enableExtension("KHR_fp16");
       if (isSupported) devices.push(dev);
-    }
-  }
+    });
+  });
 
   if (devices.length === 0) {
     console.error("Your system does not support KHR_fp16.");

@@ -58,8 +58,8 @@ function getFP64Devices() {
     plat.getDevices().forEach(function(dev) {
       var isSupported = dev.enableExtension("KHR_fp64");
       if (isSupported) devices.push(dev);
-    }
-  }
+    });
+  });
 
   if (devices.length === 0) {
     console.error("Your system does not support KHR_fp64.");
