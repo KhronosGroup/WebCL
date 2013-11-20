@@ -1,4 +1,5 @@
-<?php include("../../_inc/doctype.txt"); ?>
+<!doctype html>
+<html lang="en">
 <head>
 <title>Khronos WebCL API Registry</title>
 <?php include("../../_inc/registry/registry_head.txt"); ?>
