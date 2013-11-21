@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<draft href="WEBCL_html_sharing/">
+  <name>WEBCL_html_sharing</name>
+
+  <contact> <a href="https://www.khronos.org/webcl/public-mailing-list/">WebCL
+  working group</a> (public_webcl 'at' khronos.org) </contact>
+
+  <contributors>
+    <contributor>Steven Eliuk, Samsung Electronics,</contributor>
+    <contributor>Tomi Aarnio, Nokia Research,</contributor>
+    <contributor>Members of the WebCL working group.</contributor>
+  </contributors>
+
+  <number>7</number>
+
+  <depends>
+    <api version="1.0"/>
+  </depends>
+
+  <overview>
+     <p>
+      The HTML Resource Sharing extension makes it more convenient and
+      potentially faster for applications to transfer image data from
+      HTML Image / Canvas elements to WebCL memory objects, and
+      vice versa.  The extension is enabled by
+      calling <code>enableExtension("WEBCL_html_sharing")</code>, after
+      which the application may call the functions specified below.
+    </p>
+    <features>
+      <feature>
+	WebCLBuffer and WebCLImage can be initialized at construction time from an ImageData, Canvas, or Image Element. This does not create a binding of any kind between the WebCL memory object and the data source. The source pixel format is treated as 32-bit RGBA (8-bits per component) with non-premultiplied alpha, regardless of the source.  
+      </feature>
+    </features>
+  </overview>
+
+  <idl xml:space="preserve">
+    partial interface WebCLContext {
+       WebCLBuffer createBuffer(CLenum memFlags, ImageData srcPixels);
+       WebCLBuffer createBuffer(CLenum memFlags, HTMLCanvasElement srcCanvas);
+       WebCLBuffer createBuffer(CLenum memFlags, HTMLImageElement srcImage);
+       WebCLImage createImage(CLenum memFlags, ImageData srcPixels);
+       WebCLImage createImage(CLenum memFlags, HTMLCanvasElement srcCanvas);
+       WebCLImage createImage(CLenum memFlags, HTMLImageElement srcImage);
+    };
+    
+    partial interface WebCLCommandQueue {
+
+    //////////////////////////////////////////////////////////////////////
+    //
+    // Writing to WebCLBuffer
+    //
+    
+    void enqueueWriteBuffer(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingWrite,
+                    CLuint                                bufferOffset,
+                    ImageData                             srcPixels,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+    void enqueueWriteBuffer(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingWrite,
+                    CLuint                                bufferOffset,
+                    HTMLCanvasElement                     srcCanvas,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+    void enqueueWriteBuffer(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingWrite,
+                    CLuint                                bufferOffset,
+                    HTMLImageElement                      srcImage,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+    void enqueueWriteBufferRect(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingWrite,
+                    sequence&lt;CLuint&gt;                      bufferOrigin,
+                    sequence&lt;CLuint&gt;                      srcOrigin,
+                    sequence&lt;CLuint&gt;                      region,
+                    CLuint                                bufferRowPitch,
+                    ImageData                             srcPixels,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+    void enqueueWriteBufferRect(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingWrite,
+                    sequence&lt;CLuint&gt;                      bufferOrigin,
+                    sequence&lt;CLuint&gt;                      srcOrigin,
+                    sequence&lt;CLuint&gt;                      region,
+                    CLuint                                bufferRowPitch,
+                    HTMLCanvasElement                     srcCanvas,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+    void enqueueWriteBufferRect(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingWrite,
+                    sequence&lt;CLuint&gt;                      bufferOrigin,
+                    sequence&lt;CLuint&gt;                      srcOrigin,
+                    sequence&lt;CLuint&gt;                      region,
+                    CLuint                                bufferRowPitch,
+                    HTMLImageElement                      srcImage,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+    //////////////////////////////////////////////////////////////////////
+    //
+    // Writing to WebCLImage
+    //
+    
+    void enqueueWriteImage(
+                    WebCLImage                            image,
+                    CLboolean                             blockingWrite,
+                    sequence&lt;CLuint&gt;                      origin,
+                    sequence&lt;CLuint&gt;                      region,
+                    ImageData                             srcPixels,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+    void enqueueWriteImage(
+                    WebCLImage                            image,
+                    CLboolean                             blockingWrite,
+                    sequence&lt;CLuint&gt;                      origin,
+                    sequence&lt;CLuint&gt;                      region,
+                    HTMLCanvasElement                     srcCanvas,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+    void enqueueWriteImage(
+                    WebCLImage                            image,
+                    CLboolean                             blockingWrite,
+                    sequence&lt;CLuint&gt;                      origin,
+                    sequence&lt;CLuint&gt;                      region,
+                    HTMLImageElement                      srcImage,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+
+    //////////////////////////////////////////////////////////////////////
+    //
+    // Reading from WebCL
+    //
+
+    void enqueueReadBuffer(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingRead,
+                    CLuint                                bufferOffset,
+                    CLuint                                numBytes,
+                    HTMLCanvasElement                     dstCanvas,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+    void enqueueReadBufferRect(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingRead,
+                    sequence&lt;CLuint&gt;                      bufferOrigin,
+                    sequence&lt;CLuint&gt;                      dstOrigin,
+                    sequence&lt;CLuint&gt;                      region,
+                    CLuint                                bufferRowPitch,
+                    HTMLCanvasElement                     dstCanvas,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+    void enqueueReadImage(
+                    WebCLImage                            image,
+                    CLboolean                             blockingRead,
+                    sequence&lt;CLuint&gt;                      origin,
+                    sequence&lt;CLuint&gt;                      region,
+                    HTMLCanvasElement                     dstCanvas,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+    };
+  </idl>
+
+  <newfun>
+    <function name="createBuffer" type="WebCLBuffer">
+      <param name="memFlags" type="CLenum"/>
+      <param name="srcPixels" type="ImageData"/>
+      Creates a new WebCLBuffer with size equal to <code>srcPixels.data.length</code>.
+      <dl class="exceptions">
+	 <dt>Exceptions:</dt>
+	 <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+	 <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcPixels.data.length &gt; DEVICE_MAX_MEM_ALLOC_SIZE</code></li>
+	 <li>`INVALID_HOST_PTR` -- if `srcPixels` has unknown length, or is otherwise not valid</li>
+       </dl>
+    </function>
+
+    <function name="createBuffer" type="WebCLBuffer">
+      <param name="memFlags" type="CLenum"/>
+      <param name="srcCanvas" type="HTMLCanvasElement"/>
+      Creates a new WebCLBuffer with size equal to <code>srcCanvas.getContext("2d").getImageData().data.length</code>.
+      <dl class="exceptions">
+	 <dt>Exceptions:</dt>
+	 <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+	 <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcCanvas.getContext("2d").getImageData().data.length &gt; DEVICE_MAX_MEM_ALLOC_SIZE</code></li>
+	 <li>`INVALID_HOST_PTR` -- if `srcCanvas` has unknown lengths, or is otherwise not valid</li>
+       </dl>
+    </function>
+
+    <function name="createBuffer" type="WebCLBuffer">
+      <param name="memFlags" type="CLenum"/>
+      <param name="srcImage" type="HTMLImageElement"/>
+      Creates a new WebCLBuffer with size equal to <code>srcImage.width * srcImage.height * 4</code>.
+      <dl class="exceptions">
+	 <dt>Exceptions:</dt>
+	 <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+	 <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcImage.width * srcImage.height * 4 &gt; DEVICE_MAX_MEM_ALLOC_SIZE</code></li>
+	 <li>`INVALID_HOST_PTR` -- if `srcImage` has unknown lengths, or is otherwise not valid</li>
+       </dl>
+    </function>
+
+
+    <function name="createImage" type="WebCLImage">
+      <param name="memFlags" type="CLenum"/>
+      <param name="descriptor" type="WebCLImageDescriptor"/>
+      <param name="srcPixels" type="ImageData"/>
+       A newly create WebCLImage will have <code>channelOrder</code> equal to <code>RGBA, channelType</code> equal to <code>UNORM_INT8</code>, and <code> width</code> and<code> height</code> equal to <code>srcPixels.width</code> and <code>srcPixels.height</code>. The <code>descriptor</code> can be used to specify the row pitch for storage.
+       <dl class="exceptions">
+	 <dt>Exceptions:</dt>
+	 <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+	 <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcPixels.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code></li>
+	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcPixels.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code></li>
+	 <li>`INVALID_HOST_PTR` -- if `srcPixels` has unknown dimensions, or is otherwise not valid</li>
+	 <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if `descriptor.channelOrder` or `descriptor.channelType` 
+	 is not valid</li>
+	 <li>`IMAGE_FORMAT_NOT_SUPPORTED` -- if the given combination
+	 of `channelOrder` and `channelType` is not supported for `srcPixels`</li>
+       </dl>
+    </function>
+
+    <function name="createImage" type="WebCLImage">
+      <param name="memFlags" type="CLenum"/>
+      <param name="descriptor" type="WebCLImageDescriptor"/>
+      <param name="srcCanvas" type="HTMLCanvasElement"/>
+      A newly create WebCLImage will have <code>channelOrder</code> equal to <code>RGBA, channelType</code> equal to <code>UNORM_INT8</code>, and <code> width</code> and<code> height</code> equal to <code>srcCanvas.width</code> and <code>srcCanvas.height</code>. The <code>descriptor</code> can be used to specify the row pitch for storage.
+       <dl class="exceptions">
+	 <dt>Exceptions:</dt>
+	 <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+	 <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcCanvas.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code></li>
+	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcCanvas.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code></li>
+	 <li>`INVALID_HOST_PTR` -- if `srcCanvas` has unknown dimensions, or is otherwise not valid</li>
+	 <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if `descriptor.channelOrder` or `descriptor.channelType` 
+	 is not valid</li>
+	 <li>`IMAGE_FORMAT_NOT_SUPPORTED` -- if the given combination
+	 of `channelOrder` and `channelType` is not supported for `srcPixels`</li>
+       </dl>
+    </function>
+
+    <function name="createImage" type="WebCLImage">
+      <param name="memFlags" type="CLenum"/>
+      <param name="descriptor" type="WebCLImageDescriptor"/>
+      <param name="srcImage" type="HTMLImageElement"/>
+      A newly create WebCLImage will have <code>channelOrder</code> equal to <code>RGBA, channelType</code> equal to <code>UNORM_INT8</code>, and <code> width</code> and<code> height</code> equal to <code>srcImage.width</code> and <code>srcImage.height</code>. The <code>descriptor</code> can be used to specify the row pitch for storage.
+       <dl class="exceptions">
+	 <dt>Exceptions:</dt>
+	 <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+	 <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcImage.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code></li>
+	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcImage.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code></li>
+	 <li>`INVALID_HOST_PTR` -- if `srcImage` has unknown dimensions, or is otherwise not valid</li>
+	 <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if `descriptor.channelOrder` or `descriptor.channelType` 
+	 is not valid</li>
+	 <li>`IMAGE_FORMAT_NOT_SUPPORTED` -- if the given combination
+	 of `channelOrder` and `channelType` is not supported for `srcPixels`</li>
+       </dl>
+    </function>
+
+    <function name="enqueueWriteBuffer" type="void">
+      <param name="buffer" type="WebCLBuffer"/>
+      <param name="blockingWrite" type="CLboolean"/>
+      <param name="bufferOffset" type="CLuint"/>
+      <param name="srcPixels" type="ImageData"/>
+      <param name="eventWaitList" type="Optional sequence&lt;WebCLEvent&gt;?"/>
+      <param name="event" type="Optional WebCLEvent?"/>
+    </function>
+    
+    <function name="enqueueWriteBuffer" type="void">
+      <param name="buffer" type="WebCLBuffer"/>
+      <param name="blockingWrite" type="CLboolean"/>
+      <param name="bufferOffset" type="CLuint"/>
+      <param name="srcCanvas" type="HTMLCanvasElement"/>
+      <param name="eventWaitList" type="Optional sequence&lt;WebCLEvent&gt;?"/>
+      <param name="event" type="Optional WebCLEvent?"/>
+    </function>
+
+    <function name="enqueueWriteBuffer" type="void">
+      <param name="buffer" type="WebCLBuffer"/>
+      <param name="blockingWrite" type="CLboolean"/>
+      <param name="bufferOffset" type="CLuint"/>
+      <param name="srcImage" type="HTMLImageElement"/>
+      <param name="eventWaitList" type="Optional sequence&lt;WebCLEvent&gt;?"/>
+      <param name="event" type="Optional WebCLEvent?"/>
+    </function>
+
+    <function name="enqueueWriteBufferRect" type="void">
+      <param name="buffer" type="WebCLBuffer"/>
+      <param name="blockingWrite" type="CLboolean"/>
+      <param name="bufferOrigin" type="sequence&lt;CLuint&gt;"/>
+      <param name="srcOrigin" type="sequence&lt;CLuint&gt;"/>
+      <param name="region" type="sequence&lt;CLuint&gt;"/>
+      <param name="bufferRowPitch" type="CLuint"/>
+      <param name="srcPixels" type="ImageData"/>
+      <param name="eventWaitList" type="Optional sequence&lt;WebCLEvent&gt;?"/>
+      <param name="event" type="Optional WebCLEvent?"/>
+    </function>
+
+    <function name="enqueueWriteBufferRect" type="void">
+      <param name="buffer" type="WebCLBuffer"/>
+      <param name="blockingWrite" type="CLboolean"/>
+      <param name="bufferOrigin" type="sequence&lt;CLuint&gt;"/>
+      <param name="srcOrigin" type="sequence&lt;CLuint&gt;"/>
+      <param name="region" type="sequence&lt;CLuint&gt;"/>
+      <param name="bufferRowPitch" type="CLuint"/>
+      <param name="srcCanvas" type="HTMLCanvasElement"/>
+      <param name="eventWaitList" type="Optional sequence&lt;WebCLEvent&gt;?"/>
+      <param name="event" type="Optional WebCLEvent?"/>
+    </function>
+
+    <function name="enqueueWriteBufferRect" type="void">
+      <param name="buffer" type="WebCLBuffer"/>
+      <param name="blockingWrite" type="CLboolean"/>
+      <param name="bufferOrigin" type="sequence&lt;CLuint&gt;"/>
+      <param name="srcOrigin" type="sequence&lt;CLuint&gt;"/>
+      <param name="region" type="sequence&lt;CLuint&gt;"/>
+      <param name="bufferRowPitch" type="CLuint"/>
+      <param name="srcImage" type="HTMLImageElement"/>
+      <param name="eventWaitList" type="Optional sequence&lt;WebCLEvent&gt;?"/>
+      <param name="event" type="Optional WebCLEvent?"/>
+    </function>
+    
+    <function name="enqueueWriteImage" type="void">
+      <param name="image" type="WebCLImage"/>
+      <param name="blockingWrite" type="CLboolean"/>
+      <param name="origin" type="sequence&lt;CLuint&gt;"/>
+      <param name="region" type="sequence&lt;CLuint&gt;"/>
+      <param name="srcPixels" type="ImageData"/>
+      <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;?"/>
+      <param name="event" type="optional WebCLEvent?"/>
+    </function>
+
+    <function name="enqueueWriteImage" type="void">
+      <param name="image" type="WebCLImage"/>
+      <param name="blockingWrite" type="CLboolean"/>
+      <param name="origin" type="sequence&lt;CLuint&gt;"/>
+      <param name="region" type="sequence&lt;CLuint&gt;"/>
+      <param name="srcPixels" type="ImageData"/>
+      <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;?"/>
+      <param name="event" type="optional WebCLEvent?"/>
+    </function>
+    
+    <function name="enqueueWriteImage" type="void">
+      <param name="image" type="WebCLImage"/>
+      <param name="blockingWrite" type="CLboolean"/>
+      <param name="origin" type="sequence&lt;CLuint&gt;"/>
+      <param name="region" type="sequence&lt;CLuint&gt;"/>
+      <param name="srcCanvas" type="HTMLCanvasElement"/>
+      <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;?"/>
+      <param name="event" type="optional WebCLEvent?"/>
+    </function>
+    
+    <function name="enqueueWriteImage" type="void">
+      <param name="image" type="WebCLImage"/>
+      <param name="blockingWrite" type="CLboolean"/>
+      <param name="origin" type="sequence&lt;CLuint&gt;"/>
+      <param name="region" type="sequence&lt;CLuint&gt;"/>
+      <param name="srcImage" type="HTMLImageElement"/>
+      <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;?"/>
+      <param name="event" type="optional WebCLEvent?"/>
+    </function>
+
+    <function name="enqueueReadBuffer" type="void">
+      <param name="buffer" type="WebCLBuffer"/>
+      <param name="blockingRead" type="CLboolean"/>
+      <param name="bufferOffset" type="CLuint"/>
+      <param name="numBytes" type="CLuint"/>
+      <param name="dstCanvas" type="HTMLCanvasElement"/>
+      <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;"/>
+      <param name="event" type="optional WebCLEvent?"/>
+    </function>
+
+     <function name="enqueueReadBufferRect" type="void">
+      <param name="buffer" type="WebCLBuffer"/>
+      <param name="blockingRead" type="CLboolean"/>
+      <param name="bufferOrigin" type="sequence&gt;CLuint&gt;"/>
+      <param name="dstOrigin" type="sequence&gt;CLuint&gt;"/>
+      <param name="region" type="sequence&gt;CLuint&gt;"/>
+      <param name="bufferRowPitch" type="CLuint"/>
+      <param name="dstCanvas" type="HTMLCanvasElement"/>
+      <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;"/>
+      <param name="event" type="optional WebCLEvent?"/>
+    </function>
+
+    <function name="enqueueReadImage" type="void">
+      <param name="image" type="WebCLImage"/>
+      <param name="origin" type="sequence&lt;CLuint&gt;"/>
+      <param name="region" type="sequence&lt;CLuint&gt;"/>
+      <param name="dstCanvas" type="HTMLCanvasElement"/>
+      <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;"/>
+      <param name="event" type="optional WebCLEvent?"/>
+    </function>
+    
+
+  </newfun>
+
+
+  <issues>
+    <ol>
+      <li>
+        <p>
+         N/A
+        </p>
+      </li>
+    </ol>
+  </issues>
+
+  <samplecode xml:space="preserve">
+    <pre class="example">
+      
+      var platforms = WebCL.getPlatforms();
+      //no platforms
+      if (platforms.length === 0) {
+        return null;
+      } 
+      var platform = platforms[0];
+      //if successful all device on platform have the extension enabled
+      var isEnabledOnPlatform = platform.enableExtension("WEBCL_html_sharing");
+
+      
+
+      var devices = platform.getDevices();
+
+      //no devices
+      if (devices.length === 0) {
+        return null;
+      }
+      var device = devices[0];
+      //only this specific device would have the extension enabled.
+      var isEnabledOnDevice = device.enableExtension("WEBCL_html_sharing");
+    </pre>
+  </samplecode>
+
+  <history>
+    <revision date="2013/11/20">
+      <change>Migrated from the WebCL Working Draft</change>
+    </revision>
+  </history>
+</draft>
