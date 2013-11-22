@@ -68,29 +68,14 @@ guarantee that the info is available if the extension is implemented. All the ex
 
   <samplecode xml:space="preserve">
     <pre class="example">
-      
-      var platforms = WebCL.getPlatforms();
-      //no platforms
-      if (platforms.length === 0) {
-        return null;
-      } 
-      var platform = platforms[0];
-      var isEnabledOnPlatform = platform.enableExtension("WEBCL_debug_info");
+      //example assumes extension has been correctly enabled
+      //on platform or device
 
       //get platform level info
       if(isEnabledOnPlatform){
          var platformName = platform.getInfo(WebCL.UNMASKED_PLATFORM_NAME);
       }
 
-      var devices = platform.getDevices();
-
-      //no devices
-      if (devices.length === 0) {
-        return null;
-      }
-      var device = devices[0];
-      
-      var isEnabledOnDevice = device.enableExtension("WEBCL_debug_info");
       //get device level info
       if(isEnabledOnDevice){
          var maxFreq = device.getInfo(WebCL.UNMASKED_DEVICE_MAX_CLOCK_FREQUENCY);

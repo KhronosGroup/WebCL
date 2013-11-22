@@ -151,33 +151,9 @@ guarantee that the info is available if the extension is implemented. All the ex
 
   <samplecode xml:space="preserve">
     <pre class="example">
+      //example assumes extension has been correctly enabled
+      //on platform or device and basic init completed.
       
-      var platforms = WebCL.getPlatforms();
-      //no platforms
-      if (platforms.length === 0) {
-        return null;
-      } 
-      var platform = platforms[0];
-      var isEnabledOnPlatform = platform.enableExtension("WEBCL_validation_info");
-      
-      if (!isEnabledOnPlatform){
-         console.error("Error: The WEBCL_validation_info extension was not enabled on platform 0."
-      }
-      
-   
-      var devices = platform.getDevices();
-
-      //no devices
-      if (devices.length === 0) {
-        return null;
-      }
-      var device = devices[0];
-      
-      var isEnabledOnDevice = device.enableExtension("WEBCL_validation_info");
-      
-      if (!isEnabledOnDevice){
-         console.error("Error: The WEBCL_validation_info extension was not enabled on device 0."
-      }
 
       var context = WebCL.createContext({devices:device, platform:platform, deviceType: WebCL.DEVICE_TYPE_DEFAULT});
      
