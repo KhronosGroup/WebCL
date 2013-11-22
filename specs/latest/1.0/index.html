@@ -38,7 +38,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">November 19, 2013</h2>
+    <h2 class="no-toc">November 22, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -2486,8 +2486,34 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
       WebCL extensions can be enabled by calling `enableExtension`
       with the name of the desired extension as a string parameter.
       This returns `true` if the extension is successfully enabled,
-      and `false` if not.
+      and `false` if not.  This is illustrated in the following
+      examples.
     </p>
+
+<pre class="example">
+// Iterates over all WebCL devices and returns the ones that
+// support the given extension, with that extension enabled.
+//
+function getDevicesWithExtensionEnabled(extensionName) {
+ var devices = [];
+  WebCL.getPlatforms().forEach(function(platform) {
+    platform.getDevices().forEach(function(device) {
+      var isSupported = device.enableExtension(extensionName);
+      if (isSupported) devices.push(device);
+    });
+  });
+  return devices;
+}
+</pre>
+
+<pre class="example">
+// Use the above function find the set of devices
+// that support both KHR_fp64 and KHR_gl_sharing.
+//
+var withFP64 = getDevicesWithExtensionEnabled("KHR_fp64");
+var withGL = getDevicesWithExtensionEnabled("KHR_gl_sharing");
+var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) });
+</pre>
 
     <h3><a id="KHR_fp64">64-bit floating point</a></h3>
     <p>
