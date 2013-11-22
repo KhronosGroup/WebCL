@@ -22,7 +22,7 @@
     <script src="../../resources/jquery-1.3.2.min.js" type="text/javascript">do not remove this text</script>
     <script src="../../resources/preprocessHTML.js" type="text/javascript">do not remove this text</script>
 
-    <p>There are some info-items that are hidden in WebCL 1.0 core specification because they could be misused to target an application to a particular hardware / software configurations or share info of the hosting device. As per <a href="http://www.w3.org/TR/api-perms/"> W3C Permissions for Device API Access Specification</a> access to private, or sensitive data from the hosting device, are meant to be discoverable, as well as disabled, or enabled, on a site-by-site, or application-by-application basis, depending on the security context <a href="http://www.w3.org/TR/api-perms/"> [0]</a>. For these reasons, it is advised that an implementation request permission from the user to expose this information, but ultimately this behavior is left up to the discretion of the implementation.</p> The <code>WEBCL_debug_info</code> extension allows the exposure of additional properties that are hidden in the WebCL 1.0 core specification. There is the ability to query for this info at the <code> WebCLPlatform &amp; WebCLDevice </code> levels through the <code> getInfo(CLenum name) </code> API.
+    <p>There are some info-items that are hidden in WebCL 1.0 core specification because they could be misused to target an application to a particular hardware / software configurations or share info of the hosting device. As per <a href="http://www.w3.org/TR/api-perms/"> W3C Permissions for Device API Access Specification</a> access to private, or sensitive data from the hosting device, are meant to be discoverable, as well as disabled, or enabled, on a site-by-site, or application-by-application basis, depending on the security context <a href="http://www.w3.org/TR/api-perms/"> [0]</a>. For these reasons, it is advised that an implementation request permission from the user to expose this information, but ultimately this behavior is left up to the discretion of the implementation.</p> The <code>WEBCL_debug_info</code> extension allows the exposure of additional properties that are hidden in the WebCL 1.0 core specification. There is the ability to query for this info at the <code> WebCLPlatform &amp; WebCLDevice </code> levels through the <code> getInfo(CLenum name) </code> API.<p> The original enums, i.e. <code>PLATFORM_NAME, PLATFORM_VENDOR, etc</p> can infact be queried without first enabling this extension but are not guaranteed to return useful information. Most browsers will probably return a placeholder value, but some may return the true underlying value from OpenCL.
     <features>
       <feature>
         Allows applications to query additional properties. Given that they are optionally visible, there is no
@@ -36,22 +36,22 @@ guarantee that the info is available if the extension is implemented. All the ex
 
     partial interface WEBCL_debug_info {
       //Platform Properties  
-      const CLenum PLATFORM_NAME                             = 0x0902;
-      const CLenum PLATFORM_VENDOR                           = 0x0903;
-      const CLenum PLATFORM_EXTENSIONS                       = 0x0904;
+      const CLenum UNMASKED_PLATFORM_NAME                             = 0x0902;
+      const CLenum UNMASKED_PLATFORM_VENDOR                           = 0x0903;
+      const CLenum UNMASKED_PLATFORM_EXTENSIONS                       = 0x0904;
       
       //Device Properties
-      const CLenum DEVICE_VENDOR_ID                          = 0x1001;
-      const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_CHAR        = 0x1006;
-      const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_SHORT       = 0x1007;
-      const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_INT         = 0x1008;
-      const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_LONG        = 0x1009;
-      const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT       = 0x100A;
-      const CLenum DEVICE_MAX_CLOCK_FREQUENCY                = 0x100C;
-      const CLenum DEVICE_NAME                               = 0x102B;
-      const CLenum DEVICE_VENDOR                             = 0x102C;
-      const CLenum DEVICE_VERSION                            = 0x102F;
-      const CLenum DEVICE_EXTENSIONS                         = 0x1030;
+      const CLenum UNMASKED_DEVICE_VENDOR_ID                          = 0x1001;
+      const CLenum UNMASKED_DEVICE_PREFERRED_VECTOR_WIDTH_CHAR        = 0x1006;
+      const CLenum UNMASKED_DEVICE_PREFERRED_VECTOR_WIDTH_SHORT       = 0x1007;
+      const CLenum UNMASKED_DEVICE_PREFERRED_VECTOR_WIDTH_INT         = 0x1008;
+      const CLenum UNMASKED_DEVICE_PREFERRED_VECTOR_WIDTH_LONG        = 0x1009;
+      const CLenum UNMASKED_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT       = 0x100A;
+      const CLenum UNMASKED_DEVICE_MAX_CLOCK_FREQUENCY                = 0x100C;
+      const CLenum UNMASKED_DEVICE_NAME                               = 0x102B;
+      const CLenum UNMASKED_DEVICE_VENDOR                             = 0x102C;
+      const CLenum UNMASKED_DEVICE_VERSION                            = 0x102F;
+      const CLenum UNMASKED_DEVICE_EXTENSIONS                         = 0x1030;
     };
   </idl>
 
@@ -79,7 +79,7 @@ guarantee that the info is available if the extension is implemented. All the ex
 
       //get platform level info
       if(isEnabledOnPlatform){
-         var platformName = platform.getInfo(WebCL.PLATFORM_NAME);
+         var platformName = platform.getInfo(WebCL.UNMASKED_PLATFORM_NAME);
       }
 
       var devices = platform.getDevices();
@@ -93,7 +93,7 @@ guarantee that the info is available if the extension is implemented. All the ex
       var isEnabledOnDevice = device.enableExtension("WEBCL_debug_info");
       //get device level info
       if(isEnabledOnDevice){
-         var maxFreq = device.getInfo(WebCL.DEVICE_MAX_CLOCK_FREQUENCY);
+         var maxFreq = device.getInfo(WebCL.UNMASKED_DEVICE_MAX_CLOCK_FREQUENCY);
       }
     </pre>
   </samplecode>
