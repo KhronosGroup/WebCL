@@ -1677,8 +1677,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
           <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of `image` are not supported by this WebCLCommandQueue</li>
           <li>`INVALID_VALUE` -- if `origin` or `region` does not have exactly two elements</li>
-          <li>`INVALID_VALUE` -- if any part of the region being read, specified by `origin` and `region`, is out of bounds of `image`</li>
-          <li>`INVALID_VALUE` -- if any part of the region being written, specified by `region` and `hostRowPitch`, is out of bounds of `hostPtr`</li>
+          <li>`INVALID_VALUE` -- if any part of the region being written, specified by `origin` and `region`, is out of bounds of `image`</li>
+          <li>`INVALID_VALUE` -- if any part of the region being read, specified by `region` and `hostRowPitch`, is out of bounds of `hostPtr`</li>
           <li>`INVALID_VALUE` -- if <code>hostRowPitch % hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
