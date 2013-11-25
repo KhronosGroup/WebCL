@@ -38,7 +38,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">November 22, 2013</h2>
+    <h2 class="no-toc">November 25, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -2433,12 +2433,12 @@ interface <dfn>WebCLEvent</dfn> {
 
 <pre class="idl" id="WEBCLUSEREVENT">
 interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
-  void  setUserEventStatus(CLenum executionStatus);
+  void  setUserEventStatus(CLint executionStatus);
 };
 </pre>
 
     <dl class="methods">
-      <dt class="idl-code">void setUserEventStatus(CLenum executionStatus)
+      <dt class="idl-code">void setUserEventStatus(CLint executionStatus)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetUserEventStatus.html">man page</a>)</span>
       </dt>
@@ -2495,7 +2495,7 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
 // support the given extension, with that extension enabled.
 //
 function getDevicesWithExtensionEnabled(extensionName) {
- var devices = [];
+  var devices = [];
   WebCL.getPlatforms().forEach(function(platform) {
     platform.getDevices().forEach(function(device) {
       var isSupported = device.enableExtension(extensionName);
