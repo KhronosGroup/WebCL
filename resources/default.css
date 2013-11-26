@@ -659,7 +659,8 @@ dl.methods {
     background: #EEEEFF;
 }
 
-dl.exceptions {
+ul.exceptions {
+    margin-top: 1em;
     font-size: small;
 }
 
