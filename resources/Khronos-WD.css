@@ -24,7 +24,7 @@ body {
  display: block;
 }
 .stability input {
- appearance: none; margin: 0; border: 0; padding: 0.25em 0.5em; background: transparent; color: black;
+ margin: 0; border: 0; padding: 0.25em 0.5em; background: transparent; color: black;
  position: absolute; top: -0.5em; right: 0; font: 1.25em sans-serif; text-align: center;
 }
 .stability input:hover {
