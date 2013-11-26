@@ -674,8 +674,8 @@ interface <dfn>WebCL</dfn> {
         case the implementation will decide which platform and device
         to use.
 
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
 	        <li>`INVALID_DEVICE` -- if `properties.devices` is non-`null`, but is not an array of valid device objects</li>
 	        <li>`INVALID_DEVICE` -- if any devices in `properties.devices` are on different platforms</li>
 	        <li>`INVALID_PLATFORM` -- if `properties.platform` is non-`null`, but is not a valid platform object</li>
@@ -707,8 +707,9 @@ interface <dfn>WebCL</dfn> {
       </dt>
       <dd>
         Waits until the given events have completed. See WebCLEvent for more information.
+
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
 	        <li>`INVALID_VALUE` -- if `eventWaitList` is `null` or empty</li>
 	        <li>`INVALID_CONTEXT` -- if events specified in
 	          `eventWaitList` do not belong to the same context</li>
@@ -819,8 +820,9 @@ interface <dfn>WebCLPlatform</dfn> {
           <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device on this platform.</td></tr>
           <tr><td>DEVICE_TYPE_ALL</td><td>All devices available on this platform.</td></tr>
         </table>
+
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `deviceType` is given, but is not one of the valid enumerated values listed in the table above</li>
           <li>`DEVICE_NOT_FOUND` -- if there is no WebCLDevice available that matches the given `deviceType`</li>
         </ul>
@@ -834,8 +836,9 @@ interface <dfn>WebCLPlatform</dfn> {
         Retrieves information about this WebCLPlatform. The available
         query parameters are listed
         in <a href="#getPlatformInfoEnums">Chapter 6</a>.
+
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values</li>
         </ul>
       </dd>
@@ -885,8 +888,9 @@ interface <dfn>WebCLDevice</dfn> {
         Retrieves information about this WebCLDevice. The available
         query parameters are listed
         in <a href="#getDeviceInfoEnums">Chapter 6</a>.
+
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values</li>
         </ul>
       </dd>
@@ -963,8 +967,9 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
       <dd>
         Creates a new WebCLBuffer with a capacity of `sizeInBytes`,
         and optionally fills it with data from the given ArrayBufferView.
+
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
           <li>`INVALID_BUFFER_SIZE` -- if <code>sizeInBytes == 0 || sizeInBytes &gt; DEVICE_MAX_MEM_ALLOC_SIZE</code></li>
           <li>`INVALID_HOST_PTR` -- if <code>hostPtr.byteLength &lt; sizeInBytes</code></li>
@@ -981,8 +986,9 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
         by this WebCLContext.  If `properties` is omitted, the command
         queue is created with out-of-order execution disabled and
         profiling disabled.
+
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_DEVICE` -- if `device` is invalid or not associated with this context</li>
           <li>`INVALID_VALUE` -- if values specified in `properties` are not valid</li>
           <li>`INVALID_QUEUE_PROPERTIES` -- if values specified in `properties` are valid but not supported by the device</li>
@@ -996,8 +1002,9 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
         Creates a new WebCLImage with the width and height specified
         in `descriptor`, and optionally fills it with data from the
         given ArrayBufferView.
+
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
           <li>`INVALID_IMAGE_SIZE` -- if <code>descriptor.width == 0 || descriptor.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code>
           <li>`INVALID_IMAGE_SIZE` -- if <code>descriptor.height == 0 || descriptor.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code>
@@ -1012,8 +1019,9 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
       </dt>
       <dd>
         Creates a WebCLProgram from a UTF-8 string.
+
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `source` is `null` or empty</li>
         </ul>
       </dd>
@@ -1026,8 +1034,9 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
         Creates a new WebCLSampler with the given coordinate mode,
         addressing mode, and filtering mode.  The `ADDRESS_NONE` mode
         is not available, due to its lack of bounds checking.
+
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `addressingMode` is not
             `ADDRESS_CLAMP`, `ADDRESS_CLAMP_TO_EDGE`,
             `ADDRESS_REPEAT`, or `ADDRESS_MIRRORED_REPEAT`</li>
@@ -1059,8 +1068,9 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
           <tr><td>CONTEXT_DEVICES</td><td>sequence&lt;WebCLDevice&gt;</td></tr>
           <tr><td>CONTEXT_PROPERTIES</td><td>WebCLContextProperties</td></tr>
         </table><br>
+
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
         </ul>
       </dd>
@@ -1077,8 +1087,9 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
         The returned WebCLImageDescriptor objects will only have the
         `channelOrder` and `channelType` fields filled in; the other
         fields will have their default value (zero).
+
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
         </ul>
       </dd>
@@ -1292,8 +1303,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBuffer.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
 	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
 	          associated with the same WebCLContext as `srcBuffer` and
 	          `dstBuffer`</li>
@@ -1339,8 +1350,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferRect.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `srcBuffer` and `dstBuffer`</li>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
           <li>`INVALID_MEM_OBJECT` -- if `srcBuffer` and `dstBuffer` are not valid WebCLBuffer objects</li>
@@ -1373,8 +1384,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImage.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
 	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
 	          associated with the same WebCLContext as `srcImage` and
 	          `dstImage`</li>
@@ -1416,8 +1427,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferToImage.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
 	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
 	          associated with the same WebCLContext as `srcBuffer` and
 	          `dstImage`</li>
@@ -1455,8 +1466,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImageToBuffer.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
 	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
 	          associated with the same WebCLContext as `srcImage` and
 	          `dstBuffer`</li>
@@ -1494,8 +1505,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBuffer.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
             associated with the same WebCLContext as `buffer`</li>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
@@ -1535,8 +1546,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBufferRect.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `buffer`</li>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
           <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
@@ -1570,8 +1581,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadImage.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `image`</li>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
           <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
@@ -1598,8 +1609,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBuffer.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
             associated with the same WebCLContext as `buffer`</li>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
@@ -1639,8 +1650,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBufferRect.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `buffer`</li>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
           <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
@@ -1674,8 +1685,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteImage.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `image`</li>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
           <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
@@ -1703,8 +1714,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueNDRangeKernel.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `kernel`</li>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
           <li>`INVALID_KERNEL` -- if `kernel` is not a valid WebCLKernel object</li>
@@ -1745,8 +1756,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueMarker.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `event` is not a valid WebCLEvent object</li>
         </ul>
       </dd>
@@ -1763,8 +1774,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWaitForEvents.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if `eventWaitList` is empty or contains any invalid events</li>
         </ul>
@@ -1795,8 +1806,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <tr><td>QUEUE_DEVICE</td><td>WebCLDevice</td></tr>
           <tr><td>QUEUE_PROPERTIES</td><td>CLenum</td></tr>
         </table><br>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
         </ul>
       </dd>
@@ -1899,8 +1910,8 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
           <tr><td>`MEM_OFFSET`</td><td>`CLuint`</td><td>The offset given to `createSubBuffer`,
               or zero if this buffer was not created using `createSubBuffer`</td></tr>
         </table><br>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
         </ul>
       </dd>
@@ -1937,8 +1948,8 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
         WebCLBuffer. The two buffers reference the same area of global
         memory, so changes made into one are immediately reflected in
         the other.
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_MEM_OBJECT` -- if this WebCLBuffer is already a sub-buffer object</li>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
           <li>`INVALID_VALUE` -- if the region specified by (`origin`, `sizeInBytes`) is out of bounds in this WebCLBuffer</li>
@@ -2004,8 +2015,8 @@ interface <dfn>WebCLSampler</dfn> {
           <tr><td>SAMPLER_ADDRESSING_MODE</td><td>CLenum</td></tr>
           <tr><td>SAMPLER_FILTER_MODE</td><td>CLenum</td></tr>
         </table><br>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
         </ul>
       </dd>
@@ -2055,8 +2066,8 @@ interface <dfn>WebCLProgram</dfn> {
           <tr><td>PROGRAM_DEVICES</td><td>sequence&lt;WebCLDevice&gt;</td></tr>
           <tr><td>PROGRAM_SOURCE</td><td>DOMString</td></tr>
         </table><br>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
         </ul>
       </dd>
@@ -2072,8 +2083,8 @@ interface <dfn>WebCLProgram</dfn> {
           <tr><td>PROGRAM_BUILD_OPTIONS</td><td>DOMString</td></tr>
           <tr><td>PROGRAM_BUILD_LOG</td><td>DOMString</td></tr>
         </table><br>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_DEVICE` -- if `device` is not associated with this WebCLProgram</li>
           <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
         </ul>
@@ -2118,8 +2129,8 @@ interface <dfn>WebCLProgram</dfn> {
           <tr><td><i>-Werror</i></td><td>Make all warnings into errors.</td></tr>
         </table>
 
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_DEVICE` -- if any element in `devices` is not a valid WebCLDevice</li>
           <li>`INVALID_DEVICE` -- if any device in `devices` is not associated with the WebCLContext of this WebCLProgram</li>
           <li>`INVALID_BUILD_OPTIONS` -- if the build options specified by `options` are invalid</li>
@@ -2137,8 +2148,8 @@ interface <dfn>WebCLProgram</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateKernel.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_PROGRAM_EXECUTABLE` -- if there is no successfully built executable for any device in this WebCLProgram</li>
           <li>`INVALID_KERNEL_NAME` -- if a kernel by the given `name` is not found in this WebCLProgram</li>
           <li>`INVALID_KERNEL_DEFINITION` -- if the function
@@ -2154,8 +2165,8 @@ interface <dfn>WebCLProgram</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateKernelsInProgram.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_PROGRAM_EXECUTABLE` -- if there is no successfully built executable for any device in this WebCLProgram</li>
         </ul>
       </dd>
@@ -2207,8 +2218,8 @@ interface <dfn>WebCLKernel</dfn> {
           <tr><td>KERNEL_CONTEXT</td><td>WebCLContext</td></tr>
           <tr><td>KERNEL_PROGRAM</td><td>WebCLProgram</td></tr>
         </table><br>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
         </ul>
       </dd>
@@ -2227,8 +2238,8 @@ interface <dfn>WebCLKernel</dfn> {
           <tr><td>KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE</td><td>CLuint</td></tr>
           <tr><td>KERNEL_PRIVATE_MEM_SIZE</td><td>CLuint</td></tr>
         </table><br>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_DEVICE` -- if `device` is not associated with this WebCLKernel</li>
           <li>`INVALID_DEVICE` -- if `device` is `null` but there is more than one WebCLDevice associated with this WebCLKernel</li>
           <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
@@ -2267,8 +2278,8 @@ dictionary <dfn>WebCLKernelArgInfo</dfn> {
           `N-1`, where `N` is the total number of arguments declared
           by the kernel.
         </p>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
           <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a memory object</li>
           <li>`INVALID_MEM_OBJECT` -- if `memObject` is not a valid WebCLMemoryObject</li>
@@ -2286,8 +2297,8 @@ dictionary <dfn>WebCLKernelArgInfo</dfn> {
           where `N` is the total number of arguments declared by the
           kernel.
         </p>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
           <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a sampler</li>
           <li>`INVALID_SAMPLER` -- if `sampler` is not a valid WebCLSampler</li>
@@ -2321,8 +2332,8 @@ dictionary <dfn>WebCLKernelArgInfo</dfn> {
           the second element.
         </p>
 
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
           <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a scalar, vector, or local memory size</li>
           <li>`INVALID_ARG_VALUE` -- if `value.length` is not 1, 2, 3, 4, 8, 16, or 32</li>
@@ -2398,8 +2409,8 @@ interface <dfn>WebCLEvent</dfn> {
           <tr><td>EVENT_COMMAND_TYPE</td><td>CLenum</td></tr>
           <tr><td>EVENT_COMMAND_EXECUTION_STATUS</td><td>CLint</td></tr>
         </table><br>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
         </ul>
       </dd>
@@ -2416,8 +2427,8 @@ interface <dfn>WebCLEvent</dfn> {
           <tr><td>PROFILING_COMMAND_START</td><td>CLuint</td></tr>
           <tr><td>PROFILING_COMMAND_END</td><td>CLuint</td></tr>
         </table><br>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`PROFILING_INFO_NOT_AVAILABLE` -- if the `QUEUE_PROFILING_ENABLE` flag is not set for this WebCLCommandQueue</li>
           <li>`PROFILING_INFO_NOT_AVAILABLE` -- if the execution status of this WebCLEvent is not `COMPLETE`</li>
           <li>`PROFILING_INFO_NOT_AVAILABLE` -- if this WebCLEvent is a user event object</li>
@@ -2435,8 +2446,8 @@ interface <dfn>WebCLEvent</dfn> {
         (`COMPLETE`, `RUNNING`, `SUBMITTED`, or `QUEUED`). In this
         version of WebCL, only the `COMPLETE` status is supported.
 
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `commandExecCallbackType` is not `COMPLETE`</li>
         </ul>
       </dd>
@@ -2463,8 +2474,8 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetUserEventStatus.html">man page</a>)</span>
       </dt>
       <dd>
+        <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <b>Exceptions:</b>
           <li>`INVALID_VALUE` -- if `executionStatus` is not `COMPLETE` or a negative integer value</li>
           <li>`INVALID_OPERATION` -- if the execution status of this
             event has already been changed by a previous call to
@@ -2542,7 +2553,7 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
       language.
     </p>
 
-    <h3><a id="KHR_fp64">16-bit floating point</a></h3>
+    <h3><a id="KHR_fp16">16-bit floating point</a></h3>
     <p>
       The <a href="../../../extensions/KHR_fp16">KHR_fp16</a>
       extension adds support for the `half` datatype in the kernel
@@ -2557,360 +2568,23 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
       renderbuffers and textures as WebCL memory objects.
     </p>
     
-<!-- ======================================================================================================= -->
-
     <h3><a id="WEBCL_html_sharing">HTML Resource Sharing</a></h3>
 
     <p>
-      The HTML Resource Sharing extension makes it more convenient and
-      potentially faster for applications to transfer image data from
-      HTML Image/Canvas/Video elements to WebCL memory objects, and
-      vice versa.  The extension is enabled by
-      calling <code>enableExtension("WEBCL_html_sharing")</code>, after
-      which the application may call the functions specified below.
+      The <a href="../../../extensions/WEBCL_html_sharing">WEBCL_html_sharing</a>
+      extension allows applications to conveniently transfer image
+      data from an HTML Image or Canvas to WebCL, and from WebCL to
+      Canvas.
     </p>
-
-    <h4>Creating WebCL memory objects</h4>
-
-    <p>
-      A WebCLBuffer or WebCLImage can be initialized at construction
-      time from an ImageData, Canvas, or Image element.  This does not
-      create a binding of any kind between the WebCL memory object and
-      the data source.  The source pixel format is treated as 32-bit
-      RGBA (8 bits per component) with non-premultiplied alpha,
-      regardless of the source.  A newly created WebCLImage will have
-      `channelOrder` equal to `RGBA`, `channelType` equal to
-      `UNORM_INT8`, and width and height equal to the source width and
-      height.
-    </p>
-
-<pre class="idl">
-partial interface WebCLContext {
-  WebCLBuffer createBuffer(CLenum memFlags, ImageData srcPixels);
-  WebCLBuffer createBuffer(CLenum memFlags, HTMLCanvasElement srcCanvas);
-  WebCLBuffer createBuffer(CLenum memFlags, HTMLImageElement srcImage);
-  WebCLImage createImage(CLenum memFlags, ImageData srcPixels);
-  WebCLImage createImage(CLenum memFlags, HTMLCanvasElement srcCanvas);
-  WebCLImage createImage(CLenum memFlags, HTMLImageElement srcImage);
-};
-</pre>
-
-    <p>
-      The size in bytes of a new WebCLBuffer is computed from the
-      source as follows:
-    </p>
-
-    <ul>
-      <li>For ImageData sources, the buffer size is `srcPixels.data.length`.
-      <li>For HMTLCanvasElement sources, the buffer size is <code>srcCanvas.getContext("2d").getImageData().data.length</code>.
-      <li>For HTMLImageElement sources, the buffer size is <code>srcImage.width * srcImage.height * 4</code>.
-    </ul>
-
-    <p>
-      If the HTMLImageElement object is not fully loaded,
-      `createBuffer` and `createImage` will throw an
-      `INVALID_HOST_PTR` exception.
-    </p>
-
-    <h4>Binding with HTMLVideoElement</h4>
-
-    <p>
-      A WebCLImage can be permanently bound to an HTML Video element
-      at construction time.  The Video element does not have to be
-      fully loaded at that time, but its dimensions must be known.
-      Doing an `enqueueWriteImage` from a video element is only
-      allowed when the video element is bound to the target
-      WebCLImage.  Note that `memFlags` must be equal to
-      `MEM_READ_ONLY`.
-    </p>
-
-<pre class="idl">
-partial interface WebCLContext {
-  WebCLImage createImage(CLenum memFlags, HTMLVideoElement srcVideo);
-};
-</pre>
-
-<p>
-      The source video pixel format is treated as 32-bit RGBA (8 bits
-      per component) with non-premultiplied alpha.  The newly created
-      WebCLImage will have `channelOrder` equal to `RGBA`,
-      `channelType` equal to `UNORM_INT8`, and width and height equal
-      to the source video width and height.
-</p>
-
-    <h4>Reading and writing HTML elements</h4>
-
-<pre class="idl">
-partial interface WebCLCommandQueue {
-
-  //////////////////////////////////////////////////////////////////////
-  //
-  // Writing to WebCLBuffer
-  //
-
-  void enqueueWriteBuffer(
-                    WebCLBuffer                           buffer,
-                    CLboolean                             blockingWrite,
-                    CLuint                                bufferOffset,
-                    ImageData                             srcPixels,
-                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
-                    optional WebCLEvent?                  event);
-
-  void enqueueWriteBuffer(
-                    WebCLBuffer                           buffer,
-                    CLboolean                             blockingWrite,
-                    CLuint                                bufferOffset,
-                    HTMLCanvasElement                     srcCanvas,
-                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
-                    optional WebCLEvent?                  event);
-
-  void enqueueWriteBuffer(
-                    WebCLBuffer                           buffer,
-                    CLboolean                             blockingWrite,
-                    CLuint                                bufferOffset,
-                    HTMLImageElement                      srcImage,
-                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
-                    optional WebCLEvent?                  event);
-
-  void enqueueWriteBufferRect(
-                    WebCLBuffer                           buffer,
-                    CLboolean                             blockingWrite,
-                    sequence&lt;CLuint&gt;                      bufferOrigin,
-                    sequence&lt;CLuint&gt;                      srcOrigin,
-                    sequence&lt;CLuint&gt;                      region,
-                    CLuint                                bufferRowPitch,
-                    ImageData                             srcPixels,
-                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
-                    optional WebCLEvent?                  event);
-
-  void enqueueWriteBufferRect(
-                    WebCLBuffer                           buffer,
-                    CLboolean                             blockingWrite,
-                    sequence&lt;CLuint&gt;                      bufferOrigin,
-                    sequence&lt;CLuint&gt;                      srcOrigin,
-                    sequence&lt;CLuint&gt;                      region,
-                    CLuint                                bufferRowPitch,
-                    HTMLCanvasElement                     srcCanvas,
-                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
-                    optional WebCLEvent?                  event);
-
-  void enqueueWriteBufferRect(
-                    WebCLBuffer                           buffer,
-                    CLboolean                             blockingWrite,
-                    sequence&lt;CLuint&gt;                      bufferOrigin,
-                    sequence&lt;CLuint&gt;                      srcOrigin,
-                    sequence&lt;CLuint&gt;                      region,
-                    CLuint                                bufferRowPitch,
-                    HTMLImageElement                      srcImage,
-                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
-                    optional WebCLEvent?                  event);
-
-  //////////////////////////////////////////////////////////////////////
-  //
-  // Writing to WebCLImage
-  //
-
-  void enqueueWriteImage(
-                    WebCLImage                            image,
-                    CLboolean                             blockingWrite,
-                    sequence&lt;CLuint&gt;                      origin,
-                    sequence&lt;CLuint&gt;                      region,
-                    ImageData                             srcPixels,
-                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
-                    optional WebCLEvent?                  event);
-
-  void enqueueWriteImage(
-                    WebCLImage                            image,
-                    CLboolean                             blockingWrite,
-                    sequence&lt;CLuint&gt;                      origin,
-                    sequence&lt;CLuint&gt;                      region,
-                    HTMLCanvasElement                     srcCanvas,
-                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
-                    optional WebCLEvent?                  event);
-
-  void enqueueWriteImage(
-                    WebCLImage                            image,
-                    CLboolean                             blockingWrite,
-                    sequence&lt;CLuint&gt;                      origin,
-                    sequence&lt;CLuint&gt;                      region,
-                    HTMLImageElement                      srcImage,
-                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
-                    optional WebCLEvent?                  event);
-
-  void enqueueWriteImage(
-                    WebCLImage                            image,
-                    CLboolean                             blockingWrite,
-                    sequence&lt;CLuint&gt;                      origin,
-                    sequence&lt;CLuint&gt;                      region,
-                    HTMLVideoElement                      srcVideo,
-                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
-                    optional WebCLEvent?                  event);
-
-  //////////////////////////////////////////////////////////////////////
-  //
-  // Reading from WebCL
-  //
-
-  void enqueueReadBuffer(
-                    WebCLBuffer                           buffer,
-                    CLboolean                             blockingRead,
-                    CLuint                                bufferOffset,
-                    CLuint                                numBytes,
-                    HTMLCanvasElement                     dstCanvas,
-                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
-                    optional WebCLEvent?                  event);
-
-  void enqueueReadBufferRect(
-                    WebCLBuffer                           buffer,
-                    CLboolean                             blockingRead,
-                    sequence&lt;CLuint&gt;                      bufferOrigin,
-                    sequence&lt;CLuint&gt;                      dstOrigin,
-                    sequence&lt;CLuint&gt;                      region,
-                    CLuint                                bufferRowPitch,
-                    HTMLCanvasElement                     dstCanvas,
-                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
-                    optional WebCLEvent?                  event);
-
-  void enqueueReadImage(
-                    WebCLImage                            image,
-                    CLboolean                             blockingRead,
-                    sequence&lt;CLuint&gt;                      origin,
-                    sequence&lt;CLuint&gt;                      region,
-                    HTMLCanvasElement                     dstCanvas,
-                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
-                    optional WebCLEvent?                  event);
-};
-</pre>
-    
-    <dd>
-      The following exceptions apply to the above methods:
-      <ul class="exceptions">
-        <b>Exceptions:</b>
-          <li>`INVALID_HOST_PTR` -- if `srcImage` is not fully loaded</li>
-          <li>`INVALID_HOST_PTR` -- if `srcVideo` is not bound to the given `image`</li>
-      </ul>
-    </dd>
-
-<!-- ======================================================================================================= -->
 
     <h3><a id="WEBCL_validation_info">Validation Info Query</a></h3>
 
     <p>
-      The Validation Info Query extension, enabled by
-      <code>enableExtension("WEBCL_validation_info")</code>, allows
-      applications to retrieve the results of kernel program
-      validation, including error messages, warnings, logs, and
-      instrumented source code.  The results become available after
-      building (or attempting to build) a WebCLProgram.  Validation
-      can also be triggered manually by calling the `validate` method
-      provided in this extension.
+      The <a href="../../../extensions/WEBCL_validation_info">WEBCL_validation_info</a>
+      extension allows applications to retrieve the results of kernel
+      program validation, including error messages, warnings, logs,
+      and instrumented source code.
     </p>
-
-<pre class="idl">
-partial interface <dfn>WebCLProgram</dfn> {
-
-  void validate(optional sequence&lt;WebCLDevice&gt; devices,
-                optional DOMString? options,
-                optional WebCLCallback whenFinished);
-
-  CLint getValidationStatus();
-  DOMString? getValidationErrors();
-  DOMString? getValidationWarnings();
-  DOMString? getValidationInfo();
-  DOMString? getValidatedSource();
-};
-</pre>
-
-    <dl class="methods">
-      <dt class="idl-code">void validate(optional sequence&lt;WebCLDevice&gt; devices,
-                                         optional DOMString? options,
-                                         optional WebCLCallback whenFinished)</dt>
-      <dd>
-        Validates this WebCLProgram for the given list of devices,
-        or in absence of the list, for all devices associated with
-        the WebCLContext that this WebCLProgram was created from.  A
-        string of validator options and an asynchronous callback
-        function to invoke when the validation is completed can also
-        be provided. The available validator options are listed in
-        the table below; any other option is considered invalid.
-
-        <table class="enumtable">
-          <tr><th>Validator option</th><th>Description</th></tr>
-          <tr><td><i>-D name</i></td><td>Equivalent to <i>#define name</i> in OpenCL C.</td></tr>
-          <tr><td><i>-D name=definition</i></td><td>Equivalent to <i>#define name definition</i> in OpenCL C.</td></tr>
-          <tr><td><i>-cl-opt-disable</i></td><td>Disable all optimizations.</td></tr>
-          <tr><td><i>-W</i></td><td>Inhibit all warning messages.</td></tr>
-          <tr><td><i>-Werror</i></td><td>Make all warnings into errors.</td></tr>
-        </table>
-
-        <ul class="exceptions">
-          <b>Exceptions:</b>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
-          <li>`INVALID_DEVICE` -- if any element in `devices` is not a valid WebCLDevice</li>
-          <li>`INVALID_DEVICE` -- if any device in `devices` is not associated with the WebCLContext of this WebCLProgram</li>
-          <li>`INVALID_BUILD_OPTIONS` -- if the validator options specified by `options` are invalid</li>
-          <li>`INVALID_OPERATION` -- if a previous validation of this
-            WebCLProgram for any of the devices listed in `devices`
-            has not completed</li>
-          <li>`BUILD_PROGRAM_FAILURE` -- if there is a failure to validate the program</li>
-        </ul>
-      </dd>
-
-      <dt class="idl-code">CLint getValidationStatus()</dt>
-      <dd>
-        Returns the validation status of this WebCLProgram.  Zero
-        indicates that the program is successfully validated (but only
-        for the given devices and with the given options).  Negative
-        values indicate implementation-specific error conditions that
-        are documented elsewhere.
-        <ul class="exceptions">
-          <b>Exceptions:</b>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
-        </ul>
-      </dd>
-
-      <dt class="idl-code">DOMString? getValidationErrors()</dt>
-      <dd>
-        Returns the error messages from the most recent validation of
-        this WebCLProgram, or null if there are no errors.
-        <ul class="exceptions">
-          <b>Exceptions:</b>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
-        </ul>
-      </dd>
-
-      <dt class="idl-code">DOMString? getValidationWarnings()</dt>
-      <dd>
-        Returns the warning messages from the most recent validation
-        of this WebCLProgram, or null if there are no warnings.
-        <ul class="exceptions">
-          <b>Exceptions:</b>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
-        </ul>
-      </dd>
-
-      <dt class="idl-code">DOMString? getValidationInfo()</dt>
-      <dd>
-        Returns informational messages from the most recent validation
-        of this WebCLProgram, or null if there are no such messages.
-        <ul class="exceptions">
-          <b>Exceptions:</b>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
-        </ul>
-      </dd>
-
-      <dt class="idl-code">DOMString? getValidatedSource()</dt>
-      <dd>
-        Returns the validated source code from the most recent
-        validation of this WebCLProgram, or null if no source code is
-        available due to unsuccessful validation or any other reason.
-        <ul class="exceptions">
-          <b>Exceptions:</b>
-          <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_validation_info` extension has not been enabled</li>
-        </ul>
-      </dd>
-
-    </dl>
 
 <!-- ======================================================================================================= -->
 

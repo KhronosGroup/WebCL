@@ -36,7 +36,7 @@ function nextLevel(nodeList, startIndex, hlevel, prefix, tocString)
 
 function generateTOC(toc)
 {
-    var nodeList = $("h2,h3,h4,h5,h6");
+    var nodeList = $("h2,h3,h4");
     var tocString = { s:"<ul class='toc'>\n" };
     nextLevel(nodeList, 0, 2, "", tocString);
     toc.innerHTML = tocString.s;
