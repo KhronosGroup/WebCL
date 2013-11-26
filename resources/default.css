@@ -81,7 +81,6 @@ img {
 
     body {
         line-height: 1.3;
-        -webkit-text-size-adjust:none;
     }
 
     a:link, a:visited {
@@ -252,18 +251,6 @@ pre.strawman { color: #400 }
 .normref { color: red }	
 .informref { color: green }	
 
-
-/* ToC not indented, but font style shows hierarchy */
-//ul.toc {margin: 1em 0; padding: 0; font-weight: bold}
-//ul.toc ul {margin: 0; padding: 0; font-weight: normal}
-//ul.toc ul ul {margin: 0 /*0 0 2em*/; font-style: italic}
-//ul.toc ul ul ul {margin: 0}
-//ul.toc li {margin: 0.6em 0; padding: 0}
-//ul.toc li li {margin: 0}
-/*
-ul.toc li li li, ul.toc li li li ul {margin-left: 0; display: inline}
-ul.toc li li li ul, ul.toc li li li ul li {margin-left: 0; display: inline}
-*/
 
 .toc-h2 {margin: 0.5em 0; padding: 0; font-weight: bold; font-style: normal; }
 .toc-h3 {margin: 0.2em 0.5em; padding: 0; font-weight: normal; font-style: normal; }
@@ -567,15 +554,15 @@ table {
     border-style:solid;
     border-spacing:2px;
     border-collapse:collapse;
-    padding:3;
+    padding:3px;
 }
 
 th, td { /* ns 4 */
     border-width:1px;
     border-style:solid;
-   font-family: sans-serif;
-   padding:4px;
-   text-align:left;
+    font-family: sans-serif;
+    padding:4px;
+    text-align:left;
 }
 
 th {
@@ -719,14 +706,6 @@ p.idl-code {
 ul.toc, ol.toc {
   list-style: disc;		/* Mac NS has problem with 'none' */
   list-style: none;
-}
-
-@media aural {  
-  h1, h2, h3 { stress: 20; richness: 90 }
-  .hide { speak: none }
-  p.copyright { volume: x-soft; speech-rate: x-fast }
-  dt { pause-before: 20% }
-  pre { speak-punctuation: code } 
 }
 
 /******************************************************************
