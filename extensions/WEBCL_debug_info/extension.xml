@@ -34,7 +34,7 @@ guarantee that the info is available if the extension is implemented. All the ex
 
   <idl xml:space="preserve">
 
-    partial interface WEBCL_debug_info {
+    partial interface WebCL {
       //Platform Properties  
       const CLenum UNMASKED_PLATFORM_NAME                             = 0x0902;
       const CLenum UNMASKED_PLATFORM_VENDOR                           = 0x0903;
@@ -58,11 +58,13 @@ guarantee that the info is available if the extension is implemented. All the ex
 
   <issues>
     <ol>
-      <li>
-        <p>
-         N/A
-        </p>
-      </li>
+
+      <li>Should UNMASKED_ENUM_NAME have the same numerical value as ENUM_NAME?</li>
+      <p>TBD. Probably yes.</p>
+
+      <li>Should it be up to each implementation to decide which enums to mask?</li>
+      <p>TBD. Probably yes, but masking certain fundamental enums should be discouraged.</p>
+
     </ol>
   </issues>
 
@@ -84,6 +86,9 @@ guarantee that the info is available if the extension is implemented. All the ex
   </samplecode>
 
   <history>
+    <revision date="2013/11/26">
+      <change>Added issues 1 and 2.</change>
+    </revision>
     <revision date="2013/11/15">
       <change>Initial revision.</change>
     </revision>
