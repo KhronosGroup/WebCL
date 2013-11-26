@@ -734,6 +734,8 @@ interface <dfn>WebCL</dfn> {
 
     </dl>
 
+<!-- ======================================================================================================= -->
+
     <h4><a id="WEBCLCONTEXTPROPERTIES">WebCLContextProperties</a></h4>
 
 <pre class="idl">
@@ -785,8 +787,6 @@ dictionary <dfn>WebCLContextProperties</dfn> {
 
     </dl>
     
-
-
 <!-- ======================================================================================================= -->
 
     <h3><a id="WEBCLPLATFORM">WebCLPlatform</a></h3>
@@ -1041,15 +1041,6 @@ interface <dfn>WebCLContext</dfn> {
 };
 </pre>
 
-<pre class="idl" id="WEBCLIMAGEDESCRIPTOR">
-dictionary <dfn>WebCLImageDescriptor</dfn> {
-  CLenum channelOrder = 0x10B5;            // 0x10B5 == WebCL.RGBA
-  CLenum channelType = 0x10D2;             // 0x10D2 == WebCL.UNORM_INT8, 8-bit colors normalized to [0, 1]
-  CLuint width = 0, height = 0;
-  CLuint rowPitch = 0;
-};
-</pre>
-
     <dl class="methods">
       <dt class="idl-code">WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBufferView hostPtr)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=56">OpenCL 1.1 §5.2.1</a>,
@@ -1229,6 +1220,19 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
         objects created from it, if any.
       </dd>
     </dl>
+
+<!-- ======================================================================================================= -->
+
+    <h4><a id="WEBCLIMAGEDESCRIPTOR">WebCLImageDescriptor</a></h4>
+
+<pre class="idl">
+dictionary <dfn>WebCLImageDescriptor</dfn> {
+  CLenum channelOrder = 0x10B5;            // 0x10B5 == WebCL.RGBA
+  CLenum channelType = 0x10D2;             // 0x10D2 == WebCL.UNORM_INT8, 8-bit colors normalized to [0, 1]
+  CLuint width = 0, height = 0;
+  CLuint rowPitch = 0;
+};
+</pre>
 
 <!-- ======================================================================================================= -->
 
@@ -2377,15 +2381,6 @@ interface <dfn>WebCLKernel</dfn> {
         the kernel.
       </dd>
 
-<pre class="idl" id="WEBCLKERNELARGINFO">
-dictionary <dfn>WebCLKernelArgInfo</dfn> {
-  DOMString name;
-  DOMString typeName;         // 'char', 'float', 'uint4', 'image2d', 'sampler', etc.
-  DOMString addressQualifier; // 'global', 'local', 'constant', or 'private'
-  DOMString accessQualifier;  // 'read_only', 'write_only', 'read_write', or 'none'
-};
-</pre>
-
       <dt class="idl-code">void setArg(CLuint index, WebCLMemoryObject memObject)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.7.2">OpenCL 1.1 §5.7.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">man page</a>)</span>
@@ -2480,6 +2475,22 @@ myKernel.setArg(0, new Float32Array([3.14159]));              // cast 3.14159 to
 myKernel.setArg(1, new Uint32Array([1.23, 2.34]));            // cast the numbers to `uint2`, then pass to kernel as arg #1
 myKernel.setArg(2, new Uint32Array([512]));                   // reserve 512 bytes of local memory for arg #2
 myKernel.setArg(3, myImage);                                  // pass `myImage` to kernel as arg #3
+</pre>
+
+<!-- ======================================================================================================= -->
+
+    <h4><a id="WEBCLKERNELARGINFO">WebCLKernelArgInfo</a></h4>
+
+    <p>
+    </p>
+
+<pre class="idl">
+dictionary <dfn>WebCLKernelArgInfo</dfn> {
+  DOMString name;
+  DOMString typeName;         // 'char', 'float', 'uint4', 'image2d', 'sampler', etc.
+  DOMString addressQualifier; // 'global', 'local', 'constant', or 'private'
+  DOMString accessQualifier;  // 'read_only', 'write_only', or 'none'
+};
 </pre>
 
 <!-- ======================================================================================================= -->
@@ -2582,7 +2593,14 @@ interface <dfn>WebCLEvent</dfn> {
 
     </dl>
 
-<pre class="idl" id="WEBCLUSEREVENT">
+<!-- ======================================================================================================= -->
+
+    <h4><a id="WEBCLUSEREVENT">WebCLUserEvent</a></h4>
+
+    <p>
+    </p>
+
+<pre class="idl">
 interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
   void  setUserEventStatus(CLint executionStatus);
 };
