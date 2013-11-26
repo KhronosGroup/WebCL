@@ -1174,13 +1174,37 @@ dictionary <dfn>WebCLImageDescriptor</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetSupportedImageFormats.html">man page</a>)</span>
       </dt>
       <dd>
-        Returns a list of image formats that are supported by this
-        WebCLContext with the given `memFlags`. For example, passing
-        in `MEM_READ_WRITE` will return a list of image formats that
-        are available for both reading and writing in kernel code.
-        The returned WebCLImageDescriptor objects will only have the
-        `channelOrder` and `channelType` fields filled in; the other
-        fields will have their default value (zero).
+        <p>
+          Returns a list of image formats that are supported by this
+          WebCLContext with the given `memFlags`. For example, passing
+          in `MEM_READ_WRITE` will return a list of image formats that
+          are available for both reading and writing in kernel code.
+          The returned WebCLImageDescriptor objects will only have the
+          `channelOrder` and `channelType` fields filled in; the other
+          fields will have their default value (zero).
+        </p>
+
+        <p>
+          The minimum set of image formats that must be supported (for
+          both reading and writing) by all devices is defined in the
+          table below.  Note that the set of required formats is the
+          same as on OpenCL 1.1 Embedded Profile.
+       </p>
+
+        <table class="enumtable">
+          <tr><th>channelOrder</th><th>channelType</th></tr>
+          <tr><td>RGBA</td>
+            <td>UNORM_INT8<br>
+        		  UNORM_INT16<br>
+						  SIGNED_INT8<br>
+						  SIGNED_INT16<br>
+						  SIGNED_INT32<br>
+						  UNSIGNED_INT8<br>
+						  UNSIGNED_INT16<br>
+						  UNSIGNED_INT32<br>
+						  HALF_FLOAT<br>
+						  FLOAT</td></tr>
+        </table>
 
         <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
@@ -2838,7 +2862,7 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
       <li>Mapping of CL memory objects into host memory space is not supported</li>
       <li>Program binaries are not supported</li>
       <li>Structures are not supported as kernel arguments</li>
-      <li>Identifiers in OpenCL C must be less than 256 characters</li>
+      <li>Identifiers in WebCL C must be less than 256 characters</li>
       <li>The following OpenCL API functions are not supported:</li>
       <ul>
         <li>`clEnqueueTask`</li>
@@ -2858,29 +2882,6 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
         <li>`wait_group_events`</li>
       </ul>
     </ul>
-
-    <p>
-      WebCL supports the minimum set
-      of <a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=365">image
-      formats and image data types allowed by OpenCL 1.1 Embedded
-      Profile</a>. Implementations may provide extensions to support
-      other formats.
-    </p>
-
-      <table class="enumtable">
-        <tr><th>channelOrder</th><th>channelType</th></tr>
-        <tr><td valign="center">RGBA</td>
-          <td>UNORM_INT8<br>
-        		UNORM_INT16<br>
-						SIGNED_INT8<br>
-						SIGNED_INT16<br>
-						SIGNED_INT32<br>
-						UNSIGNED_INT8<br>
-						UNSIGNED_INT16<br>
-						UNSIGNED_INT32<br>
-						HALF_FLOAT<br>
-						FLOAT</td></tr>
-      </table>
     
 <!-- ======================================================================================================= -->
 
