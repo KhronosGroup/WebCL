@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<draft href="WEBCL_system_info/">
+  <name>WEBCL_system_info</name>
+
+  <contact> <a href="https://www.khronos.org/webcl/public-mailing-list/">WebCL
+  working group</a> (public_webcl 'at' khronos.org) </contact>
+
+  <contributors>
+    <contributor>Tomi Aarnio, Nokia Research,</contributor>
+    <contributor>Steven Eliuk, Samsung Electronics,</contributor>
+    <contributor>Members of the WebCL working group.</contributor>
+  </contributors>
+
+  <number>6</number>
+
+  <depends>
+    <api version="1.0"/>
+  </depends>
+
+  <overview>
+    
+    <script src="../../resources/jquery-1.3.2.min.js" type="text/javascript">do not remove this text</script>
+    <script src="../../resources/preprocessHTML.js" type="text/javascript">do not remove this text</script>
+
+    <p>
+      This extension allows applications, at the discretion of the browser and preferably of the end
+      user, to gain access to OpenCL system details that are otherwise masked.  Access would
+      typically not be granted to regular web content, but only to development tools and other
+      privileged content.
+    </p>
+
+    <p>
+      WebCL implementations may choose to mask certain details of the underlying OpenCL system in
+      order to prevent end users from getting identified and tracked without their consent; see also
+      <a href="http://www.w3.org/TR/api-perms/">W3C Permissions for Device API Access</a>.  On the
+      other hand, unrestricted access to system information is sometimes important while developing
+      a WebCL application.
+    </p>
+
+    <p>
+      The system details exposed by this extension consist of an implementation-specific subset of
+      the WebCLPlatform and WebCLDevice `getInfo` query results.  The set of query enums given in
+      the IDL fragment below is therefore not normative, but merely indicative of which attributes
+      might be masked by a typical implementation.
+    </p>
+
+    <p>
+      Note that the numerical values of the `UNMASKED` enums below are the same as their masked
+      counterparts in the WebCL specification.  This implies that a query for `PLATFORM_NAME` will
+      produce the same result as if `UNMASKED_PLATFORM_NAME` were used, and also that the result is
+      determined by whether this extension is enabled or not.
+    </p>
+      
+    <features>
+      <feature>
+        Applications can query for more specific OpenCL platform and device information than is
+        provided by default.
+      </feature>
+    </features>
+
+  </overview>
+
+  <idl xml:space="preserve">
+
+    partial interface WebCL {
+
+      // Platform Properties (exemplary, non-normative)
+
+      CLenum UNMASKED_PLATFORM_PROFILE                          = 0x0900;
+      CLenum UNMASKED_PLATFORM_VERSION                          = 0x0901;
+      CLenum UNMASKED_PLATFORM_NAME                             = 0x0902;
+      CLenum UNMASKED_PLATFORM_VENDOR                           = 0x0903;
+      CLenum UNMASKED_PLATFORM_EXTENSIONS                       = 0x0904;
+
+      // Device Properties (exemplary, non-normative)
+
+      CLenum UNMASKED_DEVICE_VENDOR_ID                          = 0x1001;
+      CLenum UNMASKED_DEVICE_MAX_CLOCK_FREQUENCY                = 0x100C;
+      CLenum UNMASKED_DEVICE_NAME                               = 0x102B;
+      CLenum UNMASKED_DEVICE_VENDOR                             = 0x102C;
+      CLenum UNMASKED_DEVICE_VERSION                            = 0x102F;
+      CLenum UNMASKED_DEVICE_EXTENSIONS                         = 0x1030;
+    };
+  </idl>
+
+  <issues>
+    <ol>
+
+      <li>Should UNMASKED_ENUM_NAME have the same numerical value as ENUM_NAME?</li>
+      <p>Yes. Assigning different values could create conflicts with OpenCL later on.</p>
+
+      <li>Should it be up to each implementation to decide which enums to mask?</li>
+      <p>Yes. There is no way to conformance-test whether something has been masked or not.</p>
+
+    </ol>
+  </issues>
+
+  <samplecode xml:space="preserve">
+    <pre class="example">
+      // Returns a JavaScript object containing all 'UNMASKED' device
+      // info items that are available for the given WebCLDevice.
+
+      function getRealDeviceInfo(device) 
+      {
+        var deviceInfo = {};
+        if (device.enableExtension("WEBCL_system_info")) {
+          for (var e in WebCL) {
+            if (e.indexOf("UNMASKED_DEVICE") !== -1) {
+              deviceInfo[e] = device.getInfo(WebCL[e]);
+            }
+          }
+        }
+        return deviceInfo;
+      }
+    </pre>
+  </samplecode>
+
+  <history>
+    <revision date="2013/11/27">
+      <change>Rewrote overview. Resolved issues 1 and 2. Wrote a new code example.</change>
+    </revision>
+    <revision date="2013/11/26">
+      <change>Added issues 1 and 2.</change>
+    </revision>
+    <revision date="2013/11/15">
+      <change>Initial revision.</change>
+    </revision>
+  </history>
+</draft>

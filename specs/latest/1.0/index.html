@@ -135,12 +135,12 @@
     <p>The following basic types are used in this document.</p>
 
 <pre class="idl">
-typedef boolean            CLboolean;
-typedef long               CLint;      // 32-bit signed integer
-typedef long long          CLlong;     // 64-bit signed integer
-typedef unsigned long      CLuint;     // 32-bit unsigned integer
-typedef unsigned long long CLulong;    // 64-bit unsigned integer
-typedef unsigned long      CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
+typedef boolean             CLboolean;
+typedef long                CLint;      // 32-bit signed integer
+typedef long long           CLlong;     // 64-bit signed integer
+typedef unsigned long       CLuint;     // 32-bit unsigned integer
+typedef unsigned long long  CLulong;    // 64-bit unsigned integer
+typedef const unsigned long CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
 </pre>
 
 
@@ -839,24 +839,21 @@ interface <dfn>WebCLPlatform</dfn> {
       </dt>
       <dd>
         <p>
-          Retrieves information about this WebCLPlatform. The available
-          query parameters are listed in the table below.  Note that
-          depending on the privacy policy of the implementation, some of
-          the return values may be empty or otherwise not reflective of
-          the underlying OpenCL platform.  Implementations that choose
-          to mask the underlying values are strongly recommended to make
-          them available for privileged applications (such as browser
-          extensions) via the <a href="#WEBCL_debug_info">Debug Info</a>
-          extension.
+          Retrieves information about this WebCLPlatform.  The available query parameters are listed
+          in the table below.  Note that depending on the privacy policy of the implementation, some
+          of the return values may be empty or otherwise not reflective of the underlying OpenCL
+          platform.  Implementations that choose to mask the underlying values are recommended to
+          make them available for privileged applications (such as browser extensions and
+          development tools) via the <a href="#WEBCL_system_info">System Info</a> extension.
         </p>
 
         <table class="enumtable" id="getPlatformInfoEnums">
           <tr><th>name</th><th>return type</th><th>return value</th>
-          <tr><td>PLATFORM_PROFILE</td><td>DOMString</td><td>"WEBCL_PROFILE"</td></tr>
+          <tr><td>PLATFORM_PROFILE</td><td>DOMString</td><td>"WEBCL_PROFILE" + optional vendor string</td></tr>
           <tr><td>PLATFORM_VERSION</td><td>DOMString</td><td>"WebCL 1.0" + optional vendor string</td></tr>
-          <tr><td>PLATFORM_NAME</td><td>DOMString</td><td>Optional</td></tr>
-          <tr><td>PLATFORM_VENDOR</td><td>DOMString</td><td>Optional</td></tr>
-          <tr><td>PLATFORM_EXTENSIONS</td><td>DOMString</td><td>Optional</td></tr>
+          <tr><td>PLATFORM_NAME</td><td>DOMString</td><td>Vendor specific</td></tr>
+          <tr><td>PLATFORM_VENDOR</td><td>DOMString</td><td>Vendor specific</td></tr>
+          <tr><td>PLATFORM_EXTENSIONS</td><td>DOMString</td><td>Vendor specific</td></tr>
         </table>
 
         <h5 class="exceptions">Exceptions:</h5>
@@ -908,27 +905,24 @@ interface <dfn>WebCLDevice</dfn> {
       <dd>
       <dd>
         <p>
-          Retrieves information about this WebCLDevice. The available
-          query parameters are listed in the table below.  Note that
-          depending on the privacy policy of the implementation, some of
-          the return values may be empty or otherwise not reflective of
-          the underlying OpenCL device.  Implementations that choose to
-          mask the underlying values are strongly recommended to make
-          them available for privileged applications (such as browser
-          extensions) via the <a href="#WEBCL_debug_info">Debug Info</a>
-          extension.
+          Retrieves information about this WebCLDevice.  The available query parameters are listed
+          in the table below.  Note that depending on the privacy policy of the implementation, some
+          of the return values may be empty or otherwise not reflective of the underlying OpenCL
+          device.  Implementations that choose to mask the underlying values are recommended to make
+          them available for privileged applications (such as browser extensions and development
+          tools) via the <a href="#WEBCL_system_info">System Info</a> extension.
         </p>
 
         <table class="enumtable" id="getDeviceInfoEnums">
           <tr><th>name</th><th>return type</th><th>possible return values</th>
-          <tr><td>DEVICE_PROFILE</td><td>DOMString</td><td>"WEBCL_PROFILE"</td></tr>
+          <tr><td>DEVICE_PROFILE</td><td>DOMString</td><td>"WEBCL_PROFILE" + optional vendor string</td></tr>
           <tr><td>DEVICE_VERSION</td><td>DOMString</td><td>"WebCL 1.0" + optional vendor string</td></tr>
-          <tr><td>DEVICE_OPENCL_C_VERSION</td><td>DOMString</td><td>"WebCL C 1.0"</td></tr>
-          <tr><td>DEVICE_NAME</td><td>DOMString</td><td>Optional</td></tr>
-          <tr><td>DEVICE_VENDOR</td><td>DOMString</td><td>Optional</td></tr>
-          <tr><td>DEVICE_VENDOR_ID</td><td>CLuint</td><td>Optional</td></tr>
-          <tr><td>DRIVER_VERSION</td><td>DOMString</td><td>Optional</td></tr>
-          <tr><td>DEVICE_EXTENSIONS</td><td>DOMString</td><td>Optional</td></tr>
+          <tr><td>DEVICE_OPENCL_C_VERSION</td><td>DOMString</td><td>"WebCL C 1.0" + optional vendor string</td></tr>
+          <tr><td>DEVICE_NAME</td><td>DOMString</td><td>Vendor specific</td></tr>
+          <tr><td>DEVICE_VENDOR</td><td>DOMString</td><td>Vendor specific</td></tr>
+          <tr><td>DEVICE_VENDOR_ID</td><td>CLuint</td><td>Vendor specific</td></tr>
+          <tr><td>DRIVER_VERSION</td><td>DOMString</td><td>Vendor specific</td></tr>
+          <tr><td>DEVICE_EXTENSIONS</td><td>DOMString</td><td>Vendor specific</td></tr>
           <tr><td>DEVICE_AVAILABLE</td><td>CLboolean</td><td>true</td></tr>
           <tr><td>DEVICE_COMPILER_AVAILABLE</td><td>CLboolean</td><td>true</td></tr>
           <tr><td>DEVICE_TYPE</td><td>CLenum</td><td>
@@ -940,8 +934,8 @@ interface <dfn>WebCLDevice</dfn> {
           <tr><td>DEVICE_MAX_WORK_ITEM_DIMENSIONS</td><td>CLuint</td><td>&gt;= 3</td></tr>
           <tr><td>DEVICE_MAX_WORK_ITEM_SIZES</td><td>CLuint</td><td>&gt;= (1, 1, 1)</td></tr>
           <tr><td>DEVICE_MAX_WORK_GROUP_SIZE</td><td>CLuint</td><td>&gt;= 1</td></tr>
-          <tr><td>DEVICE_PREFERRED_VECTOR_WIDTH_{CHAR, SHORT, INT, LONG, FLOAT, DOUBLE, HALF}</td><td>CLuint</td><td>&gt;= 1</td></tr>
-          <tr><td>DEVICE_NATIVE_VECTOR_WIDTH_{CHAR, SHORT, INT, LONG, FLOAT, DOUBLE, HALF}</td><td>CLuint</td><td>&gt;= 1</td></tr>
+          <tr><td>DEVICE_PREFERRED_VECTOR_WIDTH_{CHAR, SHORT, INT, LONG, FLOAT}</td><td>CLuint</td><td>&gt;= 1</td></tr>
+          <tr><td>DEVICE_NATIVE_VECTOR_WIDTH_{CHAR, SHORT, INT, LONG, FLOAT}</td><td>CLuint</td><td>&gt;= 1</td></tr>
           <tr><td>DEVICE_MAX_CLOCK_FREQUENCY</td><td>CLuint</td><td>&gt;= 0</td></tr>
           <tr><td>DEVICE_ADDRESS_BITS</td><td>CLuint</td><td>32 or 64</td></tr>
           <tr><td>DEVICE_MAX_MEM_ALLOC_SIZE</td><td>CLulong</td><td>&gt;= max(DEVICE_GLOBAL_MEM_SIZE/4, 1024*1024)</td></tr>
@@ -2723,26 +2717,23 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
       WebCLImage from an HTML Video element.
     </p>
 
-    <h3><a id="WEBCL_debug_info">Debug Info</a></h3>
+    <h3><a id="WEBCL_system_info">System Info</a></h3>
 
     <p>
-      The <a href="../../../extensions/WEBCL_debug_info">WEBCL_debug_info</a>
-      extension allows applications, at the discretion of the browser
-      and ultimately of the end user, to retrieve OpenCL system
-      information that is otherwise masked.  Implementations that
-      choose to mask some of the `DEVICE` and `PLATFORM` query enums
-      are recommended to make the unmasked values available to
-      privileged applications (such as JavaScript development tools)
-      by implementing this extension.
+      The <a href="../../../extensions/WEBCL_system_info">WEBCL_system_info</a> extension allows
+      applications, at the discretion of the browser (and ultimately of the end user), to retrieve
+      OpenCL system information that may otherwise be masked.  Implementations that choose to mask
+      some of the `DEVICE` and `PLATFORM` query enums are recommended to make the unmasked values
+      available to privileged applications (such as JavaScript development tools) by implementing
+      this extension.
     </p>
 
     <h3><a id="WEBCL_validation_info">Validation Info</a></h3>
 
     <p>
-      The <a href="../../../extensions/WEBCL_validation_info">WEBCL_validation_info</a>
-      extension allows applications to retrieve the results of kernel
-      program validation, including error messages, warnings, logs,
-      and instrumented source code.  It also allows the application to
+      The <a href="../../../extensions/WEBCL_validation_info">WEBCL_validation_info</a> extension
+      allows applications to retrieve the results of kernel program validation, including error
+      messages, warnings, logs, and instrumented source code.  It also allows applications to
       validate a program without attempting to build it.
     </p>
 
