@@ -38,7 +38,7 @@
     <!-- end warning box -->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">November 26, 2013</h2>
+    <h2 class="no-toc">December 10, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -226,23 +226,21 @@ exception <dfn>WebCLException</dfn> : DOMException {
     <h4><a id="WEBCLCALLBACK">Callbacks</a></h4>
 
     <p>
-      WebCL allows certain long-running functions to be executed
-      either synchronously or asynchronously. The asynchronous mode is
-      used if a user-defined callback function is given as an argument
-      to such functions.  If a callback function is associated with a
-      WebCL object that is subsequently released, the callback will no
-      longer be invoked.  The signature of the callback function must
-      be as follows:
+      WebCL allows certain long-running functions to be executed either synchronously or
+      asynchronously.  The asynchronous mode is used if a user-defined callback function is given as
+      an argument to such functions.  The asynchronous mode is strongly recommended, so as to avoid
+      blocking the JavaScript main thread.  If a callback function is associated with a WebCL object
+      that is subsequently released, the callback will no longer be invoked.  The signature of the
+      callback function is as follows:
     </p>
 
 <pre class="idl">
-callback <dfn>WebCLCallback</dfn> = void (WebCLEvent event);
+callback <dfn>WebCLCallback</dfn> = void (optional WebCLEvent event);
 </pre>
 
     <p>
-      The callback function can call arbitrary JavaScript functions,
-      including both blocking and non-blocking APIs.  The following
-      diagram is non-normative, but describes a possible
+      The callback function can call arbitrary JavaScript functions, including both blocking and
+      non-blocking APIs.  The following diagram is non-normative, but describes a possible
       implementation.
     </p>
 
@@ -708,15 +706,17 @@ interface <dfn>WebCL</dfn> {
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clWaitForEvents.html">man page</a>)</span>
       </dt>
       <dd>
-        Waits until the given events have completed. See WebCLEvent for more information.
+        Invokes the given callback when all events in `eventWaitList` have completed.  If a callback
+        is not provided, the JavaScript main thread will be blocked until the events have completed.
+        Applications are strongly advised to provide a callback; the blocking mode mainly exists to
+        ease the porting of existing OpenCL code.
 
         <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
 	        <li>`INVALID_VALUE` -- if `eventWaitList` is `null` or empty</li>
-	        <li>`INVALID_CONTEXT` -- if events specified in
-	          `eventWaitList` do not belong to the same context</li>
-          <li>`INVALID_EVENT` -- if any event in `eventWaitList` is
-            not a valid event object</li>
+	        <li>`INVALID_CONTEXT` -- if events specified in `eventWaitList` do not belong to the same
+	          context</li>
+          <li>`INVALID_EVENT` -- if any event in `eventWaitList` is not a valid event object</li>
           <li>`INVALID_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` --
             if the execution status of any of the events in
             `eventWaitList` is a negative integer value</li>
@@ -1390,7 +1390,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
 
   void enqueueWaitForEvents (sequence&lt;WebCLEvent&gt; eventWaitList);
   
-  void finish();
+  void finish(optional WebCLCallback whenFinished);
 
   void flush();
 
@@ -1897,11 +1897,15 @@ interface <dfn>WebCLCommandQueue</dfn> {
         </ul>
       </dd>
 
-      <dt class="idl-code">void finish()
+      <dt class="idl-code">void finish(optional WebCLCallback whenFinished)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFinish.html">man page</a>)</span>
       </dt>
       <dd>
+        Invokes the given callback when all commands in this queue have completed.  If a callback is
+        not provided, the JavaScript main thread will be blocked until the commands have completed.
+        Applications are strongly advised to provide a callback; the blocking mode mainly exists to
+        ease the porting of existing OpenCL code.
       </dd>
 
       <dt class="idl-code">void flush()
@@ -2211,13 +2215,12 @@ interface <dfn>WebCLProgram</dfn> {
 
       <dd>
         <p>
-          Compiles this WebCLProgram for the given list of devices, or
-          in absence of the list, for all devices associated with the
-          WebCLContext that this WebCLProgram was created from.  A
-          string of compiler options and an asynchronous callback
-          function to invoke when the build is completed can also be
-          provided. The available compiler options are listed in the
-          table below; any other option is considered invalid.
+          Compiles this WebCLProgram for the given list of devices, or in absence of the list, for
+          all devices associated with the WebCLContext that this WebCLProgram was created from.  A
+          string of compiler options and an asynchronous callback function to invoke when the build
+          is completed can also be provided.  Applications are strongly advised to provide a
+          callback, to avoid blocking the JavaScript main thread.  The available compiler options
+          are listed in the table below; any other option is considered invalid.
         </p>
 
         <table class="enumtable">
