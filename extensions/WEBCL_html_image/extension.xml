@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<draft href="WEBCL_html_sharing/">
-  <name>WEBCL_html_sharing</name>
+<draft href="WEBCL_html_image/">
+  <name>WEBCL_html_image</name>
 
   <contact> <a href="https://www.khronos.org/webcl/public-mailing-list/">WebCL
   working group</a> (public_webcl 'at' khronos.org) </contact>
@@ -19,38 +19,41 @@
 
   <overview>
      <p>
-      The HTML Resource Sharing extension makes it more convenient and
+      The HTML Image Sharing extension makes it more convenient and
       potentially faster for applications to transfer image data from
       HTML Image / Canvas elements to WebCL memory objects, and
       vice versa.  The extension is enabled by
-      calling <code>enableExtension("WEBCL_html_sharing")</code>, after
+      calling <code>enableExtension("WEBCL_html_image")</code>, after
       which the application may call the functions specified below.
     </p>
     <features>
       <feature>
-	WebCLBuffer and WebCLImage can be initialized at construction time from an ImageData, Canvas, or Image Element. This does not create a binding of any kind between the WebCL memory object and the data source. The source pixel format is treated as 32-bit RGBA (8-bits per component) with non-premultiplied alpha, regardless of the source.  
+        WebCLBuffer and WebCLImage can be initialized at construction time from an ImageData,
+        Canvas, or Image Element.  This does not create a binding of any kind between the WebCL
+        memory object and the data source. The source pixel format is treated as 32-bit RGBA (8-bits
+        per component) with non-premultiplied alpha, regardless of the source.
       </feature>
     </features>
   </overview>
 
   <idl xml:space="preserve">
     partial interface WebCLContext {
-       WebCLBuffer createBuffer(CLenum memFlags, ImageData srcPixels);
-       WebCLBuffer createBuffer(CLenum memFlags, HTMLCanvasElement srcCanvas);
-       WebCLBuffer createBuffer(CLenum memFlags, HTMLImageElement srcImage);
-       WebCLImage createImage(CLenum memFlags, ImageData srcPixels);
-       WebCLImage createImage(CLenum memFlags, HTMLCanvasElement srcCanvas);
-       WebCLImage createImage(CLenum memFlags, HTMLImageElement srcImage);
+      WebCLBuffer createBuffer(CLenum memFlags, ImageData srcPixels);
+      WebCLBuffer createBuffer(CLenum memFlags, HTMLCanvasElement srcCanvas);
+      WebCLBuffer createBuffer(CLenum memFlags, HTMLImageElement srcImage);
+      WebCLImage createImage(CLenum memFlags, ImageData srcPixels);
+      WebCLImage createImage(CLenum memFlags, HTMLCanvasElement srcCanvas);
+      WebCLImage createImage(CLenum memFlags, HTMLImageElement srcImage);
     };
     
     partial interface WebCLCommandQueue {
 
-    //////////////////////////////////////////////////////////////////////
-    //
-    // Writing to WebCLBuffer
-    //
+      //////////////////////////////////////////////////////////////////////
+      //
+      // Writing to WebCLBuffer
+      //
     
-    void enqueueWriteBuffer(
+      void enqueueWriteBuffer(
                     WebCLBuffer                           buffer,
                     CLboolean                             blockingWrite,
                     CLuint                                bufferOffset,
@@ -58,7 +61,7 @@
                     optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
                     optional WebCLEvent?                  event);
 
-    void enqueueWriteBuffer(
+      void enqueueWriteBuffer(
                     WebCLBuffer                           buffer,
                     CLboolean                             blockingWrite,
                     CLuint                                bufferOffset,
@@ -66,7 +69,7 @@
                     optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
                     optional WebCLEvent?                  event);
 
-    void enqueueWriteBuffer(
+      void enqueueWriteBuffer(
                     WebCLBuffer                           buffer,
                     CLboolean                             blockingWrite,
                     CLuint                                bufferOffset,
@@ -74,7 +77,7 @@
                     optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
                     optional WebCLEvent?                  event);
 
-    void enqueueWriteBufferRect(
+      void enqueueWriteBufferRect(
                     WebCLBuffer                           buffer,
                     CLboolean                             blockingWrite,
                     sequence&lt;CLuint&gt;                      bufferOrigin,
@@ -86,7 +89,7 @@
                     optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
                     optional WebCLEvent?                  event);
 
-    void enqueueWriteBufferRect(
+      void enqueueWriteBufferRect(
                     WebCLBuffer                           buffer,
                     CLboolean                             blockingWrite,
                     sequence&lt;CLuint&gt;                      bufferOrigin,
@@ -98,7 +101,7 @@
                     optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
                     optional WebCLEvent?                  event);
 
-    void enqueueWriteBufferRect(
+      void enqueueWriteBufferRect(
                     WebCLBuffer                           buffer,
                     CLboolean                             blockingWrite,
                     sequence&lt;CLuint&gt;                      bufferOrigin,
@@ -110,12 +113,12 @@
                     optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
                     optional WebCLEvent?                  event);
 
-    //////////////////////////////////////////////////////////////////////
-    //
-    // Writing to WebCLImage
-    //
+      //////////////////////////////////////////////////////////////////////
+      //
+      // Writing to WebCLImage
+      //
     
-    void enqueueWriteImage(
+      void enqueueWriteImage(
                     WebCLImage                            image,
                     CLboolean                             blockingWrite,
                     sequence&lt;CLuint&gt;                      origin,
@@ -124,7 +127,7 @@
                     optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
                     optional WebCLEvent?                  event);
 
-    void enqueueWriteImage(
+      void enqueueWriteImage(
                     WebCLImage                            image,
                     CLboolean                             blockingWrite,
                     sequence&lt;CLuint&gt;                      origin,
@@ -133,7 +136,7 @@
                     optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
                     optional WebCLEvent?                  event);
 
-    void enqueueWriteImage(
+      void enqueueWriteImage(
                     WebCLImage                            image,
                     CLboolean                             blockingWrite,
                     sequence&lt;CLuint&gt;                      origin,
@@ -143,12 +146,12 @@
                     optional WebCLEvent?                  event);
 
 
-    //////////////////////////////////////////////////////////////////////
-    //
-    // Reading from WebCL
-    //
+      //////////////////////////////////////////////////////////////////////
+      //
+      // Reading from WebCL to HTMLCanvasElement
+      //
 
-    void enqueueReadBuffer(
+      void enqueueReadBuffer(
                     WebCLBuffer                           buffer,
                     CLboolean                             blockingRead,
                     CLuint                                bufferOffset,
@@ -157,7 +160,7 @@
                     optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
                     optional WebCLEvent?                  event);
 
-    void enqueueReadBufferRect(
+      void enqueueReadBufferRect(
                     WebCLBuffer                           buffer,
                     CLboolean                             blockingRead,
                     sequence&lt;CLuint&gt;                      bufferOrigin,
@@ -169,7 +172,7 @@
                     optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
                     optional WebCLEvent?                  event);
 
-    void enqueueReadImage(
+      void enqueueReadImage(
                     WebCLImage                            image,
                     CLboolean                             blockingRead,
                     sequence&lt;CLuint&gt;                      origin,
@@ -656,12 +659,13 @@
 
   <samplecode xml:space="preserve">
     <pre class="example">
-      //example assumes extension has been correctly enabled
-      //on platform or device
     </pre>
   </samplecode>
 
   <history>
+    <revision date="2013/12/10">
+      <change>Renamed to WEBCL_html_image</change>
+    </revision>
     <revision date="2013/11/20">
       <change>Migrated from the WebCL Working Draft</change>
     </revision>
