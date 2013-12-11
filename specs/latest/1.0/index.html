@@ -147,19 +147,14 @@ typedef const unsigned long CLenum;     // Used for enumerated types, such as We
     <h4><a id="WEBCLEXCEPTION">Exceptions</a></h4>
 
     <p>
-      WebCL methods throw exceptions instead of returning error codes
-      as return values as in OpenCL.  Exceptions that may be thrown by
-      each method are listed in that method's documentation.
-      Additionally, almost all methods may throw `OUT_OF_RESOURCES`,
-      `OUT_OF_HOST_MEMORY`, or the WebCL-specific
-      `WEBCL_IMPLEMENTATION_FAILURE`, so these are not listed
-      separately.  Furthermore, calling any function on an object that
-      has been released (either explicitly, or implicitly by releasing
-      any of its parent objects), will
-      throw <code>INVALID_<i>TYPE</i></code>, where <i>`TYPE`</i> is
-      `CONTEXT`, `COMMAND_QUEUE`, `MEM_OBJECT`, `SAMPLER`, `PROGRAM`,
-      `KERNEL`, or `EVENT`.  These exceptions are also not listed
-      separately in the method descriptions.
+      WebCL methods throw exceptions instead of returning error codes as return values as in OpenCL.
+      Exceptions that may be thrown by each method are listed in that method's documentation.
+      Additionally, almost all methods may throw `OUT_OF_RESOURCES`, `OUT_OF_HOST_MEMORY`, or the
+      WebCL-specific `WEBCL_IMPLEMENTATION_FAILURE`, so these are not listed separately.
+      Furthermore, calling any function (except `release`) on an object that has been released, will
+      throw <code>INVALID_<i>TYPE</i></code>, where <i>`TYPE`</i> is `CONTEXT`, `COMMAND_QUEUE`,
+      `MEM_OBJECT`, `SAMPLER`, `PROGRAM`, `KERNEL`, or `EVENT`.  These exceptions are also not
+      listed separately in the method descriptions.
     </p>
 
 <pre class="idl">
@@ -695,10 +690,11 @@ interface <dfn>WebCL</dfn> {
 
       <dt class="idl-code">CLboolean enableExtension(DOMString extensionName)</dt>
       <dd>
-        Enables the given extension on all WebCLPlatforms and
-        WebCLDevices.  Returns `true` if the extension is successfully
-        enabled, or `false` if not.  The available extension names can
-        be queried by `getSupportedExtensions`.
+        Enables the given extension on all WebCLPlatforms and WebCLDevices.  Returns `true` if the
+        extension is successfully enabled, or `false` if not.  The available extension names can be
+        queried by `getSupportedExtensions`.  Note that enabling an extension does not take effect
+        retroactively, i.e., contexts that were created before enabling the extension will continue
+        to not have the extended capabilities.
       </dd>
 
       <dt class="idl-code">void waitForEvents(sequence&lt;WebCLEvent&gt; eventWaitList, optional WebCLCallback whenFinished)
@@ -874,10 +870,11 @@ interface <dfn>WebCLPlatform</dfn> {
 
       <dt class="idl-code">CLboolean enableExtension(DOMString extensionName)</dt>
       <dd>
-        Enables the given WebCL extension on this WebCLPlatform.
-        Returns `true` if the extension is successfully enabled, or
-        `false` if not.  The available extension names can be queried
-        by `getSupportedExtensions`.
+        Enables the given WebCL extension on this WebCLPlatform.  Returns `true` if the extension is
+        successfully enabled, or `false` if not.  The available extension names can be queried by
+        `getSupportedExtensions`.  Note that enabling an extension does not take effect
+        retroactively, i.e., contexts that were created before enabling the extension will continue
+        to not have the extended capabilities.
       </dd>
     </dl>
 
@@ -992,10 +989,11 @@ interface <dfn>WebCLDevice</dfn> {
 
       <dt class="idl-code">CLboolean enableExtension(DOMString extensionName)</dt>
       <dd>
-        Enables the given WebCL extension on this WebCLDevice.
-        Returns `true` if the extension is successfully enabled, or
-        `false` if not.  The available extension names can be queried
-        by `getSupportedExtensions`.
+        Enables the given WebCL extension on this WebCLDevice.  Returns `true` if the extension is
+        successfully enabled, or `false` if not.  The available extension names can be queried by
+        `getSupportedExtensions`.  Note that enabling an extension does not take effect
+        retroactively, i.e., contexts that were created before enabling the extension will continue
+        to not have the extended capabilities.
       </dd>
     </dl>
 
