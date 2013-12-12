@@ -18,7 +18,11 @@
   </depends>
 
   <overview>
-     <p>
+
+    <script src="../../resources/jquery-1.3.2.min.js" type="text/javascript">do not remove this text</script>
+    <script src="../../resources/preprocessHTML.js" type="text/javascript">do not remove this text</script>
+
+    <p>
       The HTML Image Sharing extension makes it more convenient and
       potentially faster for applications to transfer image data from
       HTML Image / Canvas elements to WebCL memory objects, and
@@ -26,6 +30,16 @@
       calling <code>enableExtension("WEBCL_html_image")</code>, after
       which the application may call the functions specified below.
     </p>
+
+    <p>
+      In order to prevent information leakage, this extension prohibits reading data from (1) an
+      Image element whose origin is not the same as the origin of the current Document, and (2) a
+      Canvas element whose <i>origin-clean</i> flag is set to false.  An attempt to violate these
+      restrictions will cause a `SECURITY_ERR` exception to be thrown.  Applications may utilize
+      Cross-Origin Resource Sharing [<a href="http://www.w3.org/TR/cors/">CORS</a>] to get access to
+      images on another domain, provided that the server hosting the images supports that mechanism.
+    </p>
+
     <features>
       <feature>
         WebCLBuffer and WebCLImage can be initialized at construction time from an ImageData,
