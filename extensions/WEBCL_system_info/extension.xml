@@ -74,13 +74,69 @@
 
       // Device Properties (exemplary, non-normative)
 
+      CLenum UNMASKED_DEVICE_TYPE                               = 0x1000;
       CLenum UNMASKED_DEVICE_VENDOR_ID                          = 0x1001;
+      CLenum UNMASKED_DEVICE_MAX_COMPUTE_UNITS                  = 0x1002;
+      CLenum UNMASKED_DEVICE_MAX_WORK_ITEM_DIMENSIONS           = 0x1003;
+      CLenum UNMASKED_DEVICE_MAX_WORK_GROUP_SIZE                = 0x1004;
+      CLenum UNMASKED_DEVICE_MAX_WORK_ITEM_SIZES                = 0x1005;
+      CLenum UNMASKED_DEVICE_PREFERRED_VECTOR_WIDTH_CHAR        = 0x1006;
+      CLenum UNMASKED_DEVICE_PREFERRED_VECTOR_WIDTH_SHORT       = 0x1007;
+      CLenum UNMASKED_DEVICE_PREFERRED_VECTOR_WIDTH_INT         = 0x1008;
+      CLenum UNMASKED_DEVICE_PREFERRED_VECTOR_WIDTH_LONG        = 0x1009;
+      CLenum UNMASKED_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT       = 0x100A;
+      CLenum UNMASKED_DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE      = 0x100B; // moved to extension
       CLenum UNMASKED_DEVICE_MAX_CLOCK_FREQUENCY                = 0x100C;
+      CLenum UNMASKED_DEVICE_ADDRESS_BITS                       = 0x100D;
+      CLenum UNMASKED_DEVICE_MAX_READ_IMAGE_ARGS                = 0x100E;
+      CLenum UNMASKED_DEVICE_MAX_WRITE_IMAGE_ARGS               = 0x100F;
+      CLenum UNMASKED_DEVICE_MAX_MEM_ALLOC_SIZE                 = 0x1010;
+      CLenum UNMASKED_DEVICE_IMAGE2D_MAX_WIDTH                  = 0x1011;
+      CLenum UNMASKED_DEVICE_IMAGE2D_MAX_HEIGHT                 = 0x1012;
+      CLenum UNMASKED_DEVICE_IMAGE3D_MAX_WIDTH                  = 0x1013;
+      CLenum UNMASKED_DEVICE_IMAGE3D_MAX_HEIGHT                 = 0x1014;
+      CLenum UNMASKED_DEVICE_IMAGE3D_MAX_DEPTH                  = 0x1015;
+      CLenum UNMASKED_DEVICE_IMAGE_SUPPORT                      = 0x1016;
+      CLenum UNMASKED_DEVICE_MAX_PARAMETER_SIZE                 = 0x1017;
+      CLenum UNMASKED_DEVICE_MAX_SAMPLERS                       = 0x1018;
+      CLenum UNMASKED_DEVICE_MEM_BASE_ADDR_ALIGN                = 0x1019;
+      //CLenum UNMASKED_DEVICE_MIN_DATA_TYPE_ALIGN_SIZE         = 0x101A; // removed; deprecated in OpenCL 1.2
+      CLenum UNMASKED_DEVICE_SINGLE_FP_CONFIG                   = 0x101B;
+      CLenum UNMASKED_DEVICE_GLOBAL_MEM_CACHE_TYPE              = 0x101C;
+      CLenum UNMASKED_DEVICE_GLOBAL_MEM_CACHELINE_SIZE          = 0x101D;
+      CLenum UNMASKED_DEVICE_GLOBAL_MEM_CACHE_SIZE              = 0x101E;
+      CLenum UNMASKED_DEVICE_GLOBAL_MEM_SIZE                    = 0x101F;
+      CLenum UNMASKED_DEVICE_MAX_CONSTANT_BUFFER_SIZE           = 0x1020;
+      CLenum UNMASKED_DEVICE_MAX_CONSTANT_ARGS                  = 0x1021;
+      CLenum UNMASKED_DEVICE_LOCAL_MEM_TYPE                     = 0x1022;
+      CLenum UNMASKED_DEVICE_LOCAL_MEM_SIZE                     = 0x1023;
+      CLenum UNMASKED_DEVICE_ERROR_CORRECTION_SUPPORT           = 0x1024;
+      CLenum UNMASKED_DEVICE_PROFILING_TIMER_RESOLUTION         = 0x1025;
+      CLenum UNMASKED_DEVICE_ENDIAN_LITTLE                      = 0x1026;
+      CLenum UNMASKED_DEVICE_AVAILABLE                          = 0x1027;
+      CLenum UNMASKED_DEVICE_COMPILER_AVAILABLE                 = 0x1028;
+      CLenum UNMASKED_DEVICE_EXECUTION_CAPABILITIES             = 0x1029;
+      CLenum UNMASKED_DEVICE_QUEUE_PROPERTIES                   = 0x102A;
       CLenum UNMASKED_DEVICE_NAME                               = 0x102B;
       CLenum UNMASKED_DEVICE_VENDOR                             = 0x102C;
+      CLenum DRIVER_VERSION                                     = 0x102D;
+      CLenum UNMASKED_DEVICE_PROFILE                            = 0x102E;
       CLenum UNMASKED_DEVICE_VERSION                            = 0x102F;
       CLenum UNMASKED_DEVICE_EXTENSIONS                         = 0x1030;
-    };
+      CLenum UNMASKED_DEVICE_PLATFORM                           = 0x1031;
+      CLenum UNMASKED_DEVICE_DOUBLE_FP_CONFIG                   = 0x1032; // moved to extension
+      CLenum UNMASKED_DEVICE_HALF_FP_CONFIG                     = 0x1033; // moved to extension
+      CLenum UNMASKED_DEVICE_PREFERRED_VECTOR_WIDTH_HALF        = 0x1034; // moved to extension
+      CLenum UNMASKED_DEVICE_HOST_UNIFIED_MEMORY                = 0x1035;
+      CLenum UNMASKED_DEVICE_NATIVE_VECTOR_WIDTH_CHAR           = 0x1036;
+      CLenum UNMASKED_DEVICE_NATIVE_VECTOR_WIDTH_SHORT          = 0x1037;
+      CLenum UNMASKED_DEVICE_NATIVE_VECTOR_WIDTH_INT            = 0x1038;
+      CLenum UNMASKED_DEVICE_NATIVE_VECTOR_WIDTH_LONG           = 0x1039;
+      CLenum UNMASKED_DEVICE_NATIVE_VECTOR_WIDTH_FLOAT          = 0x103A;
+      CLenum UNMASKED_DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE         = 0x103B; // moved to extension
+      CLenum UNMASKED_DEVICE_NATIVE_VECTOR_WIDTH_HALF           = 0x103C; // moved to extension
+      CLenum UNMASKED_DEVICE_OPENCL_C_VERSION                   = 0x103D;
+      };
   </idl>
 
   <issues>
@@ -116,6 +172,9 @@
   </samplecode>
 
   <history>
+    <revision date="2013/12/11">
+      <change>Added all platform and device info enums. This provides the ability to expose unmasked values in the event the implementation chooses to.
+    </revision>
     <revision date="2013/11/27">
       <change>Rewrote overview. Resolved issues 1 and 2. Wrote a new code example.</change>
     </revision>
