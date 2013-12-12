@@ -34,7 +34,7 @@
       <dt>This version:
       </dt><dd>
         <a href="http://www.khronos.org/registry/webcl/specs/1.0.0/">
-          http://www.khronos.org/registry/webcl/specs/latest/1.0/
+          http://www.khronos.org/registry/webcl/specs/latest/1.0.0/
         </a>
       </dd>
       <dt>Latest version:
@@ -2596,14 +2596,12 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
     <h2>Extensions</h2>
 
     <p>
-      WebCL implementations may expose a number of extensions to the
-      core functionality.  In addition to the official Khronos
-      extensions that are listed below, each WebCL implementation may
-      also support vendor-specific extensions that are documented
-      elsewhere.  Each extension, regardless of its standardization
-      status, must be explicitly enabled by the application before it
-      can be used.  This policy is aimed to minimize inadvertant usage
-      of features that are not universally available.
+      WebCL implementations may expose a number of extensions to the core functionality.  The
+      extensions are listed and documented in
+      the <a href="http://www.khronos.org/registry/webcl/extensions/">WebCL Extension Registry</a>.
+      Each extension, regardless of its standardization status, must be explicitly enabled by the
+      application before it can be used.  This policy is aimed to minimize inadvertant usage of
+      features that are not universally available.
     </p>
     
     <p>
@@ -2652,65 +2650,6 @@ var withFP64 = getDevicesWithExtensionEnabled("KHR_fp64");
 var withGL = getDevicesWithExtensionEnabled("KHR_gl_sharing");
 var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) });
 </pre>
-
-    <h3><a id="KHR_fp64">64-bit floating point</a></h3>
-    <p>
-      The <a href="../../../extensions/KHR_fp64">KHR_fp64</a>
-      extension adds support for the `double` datatype in the kernel
-      language.
-    </p>
-
-    <h3><a id="KHR_fp16">16-bit floating point</a></h3>
-    <p>
-      The <a href="../../../extensions/KHR_fp16">KHR_fp16</a>
-      extension adds support for the `half` datatype in the kernel
-      language.
-    </p>
-
-    <h3><a id="KHR_gl_sharing">WebGL Resource Sharing</a></h3>
-
-    <p>
-      The <a href="../../../extensions/KHR_gl_sharing">KHR_gl_sharing</a>
-      extension allows applications to use WebGL buffers,
-      renderbuffers and textures as WebCL memory objects.
-    </p>
-    
-    <h3><a id="WEBCL_html_iamge">HTML Image Sharing</a></h3>
-
-    <p>
-      The <a href="../../../extensions/WEBCL_html_image">WEBCL_html_image</a>
-      extension allows applications to conveniently transfer image
-      data from an HTML Image or Canvas to WebCL, and from WebCL to
-      Canvas.
-    </p>
-
-    <h3><a id="WEBCL_html_video">HTML Video Sharing</a></h3>
-
-    <p>
-      The <a href="../../../extensions/WEBCL_html_video">WEBCL_html_video</a>
-      extension allows applications to synchronize the contents of a
-      WebCLImage from an HTML Video element.
-    </p>
-
-    <h3><a id="WEBCL_system_info">System Info</a></h3>
-
-    <p>
-      The <a href="../../../extensions/WEBCL_system_info">WEBCL_system_info</a> extension allows
-      applications, at the discretion of the browser (and ultimately of the end user), to retrieve
-      OpenCL system information that may otherwise be masked.  Implementations that choose to mask
-      some of the `DEVICE` and `PLATFORM` query enums are recommended to make the unmasked values
-      available to privileged applications (such as JavaScript development tools) by implementing
-      this extension.
-    </p>
-
-    <h3><a id="WEBCL_validation_info">Validation Info</a></h3>
-
-    <p>
-      The <a href="../../../extensions/WEBCL_validation_info">WEBCL_validation_info</a> extension
-      allows applications to retrieve the results of kernel program validation, including error
-      messages, warnings, logs, and instrumented source code.  It also allows applications to
-      validate a program without attempting to build it.
-    </p>
 
 <!-- ======================================================================================================= -->
 
@@ -2835,8 +2774,8 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
         A. Munshi.
       </dd>
       <dt id="refsWEBIDL">[WEBIDL]</dt>
-      <dd><cite><a href="http://dev.w3.org/2006/webapi/WebIDL/">
-            Web IDL: W3C Editor’s Draft</a></cite>,
+      <dd><cite><a href="http://www.w3.org/TR/WebIDL/">
+            Web IDL: W3C Candidate Recommendation</a></cite>,
         C. McCormack.
       </dd>
       <dt id="refsWEBGL">[WEBGL]</dt>
