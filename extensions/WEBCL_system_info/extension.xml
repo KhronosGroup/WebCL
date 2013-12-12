@@ -173,7 +173,7 @@
 
   <history>
     <revision date="2013/12/11">
-      <change>Added all platform and device info enums. This provides the ability to expose unmasked values in the event the implementation chooses to.
+      <change>Added all platform and device info enums. This provides the ability to expose unmasked values in the event the implementation chooses to.</change>
     </revision>
     <revision date="2013/11/27">
       <change>Rewrote overview. Resolved issues 1 and 2. Wrote a new code example.</change>
