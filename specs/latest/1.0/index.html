@@ -2724,110 +2724,63 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
 
     <h2>Security and Robustness</h2>
 
-    <p>
-      To promote robustness of the WebCL standard, the working group
-      is actively working on identifying and remediating potential
-      vulnerabilities.  Depending upon the nature of the issue, the
-      remediation may need to be addressed by the OpenCL Working Group
-      or the WebCL Working Group, or both.  The working group has
-      identified the following security requirements for WebCL.
-    </p>
-
-    <h3>Out-of-Bounds Memory Accesses</h3>
+    <h3>Out-of-Bounds Memory Access</h3>
 
     <p>
-      WebCL kernels must not be able to access unauthorized areas of
-      memory, regardless of address space (private, local, global, or
-      constant).  If detected during compilation, out-of-bounds (OOB)
-      accesses must generate a compiler error.  At runtime, OOB reads
-      must return zero and writes must be discarded.  Alternatively,
-      the kernel may be terminated and an exception be thrown.
+      WebCL kernels must not be able to access unauthorized areas of memory, regardless of address
+      space (private, local, global, or constant).  If detected during compilation, out-of-bounds
+      (OOB) accesses must generate a compiler error.  At runtime, OOB reads must return zero and
+      writes must be discarded.  Alternatively, the kernel may be terminated and an exception be
+      thrown.
     </p>
 
     <p>
-      For purposes of bounds checking, the implementation may treat
-      all `private` variables as one contiguous block of memory, and
-      similarly for `local` variables, instead of enforcing the bounds
-      of each variable separately. For example, in a kernel program
-      containing two `private` arrays, an OOB read from the first
-      array is allowed to return any value from either the first or
-      the second array, rather than zero.
+      For purposes of bounds checking, the implementation may treat all `private` variables as one
+      contiguous block of memory, and similarly for `local` variables, instead of enforcing the
+      bounds of each variable separately.  For example, in a kernel program containing two `private`
+      arrays, an OOB read from the first array is allowed to return any value from either the first
+      or the second array, rather than zero.
     </p>
-
-    <h3>Undefined Behavior</h3>
-
-    <p>
-      Behavior left undefined in OpenCL will be defined by the WebCL specification
-      where possible, to ensure the authoring of strong conformance tests, and to
-      prevent the potential introduction of security vulnerabilities resulting
-      from undefined behavior.
-    </p>
-
-    <h3>Cross-Origin Information Leakage</h3>
-
-    <p>
-     WebCL will restrict the use of media, such as image and video,
-     originating from a different web site than the hosting web page.
-     WebCL will leverage provisions such as Cross-Origin Resource
-     Sharing [<a href="#refsCORS">CORS</a>] to help enforce the
-     restriction on the use of media by a web page different than the
-     originating web site.
-    </p>
-
 
     <h3>Memory Initialization</h3>
 
     <p>
-     To prevent information leakage from un-initialized memory, all WebCL
-     allocated memory objects (buffers and images), inclusive of private and
-     local variables in kernel code, must be initialized at allocation time
-     (before the application is allowed to use them).  To minimize the
-     performance burden on applications for initializing allocated memory to
-     zeroes, WebCL implementations will ensure that memory is initialized
-     to a pre-defined value at allocation time.
+      To prevent information leakage via uninitialized memory, the WebCL implementation must
+      initialize all buffers and variables to zero before giving the application read access to
+      them.  This requirement applies regardless of address space (private, local, global, or
+      constant), and regardless of whether the allocation is made in kernel code or host code.
     </p>
-
-
-    <h3>Cross-Context Information Leakage</h3>
-
-    <p>
-     WebCL implementations must ensure that no information can leak
-     from one WebCL/OpenCL context to another. It must not be
-     possible for WebCL kernels or host code to access arbitrary
-     system memory, or memory from another OpenCL/WebCL context.
-    </p>
-
 
     <h3>Denial of Service (DoS)</h3>
 
     <p>
-     Long running and/or computationally intensive kernels may cause the
-     system to become unresponsive, and can lead to denial of
-     service. It is not acceptable for content downloaded over the
-     internet to lock up the browser.
+      Long-running and/or computationally intensive kernels (or other commands in a command queue)
+      may cause the system to become unresponsive.  It is generally not possible to guard against
+      this problem at the browser/WebCL level; the necessary mechanisms, such as watchdog timers and
+      pre-emptive multitasking, must be provided by the OpenCL driver and the operating system.  On
+      systems where the necessary facilities are in place, WebCL implementations are strongly
+      encouraged to make use of them in order to:
 
-     To prevent bugs/issues in unknown and untrusted code from monopolizing
-     an OpenCL device and making it unresponsive, WebCL implementations need to
-     be able to:
-    </p>
-
-    <ul>
-    <li> Detect offending kernels.  A kernel is considered "offending"
-         if it runs for an excessively long time, or disproportionately
-         consumes system resources.
-    <li> Terminate contexts associated with long-running malicious or
-         erroneous kernels, before they render the OpenCL device
-         unresponsive, and result in potential device reset.
-    </ul>
+    <ol>
+      <li>Detect offending kernels and other commands.  A command is considered offending if it runs
+        for an excessively long time, or disproportionately consumes system resources.</li>
+      <li>Terminate the contexts associated with the offending commands, before they render the
+        OpenCL device unresponsive, and result in potential device reset.</li>
+    </ol>
 
 <!-- ======================================================================================================= -->
 
     <h2>Implementation notes</h2>
 
     <p>
-      Although WebCL is based on OpenCL 1.1 (Embedded Profile), it can
-      also be implemented on top of OpenCL 1.2, or any future version
-      that remains backwards compatible with OpenCL 1.1.
+      Although WebCL is based on OpenCL 1.1 (Embedded Profile), it can also be implemented on top of
+      OpenCL 1.2, or any future version that remains backwards compatible with OpenCL 1.1.  However,
+      an implementation running on top of OpenCL 1.2 or later must make sure to not allow
+      applications to use any features that are not supported in WebCL.  This implies, in
+      particular, that implementations must not pass kernel code to the underlying OpenCL compiler
+      without first checking that the kernel code is valid according to WebCL.  For example, usage
+      of `printf()` must be treated as a compilation error, because `printf` is not supported in
+      WebCL.
     </p>
 
     <p>
@@ -2884,21 +2837,6 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
     <h3>Normative references</h3>
 
     <dl>
-      <dt id="refsCANVAS">[CANVAS]</dt>
-      <dd><cite><a href="http://www.w3.org/TR/html5/the-canvas-element.html">
-            HTML5: The Canvas Element</a></cite>,
-        World Wide Web Consortium (W3C).
-      </dd>
-      <dt id="refsCORS">[CORS]</dt>
-      <dd><cite><a href="http://www.w3.org/TR/cors/">
-            Cross-Origin Resource Sharing</a></cite>,
-        A. van Kesteren.
-      </dd>
-      <dt id="refsDOMSTRING">[DOMSTRING]</dt>
-      <dd><cite><a href="http://www.w3.org/TR/DOM-Level-2-Core/core.html#DOMString">
-            Document Object Model Core: The DOMString type</a></cite>,
-        World Wide Web Consortium (W3C).
-      </dd>
       <dt id="refsOPENCL">[OPENCL11]</dt>
       <dd><cite><a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf">
             OpenCL 1.1 Specification</a></cite>,
@@ -2925,6 +2863,7 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
     <dd>Tomi Aarnio (Editor)</dd>
     <dd>Mika&euml;l Bourges-S&eacute;venier (Editor)</a>
     <dd>Tasneem Brutch (Working Group Chair)</dd>
+    <dd>Fabien Cellier</dd>
     <dd>Steven Eliuk</dd>
     <dd>Jeff Gilbert</dd>
     <dd>Antonio Gomes</dd>
