@@ -2579,12 +2579,12 @@ interface <dfn>WebCLEvent</dfn> {
 
 <pre class="idl">
 interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
-  void  setUserEventStatus(CLint executionStatus);
+  void  setStatus(CLint executionStatus);
 };
 </pre>
 
     <dl class="methods">
-      <dt class="idl-code">void setUserEventStatus(CLint executionStatus)
+      <dt class="idl-code">void setStatus(CLint executionStatus)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetUserEventStatus.html">man page</a>)</span>
       </dt>
@@ -2594,7 +2594,7 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
           <li>`INVALID_VALUE` -- if `executionStatus` is not `COMPLETE` or a negative integer value</li>
           <li>`INVALID_OPERATION` -- if the execution status of this
             event has already been changed by a previous call to
-            `setUserEventStatus`</li>
+            `setStatus`</li>
         </ul>
       </dd>
     </dl>
