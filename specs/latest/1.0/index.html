@@ -2668,16 +2668,18 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
     <p>
       WebCL was designed from the begining with security as a primary requirement.
       WebCL addresses the following three main security requirements:
+
     <ol>
       <li> Prevent out of bounds memory accesses</li>
       <li> Prevent memory leakage from uninitialized memory </li>
       <li> Prevent denial of service resulting from long running kernels </li>      
-      In addition to ensuring that WebCL met the security requirements of the browsers, the
-      working group strived to provide layered security.  At the OpenCL layer, two security
-      extensions are in place for protection against memory leakage and denial of service 
+    </ol>
+
+      In addition to ensuring that WebCL met the security requirements of the browsers,
+      a layerd security approach was taken.  At the OpenCL layer, two security
+      extensions are in place to enforce protection against memory leakage and denial of service 
       from long running kernels.  The WebCL Kernel Validator project was intiated to enforce
       protection against out of bounds memory accesses.
-    </ol>
     </p>
 
     <h3>Out-of-Bounds Memory Access</h3>
@@ -2712,12 +2714,15 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
       WebCL implementation must initialize all buffers and variables to zero before giving
       the application read access to them.  This requirement applies regardless of address 
       space (private, local, global, or constant), and regardless of whether the allocation
-      is made in kernel code or host code.
+      is made in kernel code or host code.a
     </p>
-      The WebCL working group proposed the OpenCL memory Initialization extension, for enhanced
-      security and robustness of the underlying OpenCL implementation.  The OpenCL 1.2 memory 
-      initialization extension prevents memory leakage by enforcing initilialization of 
-      local and private memory before an OpenCL or WebCL kernel is invoked.    
+
+    <p>
+      The OpenCL 1.2 cl_khr_initialize_memory memory initialization extension can be used to 
+      prevent memory leakage by enforcing initilialization of local and private memory before 
+      a kernel begins execution.
+      <span class="cl-spec">(<a href="https://www.khronos.org/registry/cl/specs/opencl-1.2-extensions.pdf#nameddest=section-9.15">OpenCL 1.2 §9.15</a>
+    </p>
 
     <h3>Denial of Service (DoS)</h3>
 
@@ -2736,7 +2741,8 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
       <li>Terminate the contexts associated with the offending commands, before they render the
         OpenCL device unresponsive, and result in potential device reset.</li>
     </ol>
-
+    
+    </p>
 <!-- ======================================================================================================= -->
 
     <h2>Implementation notes</h2>
