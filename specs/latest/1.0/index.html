@@ -2665,6 +2665,21 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
 
     <h2>Security and Robustness</h2>
 
+    <p>
+      WebCL was designed from the begining with security as a primary requirement.
+      WebCL addresses the following three main security requirements:
+    <ol>
+      <li> Prevent out of bounds memory accesses</li>
+      <li> Prevent memory leakage from uninitialized memory </li>
+      <li> Prevent denial of service resulting from long running kernels </li>      
+      In addition to ensuring that WebCL met the security requirements of the browsers, the
+      working group strived to provide layered security.  At the OpenCL layer, two security
+      extensions are in place for protection against memory leakage and denial of service 
+      from long running kernels.  The WebCL Kernel Validator project was intiated to enforce
+      protection against out of bounds memory accesses.
+    </ol>
+    </p>
+
     <h3>Out-of-Bounds Memory Access</h3>
 
     <p>
@@ -2683,16 +2698,24 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
       or the second array, rather than zero.
     </p>
 
+    <p> 
+      The WebCL Validator open source project was initiated by the WebCL working group for
+      enforcing protections against out of bounds (OOB) memory accesses through instrumentation, 
+      analysis and validation of WebCL kernels.
+    </p>        
+
     <h3>Memory Initialization</h3>
 
     <p>
-      To prevent information leakage via uninitialized memory, the WebCL implementation must
-      initialize all buffers and variables to zero before giving the application read access to
-      them.  This requirement applies regardless of address space (private, local, global, or
-      constant), and regardless of whether the allocation is made in kernel code or host code.
+      To prevent information leakage via uninitialized memory, and to ensure that the WebCL
+      application code cannot inspect data left over from a previous application, the 
+      WebCL implementation must initialize all buffers and variables to zero before giving
+      the application read access to them.  This requirement applies regardless of address 
+      space (private, local, global, or constant), and regardless of whether the allocation
+      is made in kernel code or host code.
     </p>
       The WebCL working group proposed the OpenCL memory Initialization extension, for enhanced
-      the security and robustness of the OpenCL driver and runtime.  The OpenCL 1.2 memory 
+      security and robustness of the underlying OpenCL implementation.  The OpenCL 1.2 memory 
       initialization extension prevents memory leakage by enforcing initilialization of 
       local and private memory before an OpenCL or WebCL kernel is invoked.    
 
@@ -2700,11 +2723,12 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
 
     <p>
       Long-running and/or computationally intensive kernels (or other commands in a command queue)
-      may cause the system to become unresponsive.  It is generally not possible to guard against
-      this problem at the browser/WebCL level; the necessary mechanisms, such as watchdog timers and
-      pre-emptive multitasking, must be provided by the OpenCL driver and the operating system.  On
-      systems where the necessary facilities are in place, WebCL implementations are strongly
-      encouraged to make use of them in order to:
+      may cause the system to become unresponsive by disproportionately consuming device resources.  
+      It is generally not possible to guard against this problem at the browser/WebCL level; 
+      the necessary mechanisms, such as watchdog timers and pre-emptive multitasking, must be 
+      provided by the OpenCL driver and the operating system.  On systems where the necessary 
+      facilities are in place, WebCL implementations are strongly encouraged to make use of them 
+      in order to:
 
     <ol>
       <li>Detect offending kernels and other commands.  A command is considered offending if it runs
