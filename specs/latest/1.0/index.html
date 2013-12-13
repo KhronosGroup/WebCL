@@ -2691,6 +2691,10 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
       them.  This requirement applies regardless of address space (private, local, global, or
       constant), and regardless of whether the allocation is made in kernel code or host code.
     </p>
+      The WebCL working group proposed the OpenCL memory Initialization extension, for enhanced
+      the security and robustness of the OpenCL driver and runtime.  The OpenCL 1.2 memory 
+      initialization extension prevents memory leakage by enforcing initilialization of 
+      local and private memory before an OpenCL or WebCL kernel is invoked.    
 
     <h3>Denial of Service (DoS)</h3>
 
