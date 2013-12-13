@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">December 12, 2013</h2>
+    <h2 class="no-toc">December 13, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -68,7 +68,7 @@
       harness GPU and multi-core CPU parallel processing from within a
       Web browser, enabling significant acceleration of
       computationally intensive applications, such as image and video
-      processing and advanced physics for WebGL games.
+      processing, data visualization, and 3D games.
     </p>
 
     <h2 class="no-toc">Status of this document</h2>
@@ -95,26 +95,22 @@
     <h2>Introduction</h2>
 
     <p>
-      With the popularity of web-centric platforms, there is a need to enable web
-      applications with high compute demands.  WebCL (Web Compute Language) enables 
-      acceleration of compute-intensive web applications through high performance 
-      parallel processing.  By defining a JavaScript binding to the underlying OpenCL
-      API, WebCL provides access to native OpenCL API implementation.  Accessibility 
-      to a parallel API using a standardized JavaScript API allows for portable and
-      efficient access to the heterogeneous multicore hardware available locally on
-      the device, while defining a coherent standard across a breadth of devices,
-      including desktop and mobile.  Accelerated JavaScript APIs enable and enhance
-      use cases such as, interactive big-data visualization, accelerated video
-      processing, accelerated 3D gaming and computational photography.
+      With the popularity of web-centric platforms, there is a need to leverage high-performance
+      parallel processing to accelerate compute-intensive web applications.  Such applications
+      include, for example, data visualization, image and video processing, 3D gaming, computational
+      photography, computer vision, and cryptography.  By providing application developers with a
+      standardized JavaScript API and a portable kernel programming language, WebCL enables parallel
+      computing on heterogeneous multicore hardware across a breadth of devices, including mobile,
+      desktop, and server.  The WebCL API and kernel language are designed to be substantially
+      similar to those of OpenCL (Open Computing Language), and implementable on top of a conformant
+      OpenCL driver.
     </p>
 
 <!-- ======================================================================================================= -->
 
-    <h2>DOM Interfaces</h2>
+    <h2>Conventions</h2>
 
-    <h3>Types</h3>
-
-    <h4>Basic types</h4>
+    <h3>Basic types</h3>
 
     <p>The following basic types are used in this document.</p>
 
@@ -128,7 +124,7 @@ typedef const unsigned long CLenum;     // Used for enumerated types, such as We
 </pre>
 
 
-    <h4><a id="WEBCLEXCEPTION">Exceptions</a></h4>
+    <h3><a id="WEBCLEXCEPTION">Exceptions</a></h2>
 
     <p>
       WebCL methods throw exceptions instead of returning error codes as return values as in OpenCL.
@@ -154,7 +150,7 @@ exception <dfn>WebCLException</dfn> : DOMException {
       be `null`.
     </p>
 
-    <h4><a id="RELEASE">Resource management</a></h4>
+    <h3><a id="RELEASE">Resource management</a></h3>
 
     <p>
       Each dynamically created WebCL object has a `release` method
@@ -202,7 +198,19 @@ exception <dfn>WebCLException</dfn> : DOMException {
       WebCL objects.
     </p>
 
-    <h4><a id="WEBCLCALLBACK">Callbacks</a></h4>
+    <h3><a id="CONCURRENCY">Concurrency</a></h3>
+
+    <p>
+      Depending on the implementation, WebCL operations may be running
+      concurrently with JavaScript.  In particular, it may be possible
+      for the application to modify an ArrayBuffer while it's being
+      asynchronously copied to/from a WebCLMemoryObject.  To avoid
+      corrupting the contents of either buffer, applications should
+      not modify an ArrayBuffer that has been enqueued for async
+      read/write, until the relevant WebCL command queue has finished.
+    </p>
+
+    <h3><a id="WEBCLCALLBACK">Callbacks</a></h3>
 
     <p>
       WebCL allows certain long-running functions to be executed either synchronously or
@@ -228,54 +236,23 @@ callback <dfn>WebCLCallback</dfn> = void (optional WebCLEvent event);
     </div>
 
 
-    <h4><a id="CONCURRENCY">Concurrency</a></h4>
+<!-- ======================================================================================================= -->
 
-    <p>
-      Depending on the implementation, WebCL operations may be running
-      concurrently with JavaScript.  In particular, it may be possible
-      for the application to modify an ArrayBuffer while it's being
-      asynchronously copied to/from a WebCLMemoryObject.  To avoid
-      corrupting the contents of either buffer, applications should
-      not modify an ArrayBuffer that has been enqueued for async
-      read/write, until the relevant WebCL command queue has finished.
-    </p>
-
+    <h2>Interfaces</h2>
 
     <h3><a id="WEBCL">WebCL</a></h3>
 
     <p>
-      Window and WorkerUtils objects must implement the WebCLEnvironment interface.
+      The WebCL API is accessible through a singleton `webcl` object that resides in the global
+      `window` namespace.  The `webcl` object implements the WebCL interface, providing functions
+      for creating computing contexts and querying the available WebCL platforms and extensions.
     </p>
 
 <pre class="idl">
-Window implements WebCLEnvironment;
-
-WorkerUtils implements WebCLEnvironment;
+partial interface Window {
+  readonly attribute WebCL webcl;
+};
 </pre>
-
-<pre class="idl">
-[NoInterfaceObject]
-interface <dfn>WebCLEnvironment</dfn> {
-    readonly attribute WebCL webcl;
-};</pre>
-
-    <dl class="methods">
-
-      <dt class="idl-code">webcl</dt>
-      <dd>
-        This attribute provides applications a mechanism for accessing WebCL compute capabilities.<p>
-        <i>No exceptions.</i>
-      </dd>
-    </dl>
-
-    <p>
-      `WebCL` is a singleton object in the global namespace that can
-      not be used as a constructor or invoked as a function.  It
-      provides functions for creating computing contexts and for
-      querying the available CL platforms and extensions. It also
-      defines all enumerated types used in the API.
-    </p>
-
 
 <pre class="idl">
 interface <dfn>WebCL</dfn> {
