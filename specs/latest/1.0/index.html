@@ -2702,8 +2702,9 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
 
     <p> 
       The WebCL Validator open source project was initiated by the WebCL working group for
-      enforcing protections against out of bounds (OOB) memory accesses through instrumentation, 
-      analysis and validation of WebCL kernels.
+      prevention of out of bounds (OOB) memory accesses through instrumentation, 
+      analysis and validation of WebCL kernels
+      <span class="cl-spec">(<a href="https://github.com/KhronosGroup/webcl-validator"> Khronos WebCL Validator Project </a>)</span>.
     </p>        
 
     <h3>Memory Initialization</h3>
@@ -2714,14 +2715,14 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
       WebCL implementation must initialize all buffers and variables to zero before giving
       the application read access to them.  This requirement applies regardless of address 
       space (private, local, global, or constant), and regardless of whether the allocation
-      is made in kernel code or host code.a
+      is made in kernel code or host code.
     </p>
 
     <p>
-      The OpenCL 1.2 cl_khr_initialize_memory memory initialization extension can be used to 
+      The OpenCL 1.2 memory initialization extension cl_khr_initialize_memory can be used to 
       prevent memory leakage by enforcing initilialization of local and private memory before 
       a kernel begins execution 
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.2-extensions.pdf#page=130">OpenCL 1.2 Extensions Specification §9.15</a>)</span>
+      <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.2-extensions.pdf">OpenCL 1.2 Extensions Specification </a>)</span>.
     </p>
 
     <h3>Denial of Service (DoS)</h3>
@@ -2741,7 +2742,12 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
       <li>Terminate the contexts associated with the offending commands, before they render the
         OpenCL device unresponsive, and result in potential device reset.</li>
     </ol>
-    
+   
+    <p>
+        The OpenCL extension cl_khr_terminate_context can be used for fast release of a context, if
+        for example, one or more of the kernels associated with the context has been running too long,
+        or if the program terminates due to an exception
+      <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.2-extensions.pdf">OpenCL 1.2 Extensions Specification </a>)</span>.
     </p>
 <!-- ======================================================================================================= -->
 
