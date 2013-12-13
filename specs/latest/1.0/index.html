@@ -2675,17 +2675,16 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
     <h3>Memory Initialization</h3>
 
     <p>
-      To prevent information leakage via uninitialized memory, and to ensure that the WebCL
-      application code cannot inspect data left over from a previous application, the 
-      WebCL implementation must initialize all buffers and variables to zero before giving
-      the application read access to them.  This requirement applies regardless of address 
-      space (private, local, global, or constant), and regardless of whether the allocation
-      is made in kernel code or host code.
+      To ensure that applications cannot inspect data left behind by previous applications, the
+      WebCL implementation must initialize all buffers and variables to zero before giving the
+      application read access to them.  This requirement applies regardless of address space
+      (private, local, global, or constant), and regardless of whether the allocation is made in
+      kernel code or host code.
     </p>
 
     <p>
-      Where available, the OpenCL 1.2 extension `cl_khr_initialize_memory` allows the WebCL
-      implementation to automatically and efficiently initialize local and private memory before a
+      Where available, the OpenCL 1.2 extension `cl_khr_initialize_memory` allows WebCL
+      implementations to automatically and efficiently initialize local and private memory before a
       kernel begins execution
       <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.2-extensions.pdf">OpenCL
       1.2 Extensions Specification</a>)</span>.
