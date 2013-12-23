@@ -613,7 +613,7 @@ interface <dfn>WebCL</dfn> {
 
       <dt class="idl-code">sequence&lt;WebCLPlatform&gt; getPlatforms()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=32">OpenCL 1.1 §4.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetPlatformIDs.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetPlatformIDs.html">clGetPlatformIDs</a>)</span>
       </dt>
       <dd>
         Retrieves all WebCL platforms that are available in this system.
@@ -621,7 +621,8 @@ interface <dfn>WebCL</dfn> {
 
       <dt class="idl-code">WebCLContext? createContext(optional WebCLContextProperties? properties)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=45">OpenCL 1.1 §4.3</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">clCreateContext</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContextFromType.html">clCreateContextFromType</a>)</span>
       </dt>
       <dd>
         Returns a newly created WebCL context with the given properties, or `null` if a suitable
@@ -659,7 +660,7 @@ interface <dfn>WebCL</dfn> {
 
       <dt class="idl-code">void waitForEvents(sequence&lt;WebCLEvent&gt; eventWaitList, optional WebCLCallback whenFinished)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=141">OpenCL 1.1 §5.9</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clWaitForEvents.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clWaitForEvents.html">clWaitForEvents</a>)</span>
       </dt>
       <dd>
         Invokes the given callback when all events in `eventWaitList` have completed.  If a callback
@@ -681,7 +682,7 @@ interface <dfn>WebCL</dfn> {
 
       <dt class="idl-code">void releaseAll()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=48">OpenCL 1.1 §4.3</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">clReleaseContext</a>)</span>
       </dt>
       <dd>
         Releases the resources held up by all WebCLContext instances,
@@ -787,7 +788,7 @@ interface <dfn>WebCLPlatform</dfn> {
 
       <dt class="idl-code">sequence&lt;WebCLDevice&gt; getDevices(optional CLenum deviceType)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=34">OpenCL 1.1 §4.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceIDs.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceIDs.html">clGetDeviceIDs</a>)</span>
       </dt>
       <dd>
         <p>
@@ -815,7 +816,7 @@ interface <dfn>WebCLPlatform</dfn> {
 
       <dt class="idl-code">any getInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=32">OpenCL 1.1 §4.1</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetPlatformInfo.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetPlatformInfo.html">clGetPlatformInfo</a>)</span>
       </dt>
       <dd>
         <p>
@@ -843,7 +844,8 @@ interface <dfn>WebCLPlatform</dfn> {
       </dd>
 
       <dt class="idl-code">sequence&lt;DOMString&gt;? getSupportedExtensions()
-        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=269">OpenCL 1.1 §9</a>)</span>
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=269">OpenCL 1.1 §9</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetPlatformInfo.html">clGetPlatformInfo</a>)</span>
       </dt>
       <dd>
         Returns an array of extension names that are supported by all
@@ -881,7 +883,7 @@ interface <dfn>WebCLDevice</dfn> {
 
       <dt class="idl-code">any getInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=36">OpenCL 1.1 §4.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceInfo.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceInfo.html">clGetDeviceInfo</a>)</span>
       </dt>
       <dd>
       <dd>
@@ -963,7 +965,7 @@ interface <dfn>WebCLDevice</dfn> {
 
       <dt class="idl-code">sequence&lt;DOMString&gt;? getSupportedExtensions()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=269">OpenCL 1.1 §9</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceInfo.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceInfo.html">clGetDeviceInfo</a>)</span>
       </dt>
       <dd>
         Returns an array of extension names that are supported by this
@@ -1020,7 +1022,7 @@ interface <dfn>WebCLContext</dfn> {
     <dl class="methods">
       <dt class="idl-code">WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBufferView hostPtr)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=56">OpenCL 1.1 §5.2.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateBuffer.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateBuffer.html">clCreateBuffer</a>)</span>
       </dt>
       <dd>
         Creates a new WebCLBuffer with a capacity of `sizeInBytes`,
@@ -1035,7 +1037,7 @@ interface <dfn>WebCLContext</dfn> {
       </dd>
       <dt class="idl-code">WebCLCommandQueue createCommandQueue(optional WebCLDevice? device = null, optional CLenum properties = 0)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=51">OpenCL 1.1 §5.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateCommandQueue.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateCommandQueue.html">clCreateCommandQueue</a>)</span>
       </dt>
       <dd>
         Creates a new command queue for the given device.  If `device`
@@ -1054,7 +1056,7 @@ interface <dfn>WebCLContext</dfn> {
       </dd>
       <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBufferView hostPtr)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=76">OpenCL 1.1 §5.3.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateImage2D.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateImage2D.html">clCreateImage2D</a>)</span>
       </dt>
       <dd>
         Creates a new WebCLImage with the width and height specified
@@ -1073,7 +1075,7 @@ interface <dfn>WebCLContext</dfn> {
       </dd>
       <dt class="idl-code">WebCLProgram createProgram(DOMString source)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=110">OpenCL 1.1 §5.6.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateProgramWithSource.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateProgramWithSource.html">clCreateProgramWithSource</a>)</span>
       </dt>
       <dd>
         Creates a WebCLProgram from a UTF-8 string.
@@ -1086,7 +1088,7 @@ interface <dfn>WebCLContext</dfn> {
 
       <dt class="idl-code">WebCLSampler createSampler(CLboolean normalizedCoords, CLenum addressingMode, CLenum filterMode)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=106">OpenCL 1.1 §5.5.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateSampler.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateSampler.html">clCreateSampler</a>)</span>
       </dt>
       <dd>
         Creates a new WebCLSampler with the given coordinate mode,
@@ -1108,14 +1110,14 @@ interface <dfn>WebCLContext</dfn> {
 
       <dt class="idl-code">WebCLUserEvent createUserEvent()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=142">OpenCL 1.1 §5.9</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateUserEvent.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateUserEvent.html">clCreateUserEvent</a>)</span>
       </dt>
       <dd>
       </dd>
 
       <dt class="idl-code">any getInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=49">OpenCL 1.1 §4.3</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetContextInfo.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetContextInfo.html">clGetContextInfo</a>)</span>
       </dt>
       <dd>
         <p>
@@ -1157,7 +1159,7 @@ ASSERT(props.platform === undefined || props.platform === null || props.platform
 
       <dt class="idl-code">sequence&lt;WebCLImageDescriptor&gt;? getSupportedImageFormats(CLenum memFlags)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=82">OpenCL 1.1 §5.3.2</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetSupportedImageFormats.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetSupportedImageFormats.html">clGetSupportedImageFormats</a>)</span>
       </dt>
       <dd>
         <p>
@@ -1200,7 +1202,7 @@ ASSERT(props.platform === undefined || props.platform === null || props.platform
 
       <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=48">OpenCL 1.1 §4.3</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">clReleaseContext</a>)</span>
       </dt>
       <dd>
         Releases the resources held up by this object.
@@ -1208,7 +1210,7 @@ ASSERT(props.platform === undefined || props.platform === null || props.platform
 
       <dt class="idl-code">void releaseAll()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=48">OpenCL 1.1 §4.3</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">clReleaseContext</a>)</span>
       </dt>
       <dd>
         Releases the resources held up by this WebCLContext and all
@@ -1417,7 +1419,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBuffer.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBuffer.html">clEnqueueCopyBuffer</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -1464,7 +1466,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
         optional WebCLEvent?    event);
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferRect.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferRect.html">clEnqueueCopyBufferRect</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -1498,7 +1500,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImage.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImage.html">clEnqueueCopyImage</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -1541,7 +1543,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferToImage.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferToImage.html">clEnqueueCopyBufferToImage</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -1580,7 +1582,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImageToBuffer.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImageToBuffer.html">clEnqueueCopyImageToBuffer</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -1619,7 +1621,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBuffer.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBuffer.html">clEnqueueReadBuffer</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -1660,7 +1662,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBufferRect.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBufferRect.html">clEnqueueReadBufferRect</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -1695,7 +1697,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadImage.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadImage.html">clEnqueueReadImage</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -1723,7 +1725,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBuffer.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBuffer.html">clEnqueueWriteBuffer</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -1764,7 +1766,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBufferRect.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBufferRect.html">clEnqueueWriteBufferRect</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -1799,7 +1801,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
         optional WebCLEvent?    event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteImage.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteImage.html">clEnqueueWriteImage</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -1828,7 +1830,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         optional sequence&lt;WebCLEvent&gt;? eventWaitList = null,
         optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueNDRangeKernel.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueNDRangeKernel.html">clEnqueueNDRangeKernel</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -1870,7 +1872,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
 
       <dt class="idl-code">void enqueueMarker(WebCLEvent event)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueMarker.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueMarker.html">clEnqueueMarker</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -1881,14 +1883,14 @@ interface <dfn>WebCLCommandQueue</dfn> {
 
       <dt class="idl-code">void enqueueBarrier()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueBarrier.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueBarrier.html">clEnqueueBarrier</a>)</span>
       </dt>
       <dd>
       </dd>
 
       <dt class="idl-code">void enqueueWaitForEvents (sequence&lt;WebCLEvent&gt; eventWaitList);
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWaitForEvents.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWaitForEvents.html">clEnqueueWaitForEvents</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -1900,7 +1902,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
 
       <dt class="idl-code">void finish(optional WebCLCallback whenFinished)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFinish.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFinish.html">clFinish</a>)</span>
       </dt>
       <dd>
         Invokes the given callback when all commands in this queue have completed.  If a callback is
@@ -1911,14 +1913,14 @@ interface <dfn>WebCLCommandQueue</dfn> {
 
       <dt class="idl-code">void flush()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFlush.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFlush.html">clFlush</a>)</span>
       </dt>
       <dd>
       </dd>
 
       <dt class="idl-code">any getInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.1">OpenCL 1.1 §5.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetCommandQueueInfo.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetCommandQueueInfo.html">clGetCommandQueueInfo</a>)</span>
       </dt>
       <dd>
         <table class="enumtable">
@@ -1935,7 +1937,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
 
       <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=53">OpenCL 1.1 §5.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseCommandQueue.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseCommandQueue.html">clReleaseCommandQueue</a>)</span>
       </dt>
       <dd>
         Releases the resources held up by this object.
@@ -2014,7 +2016,7 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
     <dl class="methods">
       <dt class="idl-code">any getInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=103">OpenCL 1.1 §5.4.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetMemObjectInfo.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetMemObjectInfo.html">clGetMemObjectInfo</a>)</span>
       </dt>
       <dd>
         <table class="enumtable">
@@ -2037,7 +2039,7 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
 
       <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=99">OpenCL 1.1 §5.4.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseMemObject.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseMemObject.html">clReleaseMemObject</a>)</span>
       </dt>
       <dd>
         Releases the resources held up by this object.
@@ -2060,7 +2062,7 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
     <dl class="methods">
       <dt class="idl-code">WebCLBuffer createSubBuffer(CLenum memFlags, CLuint origin, CLuint sizeInBytes)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.1">OpenCL 1.1 §5.2.1</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateSubBuffer.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateSubBuffer.html">clCreateSubBuffer</a>)</span>
       </dt>
       <dd>
         Creates a new WebCLBuffer that represents a sub-region of this
@@ -2096,7 +2098,7 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
    <dl class="methods">
      <dt class="idl-code">WebCLImageDescriptor getInfo()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=97">OpenCL 1.1 §5.3.6</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetImageInfo.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetImageInfo.html">clGetImageInfo</a>)</span>
       </dt>
      <dd>
        Returns a new WebCLImageDescriptor containing information about
@@ -2122,7 +2124,7 @@ interface <dfn>WebCLSampler</dfn> {
     <dl class="methods">
       <dt class="idl-code">any getInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=108">OpenCL 1.1 §5.5.2</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetSamplerInfo.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetSamplerInfo.html">clGetSamplerInfo</a>)</span>
       </dt>
       <dd>
         <table class="enumtable">
@@ -2140,7 +2142,7 @@ interface <dfn>WebCLSampler</dfn> {
 
       <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=107">OpenCL 1.1 §5.5.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseSampler.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseSampler.html">clReleaseSampler</a>)</span>
       </dt>
       <dd>
         Releases the resources held up by this object.
@@ -2173,7 +2175,7 @@ interface <dfn>WebCLProgram</dfn> {
     <dl class="methods">
       <dt class="idl-code">any getInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=119">OpenCL 1.1 §5.6.5</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetProgramInfo.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetProgramInfo.html">clGetProgramInfo</a>)</span>
       </dt>
       <dd>
         <table class="enumtable">
@@ -2191,7 +2193,7 @@ interface <dfn>WebCLProgram</dfn> {
 
       <dt class="idl-code">any getBuildInfo(WebCLDevice device, CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=122">OpenCL 1.1 §5.6.5</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetProgramBuildInfo.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetProgramBuildInfo.html">clGetProgramBuildInfo</a>)</span>
       </dt>
       <dd>
         <table class="enumtable">
@@ -2211,7 +2213,7 @@ interface <dfn>WebCLProgram</dfn> {
                                       optional DOMString? options,
                                       optional WebCLCallback whenFinished)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=114">OpenCL 1.1 §5.6.2</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clBuildProgram.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clBuildProgram.html">clBuildProgram</a>)</span>
       </dt>
 
       <dd>
@@ -2263,7 +2265,7 @@ interface <dfn>WebCLProgram</dfn> {
 
       <dt class="idl-code">WebCLKernel createKernel(DOMString name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=124">OpenCL 1.1 §5.7.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateKernel.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateKernel.html">clCreateKernel</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -2280,7 +2282,7 @@ interface <dfn>WebCLProgram</dfn> {
 
       <dt class="idl-code">sequence&lt;WebCLKernel&gt; createKernelsInProgram()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=125">OpenCL 1.1 §5.7.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateKernelsInProgram.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateKernelsInProgram.html">clCreateKernelsInProgram</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
@@ -2291,7 +2293,7 @@ interface <dfn>WebCLProgram</dfn> {
 
       <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=113">OpenCL 1.1 §5.6.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseProgram.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseProgram.html">clReleaseProgram</a>)</span>
       </dt>
       <dd>
       <dd>
@@ -2324,7 +2326,7 @@ interface <dfn>WebCLKernel</dfn> {
     <dl class="methods">
       <dt class="idl-code">any getInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=129">OpenCL 1.1 §5.7.3</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetKernelInfo.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetKernelInfo.html">clGetKernelInfo</a>)</span>
       </dt>
       <dd>
         <table class="enumtable">
@@ -2343,7 +2345,7 @@ interface <dfn>WebCLKernel</dfn> {
 
       <dt class="idl-code">any getWorkGroupInfo(WebCLDevice device, CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=130">OpenCL 1.1 §5.7.3</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetKernelWorkGroupInfo.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetKernelWorkGroupInfo.html">clGetKernelWorkGroupInfo</a>)</span>
       </dt>
       <dd>
         <p>
@@ -2370,7 +2372,7 @@ interface <dfn>WebCLKernel</dfn> {
 
       <dt class="idl-code">WebCLKernelArgInfo? getArgInfo(CLuint index)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.2.pdf#page=167">OpenCL 1.2 §5.7.3</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/clGetKernelArgInfo.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/clGetKernelArgInfo.html">clGetKernelArgInfo</a>)</span>
       </dt>
       <dd>
         Returns `null` if `index` is not a valid argument index for
@@ -2381,7 +2383,7 @@ interface <dfn>WebCLKernel</dfn> {
 
       <dt class="idl-code">void setArg(CLuint index, WebCLMemoryObject memObject)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.7.2">OpenCL 1.1 §5.7.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">clSetKernelArg</a>)</span>
       </dt>
       <dd>
         <p>
@@ -2400,7 +2402,7 @@ interface <dfn>WebCLKernel</dfn> {
 
       <dt class="idl-code">void setArg(CLuint index, WebCLSampler sampler)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.7.2">OpenCL 1.1 §5.7.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">clSetKernelArg</a>)</span>
       </dt>
       <dd>
         <p>
@@ -2419,7 +2421,7 @@ interface <dfn>WebCLKernel</dfn> {
 
       <dt class="idl-code">void setArg(CLuint index, ArrayBufferView value)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.7.2">OpenCL 1.1 §5.7.2</a>,
-        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">man page</a>)</span>
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">clSetKernelArg</a>)</span>
       </dt>
       <dd>
         <p>
@@ -2459,7 +2461,7 @@ interface <dfn>WebCLKernel</dfn> {
 
       <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=126">OpenCL 1.1 §5.7.1</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseKernel.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseKernel.html">clReleaseKernel</a>)</span>
       </dt>
       <dd>
         Releases the resources held up by this object.
@@ -2528,7 +2530,7 @@ interface <dfn>WebCLEvent</dfn> {
 
       <dt class="idl-code">any getInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventInfo.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventInfo.html">clGetEventInfo</a>)</span>
       </dt>
       <dd>
         <table class="enumtable">
@@ -2546,7 +2548,7 @@ interface <dfn>WebCLEvent</dfn> {
 
       <dt class="idl-code">any getProfilingInfo(CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.12">OpenCL 1.1 §5.12</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventProfilingInfo.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventProfilingInfo.html">clGetEventProfilingInfo</a>)</span>
       </dt>
       <dd>
         <table class="enumtable">
@@ -2567,7 +2569,7 @@ interface <dfn>WebCLEvent</dfn> {
 
       <dt class="idl-code">void setCallback(CLenum commandExecCallbackType, WebCLCallback notify)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetEventCallback.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetEventCallback.html">clSetEventCallback</a>)</span>
       </dt>
       <dd>
         Sets a WebCLCallback function `notify` to be called when this
@@ -2583,7 +2585,7 @@ interface <dfn>WebCLEvent</dfn> {
 
       <dt class="idl-code">void release()
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=149">OpenCL 1.1 §5.9</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseEvent.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseEvent.html">clReleaseEvent</a>)</span>
       </dt>
       <dd>
         Releases the resources held up by this object.
@@ -2607,7 +2609,7 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
     <dl class="methods">
       <dt class="idl-code">void setStatus(CLint executionStatus)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
-          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetUserEventStatus.html">man page</a>)</span>
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetUserEventStatus.html">clSetUserEventStatus</a>)</span>
       </dt>
       <dd>
         <h5 class="exceptions">Exceptions:</h5>
