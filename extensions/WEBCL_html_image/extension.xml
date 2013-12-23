@@ -395,6 +395,7 @@
       <param name="srcOrigin" type="sequence&lt;CLuint&gt;"/>
       <param name="region" type="sequence&lt;CLuint&gt;"/>
       <param name="bufferRowPitch" type="CLuint"/>
+      <param name="bufferSlicePitch" type="CLuint"/>
       <param name="srcPixels" type="ImageData"/>
       <param name="eventWaitList" type="Optional sequence&lt;WebCLEvent&gt;?"/>
       <param name="event" type="Optional WebCLEvent?"/>
@@ -427,6 +428,7 @@
       <param name="srcOrigin" type="sequence&lt;CLuint&gt;"/>
       <param name="region" type="sequence&lt;CLuint&gt;"/>
       <param name="bufferRowPitch" type="CLuint"/>
+      <param name="bufferSlicePitch" type="CLuint"/>
       <param name="srcCanvas" type="HTMLCanvasElement"/>
       <param name="eventWaitList" type="Optional sequence&lt;WebCLEvent&gt;?"/>
       <param name="event" type="Optional WebCLEvent?"/>
@@ -459,6 +461,7 @@
       <param name="srcOrigin" type="sequence&lt;CLuint&gt;"/>
       <param name="region" type="sequence&lt;CLuint&gt;"/>
       <param name="bufferRowPitch" type="CLuint"/>
+      <param name="bufferSlicePitch" type="CLuint"/>
       <param name="srcImage" type="HTMLImageElement"/>
       <param name="eventWaitList" type="Optional sequence&lt;WebCLEvent&gt;?"/>
       <param name="event" type="Optional WebCLEvent?"/>
