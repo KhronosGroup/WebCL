@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">December 13, 2013</h2>
+    <h2 class="no-toc">December 23, 2013</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -261,7 +261,7 @@ interface <dfn>WebCL</dfn> {
 
   sequence&lt;WebCLPlatform&gt; getPlatforms();
 
-  WebCLContext? createContext(optional WebCLContextProperties properties);
+  WebCLContext? createContext(optional WebCLContextProperties? properties);
 
   sequence&lt;DOMString&gt;? getSupportedExtensions();
 
@@ -619,22 +619,21 @@ interface <dfn>WebCL</dfn> {
         Retrieves all WebCL platforms that are available in this system.
       </dd>
 
-      <dt class="idl-code">WebCLContext? createContext(optional WebCLContextProperties properties)
+      <dt class="idl-code">WebCLContext? createContext(optional WebCLContextProperties? properties)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=45">OpenCL 1.1 §4.3</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
       </dt>
       <dd>
-        Returns a newly created WebCL context with the given
-        properties, or `null` if a suitable context could not be
-        created.  The `properties` parameter can be omitted, in which
-        case the implementation will decide which platform and device
-        to use.
+        Returns a newly created WebCL context with the given properties, or `null` if a suitable
+        context could not be created.  The `properties` parameter can be omitted or `null`, in which
+        case the implementation will decide which platform and device to use.
 
         <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
 	        <li>`INVALID_DEVICE` -- if `properties.devices` is non-`null`, but is not an array of valid device objects</li>
 	        <li>`INVALID_DEVICE` -- if any devices in `properties.devices` are on different platforms</li>
 	        <li>`INVALID_PLATFORM` -- if `properties.platform` is non-`null`, but is not a valid platform object</li>
+	        <li>`INVALID_DEVICE_TYPE` -- if `properties.deviceType` is non-`null`, but is not a valid `DEVICE_TYPE`</li>
 	        <li>`DEVICE_NOT_AVAILABLE` -- if a device in `properties.devices` is currently not available</li>
         </ul>
       </dd>
@@ -705,44 +704,68 @@ dictionary <dfn>WebCLContextProperties</dfn> {
 
     <dl class="methods">
 
-      <dt class="idl-code">sequence&lt;WebCLDevice&gt; devices</dt>
+      <dt class="idl-code">sequence&lt;WebCLDevice&gt;? devices</dt>
       <dd>
-        An array of devices to create the context for.  If the array
-        is not `null`, it must not be empty, and must not contain
-        elements of any other type than WebCLDevice.  The given
-        devices must be on the same platform.  If the array is `null`,
-        the implementation will decide which device (on the given
-        `platform` and/or with the given `deviceType`) to use.
+        An array of devices to create the context for.  If this array is not `null`, `platform` and
+        `deviceType` are ignored.  The array must not be empty, and must not contain elements of any
+        other type than WebCLDevice.  The given devices must be on the same platform.  If the array
+        is `null`, the implementation will decide which device (on the given `platform` and/or with
+        the given `deviceType`) to use.
       </dd>
 
-      <dt class="idl-code">WebCLPlatform platform</dt>
+      <dt class="idl-code">WebCLPlatform? platform</dt>
       <dd>
-        The platform to create a context for.  This field is ignored
-        if `devices` is non-`null`.  If this field is `null`, the
-        implementation will decide which platform to use.  Note that
-        in typical systems, there is only one WebCLPlatform.
+        The platform to create a context for.  If `devices` is not `null`, this field is ignored and
+        its value may or may not be preserved when subsequently queried using
+        `getInfo(CONTEXT_PROPERTIES)`.  If this field is `null`, the implementation will decide
+        which platform to use.
       </dd>
 
       <dt class="idl-code">CLenum deviceType</dt>
       <dd>
-        The type of device to create a context for.  The available
-        device types are listed in the table below.  This field is
-        ignored if `devices` is non-`null`.  If there is no device of
-        the given type on the given `platform`, `createContext` will
-        return `null`.  If `platform` is `null`, `createContext` will
-        select any device on any platform that matches the given type,
-        or failing that, will return `null`.
+        The type of device to create a context for.  The available device types are listed in the
+        table below.  If `devices` is not `null`, this field is ignored and its value may or may not
+        be preserved when subsequently queried using `getInfo(CONTEXT_PROPERTIES)`.  If there is no
+        device of the given type on the given `platform`, `createContext` will return `null`.  If
+        `platform` is `null`, `createContext` will select any device on any platform that matches
+        the given type, or failing that, will return `null`.
         <table class="enumtable">
           <tr><th>deviceType</th><th>Description</th></tr>
           <tr><td>DEVICE_TYPE_CPU</td><td>A single-core or multi-core CPU, typically the host processor.</td></tr>
           <tr><td>DEVICE_TYPE_GPU</td><td>A graphics processing unit, typically also used by WebGL.</td></tr>
           <tr><td>DEVICE_TYPE_ACCELERATOR</td><td>A dedicated OpenCL accelerator.</td></tr>
-          <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device on this platform.</td></tr>
-          <tr><td>DEVICE_TYPE_ALL</td><td>All devices available on this platform.</td></tr>
+          <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device on the given platform.</td></tr>
+          <tr><td>DEVICE_TYPE_ALL</td><td>All devices available on the given platform.</td></tr>
         </table>
       </dd>
 
     </dl>
+
+<pre class="example">
+// Valid examples of createContext. All of these will create a valid
+// context or return null if no suitable device exists, but will not
+// throw any exceptions.
+
+ctx = WebCL.createContext();
+ctx = WebCL.createContext(null);
+ctx = WebCL.createContext({});
+ctx = WebCL.createContext({ devices: null });
+ctx = WebCL.createContext({ platform: null });
+ctx = WebCL.createContext({ platform: null, deviceType: WebCL.DEVICE_TYPE_CPU });
+ctx = WebCL.createContext({ platform: aPlatform, deviceType: WebCL.DEVICE_TYPE_CPU });
+ctx = WebCL.createContext({ devices: [aDevice], platform: "foo", deviceType: "bar" });
+
+// Invalid examples of createContext. These will throw an exception.
+
+ctx = WebCL.createContext("foobar");
+ctx = WebCL.createContext({ devices: [] });
+ctx = WebCL.createContext({ devices: [null] });
+ctx = WebCL.createContext({ devices: [aValidDevice, null] });
+ctx = WebCL.createContext({ devices: "foobar" });
+ctx = WebCL.createContext({ platform: "foobar" });
+ctx = WebCL.createContext({ deviceType: "foobar" });
+ctx = WebCL.createContext({ devices: [aDeviceOnPlatformA, aDeviceOnPlatformB] });
+</pre>
     
 <!-- ======================================================================================================= -->
 
@@ -1101,10 +1124,12 @@ interface <dfn>WebCLContext</dfn> {
         </p>
 
         <table class="enumtable">
-          <tr><th>name</th><th>return type</th></tr>
-          <tr><td>CONTEXT_NUM_DEVICES</td><td>CLuint</td></tr>
-          <tr><td>CONTEXT_DEVICES</td><td>sequence&lt;WebCLDevice&gt;</td></tr>
-          <tr><td>CONTEXT_PROPERTIES</td><td>WebCLContextProperties</td></tr>
+          <tr><th>name</th><th>return type</th><th>description</th></tr>
+          <tr><td>CONTEXT_NUM_DEVICES</td><td>CLuint</td><td>the number of devices in this context</td></tr>
+          <tr><td>CONTEXT_DEVICES</td><td>sequence&lt;WebCLDevice&gt;</td><td>the devices in this context</td></tr>
+          <tr><td>CONTEXT_PROPERTIES</td><td>WebCLContextProperties?</td><td>the properties passed
+              in to `createContext`, or `null` if none were passed.  The object returned may or may
+              not be the same that was passed in, but must be functionally equivalent.</td></tr>
         </table>
 
         <h5 class="exceptions">Exceptions:</h5>
@@ -1112,6 +1137,23 @@ interface <dfn>WebCLContext</dfn> {
           <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
         </ul>
       </dd>
+
+<pre class="example">
+// getInfo(CONTEXT_PROPERTIES) returns the 'properties' object passed in
+// to createContext, or equivalent.  If no object is passed in, either null
+// or a default object may be returned.
+
+props = WebCL.createContext().getInfo(WebCL.CONTEXT_PROPERTIES);
+ASSERT(props === null || props.devices === undefined || props.devices === null);
+ASSERT(props === null || props.platform === undefined || props.platform === null);
+ASSERT(props === null || props.deviceType === undefined || props.deviceType === WebCL.DEVICE_TYPE_DEFAULT);
+
+// Values that are ignored by createContext may or may not be stored.
+
+ctx = WebCL.createContext({ devices: [aDevice], platform: "foobar" });
+props = ctx.getInfo(WebCL.CONTEXT_PROPERTIES);
+ASSERT(props.platform === undefined || props.platform === null || props.platform === "foobar");
+</pre>
 
       <dt class="idl-code">sequence&lt;WebCLImageDescriptor&gt;? getSupportedImageFormats(CLenum memFlags)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=82">OpenCL 1.1 §5.3.2</a>,
