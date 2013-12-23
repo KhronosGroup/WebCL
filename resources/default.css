@@ -154,7 +154,7 @@ pre.illegal-html, pre.xml, pre.illegal-xml {
     padding-top: 1.5em;
 }
 div.example { color: #600 }
-pre.example { color: #600 }
+pre.example { color: #600; font-size: small; }
 pre.illegal-example { color: red }
 div.illegal-example { color: red }
 div.illegal-example p { color: black }
@@ -631,8 +631,6 @@ p {
 */
 dt, dd { margin-top: 0; margin-bottom: 0 } /* opera 3.50 */
 dt { font-weight: bold }
-
-pre, code { font-size: 1.2em; font-family: monospace; } /* navigator 4 requires this */
 
 pre.idl { font-size: small; border: solid thin; background: #EEEEEE; color: black; padding: 0.5em 1em; min-width: 61em;}
 pre.idl :link, pre.idl :visited { color: inherit; color: green; text-decoration: none; background: transparent;  }
