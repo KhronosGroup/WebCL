@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">December 23, 2013</h2>
+    <h2 class="no-toc">January 13, 2014</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -170,9 +170,9 @@ exception <dfn>WebCLException</dfn> : DOMException {
     </p>
 
 <pre class="example">
-  var ctx1 = WebCL.createContext(...);
-  var ctx2 = WebCL.createContext(...);
-  var ctx3 = WebCL.createContext(...);
+  var ctx1 = webcl.createContext(...);
+  var ctx2 = webcl.createContext(...);
+  var ctx3 = webcl.createContext(...);
   var A = ctx1.createBuffer(...);
   var B = ctx2.createBuffer(...);
   ctx1.release();                    // releases ctx1, but not buffer A
@@ -180,7 +180,7 @@ exception <dfn>WebCLException</dfn> : DOMException {
   A.release();                       // releases buffer A 
   B.release();                       // does nothing: B is already released
   var C = ctx1.createBuffer(...);    // EXCEPTION: ctx1 is no longer valid
-  WebCL.releaseAll();                // releases ctx3
+  webcl.releaseAll();                // releases ctx3
 </pre>
 
     <p>
@@ -747,25 +747,25 @@ dictionary <dfn>WebCLContextProperties</dfn> {
 // context or return null if no suitable device exists, but will not
 // throw any exceptions.
 
-ctx = WebCL.createContext();
-ctx = WebCL.createContext(null);
-ctx = WebCL.createContext({});
-ctx = WebCL.createContext({ devices: null });
-ctx = WebCL.createContext({ platform: null });
-ctx = WebCL.createContext({ platform: null, deviceType: WebCL.DEVICE_TYPE_CPU });
-ctx = WebCL.createContext({ platform: aPlatform, deviceType: WebCL.DEVICE_TYPE_CPU });
-ctx = WebCL.createContext({ devices: [aDevice], platform: "foo", deviceType: "bar" });
+ctx = webcl.createContext();
+ctx = webcl.createContext(null);
+ctx = webcl.createContext({});
+ctx = webcl.createContext({ devices: null });
+ctx = webcl.createContext({ platform: null });
+ctx = webcl.createContext({ platform: null, deviceType: WebCL.DEVICE_TYPE_CPU });
+ctx = webcl.createContext({ platform: aPlatform, deviceType: WebCL.DEVICE_TYPE_CPU });
+ctx = webcl.createContext({ devices: [aDevice], platform: "foo", deviceType: "bar" });
 
 // Invalid examples of createContext. These will throw an exception.
 
-ctx = WebCL.createContext("foobar");
-ctx = WebCL.createContext({ devices: [] });
-ctx = WebCL.createContext({ devices: [null] });
-ctx = WebCL.createContext({ devices: [aValidDevice, null] });
-ctx = WebCL.createContext({ devices: "foobar" });
-ctx = WebCL.createContext({ platform: "foobar" });
-ctx = WebCL.createContext({ deviceType: "foobar" });
-ctx = WebCL.createContext({ devices: [aDeviceOnPlatformA, aDeviceOnPlatformB] });
+ctx = webcl.createContext("foobar");
+ctx = webcl.createContext({ devices: [] });
+ctx = webcl.createContext({ devices: [null] });
+ctx = webcl.createContext({ devices: [aValidDevice, null] });
+ctx = webcl.createContext({ devices: "foobar" });
+ctx = webcl.createContext({ platform: "foobar" });
+ctx = webcl.createContext({ deviceType: "foobar" });
+ctx = webcl.createContext({ devices: [aDeviceOnPlatformA, aDeviceOnPlatformB] });
 </pre>
     
 <!-- ======================================================================================================= -->
@@ -1145,14 +1145,14 @@ interface <dfn>WebCLContext</dfn> {
 // to createContext, or equivalent.  If no object is passed in, either null
 // or a default object may be returned.
 
-props = WebCL.createContext().getInfo(WebCL.CONTEXT_PROPERTIES);
+props = webcl.createContext().getInfo(WebCL.CONTEXT_PROPERTIES);
 ASSERT(props === null || props.devices === undefined || props.devices === null);
 ASSERT(props === null || props.platform === undefined || props.platform === null);
 ASSERT(props === null || props.deviceType === undefined || props.deviceType === WebCL.DEVICE_TYPE_DEFAULT);
 
 // Values that are ignored by createContext may or may not be stored.
 
-ctx = WebCL.createContext({ devices: [aDevice], platform: "foobar" });
+ctx = webcl.createContext({ devices: [aDevice], platform: "foobar" });
 props = ctx.getInfo(WebCL.CONTEXT_PROPERTIES);
 ASSERT(props.platform === undefined || props.platform === null || props.platform === "foobar");
 </pre>
@@ -2640,8 +2640,8 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
       another, and one WebCLPlatform to another, even within the same
       system.  For example, the WebGL Resource Sharing extension may
       be supported by the GPU but not the CPU.  The names of
-      extensions that are supported system-wide can be queried via
-      `WebCL.getSupportedExtensions()`.  Similarly, calling
+      extensions that are supported system-wide can be queried with
+      `webcl.getSupportedExtensions()`.  Similarly, calling
       `getSupportedExtensions` on a particular WebCLPlatform returns
       the set of extensions that are supported by all devices on that
       platform.  Finally, `getSupportedExtensions()` on an individual
@@ -2663,7 +2663,7 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
 //
 function getDevicesWithExtensionEnabled(extensionName) {
   var devices = [];
-  WebCL.getPlatforms().forEach(function(platform) {
+  webcl.getPlatforms().forEach(function(platform) {
     platform.getDevices().forEach(function(device) {
       var isSupported = device.enableExtension(extensionName);
       if (isSupported) devices.push(device);
