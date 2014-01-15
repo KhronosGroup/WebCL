@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">January 13, 2014</h2>
+    <h2 class="no-toc">January 15, 2014</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -1378,7 +1378,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
                     CLuint                                workDim,
                     sequence&lt;CLuint&gt;?                     globalWorkOffset, 
                     sequence&lt;CLuint&gt;                      globalWorkSize,
-                    sequence&lt;CLuint&gt;?                     localWorkSize,
+                    optional sequence&lt;CLuint&gt;?            localWorkSize,
                     optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
                     optional WebCLEvent?                  event);
 
@@ -1826,7 +1826,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         CLuint workDim,
         sequence&lt;CLuint&gt;? globalWorkOffset,
         sequence&lt;CLuint&gt; globalWorkSize,
-        sequence&lt;CLuint&gt;? localWorkSize,
+        optional sequence&lt;CLuint&gt;? localWorkSize = null,
         optional sequence&lt;WebCLEvent&gt;? eventWaitList = null,
         optional WebCLEvent? event = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
@@ -1846,22 +1846,19 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_WORK_DIMENSION` -- if `workDim` is not equal to 1, 2, or 3</li>
           <li>`INVALID_GLOBAL_WORK_SIZE` -- if <code>globalWorkSize.length != workDim</code></li>
           <li>`INVALID_GLOBAL_WORK_SIZE` -- if <code>globalWorkSize[i] &gt; 2<small><sup>32</sup></small>-1</code> for any `i`</li>
-          <li>`INVALID_GLOBAL_OFFSET` -- if <code>globalWorkOffset.length != workDim</code></li>
-          <li>`INVALID_GLOBAL_OFFSET` -- if <code>globalWorkSize[i] + globalWorkOffset[i] &gt; 2<small><sup>32</sup></small>-1</code> for any `i`</li>
-          <li>`INVALID_WORK_GROUP_SIZE` -- if <code>localWorkSize.length != workDim</code></li>
-          <li>`INVALID_WORK_GROUP_SIZE` -- if <code>globalWorkSize[i] % localWorkSize[i] !== 0</code> for any `i`</li>
-          <li>`INVALID_WORK_GROUP_SIZE` -- if <code>localWorkSize[i] !== requiredSize[i]</code> for any `i`, where
+          <li>`INVALID_GLOBAL_OFFSET` -- if <code>globalWorkOffset != null && (globalWorkOffset.length != workDim)</code></li>
+          <li>`INVALID_GLOBAL_OFFSET` -- if <code>globalWorkOffset != null && (globalWorkSize[i] +
+            globalWorkOffset[i] &gt; 2<small><sup>32</sup></small>-1)</code> for any `i`</li>
+          <li>`INVALID_WORK_GROUP_SIZE` -- if <code>localWorkSize != null && (localWorkSize.length != workDim)</code></li>
+          <li>`INVALID_WORK_GROUP_SIZE` -- if <code>localWorkSize != null && (globalWorkSize[i] % localWorkSize[i] !== 0)</code> for any `i`</li>
+          <li>`INVALID_WORK_GROUP_SIZE` -- if <code>localWorkSize != null && (localWorkSize[i] !== requiredSize[i])</code> for any `i`, where
             `requiredSize` is specified using the `reqd_work_group_size` qualifier in kernel source</li>
-          <li>`INVALID_WORK_GROUP_SIZE` -- if `localWorkSize` is
-            `null` and the `reqd_work_group_size` qualifier is given
-            in kernel source</li>
           <li>`INVALID_WORK_GROUP_SIZE` -- if the total number of
             work-items in a work-group (that is, the product of all
             elements in `localWorkSize`) is greater than the value of
             `DEVICE_MAX_WORK_GROUP_SIZE` queried from the device
             associated with this queue</li>
-
-          <li>`INVALID_WORK_ITEM_SIZE` -- if <code>localWorkSize[i] &gt; DEVICE_MAX_WORK_ITEM_SIZES[i]</code> for any `i`</li>
+          <li>`INVALID_WORK_ITEM_SIZE` -- if <code>localWorkSize != null && (localWorkSize[i] &gt; DEVICE_MAX_WORK_ITEM_SIZES[i])</code> for any `i`</li>
           <li>`INVALID_IMAGE_SIZE` -- if an image object is specified as an argument to `kernel`, and the image dimensions
             (width, height, pitch) are not supported by the device associated with this queue</li>
           <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure to allocate memory for data store associated with
