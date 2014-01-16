@@ -2489,11 +2489,49 @@ myKernel.setArg(3, myImage);                                  // pass `myImage` 
 <pre class="idl">
 dictionary <dfn>WebCLKernelArgInfo</dfn> {
   DOMString name;
-  DOMString typeName;         // 'char', 'float', 'uint4', 'image2d', 'sampler', etc.
+  DOMString typeName;         // 'char', 'float', 'uint4', 'image2d_t', 'sampler_t', etc.
   DOMString addressQualifier; // 'global', 'local', 'constant', or 'private'
   DOMString accessQualifier;  // 'read_only', 'write_only', or 'none'
 };
 </pre>
+
+    <dl class="methods">
+
+      <dt class="idl-code">DOMString name</dt>
+      <dd>
+        The name of the kernel argument; for example, <i>srcPixels</i> or <i>foobarCoefficient</i>.
+      </dd>
+
+      <dt class="idl-code">DOMString typeName
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-6.1">OpenCL 1.1 §6.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/dataTypes.html">Data types</a>)</span>
+      </dt>
+      <dd>
+        The data type of the kernel argument in normalized form; for example, <i>uint4</i> or
+        <i>image2d_t</i>.
+      </dd>
+
+      <dt class="idl-code">DOMString addressQualifier
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-6.5">OpenCL 1.1 §6.5</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/constant.html">Address space qualifiers</a>)</span>
+      </dt>
+      <dd>
+        The address space qualifier of the kernel argument in normalized form (that is, not prefixed
+        with underscores). The possible values are <i>global</i>, <i>local</i>, <i>constant</i>,
+        and <i>private</i>.
+      </dd>
+
+      <dt class="idl-code">DOMString accessQualifier
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-6.6">OpenCL 1.1 §6.6</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/accessQualifiers.html">Access qualifiers</a>)</span>
+      </dt>
+      <dd>
+        The access qualifier of the kernel argument in normalized form (that is, not prefixed with
+        underscores). If `typeName` is <i>image2d_t</i>, the possible values are <i>read_only</i>
+        and <i>write_only</i>. Otherwise, the value is <i>none</i>.
+      </dd>
+
+    </dl>
 
 <!-- ======================================================================================================= -->
 
