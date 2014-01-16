@@ -1853,11 +1853,12 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_WORK_GROUP_SIZE` -- if <code>localWorkSize != null && (globalWorkSize[i] % localWorkSize[i] !== 0)</code> for any `i`</li>
           <li>`INVALID_WORK_GROUP_SIZE` -- if <code>localWorkSize != null && (localWorkSize[i] !== requiredSize[i])</code> for any `i`, where
             `requiredSize` is specified using the `reqd_work_group_size` qualifier in kernel source</li>
-          <li>`INVALID_WORK_GROUP_SIZE` -- if the total number of
-            work-items in a work-group (that is, the product of all
-            elements in `localWorkSize`) is greater than the value of
-            `DEVICE_MAX_WORK_GROUP_SIZE` queried from the device
-            associated with this queue</li>
+          <li>`INVALID_WORK_GROUP_SIZE` -- if <code>localWorkSize != null</code> and the total
+            number of work-items in a work-group (that is, the product of all elements in
+            `localWorkSize`) is greater than the value of `DEVICE_MAX_WORK_GROUP_SIZE` queried from
+            the device associated with this queue</li>
+          <li>`INVALID_WORK_GROUP_SIZE` -- if <code>localWorkSize == null</code> and the
+            `reqd_work_group_size` qualifier is present in kernel source</li>
           <li>`INVALID_WORK_ITEM_SIZE` -- if <code>localWorkSize != null && (localWorkSize[i] &gt; DEVICE_MAX_WORK_ITEM_SIZES[i])</code> for any `i`</li>
           <li>`INVALID_IMAGE_SIZE` -- if an image object is specified as an argument to `kernel`, and the image dimensions
             (width, height, pitch) are not supported by the device associated with this queue</li>
