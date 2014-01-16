@@ -2825,9 +2825,9 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
     <h2><a id="WEBCL_OPENCL_DIFF">Differences between WebCL and OpenCL 1.1</a></h2>
 
     <p>
-      This section describes changes made to the WebCL API and the
-      kernel programming language, relative to OpenCL 1.1 Embedded
-      Profile.  The main differences are as follows:
+      This section describes changes made to the WebCL API and the WebCL C kernel programming
+      language, relative to OpenCL 1.1 Embedded Profile and OpenCL C.  The differences are as
+      follows:
     </p>
 
     <ul>
@@ -2836,8 +2836,6 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
       <li>The `ADDRESS_NONE` sampler addressing mode is not supported</li>
       <li>Mapping of CL memory objects into host memory space is not supported</li>
       <li>Program binaries are not supported</li>
-      <li>Structures are not supported as kernel arguments</li>
-      <li>Identifiers in WebCL C must be less than 256 characters</li>
       <li>The following OpenCL API functions are not supported:
         <ul>
           <li>`clEnqueueTask`</li>
@@ -2851,7 +2849,11 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
           <li>`clUnloadCompiler`</li>
         </ul>
       </li>
-      <li>The following OpenCL C built-in functions are not supported:
+      <li>Structures are not supported as kernel arguments</li>
+      <li>Calling a kernel function from another kernel function is not supported</li>
+      <li>Identifiers in WebCL C must be less than 256 characters</li>
+      <li>The `goto` keyword is not supported</li>
+      <li>The following OpenCL C built-in functions and are not supported:
         <ul>
           <li>`async_work_group_copy`</li>
           <li>`async_work_group_strided_copy`</li>
