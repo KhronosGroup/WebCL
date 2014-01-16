@@ -1142,15 +1142,20 @@ interface <dfn>WebCLContext</dfn> {
 
 <pre class="example">
 // getInfo(CONTEXT_PROPERTIES) returns the 'properties' object passed in
-// to createContext, or equivalent.  If no object is passed in, either null
-// or a default object may be returned.
+// to createContext, or equivalent.  
+
+ctx = webcl.createContext({ deviceType: WebCL.DEVICE_TYPE_CPU });
+props = ctx.getInfo(WebCL.CONTEXT_PROPERTIES);
+ASSERT(props.deviceType === WebCL.DEVICE_TYPE_CPU);
+ASSERT(props.devices === undefined || props.devices === null);
+ASSERT(props.platform === undefined || props.platform === null);
+
+// If no object is passed in to createContext, getInfo returns null.
 
 props = webcl.createContext().getInfo(WebCL.CONTEXT_PROPERTIES);
-ASSERT(props === null || props.devices === undefined || props.devices === null);
-ASSERT(props === null || props.platform === undefined || props.platform === null);
-ASSERT(props === null || props.deviceType === undefined || props.deviceType === WebCL.DEVICE_TYPE_DEFAULT);
+ASSERT(props === null);
 
-// Values that are ignored by createContext may or may not be stored.
+// Fields that are ignored by createContext may or may not be stored.
 
 ctx = webcl.createContext({ devices: [aDevice], platform: "foobar" });
 props = ctx.getInfo(WebCL.CONTEXT_PROPERTIES);
