@@ -59,7 +59,7 @@
       WebCLImage createImage(CLenum memFlags, HTMLCanvasElement srcCanvas);
       WebCLImage createImage(CLenum memFlags, HTMLImageElement srcImage);
     };
-    
+
     partial interface WebCLCommandQueue {
 
       //////////////////////////////////////////////////////////////////////
@@ -203,13 +203,13 @@
       <param name="srcPixels" type="ImageData"/>
       Creates a new WebCLBuffer with size equal to <code>srcPixels.data.length</code>.
       <dl class="exceptions">
-	 <dt>Exceptions:</dt>
-	 <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-	 <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
-	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcPixels.data.length &gt; DEVICE_MAX_MEM_ALLOC_SIZE</code></li>
-	 <li>`INVALID_HOST_PTR` -- if `srcPixels` has unknown length, or is otherwise not valid</li>
-	 <li>`INVALID_HOST_PTR` -- if `srcPixels` object is not fully loaded</li>
-       </dl>
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+        <li>`INVALID_IMAGE_SIZE` -- if <code>srcPixels.data.length &gt; DEVICE_MAX_MEM_ALLOC_SIZE</code></li>
+        <li>`INVALID_HOST_PTR` -- if `srcPixels` has unknown length, or is otherwise not valid</li>
+        <li>`INVALID_HOST_PTR` -- if `srcPixels` object is not fully loaded</li>
+      </dl>
     </function>
 
     <function name="createBuffer" type="WebCLBuffer">
@@ -217,13 +217,13 @@
       <param name="srcCanvas" type="HTMLCanvasElement"/>
       Creates a new WebCLBuffer with size equal to <code>srcCanvas.getContext("2d").getImageData().data.length</code>.
       <dl class="exceptions">
-	 <dt>Exceptions:</dt>
-	 <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-	 <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
-	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcCanvas.getContext("2d").getImageData().data.length &gt; DEVICE_MAX_MEM_ALLOC_SIZE</code></li>
-	 <li>`INVALID_HOST_PTR` -- if `srcCanvas` has unknown lengths, or is otherwise not valid</li>
-	 <li>`INVALID_HOST_PTR` -- if `srcCanvas` object is not fully loaded</li>
-       </dl>
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+        <li>`INVALID_IMAGE_SIZE` -- if <code>srcCanvas.getContext("2d").getImageData().data.length &gt; DEVICE_MAX_MEM_ALLOC_SIZE</code></li>
+        <li>`INVALID_HOST_PTR` -- if `srcCanvas` has unknown lengths, or is otherwise not valid</li>
+        <li>`INVALID_HOST_PTR` -- if `srcCanvas` object is not fully loaded</li>
+      </dl>
     </function>
 
     <function name="createBuffer" type="WebCLBuffer">
@@ -231,75 +231,68 @@
       <param name="srcImage" type="HTMLImageElement"/>
       Creates a new WebCLBuffer with size equal to <code>srcImage.width * srcImage.height * 4</code>.
       <dl class="exceptions">
-	 <dt>Exceptions:</dt>
-	 <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-	 <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
-	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcImage.width * srcImage.height * 4 &gt; DEVICE_MAX_MEM_ALLOC_SIZE</code></li>
-	 <li>`INVALID_HOST_PTR` -- if `srcImage` has unknown lengths, or is otherwise not valid</li>
-	 <li>`INVALID_HOST_PTR` -- if `srcImage` object is not fully loaded</li>
-       </dl>
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+        <li>`INVALID_IMAGE_SIZE` -- if <code>srcImage.width * srcImage.height * 4 &gt; DEVICE_MAX_MEM_ALLOC_SIZE</code></li>
+        <li>`INVALID_HOST_PTR` -- if `srcImage` has unknown lengths, or is otherwise not valid</li>
+        <li>`INVALID_HOST_PTR` -- if `srcImage` object is not fully loaded</li>
+      </dl>
     </function>
-
 
     <function name="createImage" type="WebCLImage">
       <param name="memFlags" type="CLenum"/>
-      <param name="descriptor" type="WebCLImageDescriptor"/>
       <param name="srcPixels" type="ImageData"/>
-       A newly create WebCLImage will have <code>channelOrder</code> equal to <code>RGBA, channelType</code> equal to <code>UNORM_INT8</code>, and <code> width</code> and<code> height</code> equal to <code>srcPixels.width</code> and <code>srcPixels.height</code>. The <code>descriptor</code> can be used to specify the row pitch for storage.
-       <dl class="exceptions">
-	 <dt>Exceptions:</dt>
-	 <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-	 <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
-	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcPixels.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code></li>
-	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcPixels.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code></li>
-	 <li>`INVALID_HOST_PTR` -- if `srcPixels` has unknown dimensions, or is otherwise not valid</li>
-	 <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if `descriptor.channelOrder` or `descriptor.channelType` 
-	 is not valid</li>
-	 <li>`IMAGE_FORMAT_NOT_SUPPORTED` -- if the given combination
-	 of `channelOrder` and `channelType` is not supported for `srcPixels`</li>
-	 <li>`INVALID_HOST_PTR` -- if `srcPixels` object is not fully loaded</li>
-       </dl>
+      Creates a new WebCLImage with <code>channelOrder</code> equal to <code>RGBA</code>,
+      <code>channelType</code> equal to <code>UNORM_INT8</code>, and <code>width</code> and
+      <code>height</code> equal to <code>srcPixels.width</code> and <code>srcPixels.height</code>.
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+        <li>`INVALID_IMAGE_SIZE` -- if <code>srcPixels.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code></li>
+        <li>`INVALID_IMAGE_SIZE` -- if <code>srcPixels.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code></li>
+        <li>`INVALID_HOST_PTR` -- if `srcPixels` has unknown dimensions, or is otherwise not valid</li>
+        <li>`INVALID_HOST_PTR` -- if `srcPixels` object is not fully loaded</li>
+      </dl>
     </function>
 
     <function name="createImage" type="WebCLImage">
       <param name="memFlags" type="CLenum"/>
-      <param name="descriptor" type="WebCLImageDescriptor"/>
       <param name="srcCanvas" type="HTMLCanvasElement"/>
-      A newly create WebCLImage will have <code>channelOrder</code> equal to <code>RGBA, channelType</code> equal to <code>UNORM_INT8</code>, and <code> width</code> and<code> height</code> equal to <code>srcCanvas.width</code> and <code>srcCanvas.height</code>. The <code>descriptor</code> can be used to specify the row pitch for storage.
-       <dl class="exceptions">
-	 <dt>Exceptions:</dt>
-	 <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-	 <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
-	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcCanvas.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code></li>
-	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcCanvas.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code></li>
-	 <li>`INVALID_HOST_PTR` -- if `srcCanvas` has unknown dimensions, or is otherwise not valid</li>
-	 <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if `descriptor.channelOrder` or `descriptor.channelType` 
-	 is not valid</li>
-	 <li>`IMAGE_FORMAT_NOT_SUPPORTED` -- if the given combination
-	 of `channelOrder` and `channelType` is not supported for `srcPixels`</li>
-	  <li>`INVALID_HOST_PTR` -- if `srcCanvas` object is not fully loaded</li>
-       </dl>
+      Creates a new WebCLImage with <code>channelOrder</code> equal to <code>RGBA</code>,
+      <code>channelType</code> equal to <code>UNORM_INT8</code>, and <code>width</code> and
+      <code>height</code> equal to <code>srcCanvas.width</code> and <code>srcCanvas.height</code>.
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+        <li>`INVALID_IMAGE_SIZE` -- if <code>srcCanvas.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code></li>
+        <li>`INVALID_IMAGE_SIZE` -- if <code>srcCanvas.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code></li>
+        <li>`INVALID_HOST_PTR` -- if `srcCanvas` has unknown dimensions, or is otherwise not valid</li>
+        <li>`INVALID_HOST_PTR` -- if `srcCanvas` object is not fully loaded</li>
+      </dl>
     </function>
 
     <function name="createImage" type="WebCLImage">
       <param name="memFlags" type="CLenum"/>
-      <param name="descriptor" type="WebCLImageDescriptor"/>
       <param name="srcImage" type="HTMLImageElement"/>
-      A newly create WebCLImage will have <code>channelOrder</code> equal to <code>RGBA, channelType</code> equal to <code>UNORM_INT8</code>, and <code> width</code> and<code> height</code> equal to <code>srcImage.width</code> and <code>srcImage.height</code>. The <code>descriptor</code> can be used to specify the row pitch for storage.
-       <dl class="exceptions">
-	 <dt>Exceptions:</dt>
-	 <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-	 <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
-	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcImage.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code></li>
-	 <li>`INVALID_IMAGE_SIZE` -- if <code>srcImage.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code></li>
-	 <li>`INVALID_HOST_PTR` -- if `srcImage` has unknown dimensions, or is otherwise not valid</li>
-	 <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if `descriptor.channelOrder` or `descriptor.channelType` 
-	 is not valid</li>
-	 <li>`IMAGE_FORMAT_NOT_SUPPORTED` -- if the given combination
-	 of `channelOrder` and `channelType` is not supported for `srcPixels`</li>
-	 <li>`INVALID_HOST_PTR` -- if `srcImage` object is not fully loaded</li>
-       </dl>
+      Creates a new WebCLImage with <code>channelOrder</code> equal to <code>RGBA</code>,
+      <code>channelType</code> equal to <code>UNORM_INT8</code>, and <code>width</code> and
+      <code>height</code> equal to <code>srcImage.width</code> and <code>srcImage.height</code>.
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+        <li>`INVALID_IMAGE_SIZE` -- if <code>srcImage.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code></li>
+        <li>`INVALID_IMAGE_SIZE` -- if <code>srcImage.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code></li>
+        <li>`INVALID_HOST_PTR` -- if `srcImage` has unknown dimensions, or is otherwise not valid</li>
+        <li>`INVALID_HOST_PTR` -- if `srcImage` object is not fully loaded</li>
+      </dl>
     </function>
+
+  </newfun>
+  <newfun>
 
     <function name="enqueueWriteBuffer" type="void">
       <param name="buffer" type="WebCLBuffer"/>
@@ -308,26 +301,22 @@
       <param name="srcPixels" type="ImageData"/>
       <param name="eventWaitList" type="Optional sequence&lt;WebCLEvent&gt;?"/>
       <param name="event" type="Optional WebCLEvent?"/>
-      Enqueue commands to write the contents of <code>srcPixels</code> to <code>buffer</code>.
-       <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	  <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
-            associated with the same WebCLContext as `buffer`</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
-            associated with the same WebCLContext as all events in
-            `eventWaitList`</li>
-          <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid
-            WebCLBuffer object</li>
-          <li>`INVALID_VALUE` -- if any part of the region being
-            written, specified by `bufferOffset` and `srcPixels.data.length`, is
-            out of bounds of `buffer`</li>
-          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
-          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
-            `blockingWrite` is `true` and the execution status of any
-            event in `eventWaitList` is a negative integer value</li>
-	    <li>`INVALID_HOST_PTR` -- if `srcPixels` object is not fully loaded</li>
-        </dl>
+      Enqueues a command to write the contents of <code>srcPixels</code> to <code>buffer</code>.
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same
+        WebCLContext as `buffer`</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same
+        WebCLContext as all events in `eventWaitList`</li>
+        <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
+        <li>`INVALID_VALUE` -- if any part of the region being written, specified by `bufferOffset`
+        and `srcPixels.data.length`, is out of bounds of `buffer`</li>
+        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+        <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingWrite` is `true` and the
+        execution status of any event in `eventWaitList` is a negative integer value</li>
+        <li>`INVALID_HOST_PTR` -- if `srcPixels` object is not fully loaded</li>
+      </dl>
     </function>
     
     <function name="enqueueWriteBuffer" type="void">
@@ -337,26 +326,23 @@
       <param name="srcCanvas" type="HTMLCanvasElement"/>
       <param name="eventWaitList" type="Optional sequence&lt;WebCLEvent&gt;?"/>
       <param name="event" type="Optional WebCLEvent?"/>
-       Enqueue commands to write the contents of <code>srcCanvas</code> to <code>buffer</code>.
-       <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	  <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
-            associated with the same WebCLContext as `buffer`</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
-            associated with the same WebCLContext as all events in
-            `eventWaitList`</li>
-          <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid
-            WebCLBuffer object</li>
-          <li>`INVALID_VALUE` -- if any part of the region being
-            written, specified by `bufferOffset` and `srcCanvas.getContext("2d").getImageData().data.length`, is
-            out of bounds of `buffer`</li>
-          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
-          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
-            `blockingWrite` is `true` and the execution status of any
-            event in `eventWaitList` is a negative integer value</li>
-	    <li>`INVALID_HOST_PTR` -- if `srcCanvas` object is not fully loaded</li>
-        </dl>
+      Enqueues a command to write the contents of <code>srcCanvas</code> to <code>buffer</code>.
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same
+        WebCLContext as `buffer`</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same
+        WebCLContext as all events in `eventWaitList`</li>
+        <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
+        <li>`INVALID_VALUE` -- if any part of the region being written, specified by `bufferOffset`
+        and `srcCanvas.getContext("2d").getImageData().data.length`, is out of bounds of
+        `buffer`</li>
+        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+        <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingWrite` is `true` and the
+        execution status of any event in `eventWaitList` is a negative integer value</li>
+        <li>`INVALID_HOST_PTR` -- if `srcCanvas` object is not fully loaded</li>
+      </dl>
     </function>
 
     <function name="enqueueWriteBuffer" type="void">
@@ -366,26 +352,22 @@
       <param name="srcImage" type="HTMLImageElement"/>
       <param name="eventWaitList" type="Optional sequence&lt;WebCLEvent&gt;?"/>
       <param name="event" type="Optional WebCLEvent?"/>
-       Enqueue commands to write the contents of <code>srcImage</code> to <code>buffer</code>.
-       <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	  <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
-            associated with the same WebCLContext as `buffer`</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
-            associated with the same WebCLContext as all events in
-            `eventWaitList`</li>
-          <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid
-            WebCLBuffer object</li>
-          <li>`INVALID_VALUE` -- if any part of the region being
-            written, specified by `bufferOffset` and `srcImage.width * srcImage.height * 4`, is
-            out of bounds of `buffer`</li>
-          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
-          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
-            `blockingWrite` is `true` and the execution status of any
-            event in `eventWaitList` is a negative integer value</li>
-	    <li>`INVALID_HOST_PTR` -- if `srcImage` object is not fully loaded</li>
-        </dl>
+      Enqueues a command to write the contents of <code>srcImage</code> to <code>buffer</code>.
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same
+        WebCLContext as `buffer`</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same
+        WebCLContext as all events in `eventWaitList`</li>
+        <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
+        <li>`INVALID_VALUE` -- if any part of the region being written, specified by `bufferOffset`
+        and `srcImage.width * srcImage.height * 4`, is out of bounds of `buffer`</li>
+        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+        <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingWrite` is `true` and the
+        execution status of any event in `eventWaitList` is a negative integer value</li>
+        <li>`INVALID_HOST_PTR` -- if `srcImage` object is not fully loaded</li>
+      </dl>
     </function>
 
     <function name="enqueueWriteBufferRect" type="void">
@@ -399,26 +381,24 @@
       <param name="srcPixels" type="ImageData"/>
       <param name="eventWaitList" type="Optional sequence&lt;WebCLEvent&gt;?"/>
       <param name="event" type="Optional WebCLEvent?"/>
-      Enqueue commands to write a rectangular region to a <code>buffer</code> object from <code>srcPixels</code>.
-       <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	  <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `buffer`</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
-          <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
-          <li>`INVALID_VALUE` -- if `bufferOrigin`, `srcOrigin`, or
-            `region` does not have exactly three elements</li>
-          <li>`INVALID_VALUE` -- if any part of the region being written,
-            specified by `bufferOrigin`, `region`, `bufferRowPitch` and
-            `bufferSlicePitch`, is out of bounds of `buffer`</li>
-          <li>`INVALID_VALUE` -- if any part of the region being
-            read, specified by `srcOrigin`, `region`, is out of bounds of `srcPixels`</li>
-          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
-          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
-            `blockingWrite` is `true` and the execution status of any
-            event in `eventWaitList` is a negative integer value</li>
-	    <li>`INVALID_HOST_PTR` -- if `srcPixels` object is not fully loaded</li>
-        </dl>
+      Enqueues a command to write a rectangular region to a <code>buffer</code> object from <code>srcPixels</code>.
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `buffer`</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+        <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
+        <li>`INVALID_VALUE` -- if `bufferOrigin`, `srcOrigin`, or `region` does not have exactly
+        three elements</li>
+        <li>`INVALID_VALUE` -- if any part of the region being written, specified by `bufferOrigin`,
+        `region`, `bufferRowPitch` and `bufferSlicePitch`, is out of bounds of `buffer`</li>
+        <li>`INVALID_VALUE` -- if any part of the region being read, specified by `srcOrigin`,
+        `region`, is out of bounds of `srcPixels`</li>
+        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+        <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingWrite` is `true` and the
+        execution status of any event in `eventWaitList` is a negative integer value</li>
+        <li>`INVALID_HOST_PTR` -- if `srcPixels` object is not fully loaded</li>
+      </dl>
     </function>
 
     <function name="enqueueWriteBufferRect" type="void">
@@ -432,26 +412,24 @@
       <param name="srcCanvas" type="HTMLCanvasElement"/>
       <param name="eventWaitList" type="Optional sequence&lt;WebCLEvent&gt;?"/>
       <param name="event" type="Optional WebCLEvent?"/>
-      Enqueue commands to write a rectangular region to a <code>buffer</code> object from <code>srcCanvas</code>.
+      Enqueues a command to write a rectangular region to a <code>buffer</code> object from <code>srcCanvas</code>.
       <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	  <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `buffer`</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
-          <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
-          <li>`INVALID_VALUE` -- if `bufferOrigin`, `srcOrigin`, or
-            `region` does not have exactly three elements</li>
-          <li>`INVALID_VALUE` -- if any part of the region being written,
-            specified by `bufferOrigin`, `region`, `bufferRowPitch` and
-            `bufferSlicePitch`, is out of bounds of `buffer`</li>
-          <li>`INVALID_VALUE` -- if any part of the region being
-            read, specified by `srcOrigin`, `region`, is out of bounds of `srcCanvas`</li>
-          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
-          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
-            `blockingWrite` is `true` and the execution status of any
-            event in `eventWaitList` is a negative integer value</li>
-	    <li>`INVALID_HOST_PTR` -- if `srcCanvas` object is not fully loaded</li>
-        </dl>
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `buffer`</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+        <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
+        <li>`INVALID_VALUE` -- if `bufferOrigin`, `srcOrigin`, or `region` does not have exactly
+        three elements</li>
+        <li>`INVALID_VALUE` -- if any part of the region being written, specified by `bufferOrigin`,
+        `region`, `bufferRowPitch` and `bufferSlicePitch`, is out of bounds of `buffer`</li>
+        <li>`INVALID_VALUE` -- if any part of the region being read, specified by `srcOrigin`,
+        `region`, is out of bounds of `srcCanvas`</li>
+        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+        <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingWrite` is `true` and the
+        execution status of any event in `eventWaitList` is a negative integer value</li>
+        <li>`INVALID_HOST_PTR` -- if `srcCanvas` object is not fully loaded</li>
+      </dl>
     </function>
 
     <function name="enqueueWriteBufferRect" type="void">
@@ -465,26 +443,24 @@
       <param name="srcImage" type="HTMLImageElement"/>
       <param name="eventWaitList" type="Optional sequence&lt;WebCLEvent&gt;?"/>
       <param name="event" type="Optional WebCLEvent?"/>
-      Enqueue commands to write a rectangular region to a <code>buffer</code> object from <code>srcImage</code>.
+      Enqueues a command to write a rectangular region to a <code>buffer</code> object from <code>srcImage</code>.
       <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	  <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `buffer`</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
-          <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
-          <li>`INVALID_VALUE` -- if `bufferOrigin`, `srcOrigin`, or
-            `region` does not have exactly three elements</li>
-          <li>`INVALID_VALUE` -- if any part of the region being written,
-            specified by `bufferOrigin`, `region`, `bufferRowPitch` and
-            `bufferSlicePitch`, is out of bounds of `buffer`</li>
-          <li>`INVALID_VALUE` -- if any part of the region being
-            read, specified by `srcOrigin`, `region`, is out of bounds of `srcImage`</li>
-          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
-          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
-            `blockingWrite` is `true` and the execution status of any
-            event in `eventWaitList` is a negative integer value</li>
-	    <li>`INVALID_HOST_PTR` -- if `srcImage` object is not fully loaded</li>
-        </dl>
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `buffer`</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+        <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
+        <li>`INVALID_VALUE` -- if `bufferOrigin`, `srcOrigin`, or `region` does not have exactly
+        three elements</li>
+        <li>`INVALID_VALUE` -- if any part of the region being written, specified by `bufferOrigin`,
+        `region`, `bufferRowPitch` and `bufferSlicePitch`, is out of bounds of `buffer`</li>
+        <li>`INVALID_VALUE` -- if any part of the region being read, specified by `srcOrigin`,
+        `region`, is out of bounds of `srcImage`</li>
+        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+        <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingWrite` is `true` and the
+        execution status of any event in `eventWaitList` is a negative integer value</li>
+        <li>`INVALID_HOST_PTR` -- if `srcImage` object is not fully loaded</li>
+      </dl>
     </function>
     
     <function name="enqueueWriteImage" type="void">
@@ -495,22 +471,22 @@
       <param name="srcPixels" type="ImageData"/>
       <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;?"/>
       <param name="event" type="optional WebCLEvent?"/>
-      Enqueue commands to write the contents of <code>srcPixels</code> to 2D <code>image</code>.
+      Enqueues a command to write the contents of <code>srcPixels</code> to 2D <code>image</code>.
       <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	  <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `image`</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
-          <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
-          <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of `image` are not supported by this WebCLCommandQueue</li>
-          <li>`INVALID_VALUE` -- if `origin` or `region` does not have exactly two elements</li>
-          <li>`INVALID_VALUE` -- if any part of the region being written, specified by `origin` and `region`, is out of bounds of `image`</li>
-          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
-          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
-            `blockingWrite` is `true` and the execution status of any
-            event in `eventWaitList`is a negative integer value</li>
-	    <li>`INVALID_HOST_PTR` -- if `srcPixels` object is not fully loaded</li>
-        </dl>
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `image`</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+        <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
+        <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of `image` are not supported by this WebCLCommandQueue</li>
+        <li>`INVALID_VALUE` -- if `origin` or `region` does not have exactly two elements</li>
+        <li>`INVALID_VALUE` -- if any part of the region being written, specified by `origin` and `region`, is out of bounds of `image`</li>
+        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+        <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
+        `blockingWrite` is `true` and the execution status of any
+        event in `eventWaitList`is a negative integer value</li>
+        <li>`INVALID_HOST_PTR` -- if `srcPixels` object is not fully loaded</li>
+      </dl>
     </function>
     
     <function name="enqueueWriteImage" type="void">
@@ -521,22 +497,21 @@
       <param name="srcCanvas" type="HTMLCanvasElement"/>
       <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;?"/>
       <param name="event" type="optional WebCLEvent?"/>
-       Enqueue commands to write the contents of <code>srcCanvas</code> to 2D <code>image</code>.
+      Enqueues a command to write the contents of <code>srcCanvas</code> to 2D <code>image</code>.
       <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	  <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `image`</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
-          <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
-          <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of `image` are not supported by this WebCLCommandQueue</li>
-          <li>`INVALID_VALUE` -- if `origin` or `region` does not have exactly two elements</li>
-          <li>`INVALID_VALUE` -- if any part of the region being written, specified by `origin` and `region`, is out of bounds of `image`</li>
-          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
-          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
-            `blockingWrite` is `true` and the execution status of any
-            event in `eventWaitList`is a negative integer value</li>
-	    <li>`INVALID_HOST_PTR` -- if `srcCanvas` object is not fully loaded</li>
-        </dl>
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `image`</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+        <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
+        <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of `image` are not supported by this WebCLCommandQueue</li>
+        <li>`INVALID_VALUE` -- if `origin` or `region` does not have exactly two elements</li>
+        <li>`INVALID_VALUE` -- if any part of the region being written, specified by `origin` and `region`, is out of bounds of `image`</li>
+        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+        <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingWrite` is `true` and the
+        execution status of any event in `eventWaitList`is a negative integer value</li>
+        <li>`INVALID_HOST_PTR` -- if `srcCanvas` object is not fully loaded</li>
+      </dl>
     </function>
     
     <function name="enqueueWriteImage" type="void">
@@ -547,22 +522,21 @@
       <param name="srcImage" type="HTMLImageElement"/>
       <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;?"/>
       <param name="event" type="optional WebCLEvent?"/>
-       Enqueue commands to write the contents of <code>srcImage</code> to 2D <code>image</code>.
+      Enqueues a command to write the contents of <code>srcImage</code> to 2D <code>image</code>.
       <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	  <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `image`</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
-          <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
-          <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of `image` are not supported by this WebCLCommandQueue</li>
-          <li>`INVALID_VALUE` -- if `origin` or `region` does not have exactly two elements</li>
-          <li>`INVALID_VALUE` -- if any part of the region being written, specified by `origin` and `region`, is out of bounds of `image`</li>
-          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
-          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
-            `blockingWrite` is `true` and the execution status of any
-            event in `eventWaitList`is a negative integer value</li>
-	    <li>`INVALID_HOST_PTR` -- if `srcImage` object is not fully loaded</li>
-        </dl>
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `image`</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+        <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
+        <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of `image` are not supported by this WebCLCommandQueue</li>
+        <li>`INVALID_VALUE` -- if `origin` or `region` does not have exactly two elements</li>
+        <li>`INVALID_VALUE` -- if any part of the region being written, specified by `origin` and `region`, is out of bounds of `image`</li>
+        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+        <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingWrite` is `true` and the
+        execution status of any event in `eventWaitList`is a negative integer value</li>
+        <li>`INVALID_HOST_PTR` -- if `srcImage` object is not fully loaded</li>
+      </dl>
     </function>
 
     <function name="enqueueReadBuffer" type="void">
@@ -573,30 +547,26 @@
       <param name="dstCanvas" type="HTMLCanvasElement"/>
       <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;"/>
       <param name="event" type="optional WebCLEvent?"/>
-      Enqueue commands to read the contents of <code>buffer</code> object to <code>dstCanvas</code>.
+      Enqueues a command to read the contents of <code>buffer</code> object to <code>dstCanvas</code>.
       <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	  <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
-            associated with the same WebCLContext as `buffer`</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
-            associated with the same WebCLContext as all events in
-            `eventWaitList`</li>
-          <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid
-            WebCLBuffer object</li>
-          <li>`INVALID_VALUE` -- if any part of the region being read,
-            specified by `bufferOffset` and `numBytes`, is out of
-            bounds of `buffer`</li>
-          <li>`INVALID_VALUE` -- if any part of the region being
-            written, specified by `dstCanvas` is out of bounds</li>
-          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
-          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
-            `blockingRead` is `true` and the execution status of any
-            event in `eventWaitList` is a negative integer value</li>
-        </dl>
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same
+        WebCLContext as `buffer`</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same
+        WebCLContext as all events in `eventWaitList`</li>
+        <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
+        <li>`INVALID_VALUE` -- if any part of the region being read, specified by `bufferOffset` and
+        `numBytes`, is out of bounds of `buffer`</li>
+        <li>`INVALID_VALUE` -- if any part of the region being written, specified by `dstCanvas` is
+        out of bounds</li>
+        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+        <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingRead` is `true` and the
+        execution status of any event in `eventWaitList` is a negative integer value</li>
+      </dl>
     </function>
 
-     <function name="enqueueReadBufferRect" type="void">
+    <function name="enqueueReadBufferRect" type="void">
       <param name="buffer" type="WebCLBuffer"/>
       <param name="blockingRead" type="CLboolean"/>
       <param name="bufferOrigin" type="sequence&gt;CLuint&gt;"/>
@@ -607,25 +577,23 @@
       <param name="dstCanvas" type="HTMLCanvasElement"/>
       <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;"/>
       <param name="event" type="optional WebCLEvent?"/>
-      Enqueue commands to read, a rectangular region, from a <code>buffer</code> object to <code>dstCanvas</code>.
-       <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	  <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `buffer`</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
-          <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
-          <li>`INVALID_VALUE` -- if `bufferOrigin`, `dstOrigin`, or
-            `region` does not have exactly three elements</li>
-          <li>`INVALID_VALUE` -- if any part of the region being read,
-            specified by `bufferOrigin`, `region`, `bufferRowPitch` and
-            `bufferSlicePitch`, is out of bounds of `buffer`</li>
-          <li>`INVALID_VALUE` -- if any part of the region being
-            written, specified by `dstOrigin`, `region`, is out of bounds of `dstCanvas`</li>
-          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
-          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
-            `blockingRead` is `true` and the execution status of any
-            event in `eventWaitList` is a negative integer value</li>
-        </dl>
+      Enqueues a command to read a rectangular region from a <code>buffer</code> object to <code>dstCanvas</code>.
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `buffer`</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+        <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
+        <li>`INVALID_VALUE` -- if `bufferOrigin`, `dstOrigin`, or `region` does not have exactly
+        three elements</li>
+        <li>`INVALID_VALUE` -- if any part of the region being read, specified by `bufferOrigin`,
+        `region`, `bufferRowPitch` and `bufferSlicePitch`, is out of bounds of `buffer`</li>
+        <li>`INVALID_VALUE` -- if any part of the region being written, specified by `dstOrigin`,
+        `region`, is out of bounds of `dstCanvas`</li>
+        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+        <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingRead` is `true` and the
+        execution status of any event in `eventWaitList` is a negative integer value</li>
+      </dl>
     </function>
 
     <function name="enqueueReadImage" type="void">
@@ -635,32 +603,28 @@
       <param name="dstCanvas" type="HTMLCanvasElement"/>
       <param name="eventWaitList" type="optional sequence&lt;WebCLEvent&gt;"/>
       <param name="event" type="optional WebCLEvent?"/>
-      Enqueue commands to read the contents of <code>image</code> object to <code>dstCanvas</code>.
+      Enqueues commands to read the contents of <code>image</code> object to <code>dstCanvas</code>.
       <dl class="exceptions">
-          <dt>Exceptions:</dt>
-	  <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
-            associated with the same WebCLContext as `buffer`</li>
-          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
-            associated with the same WebCLContext as all events in
-            `eventWaitList`</li>
-          <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid
-            WebCLImage object</li>
-          <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of `image` are not supported by this WebCLCommandQueue</li>
-          <li>`INVALID_VALUE` -- if `origin` or `region` does not have exactly two elements</li>
-          <li>`INVALID_VALUE` -- if any part of the region being read,
-            specified by `origin` and `region`, is out of
-            bounds of `image`</li>
-          <li>`INVALID_VALUE` -- if any part of the region being
-            written, specified by `dstCanvas` is out of bounds</li>
-          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
-          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
-            `blockingRead` is `true` and the execution status of any
-            event in `eventWaitList` is a negative integer value</li>
-        </dl>
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_sharing` extension has not been enabled</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same
+        WebCLContext as `buffer`</li>
+        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same
+        WebCLContext as all events in `eventWaitList`</li>
+        <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
+        <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of `image` are not supported by this
+        WebCLCommandQueue</li>
+        <li>`INVALID_VALUE` -- if `origin` or `region` does not have exactly two elements</li>
+        <li>`INVALID_VALUE` -- if any part of the region being read, specified by `origin` and
+        `region`, is out of bounds of `image`</li>
+        <li>`INVALID_VALUE` -- if any part of the region being written, specified by `dstCanvas` is
+        out of bounds</li>
+        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+        <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingRead` is `true` and the
+        execution status of any event in `eventWaitList` is a negative integer value</li>
+      </dl>
     </function>
     
-
   </newfun>
 
 
