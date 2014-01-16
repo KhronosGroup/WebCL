@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">January 15, 2014</h2>
+    <h2 class="no-toc">January 16, 2014</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -2372,10 +2372,14 @@ interface <dfn>WebCLKernel</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/clGetKernelArgInfo.html">clGetKernelArgInfo</a>)</span>
       </dt>
       <dd>
-        Returns `null` if `index` is not a valid argument index for
-        this WebCLKernel.  Legal values for `index` range from zero to
-        `N-1`, where `N` is the total number of arguments declared by
-        the kernel.
+        Retrieves the name, type, and qualífiers of the kernel argument at the given `index`.  Legal
+        values for `index` range from zero to `N-1`, where `N` is the total number of arguments
+        declared by the kernel.
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
+        </ul>
       </dd>
 
       <dt class="idl-code">void setArg(CLuint index, WebCLMemoryObject memObject)
