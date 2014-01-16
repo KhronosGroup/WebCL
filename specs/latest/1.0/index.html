@@ -2313,7 +2313,7 @@ interface <dfn>WebCLProgram</dfn> {
 interface <dfn>WebCLKernel</dfn> {
   any getInfo(CLenum name);
   any getWorkGroupInfo(WebCLDevice device, CLenum name);
-  WebCLKernelArgInfo? getArgInfo(CLuint index);
+  WebCLKernelArgInfo getArgInfo(CLuint index);
   void setArg(CLuint index, WebCLMemoryObject value);
   void setArg(CLuint index, WebCLSampler value);
   void setArg(CLuint index, ArrayBufferView value);
@@ -2368,7 +2368,7 @@ interface <dfn>WebCLKernel</dfn> {
       </dd>
 
 
-      <dt class="idl-code">WebCLKernelArgInfo? getArgInfo(CLuint index)
+      <dt class="idl-code">WebCLKernelArgInfo getArgInfo(CLuint index)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.2.pdf#page=167">OpenCL 1.2 §5.7.3</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/clGetKernelArgInfo.html">clGetKernelArgInfo</a>)</span>
       </dt>
