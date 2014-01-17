@@ -2254,6 +2254,7 @@ interface <dfn>WebCLProgram</dfn> {
 
         <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if <code>devices.length === 0</code></li>
           <li>`INVALID_DEVICE` -- if any element in `devices` is not a valid WebCLDevice</li>
           <li>`INVALID_DEVICE` -- if any device in `devices` is not associated with the WebCLContext of this WebCLProgram</li>
           <li>`INVALID_BUILD_OPTIONS` -- if the build options specified by `options` are invalid</li>
