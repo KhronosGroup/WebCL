@@ -639,8 +639,8 @@ interface <dfn>WebCL</dfn> {
         <ul class="exceptions">
 	        <li>`INVALID_DEVICE` -- if `properties.devices` is non-`null`, but is not an array of valid device objects</li>
 	        <li>`INVALID_DEVICE` -- if any devices in `properties.devices` are on different platforms</li>
-	        <li>`INVALID_PLATFORM` -- if `properties.platform` is non-`null`, but is not a valid platform object</li>
-	        <li>`INVALID_DEVICE_TYPE` -- if `properties.deviceType` is non-`null`, but is not a valid `DEVICE_TYPE`</li>
+	        <li>`INVALID_PLATFORM` -- if `properties.devices` is `null` and `properties.platform` is not `null`, but is not a valid platform object</li>
+	        <li>`INVALID_DEVICE_TYPE` -- if `properties.devices` is `null` and `properties.deviceType` is not `null`, but is not a valid `DEVICE_TYPE`</li>
 	        <li>`DEVICE_NOT_AVAILABLE` -- if a device in `properties.devices` is currently not available</li>
         </ul>
       </dd>
@@ -722,8 +722,8 @@ dictionary <dfn>WebCLContextProperties</dfn> {
 
       <dt class="idl-code">WebCLPlatform? platform</dt>
       <dd>
-        The platform to create a context for.  If `devices` is not `null`, this field is ignored and
-        its value may or may not be preserved when subsequently queried using
+        The platform to create a context for.  If `devices` is not `null`, the contents of this
+        field are ignored (not checked in any way) and replaced with `null` when queried using
         `getInfo(CONTEXT_PROPERTIES)`.  If this field is `null`, the implementation will decide
         which platform to use.
       </dd>
@@ -731,11 +731,12 @@ dictionary <dfn>WebCLContextProperties</dfn> {
       <dt class="idl-code">CLenum deviceType</dt>
       <dd>
         The type of device to create a context for.  The available device types are listed in the
-        table below.  If `devices` is not `null`, this field is ignored and its value may or may not
-        be preserved when subsequently queried using `getInfo(CONTEXT_PROPERTIES)`.  If there is no
-        device of the given type on the given `platform`, `createContext` will return `null`.  If
-        `platform` is `null`, `createContext` will select any device on any platform that matches
-        the given type, or failing that, will return `null`.
+        table below.  If `devices` is not `null`, the contents of this field are ignored (not
+        checked in any way) and replaced with `DEVICE_TYPE_DEFAULT` when queried using
+        `getInfo(CONTEXT_PROPERTIES)`.  If there is no device of the given type on the given
+        `platform`, `createContext` will return `null`.  If `platform` is `null`, `createContext`
+        will select any device on any platform that matches the given type, or failing that, will
+        return `null`.
         <table class="enumtable">
           <tr><th>deviceType</th><th>Description</th></tr>
           <tr><td>DEVICE_TYPE_CPU</td><td>A single-core or multi-core CPU, typically the host processor.</td></tr>
@@ -1137,7 +1138,8 @@ interface <dfn>WebCLContext</dfn> {
           <tr><td>CONTEXT_DEVICES</td><td>sequence&lt;WebCLDevice&gt;</td><td>the devices in this context</td></tr>
           <tr><td>CONTEXT_PROPERTIES</td><td>WebCLContextProperties?</td><td>the properties passed
               in to `createContext`, or `null` if none were passed.  The object returned may or may
-              not be the same that was passed in, but must be functionally equivalent.</td></tr>
+              not be the same JavaScript object that was passed in, but must be functionally
+              equivalent.</td></tr>
         </table>
 
         <h5 class="exceptions">Exceptions:</h5>
@@ -1148,24 +1150,25 @@ interface <dfn>WebCLContext</dfn> {
 
 <pre class="example">
 // getInfo(CONTEXT_PROPERTIES) returns the 'properties' object passed in
-// to createContext, or equivalent.  
+// to createContext, any missing fields filled in with their default values.
 
-ctx = webcl.createContext({ deviceType: WebCL.DEVICE_TYPE_CPU });
+ctx = webcl.createContext({});
 props = ctx.getInfo(WebCL.CONTEXT_PROPERTIES);
-ASSERT(props.deviceType === WebCL.DEVICE_TYPE_CPU);
-ASSERT(props.devices === undefined || props.devices === null);
-ASSERT(props.platform === undefined || props.platform === null);
+ASSERT(props.deviceType === WebCL.DEVICE_TYPE_DEFAULT);
+ASSERT(props.devices === null);
+ASSERT(props.platform === null);
 
-// If no object is passed in to createContext, getInfo returns null.
+// If no object or null is passed in to createContext, getInfo returns null.
 
 props = webcl.createContext().getInfo(WebCL.CONTEXT_PROPERTIES);
 ASSERT(props === null);
 
-// Fields that are ignored by createContext may or may not be stored.
+// Fields that were ignored by createContext are filled in with their
+// default values by getInfo.
 
 ctx = webcl.createContext({ devices: [aDevice], platform: "foobar" });
 props = ctx.getInfo(WebCL.CONTEXT_PROPERTIES);
-ASSERT(props.platform === undefined || props.platform === null || props.platform === "foobar");
+ASSERT(props.platform === null);
 </pre>
 
       <dt class="idl-code">sequence&lt;WebCLImageDescriptor&gt;? getSupportedImageFormats(CLenum memFlags)
