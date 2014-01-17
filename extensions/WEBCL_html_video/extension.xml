@@ -30,10 +30,10 @@
 
     <features>
       <feature>
-        The application may create a WebCLImage that is permanently
-        bound to an HTMLVideoElement.  The source video pixel format
-        is treated as 32-bit RGBA (8 bits per component) with
-        non-premultiplied alpha.
+        The application may create a WebCLImage that is permanently bound to an HTMLVideoElement.
+        The source video pixel format is treated as 32-bit RGBA (8 bits per component) with
+        non-premultiplied alpha.  The new WebCLImage will have `channelOrder` equal to `RGBA` and
+        `channelType` equal to `UNORM_INT8`.
       </feature>
     </features>
 
@@ -43,7 +43,6 @@
 partial interface WebCLContext {
 
   WebCLImage createImage(CLenum memFlags,
-                         WebCLImageDescriptor descriptor,
                          HTMLVideoElement srcVideo);
 };
 
@@ -62,14 +61,12 @@ partial interface WebCLCommandQueue {
   <newfun>
     <function name="createImage" type="WebCLImage">
       <param name="memFlags" type="CLenum"/>
-      <param name="descriptor" type="WebCLImageDescriptor"/>
       <param name="srcVideo" type="HTMLVideoElement"/>
       Creates a new WebCLImage with the given pixel format, and binds
       the image permanently to the given HTMLVideoElement.  The video
       element does not have to be fully loaded, but its dimensions
       must be known.  The newly created WebCLImage will have width and
-      height equal to the source video width and height.  The width
-      and height given in `descriptor` are ignored.
+      height equal to the source video width and height.
       <dl class="exceptions">
         <dt>Exceptions:</dt>
         <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `WEBCL_html_video` extension has not been enabled</li>
@@ -115,8 +112,7 @@ var ok = device.enableExtension("WEBCL_html_video");
 if (ok) {
   var ctx = WebCL.createContext({ devices: [device] });
   var queue = ctx.createCommandQueue();
-  var format = { channelOrder: WebCL.RGBA, channelType: WebCL.UNORM_INT8 };
-  var videoImage = ctx.createImage(WebCL.MEM_READ_ONLY, format, videoElement);
+  var videoImage = ctx.createImage(WebCL.MEM_READ_ONLY, videoElement);
   var kernel = ctx.createProgram(kernelSource).createKernelsInProgram()[0];
   for (/* each frame */) {
     queue.enqueueWriteImage(videoImage, false, videoElement);
@@ -147,12 +143,20 @@ if (ok) {
 
       <li>Should we specify at least one channelOrder/channelType
       combination that is guaranteed to work on any implementation?</li>
-      <p>TBD (that would probably be RGBA/UNORM_INT8).</p>
+      <p>RESOLVED: Yes, RGBA/UNORM_INT8.</p>
+
+      <li>Should we support channelOrder/channelType combinations other
+      than RGBA/UNORM_INT8?</li>
+      <p>RESOLVED: No, not until browser implementations of HTMLVideoElement 
+      start supporting other formats.</p>
 
     </ol>
   </issues>
 
   <history>
+    <revision date="2014/01/17">
+      <change>Restricted the available video formats to RGBA/UNORM_INT8.</change>
+    </revision>
     <revision date="2013/11/20">
       <change>Migrated from the WebCL Working Draft.</change>
     </revision>
