@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">January 16, 2014</h2>
+    <h2 class="no-toc">January 17, 2014</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -123,6 +123,12 @@ typedef unsigned long long  CLulong;    // 64-bit unsigned integer
 typedef const unsigned long CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
 </pre>
 
+    <p>
+      The implementation of any WebCL function that accepts numeric values as input must ensure that
+      no undefined behavior will occur if the input value is outside of the specified numeric range.
+      Where necessary, the implementation may fit the incoming JavaScript number into the valid
+      range using a clamp or modulo operator, or alternatively throw an exception.
+    </p>
 
     <h3><a id="WEBCLEXCEPTION">Exceptions</a></h3>
 
