@@ -2579,9 +2579,11 @@ interface <dfn>WebCLEvent</dfn> {
       </dt>
       <dd>
         <p>
-          Creates a new WebCLEvent instance, to be filled in by one of
-          the `enqueue` methods.  The properties are initially set as
-          specified in the table below.
+          Creates an empty WebCLEvent instance, to be populated by one of the `enqueue` methods.
+          The properties of a newly created event are set as specified below.  Each WebCLEvent
+          instance can only be used once; the `enqueue` methods will throw an `INVALID_EVENT`
+          exception if a previously populated event is passed in.  User events are considered
+          previously populated, and as such cannot be re-populated.
         </p>
         <table class="enumtable">
           <tr><th>name</th><th>return type</th></tr>
