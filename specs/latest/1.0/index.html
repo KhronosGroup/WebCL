@@ -675,7 +675,7 @@ interface <dfn>WebCL</dfn> {
 	        <li>`INVALID_VALUE` -- if `eventWaitList` is `null` or empty</li>
 	        <li>`INVALID_CONTEXT` -- if events specified in `eventWaitList` do not belong to the same
 	          context</li>
-          <li>`INVALID_EVENT` -- if any event in `eventWaitList` is not a valid event object</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is not a valid event object</li>
           <li>`INVALID_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` --
             if the execution status of any of the events in
             `eventWaitList` is a negative integer value</li>
@@ -1450,6 +1450,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
 	          respectively
 	        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
 	          `eventWaitList` is invalid</li>
+          <li>`INVALID_EVENT` -- if `event` is not a newly created empty WebCLEvent</li>
 	        <li>`MEM_COPY_OVERLAP` -- if `srcBuffer` and `dstBuffer` are
 	          the same WebCLBuffer object and the source and destination
 	          regions overlap</li>
@@ -1491,6 +1492,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
             `srcBuffer` or `dstBuffer` objects</li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
           `eventWaitList` is invalid</li>
+          <li>`INVALID_EVENT` -- if `event` is not a newly created empty WebCLEvent</li>
           <li>`MEM_COPY_OVERLAP` -- if `srcBuffer` and `dstBuffer` are
             the same WebCLBuffer object and the source and destination
             regions overlap</li>
@@ -1533,6 +1535,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
             `region` does not have exactly two elements</li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
             `eventWaitList` is invalid</li>
+          <li>`INVALID_EVENT` -- if `event` is not a newly created empty WebCLEvent</li>
 	        <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of
             `srcImage` or `dstImage` are not supported by the device
             associated with this WebCLCommandQueue</li>
@@ -1575,6 +1578,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
             outside the boundaries of `srcBuffer` or `dstImage`</li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
             `eventWaitList` is invalid</li>
+          <li>`INVALID_EVENT` -- if `event` is not a newly created empty WebCLEvent</li>
 	        <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of
             `dstImage` are not supported by the device associated with
             this WebCLCommandQueue</li>
@@ -1614,6 +1618,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
             outside the boundaries of `srcImage` or `dstBuffer`</li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
             `eventWaitList` is invalid</li>
+          <li>`INVALID_EVENT` -- if `event` is not a newly created empty WebCLEvent</li>
 	        <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of
             `srcImage` are not supported by the device associated with
             this WebCLCommandQueue</li>
@@ -1657,6 +1662,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingRead` is `true` and the execution status of any
             event in `eventWaitList` is a negative integer value</li>
+          <li>`INVALID_EVENT` -- if `event` is not a newly created empty WebCLEvent</li>
         </ul>
       </dd>
 
@@ -1697,6 +1703,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingRead` is `true` and the execution status of any
             event in `eventWaitList` is a negative integer value</li>
+          <li>`INVALID_EVENT` -- if `event` is not a newly created empty WebCLEvent</li>
         </ul>
       </dd>
 
@@ -1727,6 +1734,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingRead` is `true` and the execution status of any event
             in `eventWaitList`is a negative integer value</li>
+          <li>`INVALID_EVENT` -- if `event` is not a newly created empty WebCLEvent</li>
         </ul>
       </dd>
 
@@ -1764,6 +1772,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingWrite` is `true` and the execution status of any
             event in `eventWaitList` is a negative integer value</li>
+          <li>`INVALID_EVENT` -- if `event` is not a newly created empty WebCLEvent</li>
         </ul>
       </dd>
 
@@ -1804,6 +1813,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingWrite` is `true` and the execution status of any
             event in `eventWaitList` is a negative integer value</li>
+          <li>`INVALID_EVENT` -- if `event` is not a newly created empty WebCLEvent</li>
         </ul>
       </dd>
 
@@ -1835,6 +1845,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingWrite` is `true` and the execution status of any
             event in `eventWaitList`is a negative integer value</li>
+          <li>`INVALID_EVENT` -- if `event` is not a newly created empty WebCLEvent</li>
         </ul>
       </dd>
 
@@ -1882,6 +1893,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure to allocate memory for data store associated with
             image or buffer objects specified as arguments to `kernel`</li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`INVALID_EVENT` -- if `event` is not a newly created empty WebCLEvent</li>
         </ul>
       </dd>
 
