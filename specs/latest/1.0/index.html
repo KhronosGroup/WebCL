@@ -260,8 +260,6 @@ partial interface Window {
 <pre class="idl">
 interface <dfn>WebCL</dfn> {
 
-  // Functions
-
   sequence&lt;WebCLPlatform&gt; getPlatforms();
 
   WebCLContext? createContext(optional WebCLContextProperties? properties);
@@ -275,7 +273,6 @@ interface <dfn>WebCL</dfn> {
 
   void releaseAll();
 
-  // Enums
 
   /* Error Codes */
   CLint SUCCESS                                   = 0;
@@ -2848,6 +2845,22 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
       OpenCL drivers in order to quickly eliminate any security or
       stability issues.
     </p>
+
+    <p>
+      WebCL objects are regular JavaScript objects, and must behave accordingly.  For example, the
+      application must be able attach arbitrary properties and functions to them, and if the same
+      object is retrieved twice, the instances returned must be equal according to the `===`
+      operator.  For example, the assertions in the following code example must be true:
+    </p>
+
+<pre class="example">
+  var ctx = webcl.createContext();
+  ctx.name = "myContext";
+  var queue = ctx.createCommandQueue();
+  var ctx2 = queue.getInfo(WebCL.QUEUE_CONTEXT);
+  ASSERT(ctx2 === ctx);
+  ASSERT(ctx2.name === "myContext");
+</pre>
 
     <h2><a id="WEBCL_OPENCL_DIFF">Differences between WebCL and OpenCL 1.1</a></h2>
 
