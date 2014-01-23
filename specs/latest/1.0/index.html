@@ -675,7 +675,9 @@ interface <dfn>WebCL</dfn> {
 	        <li>`INVALID_VALUE` -- if `eventWaitList` is `null` or empty</li>
 	        <li>`INVALID_CONTEXT` -- if events specified in `eventWaitList` do not belong to the same
 	          context</li>
-          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is not a valid event object</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if a callback is not provided, and any event in
+            `eventWaitList` is a WebCLUserEvent or a newly created (non-activated) WebCLEvent</li>
           <li>`INVALID_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` --
             if the execution status of any of the events in
             `eventWaitList` is a negative integer value</li>
@@ -1659,6 +1661,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_VALUE` -- if <code>numBytes %
             hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if `blockingRead` is `true`, and any event in
+            `eventWaitList` is a WebCLUserEvent or a newly created (non-activated) WebCLEvent</li>
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingRead` is `true` and the execution status of any
             event in `eventWaitList` is a negative integer value</li>
@@ -1700,6 +1704,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_VALUE` -- if <code>host{Row,Slice}Pitch %
             hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if `blockingRead` is `true`, and any event in
+            `eventWaitList` is a WebCLUserEvent or a newly created (non-activated) WebCLEvent</li>
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingRead` is `true` and the execution status of any
             event in `eventWaitList` is a negative integer value</li>
@@ -1732,6 +1738,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_VALUE` -- if any part of the region being written, specified by `region` and `hostRowPitch`, is out of bounds of `hostPtr`</li>
           <li>`INVALID_VALUE` -- if <code>hostRowPitch % hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if `blockingRead` is `true`, and any event in
+            `eventWaitList` is a WebCLUserEvent or a newly created (non-activated) WebCLEvent</li>
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingRead` is `true` and the execution status of any event
             in `eventWaitList`is a negative integer value</li>
           <li>`INVALID_EVENT` -- if `event` is not a newly created empty WebCLEvent</li>
@@ -1769,6 +1777,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_VALUE` -- if <code>numBytes %
             hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if `blockingWrite` is `true`, and any event in
+            `eventWaitList` is a WebCLUserEvent or a newly created (non-activated) WebCLEvent</li>
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingWrite` is `true` and the execution status of any
             event in `eventWaitList` is a negative integer value</li>
@@ -1810,6 +1820,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_VALUE` -- if <code>host{Row,Slice}Pitch %
             hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if `blockingWrite` is `true`, and any event in
+            `eventWaitList` is a WebCLUserEvent or a newly created (non-activated) WebCLEvent</li>
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingWrite` is `true` and the execution status of any
             event in `eventWaitList` is a negative integer value</li>
@@ -1842,6 +1854,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_VALUE` -- if any part of the region being read, specified by `region` and `hostRowPitch`, is out of bounds of `hostPtr`</li>
           <li>`INVALID_VALUE` -- if <code>hostRowPitch % hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if `blockingWrite` is `true`, and any event in
+            `eventWaitList` is a WebCLUserEvent or a newly created (non-activated) WebCLEvent</li>
           <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
             `blockingWrite` is `true` and the execution status of any
             event in `eventWaitList`is a negative integer value</li>
