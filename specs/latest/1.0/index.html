@@ -262,7 +262,13 @@ interface <dfn>WebCL</dfn> {
 
   sequence&lt;WebCLPlatform&gt; getPlatforms();
 
-  WebCLContext? createContext(optional WebCLContextProperties? properties);
+  WebCLContext createContext(optional CLenum deviceType);
+
+  WebCLContext createContext(WebCLPlatform platform, optional CLenum deviceType);
+
+  WebCLContext createContext(WebCLDevice device);
+
+  WebCLContext createContext(sequence&lt;WebCLDevice&gt; devices);
 
   sequence&lt;DOMString&gt;? getSupportedExtensions();
 
@@ -617,6 +623,72 @@ interface <dfn>WebCL</dfn> {
       </dt>
       <dd>
         Retrieves all WebCL platforms that are available in this system.
+      </dd>
+
+      <dt class="idl-code">WebCLContext createContext(optional CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=45">OpenCL 1.1 §4.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContextFromType.html">clCreateContextFromType</a>)</span>
+      </dt>
+      <dd>
+        Returns a newly created WebCL context for the given type of device, if available.
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_OPERATION` -- if this function is called from a WebCLCallback</li>
+	        <li>`INVALID_DEVICE_TYPE` -- if `deviceType` is not a valid `DEVICE_TYPE`</li>
+	        <li>`DEVICE_NOT_FOUND` -- if no devices that match `deviceType` were found on any platform</li>
+	        <li>`DEVICE_NOT_AVAILABLE` -- if no devices that match `deviceType` are currently available on any platform</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">WebCLContext createContext(WebCLPlatform platform, optional CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=45">OpenCL 1.1 §4.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContextFromType.html">clCreateContextFromType</a>)</span>
+      </dt>
+      <dd>
+        Returns a newly created WebCL context for the given type of device, if available on the
+        given platform.
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_OPERATION` -- if this function is called from a WebCLCallback</li>
+	        <li>`INVALID_PLATFORM` -- if `platform` is not a valid WebCLPlatform object</li>
+	        <li>`INVALID_DEVICE_TYPE` -- if `deviceType` is not a valid `DEVICE_TYPE`</li>
+	        <li>`DEVICE_NOT_FOUND` -- if no devices that match `deviceType` were found on the given platform</li>
+	        <li>`DEVICE_NOT_AVAILABLE` -- if no devices that match `deviceType` are currently available on the given platform</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">WebCLContext createContext(WebCLDevice device)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=45">OpenCL 1.1 §4.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">clCreateContext</a>)</span>
+      </dt>
+      <dd>
+        Returns a newly created WebCL context for the given device.
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_OPERATION` -- if this function is called from a WebCLCallback</li>
+	        <li>`INVALID_DEVICE` -- if `device` is not a valid WebCLDevice object</li>
+	        <li>`DEVICE_NOT_AVAILABLE` -- if the given device is currently not available</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">WebCLContext createContext(sequence&lt;WebCLDevice&gt; devices);
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=45">OpenCL 1.1 §4.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">clCreateContext</a>)</span>
+      </dt>
+      <dd>
+        Returns a newly created WebCL context spanning the given list of devices.
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_OPERATION` -- if this function is called from a WebCLCallback</li>
+	        <li>`INVALID_VALUE` -- if <code>devices.length === 0</code></li>
+	        <li>`INVALID_DEVICE` -- if any element in `devices` is not a valid WebCLDevice</li>
+	        <li>`INVALID_DEVICE` -- if any of the given devices are on different platforms</li>
+	        <li>`DEVICE_NOT_AVAILABLE` -- if any of the given devices are currently not available</li>
+        </ul>
       </dd>
 
       <dt class="idl-code">WebCLContext? createContext(optional WebCLContextProperties? properties)
