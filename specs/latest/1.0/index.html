@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">January 23, 2014</h2>
+    <h2 class="no-toc">January 24, 2014</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -1075,7 +1075,7 @@ interface <dfn>WebCLContext</dfn> {
           <li>`INVALID_QUEUE_PROPERTIES` -- if values specified in `properties` are valid but not supported by the device</li>
         </ul>
       </dd>
-      <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBufferView hostPtr)
+      <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBufferView hostPtr = null)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=76">OpenCL 1.1 §5.3.1</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateImage2D.html">clCreateImage2D</a>)</span>
       </dt>
@@ -1089,6 +1089,8 @@ interface <dfn>WebCLContext</dfn> {
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
           <li>`INVALID_IMAGE_SIZE` -- if <code>descriptor.width == 0 || descriptor.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code>
           <li>`INVALID_IMAGE_SIZE` -- if <code>descriptor.height == 0 || descriptor.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code>
+          <li>`INVALID_IMAGE_SIZE` -- if <code>hostPtr === null && descriptor.rowPitch !== 0</code>
+          <li>`INVALID_IMAGE_SIZE` -- if <code>hostPtr !== null && descriptor.rowPitch &gt; 0 && descriptor.rowPitch &lt; descriptor.width * bytesPerPixel</code>
           <li>`INVALID_HOST_PTR` -- if <code>hostPtr.byteLength &lt; descriptor.rowPitch * descriptor.height</code></li>
           <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if `descriptor.channelOrder` or `descriptor.channelType` is not valid</li>
           <li>`IMAGE_FORMAT_NOT_SUPPORTED` -- if the given combination `channelOrder`, `channelType` and `memFlags` is not supported by this WebCLContext</li>
