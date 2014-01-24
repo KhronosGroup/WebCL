@@ -1,0 +1,2880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebCL Working Draft</title>
+  <link rel="stylesheet" type="text/css" href="http://www.khronos.org/registry/webcl/resources/Khronos-WD.css">
+  <script src="http://www.khronos.org/registry/webcl/resources/jquery-1.3.2.min.js" type="text/javascript"></script>
+  <script src="http://www.khronos.org/registry/webcl/resources/generateTOC.js" type="text/javascript"></script>
+  <script src="http://www.khronos.org/registry/webcl/resources/preprocessHTML.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+    <!--begin-logo-->
+    <div class="head">
+      <p>
+        <a href="http://khronos.org/">
+          <img alt="Khronos" src="http://www.khronos.org/registry/webcl/resources/KhronosGroup-3D.png" height="60" width="220">
+        </a>
+      </p>
+    </div>
+    <div class="head">
+      <p>
+        <a href="http://www.khronos.org/webcl/">
+          <img alt="WebCL logo" src="http://www.khronos.org/registry/webcl/resources/WebCL_logo.png" width="150" height="69">
+        </a>
+      </p>
+    </div>
+    <!--end-logo-->
+
+    <h1>WebCL Working Draft</h1>
+    <h2 class="no-toc">December 13, 2013</h2>
+    <dl>
+      <dt>This version:
+      </dt><dd>
+        <a href="http://www.khronos.org/registry/webcl/specs/1.0.0/">
+          http://www.khronos.org/registry/webcl/specs/1.0.0/
+        </a>
+      </dd>
+      <dt>Latest version:
+      </dt><dd>
+        <a href="http://www.khronos.org/registry/webcl/specs/latest/1.0/">
+          http://www.khronos.org/registry/webcl/specs/latest/1.0/
+        </a>
+      </dd>
+      <dt>Previous version:
+      </dt><dd>None</dd>
+      <dt>Editors:</dt>
+      <dd>
+        <a href="mailto:tomi.aarnio@nokia.com">Tomi Aarnio</a>
+        (<a href="http://webcl.nokiaresearch.com/">Nokia Research</a>)
+      </dd>
+      <dd>
+        <a href="mailto:msevenier@motorola.com">Mika&euml;l Bourges-S&eacute;venier</a>
+        (<a href="http://www.motorola.com/">Motorola Mobility, Inc.</a>)
+      </dd>
+    </dl>
+
+    <p><span style="font-size: x-small; font-style: oblique">Copyright © 2013 Khronos Group</span></p>
+
+    <hr>
+
+    <h2 class="no-toc">Abstract</h2>
+    <p>
+      This Working Draft defines WebCL (Web Computing Language).
+      WebCL is a JavaScript binding to the Khronos OpenCL standard for
+      heterogeneous parallel computing. It enables web applications to
+      harness GPU and multi-core CPU parallel processing from within a
+      Web browser, enabling significant acceleration of
+      computationally intensive applications, such as image and video
+      processing, data visualization, and 3D games.
+    </p>
+
+    <h2 class="no-toc">Status of this document</h2>
+
+    <!--begin-status-->
+    <p>
+      This document is a Working Draft, not an official specification.
+      Do not cite this document as anything other than work in
+      progress.  Public discussion of this document is welcome on the
+      (<a href="https://www.khronos.org/webcl/public-mailing-list/archives/">archived</a>)
+      WebCL mailing
+      list <a href="mailto:public_webcl@khronos.org">public_webcl@khronos.org</a>
+      (see
+      <a href="http://www.khronos.org/webcl/public-mailing-list/">instructions</a>).
+    </p>
+    <!--end-status-->
+
+    <h2 class="no-toc">Contents</h2>
+    <div id="toc"><ul class="toc">
+    </ul></div>
+
+<!-- ======================================================================================================= -->
+
+    <h2>Introduction</h2>
+
+    <p>
+      With the popularity of web-centric platforms, there is a need to leverage high-performance
+      parallel processing to accelerate compute-intensive web applications.  Such applications
+      include, for example, data visualization, image and video processing, 3D gaming, computational
+      photography, computer vision, and cryptography.  By providing application developers with a
+      standardized JavaScript API and a portable kernel programming language, WebCL enables parallel
+      computing on heterogeneous multicore hardware across a breadth of devices, including mobile,
+      desktop, and server.  The WebCL API and kernel language are designed to be substantially
+      similar to those of OpenCL (Open Computing Language), and implementable on top of a conformant
+      OpenCL driver.
+    </p>
+
+<!-- ======================================================================================================= -->
+
+    <h2>Conventions</h2>
+
+    <h3>Basic types</h3>
+
+    <p>The following basic types are used in this document.</p>
+
+<pre class="idl">
+typedef boolean             CLboolean;
+typedef long                CLint;      // 32-bit signed integer
+typedef long long           CLlong;     // 64-bit signed integer
+typedef unsigned long       CLuint;     // 32-bit unsigned integer
+typedef unsigned long long  CLulong;    // 64-bit unsigned integer
+typedef const unsigned long CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
+</pre>
+
+
+    <h3><a id="WEBCLEXCEPTION">Exceptions</a></h3>
+
+    <p>
+      WebCL methods throw exceptions instead of returning error codes as return values as in OpenCL.
+      Exceptions that may be thrown by each method are listed in that method's documentation.
+      Additionally, almost all methods may throw `OUT_OF_RESOURCES`, `OUT_OF_HOST_MEMORY`, or the
+      WebCL-specific `WEBCL_IMPLEMENTATION_FAILURE`, so these are not listed separately.
+      Furthermore, calling any function (except `release`) on an object that has been released, will
+      throw <code>INVALID_<i>TYPE</i></code>, where <i>`TYPE`</i> is `CONTEXT`, `COMMAND_QUEUE`,
+      `MEM_OBJECT`, `SAMPLER`, `PROGRAM`, `KERNEL`, or `EVENT`.  These exceptions are also not
+      listed separately in the method descriptions.
+    </p>
+
+<pre class="idl">
+exception <dfn>WebCLException</dfn> : DOMException {
+  DOMString name;              // A string representation of the numeric error code, e.g. "INVALID_VALUE"
+  DOMString? message;          // An implementation-specific description of what caused the exception
+};
+</pre>
+
+    <p>
+      Both the `name` and `message` fields are present in any
+      WebCLException thrown by the implementation, but the message may
+      be `null`.
+    </p>
+
+    <h3><a id="RELEASE">Resource management</a></h3>
+
+    <p>
+      Each dynamically created WebCL object has a `release` method
+      that releases the resources consumed by that object.  This does
+      not cause the object to be deleted or garbage collected; it will
+      remain in place, but trying to use it will cause an exception.
+      Trying to release an object that has already been released will
+      be silently ignored.
+    </p>
+
+    <p>
+      For convenience, the WebCL and WebCLContext classes contain an
+      additional `releaseAll` function, which releases the context(s),
+      as well as all other WebCL objects created from them.  The usage
+      and behavior of the release methods are illustrated in the
+      example below.
+    </p>
+
+<pre class="example">
+  var ctx1 = WebCL.createContext(...);
+  var ctx2 = WebCL.createContext(...);
+  var ctx3 = WebCL.createContext(...);
+  var A = ctx1.createBuffer(...);
+  var B = ctx2.createBuffer(...);
+  ctx1.release();                    // releases ctx1, but not buffer A
+  ctx2.releaseAll();                 // releases ctx2 and buffer B
+  A.release();                       // releases buffer A 
+  B.release();                       // does nothing: B is already released
+  var C = ctx1.createBuffer(...);    // EXCEPTION: ctx1 is no longer valid
+  WebCL.releaseAll();                // releases ctx3
+</pre>
+
+    <p>
+      Applications are strongly recommended to explicitly release all
+      WebCL objects as soon as they are no longer needed, instead of
+      relying on the JavaScript garbage collector.  This is necessary
+      because garbage collectors typically do not give any guarantees
+      on when (or indeed if) they will reclaim the objects that are no
+      longer in scope.
+    </p>
+
+    <p>
+      When the global `document` object goes out of scope, the WebCL
+      implementation must implicitly call `release` on all remaining
+      WebCL objects.
+    </p>
+
+    <h3><a id="CONCURRENCY">Concurrency</a></h3>
+
+    <p>
+      Depending on the implementation, WebCL operations may be running
+      concurrently with JavaScript.  In particular, it may be possible
+      for the application to modify an ArrayBuffer while it's being
+      asynchronously copied to/from a WebCLMemoryObject.  To avoid
+      corrupting the contents of either buffer, applications should
+      not modify an ArrayBuffer that has been enqueued for async
+      read/write, until the relevant WebCL command queue has finished.
+    </p>
+
+    <h3><a id="WEBCLCALLBACK">Callbacks</a></h3>
+
+    <p>
+      WebCL allows certain long-running functions to be executed either synchronously or
+      asynchronously.  The asynchronous mode is used if a user-defined callback function is given as
+      an argument to such functions.  The asynchronous mode is strongly recommended, so as to avoid
+      blocking the JavaScript main thread.  If a callback function is associated with a WebCL object
+      that is subsequently released, the callback will no longer be invoked.  The signature of the
+      callback function is as follows:
+    </p>
+
+<pre class="idl">
+callback <dfn>WebCLCallback</dfn> = void (optional WebCLEvent event);
+</pre>
+
+    <p>
+      The callback function can call arbitrary JavaScript functions, including both blocking and
+      non-blocking APIs.  The following diagram is non-normative, but describes a possible
+      implementation.
+    </p>
+
+    <div>
+      <img alt="callback" src="resources/callback.png" height="420" width="780"/>
+    </div>
+
+
+<!-- ======================================================================================================= -->
+
+    <h2>Interfaces</h2>
+
+    <h3><a id="WEBCL">WebCL</a></h3>
+
+    <p>
+      The WebCL API is accessible through a singleton `webcl` object that resides in the global
+      `window` namespace.  The `webcl` object implements the WebCL interface, providing functions
+      for creating computing contexts and querying the available WebCL platforms and extensions.
+    </p>
+
+<pre class="idl">
+partial interface Window {
+  readonly attribute WebCL webcl;
+};
+</pre>
+
+<pre class="idl">
+interface <dfn>WebCL</dfn> {
+
+  // Functions
+
+  sequence&lt;WebCLPlatform&gt; getPlatforms();
+
+  WebCLContext? createContext(optional WebCLContextProperties properties);
+
+  sequence&lt;DOMString&gt;? getSupportedExtensions();
+
+  CLboolean enableExtension(DOMString extensionName);
+
+  void waitForEvents(sequence&lt;WebCLEvent&gt; eventWaitList,
+                     optional WebCLCallback whenFinished);
+
+  void releaseAll();
+
+  // Enums
+
+  /* Error Codes */
+  CLint SUCCESS                                   = 0;
+  CLint DEVICE_NOT_FOUND                          = -1;
+  CLint DEVICE_NOT_AVAILABLE                      = -2;
+  CLint COMPILER_NOT_AVAILABLE                    = -3;
+  CLint MEM_OBJECT_ALLOCATION_FAILURE             = -4;
+  CLint OUT_OF_RESOURCES                          = -5;
+  CLint OUT_OF_HOST_MEMORY                        = -6;
+  CLint PROFILING_INFO_NOT_AVAILABLE              = -7;
+  CLint MEM_COPY_OVERLAP                          = -8;
+  CLint IMAGE_FORMAT_MISMATCH                     = -9;
+  CLint IMAGE_FORMAT_NOT_SUPPORTED                = -10;
+  CLint BUILD_PROGRAM_FAILURE                     = -11;
+  CLint MAP_FAILURE                               = -12;
+  CLint MISALIGNED_SUB_BUFFER_OFFSET              = -13;
+  CLint EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST = -14;
+  CLint INVALID_VALUE                             = -30;
+  CLint INVALID_DEVICE_TYPE                       = -31;
+  CLint INVALID_PLATFORM                          = -32;
+  CLint INVALID_DEVICE                            = -33;
+  CLint INVALID_CONTEXT                           = -34;
+  CLint INVALID_QUEUE_PROPERTIES                  = -35;
+  CLint INVALID_COMMAND_QUEUE                     = -36;
+  CLint INVALID_HOST_PTR                          = -37;
+  CLint INVALID_MEM_OBJECT                        = -38;
+  CLint INVALID_IMAGE_FORMAT_DESCRIPTOR           = -39;
+  CLint INVALID_IMAGE_SIZE                        = -40;
+  CLint INVALID_SAMPLER                           = -41;
+  CLint INVALID_BINARY                            = -42;
+  CLint INVALID_BUILD_OPTIONS                     = -43;
+  CLint INVALID_PROGRAM                           = -44;
+  CLint INVALID_PROGRAM_EXECUTABLE                = -45;
+  CLint INVALID_KERNEL_NAME                       = -46;
+  CLint INVALID_KERNEL_DEFINITION                 = -47;
+  CLint INVALID_KERNEL                            = -48;
+  CLint INVALID_ARG_INDEX                         = -49;
+  CLint INVALID_ARG_VALUE                         = -50;
+  CLint INVALID_ARG_SIZE                          = -51;
+  CLint INVALID_KERNEL_ARGS                       = -52;
+  CLint INVALID_WORK_DIMENSION                    = -53;
+  CLint INVALID_WORK_GROUP_SIZE                   = -54;
+  CLint INVALID_WORK_ITEM_SIZE                    = -55;
+  CLint INVALID_GLOBAL_OFFSET                     = -56;
+  CLint INVALID_EVENT_WAIT_LIST                   = -57;
+  CLint INVALID_EVENT                             = -58;
+  CLint INVALID_OPERATION                         = -59;
+  //CLint INVALID_GL_OBJECT                         = -60; // moved to extension
+  CLint INVALID_BUFFER_SIZE                       = -61;
+  //CLint INVALID_MIP_LEVEL                         = -62; // moved to extension
+  CLint INVALID_GLOBAL_WORK_SIZE                  = -63;
+  CLint INVALID_PROPERTY                          = -64;
+
+  /* cl_bool */
+  CLenum FALSE                                     = 0;
+  CLenum TRUE                                      = 1;
+
+  /* cl_platform_info */
+  CLenum PLATFORM_PROFILE                          = 0x0900;
+  CLenum PLATFORM_VERSION                          = 0x0901;
+  CLenum PLATFORM_NAME                             = 0x0902;
+  CLenum PLATFORM_VENDOR                           = 0x0903;
+  CLenum PLATFORM_EXTENSIONS                       = 0x0904;
+
+  /* cl_device_type - bitfield */
+  CLenum DEVICE_TYPE_DEFAULT                       = 0x1;
+  CLenum DEVICE_TYPE_CPU                           = 0x2;
+  CLenum DEVICE_TYPE_GPU                           = 0x4;
+  CLenum DEVICE_TYPE_ACCELERATOR                   = 0x8;
+  CLenum DEVICE_TYPE_ALL                           = 0xFFFFFFFF;
+
+  /* cl_device_info */
+  CLenum DEVICE_TYPE                               = 0x1000;
+  CLenum DEVICE_VENDOR_ID                          = 0x1001;
+  CLenum DEVICE_MAX_COMPUTE_UNITS                  = 0x1002;
+  CLenum DEVICE_MAX_WORK_ITEM_DIMENSIONS           = 0x1003;
+  CLenum DEVICE_MAX_WORK_GROUP_SIZE                = 0x1004;
+  CLenum DEVICE_MAX_WORK_ITEM_SIZES                = 0x1005;
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_CHAR        = 0x1006;
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_SHORT       = 0x1007;
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_INT         = 0x1008;
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_LONG        = 0x1009;
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT       = 0x100A;
+  //CLenum DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE      = 0x100B; // moved to extension
+  CLenum DEVICE_MAX_CLOCK_FREQUENCY                = 0x100C;
+  CLenum DEVICE_ADDRESS_BITS                       = 0x100D;
+  CLenum DEVICE_MAX_READ_IMAGE_ARGS                = 0x100E;
+  CLenum DEVICE_MAX_WRITE_IMAGE_ARGS               = 0x100F;
+  CLenum DEVICE_MAX_MEM_ALLOC_SIZE                 = 0x1010;
+  CLenum DEVICE_IMAGE2D_MAX_WIDTH                  = 0x1011;
+  CLenum DEVICE_IMAGE2D_MAX_HEIGHT                 = 0x1012;
+  CLenum DEVICE_IMAGE3D_MAX_WIDTH                  = 0x1013;
+  CLenum DEVICE_IMAGE3D_MAX_HEIGHT                 = 0x1014;
+  CLenum DEVICE_IMAGE3D_MAX_DEPTH                  = 0x1015;
+  CLenum DEVICE_IMAGE_SUPPORT                      = 0x1016;
+  CLenum DEVICE_MAX_PARAMETER_SIZE                 = 0x1017;
+  CLenum DEVICE_MAX_SAMPLERS                       = 0x1018;
+  CLenum DEVICE_MEM_BASE_ADDR_ALIGN                = 0x1019;
+  //CLenum DEVICE_MIN_DATA_TYPE_ALIGN_SIZE           = 0x101A; // removed; deprecated in OpenCL 1.2
+  CLenum DEVICE_SINGLE_FP_CONFIG                   = 0x101B;
+  CLenum DEVICE_GLOBAL_MEM_CACHE_TYPE              = 0x101C;
+  CLenum DEVICE_GLOBAL_MEM_CACHELINE_SIZE          = 0x101D;
+  CLenum DEVICE_GLOBAL_MEM_CACHE_SIZE              = 0x101E;
+  CLenum DEVICE_GLOBAL_MEM_SIZE                    = 0x101F;
+  CLenum DEVICE_MAX_CONSTANT_BUFFER_SIZE           = 0x1020;
+  CLenum DEVICE_MAX_CONSTANT_ARGS                  = 0x1021;
+  CLenum DEVICE_LOCAL_MEM_TYPE                     = 0x1022;
+  CLenum DEVICE_LOCAL_MEM_SIZE                     = 0x1023;
+  CLenum DEVICE_ERROR_CORRECTION_SUPPORT           = 0x1024;
+  CLenum DEVICE_PROFILING_TIMER_RESOLUTION         = 0x1025;
+  CLenum DEVICE_ENDIAN_LITTLE                      = 0x1026;
+  CLenum DEVICE_AVAILABLE                          = 0x1027;
+  CLenum DEVICE_COMPILER_AVAILABLE                 = 0x1028;
+  CLenum DEVICE_EXECUTION_CAPABILITIES             = 0x1029;
+  CLenum DEVICE_QUEUE_PROPERTIES                   = 0x102A;
+  CLenum DEVICE_NAME                               = 0x102B;
+  CLenum DEVICE_VENDOR                             = 0x102C;
+  CLenum DRIVER_VERSION                            = 0x102D;
+  CLenum DEVICE_PROFILE                            = 0x102E;
+  CLenum DEVICE_VERSION                            = 0x102F;
+  CLenum DEVICE_EXTENSIONS                         = 0x1030;
+  CLenum DEVICE_PLATFORM                           = 0x1031;
+  //CLenum DEVICE_DOUBLE_FP_CONFIG                   = 0x1032; // moved to extension
+  //CLenum DEVICE_HALF_FP_CONFIG                     = 0x1033; // moved to extension
+  //CLenum DEVICE_PREFERRED_VECTOR_WIDTH_HALF        = 0x1034; // moved to extension
+  CLenum DEVICE_HOST_UNIFIED_MEMORY                = 0x1035;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_CHAR           = 0x1036;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_SHORT          = 0x1037;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_INT            = 0x1038;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_LONG           = 0x1039;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_FLOAT          = 0x103A;
+  //CLenum DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE         = 0x103B; // moved to extension
+  //CLenum DEVICE_NATIVE_VECTOR_WIDTH_HALF           = 0x103C; // moved to extension
+  CLenum DEVICE_OPENCL_C_VERSION                   = 0x103D;
+
+  /* cl_device_fp_config - bitfield */
+  CLenum FP_DENORM                                 = 0x1;
+  CLenum FP_INF_NAN                                = 0x2;
+  CLenum FP_ROUND_TO_NEAREST                       = 0x4;
+  CLenum FP_ROUND_TO_ZERO                          = 0x8;
+  CLenum FP_ROUND_TO_INF                           = 0x10;
+  CLenum FP_FMA                                    = 0x20;
+  CLenum FP_SOFT_FLOAT                             = 0x40;
+
+  /* cl_device_mem_cache_type */
+  CLenum NONE                                      = 0x0;
+  CLenum READ_ONLY_CACHE                           = 0x1;
+  CLenum READ_WRITE_CACHE                          = 0x2;
+
+  /* cl_device_local_mem_type */
+  CLenum LOCAL                                     = 0x1;
+  CLenum GLOBAL                                    = 0x2;
+
+  /* cl_device_exec_capabilities - bitfield */
+  CLenum EXEC_KERNEL                               = 0x1;
+  //CLenum EXEC_NATIVE_KERNEL                        = 0x2; // disallowed
+
+  /* cl_command_queue_properties - bitfield */
+  CLenum QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE       = 0x1;
+  CLenum QUEUE_PROFILING_ENABLE                    = 0x2;
+
+  /* cl_context_info  */
+  //CLenum CONTEXT_REFERENCE_COUNT                   = 0x1080; // disallowed
+  CLenum CONTEXT_DEVICES                           = 0x1081;
+  CLenum CONTEXT_PROPERTIES                        = 0x1082;
+  CLenum CONTEXT_NUM_DEVICES                       = 0x1083;
+
+  /* cl_context_properties */
+  //CLenum CONTEXT_PLATFORM                          = 0x1084; // disallowed; superceded by WebCLContextProperties
+
+  /* cl_command_queue_info */
+  CLenum QUEUE_CONTEXT                             = 0x1090;
+  CLenum QUEUE_DEVICE                              = 0x1091;
+  //CLenum QUEUE_REFERENCE_COUNT                     = 0x1092; // disallowed
+  CLenum QUEUE_PROPERTIES                          = 0x1093;
+
+  /* cl_mem_flags - bitfield */
+  CLenum MEM_READ_WRITE                            = 0x1;
+  CLenum MEM_WRITE_ONLY                            = 0x2;
+  CLenum MEM_READ_ONLY                             = 0x4;
+
+  /* cl_channel_order */
+  CLenum R                                         = 0x10B0;
+  CLenum A                                         = 0x10B1;
+  CLenum RG                                        = 0x10B2;
+  CLenum RA                                        = 0x10B3;
+  CLenum RGB                                       = 0x10B4;
+  CLenum RGBA                                      = 0x10B5;
+  CLenum BGRA                                      = 0x10B6;
+  CLenum ARGB                                      = 0x10B7;
+  CLenum INTENSITY                                 = 0x10B8;
+  CLenum LUMINANCE                                 = 0x10B9;
+  CLenum Rx                                        = 0x10BA;
+  CLenum RGx                                       = 0x10BB;
+  CLenum RGBx                                      = 0x10BC;
+
+  /* cl_channel_type */
+  CLenum SNORM_INT8                                = 0x10D0;
+  CLenum SNORM_INT16                               = 0x10D1;
+  CLenum UNORM_INT8                                = 0x10D2;
+  CLenum UNORM_INT16                               = 0x10D3;
+  CLenum UNORM_SHORT_565                           = 0x10D4;
+  CLenum UNORM_SHORT_555                           = 0x10D5;
+  CLenum UNORM_INT_101010                          = 0x10D6;
+  CLenum SIGNED_INT8                               = 0x10D7;
+  CLenum SIGNED_INT16                              = 0x10D8;
+  CLenum SIGNED_INT32                              = 0x10D9;
+  CLenum UNSIGNED_INT8                             = 0x10DA;
+  CLenum UNSIGNED_INT16                            = 0x10DB;
+  CLenum UNSIGNED_INT32                            = 0x10DC;
+  CLenum HALF_FLOAT                                = 0x10DD;
+  CLenum FLOAT                                     = 0x10DE;
+
+  /* cl_mem_object_type */
+  CLenum MEM_OBJECT_BUFFER                         = 0x10F0;
+  CLenum MEM_OBJECT_IMAGE2D                        = 0x10F1;
+  CLenum MEM_OBJECT_IMAGE3D                        = 0x10F2;
+
+  /* cl_mem_info */
+  CLenum MEM_TYPE                                  = 0x1100;
+  CLenum MEM_FLAGS                                 = 0x1101;
+  CLenum MEM_SIZE                                  = 0x1102;
+  //CLenum MEM_HOST_PTR                              = 0x1103; // disallowed
+  //CLenum MEM_MAP_COUNT                             = 0x1104; // disallowed
+  //CLenum MEM_REFERENCE_COUNT                       = 0x1105; // disallowed
+  CLenum MEM_CONTEXT                               = 0x1106;
+  CLenum MEM_ASSOCIATED_MEMOBJECT                  = 0x1107;
+  CLenum MEM_OFFSET                                = 0x1108;
+
+  /* cl_image_info */
+  CLenum IMAGE_FORMAT                              = 0x1110;
+  CLenum IMAGE_ELEMENT_SIZE                        = 0x1111;
+  CLenum IMAGE_ROW_PITCH                           = 0x1112;
+  CLenum IMAGE_WIDTH                               = 0x1114;
+  CLenum IMAGE_HEIGHT                              = 0x1115;
+
+  /* cl_addressing_mode */
+  //CLenum ADDRESS_NONE                              = 0x1130; // disallowed
+  CLenum ADDRESS_CLAMP_TO_EDGE                     = 0x1131;
+  CLenum ADDRESS_CLAMP                             = 0x1132;
+  CLenum ADDRESS_REPEAT                            = 0x1133;
+  CLenum ADDRESS_MIRRORED_REPEAT                   = 0x1134;
+
+  /* cl_filter_mode */
+  CLenum FILTER_NEAREST                            = 0x1140;
+  CLenum FILTER_LINEAR                             = 0x1141;
+
+  /* cl_sampler_info */
+  //CLenum SAMPLER_REFERENCE_COUNT                   = 0x1150; // disallowed
+  CLenum SAMPLER_CONTEXT                           = 0x1151;
+  CLenum SAMPLER_NORMALIZED_COORDS                 = 0x1152;
+  CLenum SAMPLER_ADDRESSING_MODE                   = 0x1153;
+  CLenum SAMPLER_FILTER_MODE                       = 0x1154;
+
+  /* cl_map_flags - bitfield */
+  //CLenum MAP_READ                                  = 0x1; // disallowed
+  //CLenum MAP_WRITE                                 = 0x2; // disallowed
+
+  /* cl_program_info */
+  //CLenum PROGRAM_REFERENCE_COUNT                   = 0x1160; // disallowed
+  CLenum PROGRAM_CONTEXT                           = 0x1161;
+  CLenum PROGRAM_NUM_DEVICES                       = 0x1162;
+  CLenum PROGRAM_DEVICES                           = 0x1163;
+  CLenum PROGRAM_SOURCE                            = 0x1164;
+  //CLenum PROGRAM_BINARY_SIZES                      = 0x1165; // disallowed
+  //CLenum PROGRAM_BINARIES                          = 0x1166; // disallowed
+
+  /* cl_program_build_info */
+  CLenum PROGRAM_BUILD_STATUS                      = 0x1181;
+  CLenum PROGRAM_BUILD_OPTIONS                     = 0x1182;
+  CLenum PROGRAM_BUILD_LOG                         = 0x1183;
+
+  /* cl_build_status */
+  CLint BUILD_SUCCESS                             = 0;
+  CLint BUILD_NONE                                = -1;
+  CLint BUILD_ERROR                               = -2;
+  CLint BUILD_IN_PROGRESS                         = -3;
+
+  /* cl_kernel_info */
+  CLenum KERNEL_FUNCTION_NAME                      = 0x1190;
+  CLenum KERNEL_NUM_ARGS                           = 0x1191;
+  //CLenum KERNEL_REFERENCE_COUNT                    = 0x1192; // disallowed
+  CLenum KERNEL_CONTEXT                            = 0x1193;
+  CLenum KERNEL_PROGRAM                            = 0x1194;
+
+  /* cl_kernel_work_group_info */
+  CLenum KERNEL_WORK_GROUP_SIZE                    = 0x11B0;
+  CLenum KERNEL_COMPILE_WORK_GROUP_SIZE            = 0x11B1;
+  CLenum KERNEL_LOCAL_MEM_SIZE                     = 0x11B2;
+  CLenum KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE = 0x11B3;
+  CLenum KERNEL_PRIVATE_MEM_SIZE                   = 0x11B4;
+
+  /* cl_event_info  */
+  CLenum EVENT_COMMAND_QUEUE                       = 0x11D0;
+  CLenum EVENT_COMMAND_TYPE                        = 0x11D1;
+  //CLenum EVENT_REFERENCE_COUNT                     = 0x11D2; // disallowed
+  CLenum EVENT_COMMAND_EXECUTION_STATUS            = 0x11D3;
+  CLenum EVENT_CONTEXT                             = 0x11D4;
+
+  /* cl_command_type */
+  CLenum COMMAND_NDRANGE_KERNEL                    = 0x11F0;
+  CLenum COMMAND_TASK                              = 0x11F1;
+  //CLenum COMMAND_NATIVE_KERNEL                     = 0x11F2; // disallowed
+  CLenum COMMAND_READ_BUFFER                       = 0x11F3;
+  CLenum COMMAND_WRITE_BUFFER                      = 0x11F4;
+  CLenum COMMAND_COPY_BUFFER                       = 0x11F5;
+  CLenum COMMAND_READ_IMAGE                        = 0x11F6;
+  CLenum COMMAND_WRITE_IMAGE                       = 0x11F7;
+  CLenum COMMAND_COPY_IMAGE                        = 0x11F8;
+  CLenum COMMAND_COPY_IMAGE_TO_BUFFER              = 0x11F9;
+  CLenum COMMAND_COPY_BUFFER_TO_IMAGE              = 0x11FA;
+  //CLenum COMMAND_MAP_BUFFER                        = 0x11FB; // disallowed
+  //CLenum COMMAND_MAP_IMAGE                         = 0x11FC; // disallowed
+  //CLenum COMMAND_UNMAP_MEM_OBJECT                  = 0x11FD; // disallowed
+  CLenum COMMAND_MARKER                            = 0x11FE;
+  //CLenum COMMAND_ACQUIRE_GL_OBJECTS                = 0x11FF; // moved to extension
+  //CLenum COMMAND_RELEASE_GL_OBJECTS                = 0x1200; // moved to extension
+  CLenum COMMAND_READ_BUFFER_RECT                  = 0x1201;
+  CLenum COMMAND_WRITE_BUFFER_RECT                 = 0x1202;
+  CLenum COMMAND_COPY_BUFFER_RECT                  = 0x1203;
+  CLenum COMMAND_USER                              = 0x1204;
+
+  /* command execution status */
+  CLenum COMPLETE                                  = 0x0;
+  CLenum RUNNING                                   = 0x1;
+  CLenum SUBMITTED                                 = 0x2;
+  CLenum QUEUED                                    = 0x3;
+
+  /* cl_profiling_info  */
+  CLenum PROFILING_COMMAND_QUEUED                  = 0x1280;
+  CLenum PROFILING_COMMAND_SUBMIT                  = 0x1281;
+  CLenum PROFILING_COMMAND_START                   = 0x1282;
+  CLenum PROFILING_COMMAND_END                     = 0x1283;
+};
+</pre>
+
+    <dl class="methods">
+
+      <dt class="idl-code">sequence&lt;WebCLPlatform&gt; getPlatforms()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=32">OpenCL 1.1 §4.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetPlatformIDs.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Retrieves all WebCL platforms that are available in this system.
+      </dd>
+
+      <dt class="idl-code">WebCLContext? createContext(optional WebCLContextProperties properties)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=45">OpenCL 1.1 §4.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Returns a newly created WebCL context with the given
+        properties, or `null` if a suitable context could not be
+        created.  The `properties` parameter can be omitted, in which
+        case the implementation will decide which platform and device
+        to use.
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+	        <li>`INVALID_DEVICE` -- if `properties.devices` is non-`null`, but is not an array of valid device objects</li>
+	        <li>`INVALID_DEVICE` -- if any devices in `properties.devices` are on different platforms</li>
+	        <li>`INVALID_PLATFORM` -- if `properties.platform` is non-`null`, but is not a valid platform object</li>
+	        <li>`DEVICE_NOT_AVAILABLE` -- if a device in `properties.devices` is currently not available</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">sequence&lt;DOMString&gt;? getSupportedExtensions()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-9">OpenCL 1.1 §9</a>)</span>
+      </dt>
+      <dd>
+        Returns an array of extension names that are supported by all
+        WebCLPlatforms and WebCLDevices in this implementation.  Any
+        string in this list, when passed to `enableExtension`, must
+        enable the corresponding extension.
+      </dd>
+
+      <dt class="idl-code">CLboolean enableExtension(DOMString extensionName)</dt>
+      <dd>
+        Enables the given extension on all WebCLPlatforms and WebCLDevices.  Returns `true` if the
+        extension is successfully enabled, or `false` if not.  The available extension names can be
+        queried by `getSupportedExtensions`.  Note that enabling an extension does not take effect
+        retroactively, i.e., contexts that were created before enabling the extension will continue
+        to not have the extended capabilities.
+      </dd>
+
+      <dt class="idl-code">void waitForEvents(sequence&lt;WebCLEvent&gt; eventWaitList, optional WebCLCallback whenFinished)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=141">OpenCL 1.1 §5.9</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clWaitForEvents.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Invokes the given callback when all events in `eventWaitList` have completed.  If a callback
+        is not provided, the JavaScript main thread will be blocked until the events have completed.
+        Applications are strongly advised to provide a callback; the blocking mode mainly exists to
+        ease the porting of existing OpenCL code.
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+	        <li>`INVALID_VALUE` -- if `eventWaitList` is `null` or empty</li>
+	        <li>`INVALID_CONTEXT` -- if events specified in `eventWaitList` do not belong to the same
+	          context</li>
+          <li>`INVALID_EVENT` -- if any event in `eventWaitList` is not a valid event object</li>
+          <li>`INVALID_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` --
+            if the execution status of any of the events in
+            `eventWaitList` is a negative integer value</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void releaseAll()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=48">OpenCL 1.1 §4.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Releases the resources held up by all WebCLContext instances,
+        as well as their descendant objects, if any.
+      </dd>
+
+    </dl>
+
+<!-- ======================================================================================================= -->
+
+    <h4><a id="WEBCLCONTEXTPROPERTIES">WebCLContextProperties</a></h4>
+
+<pre class="idl">
+dictionary <dfn>WebCLContextProperties</dfn> {
+  sequence&lt;WebCLDevice&gt;?  devices = null;       // Default: let the implementation decide
+  WebCLPlatform?          platform = null;      // Default: let the implementation decide
+  CLenum                  deviceType = 0x1;     // 0x1 == WebCL.DEVICE_TYPE_DEFAULT
+};
+</pre>
+
+    <dl class="methods">
+
+      <dt class="idl-code">sequence&lt;WebCLDevice&gt; devices</dt>
+      <dd>
+        An array of devices to create the context for.  If the array
+        is not `null`, it must not be empty, and must not contain
+        elements of any other type than WebCLDevice.  The given
+        devices must be on the same platform.  If the array is `null`,
+        the implementation will decide which device (on the given
+        `platform` and/or with the given `deviceType`) to use.
+      </dd>
+
+      <dt class="idl-code">WebCLPlatform platform</dt>
+      <dd>
+        The platform to create a context for.  This field is ignored
+        if `devices` is non-`null`.  If this field is `null`, the
+        implementation will decide which platform to use.  Note that
+        in typical systems, there is only one WebCLPlatform.
+      </dd>
+
+      <dt class="idl-code">CLenum deviceType</dt>
+      <dd>
+        The type of device to create a context for.  The available
+        device types are listed in the table below.  This field is
+        ignored if `devices` is non-`null`.  If there is no device of
+        the given type on the given `platform`, `createContext` will
+        return `null`.  If `platform` is `null`, `createContext` will
+        select any device on any platform that matches the given type,
+        or failing that, will return `null`.
+        <table class="enumtable">
+          <tr><th>deviceType</th><th>Description</th></tr>
+          <tr><td>DEVICE_TYPE_CPU</td><td>A single-core or multi-core CPU, typically the host processor.</td></tr>
+          <tr><td>DEVICE_TYPE_GPU</td><td>A graphics processing unit, typically also used by WebGL.</td></tr>
+          <tr><td>DEVICE_TYPE_ACCELERATOR</td><td>A dedicated OpenCL accelerator.</td></tr>
+          <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device on this platform.</td></tr>
+          <tr><td>DEVICE_TYPE_ALL</td><td>All devices available on this platform.</td></tr>
+        </table>
+      </dd>
+
+    </dl>
+    
+<!-- ======================================================================================================= -->
+
+    <h3><a id="WEBCLPLATFORM">WebCLPlatform</a></h3>
+
+    <p>
+    </p>
+
+<pre class="idl">
+interface <dfn>WebCLPlatform</dfn> {
+  any getInfo(CLenum name);
+  sequence&lt;WebCLDevice&gt; getDevices(optional CLenum deviceType);
+  sequence&lt;DOMString&gt;? getSupportedExtensions();
+  CLboolean enableExtension(DOMString extensionName);
+};
+</pre>
+
+    <dl class="methods">
+
+      <dt class="idl-code">sequence&lt;WebCLDevice&gt; getDevices(optional CLenum deviceType)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=34">OpenCL 1.1 §4.2</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceIDs.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <p>
+          Retrieves the WebCLDevices that are available on this
+          WebCLPlatform and match the given device type. The valid
+          device types are listed in the table below.  Omitting the
+          device type is equivalent to specifying `DEVICE_TYPE_ALL`.
+        </p>
+
+        <table class="enumtable">
+          <tr><th>deviceType</th><th>description</th></tr>
+          <tr><td>DEVICE_TYPE_CPU</td><td>A single-core or multi-core CPU, typically the host processor.</td></tr>
+          <tr><td>DEVICE_TYPE_GPU</td><td>A graphics processing unit, typically also used by WebGL.</td></tr>
+          <tr><td>DEVICE_TYPE_ACCELERATOR</td><td>A dedicated OpenCL accelerator.</td></tr>
+          <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device on this platform.</td></tr>
+          <tr><td>DEVICE_TYPE_ALL</td><td>All devices available on this platform.</td></tr>
+        </table>
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `deviceType` is given, but is not one of the valid enumerated values listed in the table above</li>
+          <li>`DEVICE_NOT_FOUND` -- if there is no WebCLDevice available that matches the given `deviceType`</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=32">OpenCL 1.1 §4.1</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetPlatformInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <p>
+          Retrieves information about this WebCLPlatform.  The available query parameters are listed
+          in the table below.  Note that depending on the privacy policy of the implementation, some
+          of the return values may be empty or otherwise not reflective of the underlying OpenCL
+          platform.  Implementations that choose to mask the underlying values are recommended to
+          make them available for privileged applications (such as browser extensions and
+          development tools) via the <a href="#WEBCL_system_info">System Info</a> extension.
+        </p>
+
+        <table class="enumtable" id="getPlatformInfoEnums">
+          <tr><th>name</th><th>return type</th><th>expected return value</th>
+          <tr><td>PLATFORM_PROFILE</td><td>DOMString</td><td>"WEBCL_PROFILE" + optional vendor string</td></tr>
+          <tr><td>PLATFORM_VERSION</td><td>DOMString</td><td>"WebCL 1.0" + optional vendor string</td></tr>
+          <tr><td>PLATFORM_NAME</td><td>DOMString</td><td>Vendor specific</td></tr>
+          <tr><td>PLATFORM_VENDOR</td><td>DOMString</td><td>Vendor specific</td></tr>
+          <tr><td>PLATFORM_EXTENSIONS</td><td>DOMString</td><td>Vendor specific</td></tr>
+        </table>
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">sequence&lt;DOMString&gt;? getSupportedExtensions()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=269">OpenCL 1.1 §9</a>)</span>
+      </dt>
+      <dd>
+        Returns an array of extension names that are supported by all
+        WebCLDevices on this WebCLPlatform.  Any string in this list,
+        when passed to `enableExtension` on this platform, or any device
+        on this platform, must enable the corresponding extension.
+      </dd>
+
+      <dt class="idl-code">CLboolean enableExtension(DOMString extensionName)</dt>
+      <dd>
+        Enables the given WebCL extension on this WebCLPlatform.  Returns `true` if the extension is
+        successfully enabled, or `false` if not.  The available extension names can be queried by
+        `getSupportedExtensions`.  Note that enabling an extension does not take effect
+        retroactively, i.e., contexts that were created before enabling the extension will continue
+        to not have the extended capabilities.
+      </dd>
+    </dl>
+
+<!-- ======================================================================================================= -->
+
+    <h3><a id="WEBCLDEVICE">WebCLDevice</a></h3>
+
+    <p>
+    </p>
+
+<pre class="idl">
+interface <dfn>WebCLDevice</dfn> {
+  any getInfo(CLenum name);
+  sequence&lt;DOMString&gt;? getSupportedExtensions();
+  CLboolean enableExtension(DOMString extensionName);
+};
+</pre>
+
+    <dl class="methods">
+
+      <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=36">OpenCL 1.1 §4.2</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+      <dd>
+        <p>
+          Retrieves information about this WebCLDevice.  The available query parameters are listed
+          in the table below.  Note that depending on the privacy policy of the implementation, some
+          of the return values may be empty or otherwise not reflective of the underlying OpenCL
+          device.  Implementations that choose to mask the underlying values are recommended to make
+          them available for privileged applications (such as browser extensions and development
+          tools) via the <a href="#WEBCL_system_info">System Info</a> extension.
+        </p>
+
+        <table class="enumtable" id="getDeviceInfoEnums">
+          <tr><th>name</th><th>return type</th><th>expected return value</th>
+          <tr><td>DEVICE_PROFILE</td><td>DOMString</td><td>"WEBCL_PROFILE" + optional vendor string</td></tr>
+          <tr><td>DEVICE_VERSION</td><td>DOMString</td><td>"WebCL 1.0" + optional vendor string</td></tr>
+          <tr><td>DEVICE_OPENCL_C_VERSION</td><td>DOMString</td><td>"WebCL C 1.0" + optional vendor string</td></tr>
+          <tr><td>DEVICE_NAME</td><td>DOMString</td><td>Vendor specific</td></tr>
+          <tr><td>DEVICE_VENDOR</td><td>DOMString</td><td>Vendor specific</td></tr>
+          <tr><td>DEVICE_VENDOR_ID</td><td>CLuint</td><td>Vendor specific</td></tr>
+          <tr><td>DRIVER_VERSION</td><td>DOMString</td><td>Vendor specific</td></tr>
+          <tr><td>DEVICE_EXTENSIONS</td><td>DOMString</td><td>Vendor specific</td></tr>
+          <tr><td>DEVICE_AVAILABLE</td><td>CLboolean</td><td>true</td></tr>
+          <tr><td>DEVICE_COMPILER_AVAILABLE</td><td>CLboolean</td><td>true</td></tr>
+          <tr><td>DEVICE_TYPE</td><td>CLenum</td><td>
+              One or more of {
+              DEVICE_TYPE_CPU,
+              DEVIDE_TYPE_GPU,
+              DEVICE_TYPE_ACCELERATOR }</td></tr>
+          <tr><td>DEVICE_MAX_COMPUTE_UNITS</td><td>CLuint</td><td>&gt;= 1</td></tr>
+          <tr><td>DEVICE_MAX_WORK_ITEM_DIMENSIONS</td><td>CLuint</td><td>&gt;= 3</td></tr>
+          <tr><td>DEVICE_MAX_WORK_ITEM_SIZES</td><td>CLuint</td><td>&gt;= (1, 1, 1)</td></tr>
+          <tr><td>DEVICE_MAX_WORK_GROUP_SIZE</td><td>CLuint</td><td>&gt;= 1</td></tr>
+          <tr><td>DEVICE_PREFERRED_VECTOR_WIDTH_{CHAR, SHORT, INT, LONG, FLOAT}</td><td>CLuint</td><td>&gt;= 1</td></tr>
+          <tr><td>DEVICE_NATIVE_VECTOR_WIDTH_{CHAR, SHORT, INT, LONG, FLOAT}</td><td>CLuint</td><td>&gt;= 1</td></tr>
+          <tr><td>DEVICE_MAX_CLOCK_FREQUENCY</td><td>CLuint</td><td>&gt;= 0</td></tr>
+          <tr><td>DEVICE_ADDRESS_BITS</td><td>CLuint</td><td>32 or 64</td></tr>
+          <tr><td>DEVICE_MAX_MEM_ALLOC_SIZE</td><td>CLulong</td><td>&gt;= max(DEVICE_GLOBAL_MEM_SIZE/4, 1024*1024)</td></tr>
+          <tr><td>DEVICE_IMAGE_SUPPORT</td><td>CLboolean</td><td>true</td></tr>
+          <tr><td>DEVICE_MAX_READ_IMAGE_ARGS</td><td>CLuint</td><td>&gt;= 8</td></tr>
+          <tr><td>DEVICE_MAX_WRITE_IMAGE_ARGS</td><td>CLuint</td><td>&gt;= 1</td></tr>
+          <tr><td>DEVICE_IMAGE2D_MAX_WIDTH</td><td>CLuint</td><td>&gt;= 2048</td></tr>
+          <tr><td>DEVICE_IMAGE2D_MAX_HEIGHT</td><td>CLuint</td><td>&gt;= 2048</td></tr>
+          <tr><td>DEVICE_IMAGE3D_MAX_WIDTH</td><td>CLuint</td><td>&gt;= 0</td></tr>
+          <tr><td>DEVICE_IMAGE3D_MAX_HEIGHT</td><td>CLuint</td><td>&gt;= 0</td></tr>
+          <tr><td>DEVICE_IMAGE3D_MAX_WIDTH</td><td>CLuint</td><td>&gt;= 0</td></tr>
+          <tr><td>DEVICE_MAX_SAMPLERS</td><td>CLuint</td><td>&gt;= 8</td></tr>
+          <tr><td>DEVICE_MAX_PARAMETER_SIZE</td><td>CLuint</td><td>&gt;= 256 bytes</td></tr>
+          <tr><td>DEVICE_MEM_BASE_ADDR_ALIGN</td><td>CLuint</td><td>&gt;= numBits(float16) = 16*32 = 512</td></tr>
+          <tr><td>DEVICE_SINGLE_FP_CONFIG</td><td>CLenum</td><td> A
+              combination of one or more of { FP_ROUND_TO_NEAREST,
+              FP_ROUND_TO_ZERO } and zero or more of { FP_DENORM,
+              FP_INF_NAN, FP_ROUND_TO_INF, FP_FMA, FP_SOFT_FLOAT }.
+          </td></tr>
+          <tr><td>DEVICE_GLOBAL_MEM_CACHE_TYPE</td><td>CLenum</td><td>Exactly one of { NONE, READ_ONLY_CACHE, READ_WRITE_CACHE }</td></tr>
+          <tr><td>DEVICE_GLOBAL_MEM_CACHELINE_SIZE</td><td>CLuint</td><td>&gt;= 0 bytes</td></tr>
+          <tr><td>DEVICE_GLOBAL_MEM_CACHE_SIZE</td><td>CLulong</td><td>&gt;= 0 bytes</td></tr>
+          <tr><td>DEVICE_GLOBAL_MEM_SIZE</td><td>CLulong</td><td>&gt;= 1024*1024 bytes</td></tr>
+          <tr><td>DEVICE_MAX_CONSTANT_BUFFER_SIZE</td><td>CLulong</td><td>&gt;= 1024 bytes</td></tr>
+          <tr><td>DEVICE_MAX_CONSTANT_ARGS</td><td>CLuint</td><td>&gt;= 4</td></tr>
+          <tr><td>DEVICE_LOCAL_MEM_TYPE</td><td>CLenum</td><td>Exactly one of { LOCAL, GLOBAL }</td></tr>
+          <tr><td>DEVICE_LOCAL_MEM_SIZE</td><td>CLulong</td><td>&gt;= 1024 bytes</td></tr>
+          <tr><td>DEVICE_ERROR_CORRECTION_SUPPORT</td><td>CLboolean</td><td>true/false</td></tr>
+          <tr><td>DEVICE_HOST_UNIFIED_MEMORY</td><td>CLboolean</td><td>true/false</td></tr>
+          <tr><td>DEVICE_PROFILING_TIMER_RESOLUTION</td><td>CLuint</td><td>&gt;= 0</td></tr>
+          <tr><td>DEVICE_ENDIAN_LITTLE</td><td>CLboolean</td><td>true/false</td></tr>
+          <tr><td>DEVICE_EXECUTION_CAPABILITIES</td><td>CLenum</td><td>EXEC_KERNEL</td></tr>
+          <tr><td>DEVICE_QUEUE_PROPERTIES</td><td>CLenum</td><td>Zero
+              or more of { QUEUE_PROFILING_ENABLE,
+              QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE }</td></tr>
+          <tr><td>DEVICE_PLATFORM</td><td>WebCLPlatform</td><td>Object</td></tr>
+        </table>
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">sequence&lt;DOMString&gt;? getSupportedExtensions()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=269">OpenCL 1.1 §9</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Returns an array of extension names that are supported by this
+        WebCLDevice. Any string in this list, when passed to
+        `enableExtension`, must enable the corresponding extension.
+      </dd>
+
+      <dt class="idl-code">CLboolean enableExtension(DOMString extensionName)</dt>
+      <dd>
+        Enables the given WebCL extension on this WebCLDevice.  Returns `true` if the extension is
+        successfully enabled, or `false` if not.  The available extension names can be queried by
+        `getSupportedExtensions`.  Note that enabling an extension does not take effect
+        retroactively, i.e., contexts that were created before enabling the extension will continue
+        to not have the extended capabilities.
+      </dd>
+    </dl>
+
+<!-- ======================================================================================================= -->
+
+    <h3><a id="WEBCLCONTEXT">WebCLContext</a></h3>
+
+    <p>
+    </p>
+
+    <pre class="idl">
+interface <dfn>WebCLContext</dfn> {
+
+  WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBufferView hostPtr);
+
+  WebCLCommandQueue createCommandQueue(optional WebCLDevice? device, optional CLenum properties);
+
+  WebCLImage createImage(CLenum memFlags,
+                         WebCLImageDescriptor descriptor,
+                         optional ArrayBufferView hostPtr);
+
+  WebCLProgram createProgram(DOMString source);
+
+  WebCLSampler createSampler(CLboolean normalizedCoords,
+                             CLenum addressingMode,
+                             CLenum filterMode);
+
+  WebCLUserEvent createUserEvent();
+
+  any getInfo(CLenum name);
+
+  sequence&lt;WebCLImageDescriptor&gt;? getSupportedImageFormats(optional CLenum memFlags = MEM_READ_WRITE);
+
+  void release();
+
+  void releaseAll();
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBufferView hostPtr)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=56">OpenCL 1.1 §5.2.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateBuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Creates a new WebCLBuffer with a capacity of `sizeInBytes`,
+        and optionally fills it with data from the given ArrayBufferView.
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+          <li>`INVALID_BUFFER_SIZE` -- if <code>sizeInBytes == 0 || sizeInBytes &gt; DEVICE_MAX_MEM_ALLOC_SIZE</code></li>
+          <li>`INVALID_HOST_PTR` -- if <code>hostPtr.byteLength &lt; sizeInBytes</code></li>
+        </ul>
+      </dd>
+      <dt class="idl-code">WebCLCommandQueue createCommandQueue(optional WebCLDevice? device = null, optional CLenum properties = 0)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=51">OpenCL 1.1 §5.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateCommandQueue.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Creates a new command queue for the given device.  If `device`
+        is `null`, the WebCL implementation will select any
+        WebCLDevice that matches the given `properties` and is covered
+        by this WebCLContext.  If `properties` is omitted, the command
+        queue is created with out-of-order execution disabled and
+        profiling disabled.
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_DEVICE` -- if `device` is invalid or not associated with this context</li>
+          <li>`INVALID_VALUE` -- if values specified in `properties` are not valid</li>
+          <li>`INVALID_QUEUE_PROPERTIES` -- if values specified in `properties` are valid but not supported by the device</li>
+        </ul>
+      </dd>
+      <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBufferView hostPtr)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=76">OpenCL 1.1 §5.3.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateImage2D.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Creates a new WebCLImage with the width and height specified
+        in `descriptor`, and optionally fills it with data from the
+        given ArrayBufferView.
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+          <li>`INVALID_IMAGE_SIZE` -- if <code>descriptor.width == 0 || descriptor.width &gt; DEVICE_IMAGE2D_MAX_WIDTH</code>
+          <li>`INVALID_IMAGE_SIZE` -- if <code>descriptor.height == 0 || descriptor.height &gt; DEVICE_IMAGE2D_MAX_HEIGHT</code>
+          <li>`INVALID_HOST_PTR` -- if <code>hostPtr.byteLength &lt; descriptor.rowPitch * descriptor.height</code></li>
+          <li>`INVALID_IMAGE_FORMAT_DESCRIPTOR` -- if `descriptor.channelOrder` or `descriptor.channelType` is not valid</li>
+          <li>`IMAGE_FORMAT_NOT_SUPPORTED` -- if the given combination `channelOrder`, `channelType` and `memFlags` is not supported by this WebCLContext</li>
+        </ul>
+      </dd>
+      <dt class="idl-code">WebCLProgram createProgram(DOMString source)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=110">OpenCL 1.1 §5.6.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateProgramWithSource.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Creates a WebCLProgram from a UTF-8 string.
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `source` is `null` or empty</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">WebCLSampler createSampler(CLboolean normalizedCoords, CLenum addressingMode, CLenum filterMode)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=106">OpenCL 1.1 §5.5.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateSampler.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Creates a new WebCLSampler with the given coordinate mode,
+        addressing mode, and filtering mode.  The `ADDRESS_NONE` mode
+        is not available, due to its lack of bounds checking.
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `addressingMode` is not
+            `ADDRESS_CLAMP`, `ADDRESS_CLAMP_TO_EDGE`,
+            `ADDRESS_REPEAT`, or `ADDRESS_MIRRORED_REPEAT`</li>
+          <li>`INVALID_VALUE` -- if `filterMode` is not
+            `FILTER_NEAREST` or `FILTER_LINEAR`</li>
+          <li>`INVALID_VALUE` -- if `normalizedCoords` is `false` and
+            `addressingMode` is `ADDRESS_REPEAT` or
+            `ADDRESS_MIRRORED_REPEAT`</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">WebCLUserEvent createUserEvent()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=142">OpenCL 1.1 §5.9</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateUserEvent.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
+
+      <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=49">OpenCL 1.1 §4.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetContextInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <p>
+          Returns the value for the passed name. The type returned is the natural type for the
+          requested name, as given in the table below.
+        </p>
+
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>CONTEXT_NUM_DEVICES</td><td>CLuint</td></tr>
+          <tr><td>CONTEXT_DEVICES</td><td>sequence&lt;WebCLDevice&gt;</td></tr>
+          <tr><td>CONTEXT_PROPERTIES</td><td>WebCLContextProperties</td></tr>
+        </table>
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">sequence&lt;WebCLImageDescriptor&gt;? getSupportedImageFormats(CLenum memFlags)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=82">OpenCL 1.1 §5.3.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetSupportedImageFormats.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <p>
+          Returns a list of image formats that are supported by this
+          WebCLContext with the given `memFlags`. For example, passing
+          in `MEM_READ_WRITE` will return a list of image formats that
+          are available for both reading and writing in kernel code.
+          The returned WebCLImageDescriptor objects will only have the
+          `channelOrder` and `channelType` fields filled in; the other
+          fields will have their default value (zero).
+        </p>
+
+        <p>
+          The minimum set of image formats that must be supported (for
+          both reading and writing) by all devices is defined in the
+          table below.  Note that the set of required formats is the
+          same as on OpenCL 1.1 Embedded Profile.
+       </p>
+
+        <table class="enumtable">
+          <tr><th>channelOrder</th><th>channelType</th></tr>
+          <tr><td>RGBA</td>
+            <td>UNORM_INT8<br>
+        		  UNORM_INT16<br>
+						  SIGNED_INT8<br>
+						  SIGNED_INT16<br>
+						  SIGNED_INT32<br>
+						  UNSIGNED_INT8<br>
+						  UNSIGNED_INT16<br>
+						  UNSIGNED_INT32<br>
+						  HALF_FLOAT<br>
+						  FLOAT</td></tr>
+        </table>
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void release()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=48">OpenCL 1.1 §4.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Releases the resources held up by this object.
+      </dd>
+
+      <dt class="idl-code">void releaseAll()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=48">OpenCL 1.1 §4.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseContext.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Releases the resources held up by this WebCLContext and all
+        objects created from it, if any.
+      </dd>
+    </dl>
+
+<!-- ======================================================================================================= -->
+
+    <h4><a id="WEBCLIMAGEDESCRIPTOR">WebCLImageDescriptor</a></h4>
+
+<pre class="idl">
+dictionary <dfn>WebCLImageDescriptor</dfn> {
+  CLenum channelOrder = 0x10B5;            // 0x10B5 == WebCL.RGBA
+  CLenum channelType = 0x10D2;             // 0x10D2 == WebCL.UNORM_INT8, 8-bit colors normalized to [0, 1]
+  CLuint width = 0, height = 0;
+  CLuint rowPitch = 0;
+};
+</pre>
+
+<!-- ======================================================================================================= -->
+
+    <h3><a id="WEBCLCOMMANDQUEUE">WebCLCommandQueue</a></h3>
+
+<pre class="idl">
+interface <dfn>WebCLCommandQueue</dfn> {
+
+  ////////////////////////////////////////////////////////////////////////////
+  //
+  // Copying: Buffer &lt;-&gt; Buffer, Image &lt;-&gt; Image, Buffer &lt;-&gt; Image
+  //
+
+  void enqueueCopyBuffer(
+                    WebCLBuffer                           srcBuffer,
+                    WebCLBuffer                           dstBuffer,
+                    CLuint                                srcOffset,
+                    CLuint                                dstOffset,
+                    CLuint                                numBytes,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+  void enqueueCopyBufferRect(
+                    WebCLBuffer                           srcBuffer,
+                    WebCLBuffer                           dstBuffer,
+                    sequence&lt;CLuint&gt;                      srcOrigin,
+                    sequence&lt;CLuint&gt;                      dstOrigin,
+                    sequence&lt;CLuint&gt;                      region,
+                    CLuint                                srcRowPitch,
+                    CLuint                                srcSlicePitch,
+                    CLuint                                dstRowPitch,
+                    CLuint                                dstSlicePitch,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+  void enqueueCopyImage(
+                    WebCLImage                            srcImage,
+                    WebCLImage                            dstImage,
+                    sequence&lt;CLuint&gt;                      srcOrigin,
+                    sequence&lt;CLuint&gt;                      dstOrigin,
+                    sequence&lt;CLuint&gt;                      region,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+  void enqueueCopyImageToBuffer(
+                    WebCLImage                            srcImage,
+                    WebCLBuffer                           dstBuffer,
+                    sequence&lt;CLuint&gt;                      srcOrigin,
+                    sequence&lt;CLuint&gt;                      srcRegion,
+                    CLuint                                dstOffset,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+  void enqueueCopyBufferToImage(
+                    WebCLBuffer                           srcBuffer,
+                    WebCLImage                            dstImage,
+                    CLuint                                srcOffset,
+                    sequence&lt;CLuint&gt;                      dstOrigin,
+                    sequence&lt;CLuint&gt;                      dstRegion,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+  ////////////////////////////////////////////////////////////////////////////
+  //
+  // Reading: Buffer -> Host, Image -> Host
+  //
+
+  void enqueueReadBuffer(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingRead,
+                    CLuint                                bufferOffset,
+                    CLuint                                numBytes,
+                    ArrayBufferView                       hostPtr,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+  void enqueueReadBufferRect(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingRead,
+                    sequence&lt;CLuint&gt;                      bufferOrigin,
+                    sequence&lt;CLuint&gt;                      hostOrigin,
+                    sequence&lt;CLuint&gt;                      region,
+                    CLuint                                bufferRowPitch,
+                    CLuint                                bufferSlicePitch,
+                    CLuint                                hostRowPitch,
+                    CLuint                                hostSlicePitch,
+                    ArrayBufferView                       hostPtr,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+  void enqueueReadImage(
+                    WebCLImage                            image,
+                    CLboolean                             blockingRead,
+                    sequence&lt;CLuint&gt;                      origin,
+                    sequence&lt;CLuint&gt;                      region,
+                    CLuint                                hostRowPitch,
+                    ArrayBufferView                       hostPtr,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+  ////////////////////////////////////////////////////////////////////////////
+  //
+  // Writing: Host -> Buffer, Host -> Image
+  //
+
+  void enqueueWriteBuffer(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingWrite,
+                    CLuint                                bufferOffset,
+                    CLuint                                numBytes,
+                    ArrayBufferView                       hostPtr,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+  void enqueueWriteBufferRect(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingWrite,
+                    sequence&lt;CLuint&gt;                      bufferOrigin,
+                    sequence&lt;CLuint&gt;                      hostOrigin,
+                    sequence&lt;CLuint&gt;                      region,
+                    CLuint                                bufferRowPitch,
+                    CLuint                                bufferSlicePitch,
+                    CLuint                                hostRowPitch,
+                    CLuint                                hostSlicePitch,
+                    ArrayBufferView                       hostPtr,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+  void enqueueWriteImage(
+                    WebCLImage                            image,
+                    CLboolean                             blockingWrite,
+                    sequence&lt;CLuint&gt;                      origin,
+                    sequence&lt;CLuint&gt;                      region,
+                    CLuint                                hostRowPitch,
+                    ArrayBufferView                       hostPtr,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+  ////////////////////////////////////////////////////////////////////////////
+  //
+  // Executing kernels
+  //
+
+  void enqueueNDRangeKernel(
+                    WebCLKernel                           kernel,
+                    CLuint                                workDim,
+                    sequence&lt;CLuint&gt;?                     globalWorkOffset, 
+                    sequence&lt;CLuint&gt;                      globalWorkSize,
+                    sequence&lt;CLuint&gt;?                     localWorkSize,
+                    optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
+                    optional WebCLEvent?                  event);
+
+  ////////////////////////////////////////////////////////////////////////////
+  //
+  // Synchronization
+  //
+
+  void enqueueMarker(WebCLEvent event);
+
+  void enqueueBarrier();
+
+  void enqueueWaitForEvents (sequence&lt;WebCLEvent&gt; eventWaitList);
+  
+  void finish(optional WebCLCallback whenFinished);
+
+  void flush();
+
+  ////////////////////////////////////////////////////////////////////////////
+  //
+  // Querying command queue information
+  //
+
+  any getInfo(CLenum name);
+
+  void release();
+};
+</pre>
+
+    <dl class="methods">
+
+      <dt class="idl-code">void enqueueCopyBuffer(
+        WebCLBuffer             srcBuffer,
+        WebCLBuffer             dstBuffer,
+        CLuint                  srcOffset,
+        CLuint                  dstOffset,
+        CLuint                  numBytes,
+        optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
+        optional WebCLEvent?    event)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as `srcBuffer` and
+	          `dstBuffer`</li>
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as all events in
+	          `eventWaitList`</li>
+	        <li>`INVALID_MEM_OBJECT` -- if `srcBuffer` and `dstBuffer`
+	          are not valid WebCLBuffer objects</li>
+	        <li>`INVALID_VALUE` -- if `srcOffset`, `dstOffset`,
+	          `numBytes`, `srcOffset`+`numBytes`, or
+	          `dstOffset`+`numBytes` require accessing elements outside
+	          the `srcBuffer` and `dstBuffer` buffer objects
+	          respectively
+	        <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
+	          `eventWaitList` is invalid</li>
+	        <li>`MEM_COPY_OVERLAP` -- if `srcBuffer` and `dstBuffer` are
+	          the same WebCLBuffer object and the source and destination
+	          regions overlap</li>
+	        <li>`MISALIGNED_SUB_BUFFER_OFFSET` -- if `srcBuffer` or
+	          `dstBuffer` is a sub-buffer object and the offset
+	          specified when the sub-buffer object was created is not
+	          aligned to the `DEVICE_MEM_BASE_ADDR_ALIGN` value for the
+	          device associated with this WebCLCommandQueue</li>
+	        <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure
+	          to allocate memory for data store associated with
+	          `srcBuffer` or `dstBuffer`</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void enqueueCopyBufferRect(
+        WebCLBuffer             srcBuffer,
+        WebCLBuffer             dstBuffer,
+        sequence&lt;CLuint&gt;               srcOrigin,
+        sequence&lt;CLuint&gt;               dstOrigin,
+        sequence&lt;CLuint&gt;               region,
+        CLuint                  srcRowPitch,
+        CLuint                  srcSlicePitch,
+        CLuint                  dstRowPitch,
+        CLuint                  dstSlicePitch,
+        optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
+        optional WebCLEvent?    event);
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferRect.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `srcBuffer` and `dstBuffer`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+          <li>`INVALID_MEM_OBJECT` -- if `srcBuffer` and `dstBuffer` are not valid WebCLBuffer objects</li>
+          <li>`INVALID_VALUE` -- if `srcOrigin`, `dstOrigin`, or `region` does not have exactly two elements</li>
+          <li>`INVALID_VALUE` -- if the `origin`, `region` and `pitch`
+            values would require accessing elements outside the
+            `srcBuffer` or `dstBuffer` objects</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
+          `eventWaitList` is invalid</li>
+          <li>`MEM_COPY_OVERLAP` -- if `srcBuffer` and `dstBuffer` are
+            the same WebCLBuffer object and the source and destination
+            regions overlap</li>
+	        <li>`MISALIGNED_SUB_BUFFER_OFFSET` -- if `srcBuffer` or
+	          `dstBuffer` is a sub-buffer object and the offset
+	          specified when the sub-buffer object was created is not
+	          aligned to the `DEVICE_MEM_BASE_ADDR_ALIGN` value for the
+	          device associated with this WebCLCommandQueue</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void enqueueCopyImage(
+        WebCLImage              srcImage,
+        WebCLImage              dstImage,
+        sequence&lt;CLuint&gt;               srcOrigin,
+        sequence&lt;CLuint&gt;               dstOrigin,
+        sequence&lt;CLuint&gt;               region,
+        optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
+        optional WebCLEvent?    event)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImage.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as `srcImage` and
+	          `dstImage`</li>
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as all events in
+	          `eventWaitList` or</li>
+	        <li>`INVALID_MEM_OBJECT` -- if `srcImage` or `dstImage` is
+	          not a valid image object</li>
+	        <li>`IMAGE_FORMAT_MISMATCH` -- if `srcImage` and `dstImage`
+	          do not have the same image format</li>
+	        <li>`INVALID_VALUE` -- if the `srcOrigin`, `dstOrigin` and
+            `region` values would require accessing elements outside
+            the boundaries of `srcImage` or `dstImage`</li>
+          <li>`INVALID_VALUE` -- if `srcOrigin`, `dstOrigin`, or
+            `region` does not have exactly two elements</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
+            `eventWaitList` is invalid</li>
+	        <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of
+            `srcImage` or `dstImage` are not supported by the device
+            associated with this WebCLCommandQueue</li>
+	        <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure
+	          to allocate memory for data store associated with
+	          `srcImage` or `dstImage`</li>
+	        <li>`MEM_COPY_OVERLAP` -- if `srcImage` and `dstImage` are
+	          the same WebCLImage object and the source and destination
+	          regions overlap</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void enqueueCopyBufferToImage(
+        WebCLBuffer             srcBuffer,
+        WebCLImage              dstImage,
+        CLuint                  srcOffset,
+        sequence&lt;CLuint&gt;               dstOrigin,
+        sequence&lt;CLuint&gt;               dstRegion,
+        optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
+        optional WebCLEvent?    event)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyBufferToImage.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as `srcBuffer` and
+	          `dstImage`</li>
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as all events in
+	          `eventWaitList`</li>
+	        <li>`INVALID_MEM_OBJECT` -- if `srcBuffer` is not a valid
+            buffer object or `dstImage` is not a valid image
+            object</li>
+          <li>`INVALID_VALUE` -- if `dstOrigin` or `dstRegion` does
+            not have exactly two elements</li>
+	        <li>`INVALID_VALUE` -- if the `srcOffset`, `dstOrigin` and
+            `dstRegion` values would require accessing elements
+            outside the boundaries of `srcBuffer` or `dstImage`</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
+            `eventWaitList` is invalid</li>
+	        <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of
+            `dstImage` are not supported by the device associated with
+            this WebCLCommandQueue</li>
+	        <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure
+	          to allocate memory for data store associated with
+	          `srcBuffer` or `dstImage`</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void enqueueCopyImageToBuffer(
+        WebCLImage              srcImage,
+        WebCLBuffer             dstBuffer,
+        sequence&lt;CLuint&gt;               srcOrigin,
+        sequence&lt;CLuint&gt;               srcRegion,
+        CLuint                  dstOffset,
+        optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
+        optional WebCLEvent?    event)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.3.4">OpenCL 1.1 §5.3.4</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueCopyImageToBuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as `srcImage` and
+	          `dstBuffer`</li>
+	        <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+	          associated with the same WebCLContext as all events in
+	          `eventWaitList`</li>
+	        <li>`INVALID_MEM_OBJECT` -- if `srcImage` is not a valid
+            image object or `dstBuffer` is not a valid buffer
+            object</li>
+          <li>`INVALID_VALUE` -- if `srcOrigin` or `srcRegion` does
+            not have exactly two elements</li>
+	        <li>`INVALID_VALUE` -- if the `srcOrigin`, `srcRegion` and
+            `dstOffset` values would require accessing elements
+            outside the boundaries of `srcImage` or `dstBuffer`</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in
+            `eventWaitList` is invalid</li>
+	        <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of
+            `srcImage` are not supported by the device associated with
+            this WebCLCommandQueue</li>
+	        <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure
+	          to allocate memory for data store associated with
+	          `srcImage` or `dstBuffer`</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void enqueueReadBuffer(
+        WebCLBuffer             buffer,
+        CLboolean               blockingRead,
+        CLuint                  bufferOffset,
+        CLuint                  numBytes,
+        ArrayBufferView         hostPtr,
+        optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
+        optional WebCLEvent?    event)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+            associated with the same WebCLContext as `buffer`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+            associated with the same WebCLContext as all events in
+            `eventWaitList`</li>
+          <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid
+            buffer object</li>
+          <li>`INVALID_VALUE` -- if any part of the region being read,
+            specified by `bufferOffset` and `numBytes`, is out of
+            bounds of `buffer`</li>
+          <li>`INVALID_VALUE` -- if any part of the region being
+            written, specified by `hostPtr` and `numBytes` is out of
+            bounds of `hostPtr`</li>
+          <li>`INVALID_VALUE` -- if <code>numBytes %
+            hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
+            `blockingRead` is `true` and the execution status of any
+            event in `eventWaitList` is a negative integer value</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void enqueueReadBufferRect(
+        WebCLBuffer             buffer,
+        CLboolean               blockingRead,
+        sequence&lt;CLuint&gt;               bufferOrigin,
+        sequence&lt;CLuint&gt;               hostOrigin,
+        sequence&lt;CLuint&gt;               region,
+        CLuint                  bufferRowPitch,
+        CLuint                  bufferSlicePitch,
+        CLuint                  hostRowPitch,
+        CLuint                  hostSlicePitch,
+        ArrayBufferView         hostPtr,
+        optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
+        optional WebCLEvent?    event)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadBufferRect.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `buffer`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+          <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
+          <li>`INVALID_VALUE` -- if `bufferOrigin`, `hostOrigin`, or
+            `region` does not have exactly three elements</li>
+          <li>`INVALID_VALUE` -- if any part of the region being read,
+            specified by `bufferOrigin`, `region`, `bufferRowPitch` and
+            `bufferSlicePitch`, is out of bounds of `buffer`</li>
+          <li>`INVALID_VALUE` -- if any part of the region being
+            written, specified by `hostOrigin`, `region`, `hostRowPitch`
+            and `hostSlicePitch`, is out of bounds of `hostPtr`</li>
+          <li>`INVALID_VALUE` -- if <code>host{Row,Slice}Pitch %
+            hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
+            `blockingRead` is `true` and the execution status of any
+            event in `eventWaitList` is a negative integer value</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void enqueueReadImage(
+        WebCLImage              image,
+        CLboolean               blockingRead,
+        sequence&lt;CLuint&gt;               origin,
+        sequence&lt;CLuint&gt;               region,
+        CLuint                  hostRowPitch,
+        ArrayBufferView         hostPtr,
+        optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
+        optional WebCLEvent?    event)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueReadImage.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `image`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+          <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
+          <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of `image` are not supported by this WebCLCommandQueue</li>
+          <li>`INVALID_VALUE` -- if `origin` or `region` does not have exactly two elements</li>
+          <li>`INVALID_VALUE` -- if any part of the region being read, specified by `origin` and `region`, is out of bounds of `image`</li>
+          <li>`INVALID_VALUE` -- if any part of the region being written, specified by `region` and `hostRowPitch`, is out of bounds of `hostPtr`</li>
+          <li>`INVALID_VALUE` -- if <code>hostRowPitch % hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if `blockingRead` is `true` and the execution status of any event
+            in `eventWaitList`is a negative integer value</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void enqueueWriteBuffer(
+        WebCLBuffer             buffer,
+        CLboolean               blockingWrite,
+        CLuint                  bufferOffset,
+        CLuint                  numBytes,
+        ArrayBufferView         hostPtr,
+        optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
+        optional WebCLEvent?    event)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+            associated with the same WebCLContext as `buffer`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not
+            associated with the same WebCLContext as all events in
+            `eventWaitList`</li>
+          <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid
+            buffer object</li>
+          <li>`INVALID_VALUE` -- if any part of the region being
+            written, specified by `bufferOffset` and `numBytes`, is
+            out of bounds of `buffer`</li>
+          <li>`INVALID_VALUE` -- if any part of the region being read,
+            specified by `hostPtr` and `numBytes`, is out of bounds of
+            `hostPtr`</li>
+          <li>`INVALID_VALUE` -- if <code>numBytes %
+            hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
+            `blockingWrite` is `true` and the execution status of any
+            event in `eventWaitList` is a negative integer value</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void enqueueWriteBufferRect(
+        WebCLBuffer             buffer,
+        CLboolean               blockingWrite,
+        sequence&lt;CLuint&gt;               bufferOrigin,
+        sequence&lt;CLuint&gt;               hostOrigin,
+        sequence&lt;CLuint&gt;               region,
+        CLuint                  bufferRowPitch,
+        CLuint                  bufferSlicePitch,
+        CLuint                  hostRowPitch,
+        CLuint                  hostSlicePitch,
+        ArrayBufferView         hostPtr,
+        optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
+        optional WebCLEvent?    event)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteBufferRect.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `buffer`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+          <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer object</li>
+          <li>`INVALID_VALUE` -- if `bufferOrigin`, `hostOrigin`, or
+            `region` does not have exactly three elements</li>
+          <li>`INVALID_VALUE` -- if any part of the region being written,
+            specified by `bufferOrigin`, `region`, `bufferRowPitch` and
+            `bufferSlicePitch`, is out of bounds of `buffer`</li>
+          <li>`INVALID_VALUE` -- if any part of the region being
+            read, specified by `hostOrigin`, `region`, `hostRowPitch`
+            and `hostSlicePitch`, is out of bounds of `hostPtr`</li>
+          <li>`INVALID_VALUE` -- if <code>host{Row,Slice}Pitch %
+            hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
+            `blockingWrite` is `true` and the execution status of any
+            event in `eventWaitList` is a negative integer value</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void enqueueWriteImage(
+        WebCLImage              image,
+        CLboolean               blockingWrite,
+        sequence&lt;CLuint&gt;               origin,
+        sequence&lt;CLuint&gt;               region,
+        CLuint                  hostRowPitch,
+        ArrayBufferView         hostPtr,
+        optional sequence&lt;WebCLEvent&gt;?  eventWaitList,
+        optional WebCLEvent?    event)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.2">OpenCL 1.1 §5.2.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWriteImage.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `image`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+          <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage object</li>
+          <li>`INVALID_IMAGE_SIZE` -- if the image dimensions of `image` are not supported by this WebCLCommandQueue</li>
+          <li>`INVALID_VALUE` -- if `origin` or `region` does not have exactly two elements</li>
+          <li>`INVALID_VALUE` -- if any part of the region being written, specified by `origin` and `region`, is out of bounds of `image`</li>
+          <li>`INVALID_VALUE` -- if any part of the region being read, specified by `region` and `hostRowPitch`, is out of bounds of `hostPtr`</li>
+          <li>`INVALID_VALUE` -- if <code>hostRowPitch % hostPtr.BYTES_PER_ELEMENT !== 0</code></li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` -- if
+            `blockingWrite` is `true` and the execution status of any
+            event in `eventWaitList`is a negative integer value</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void enqueueNDRangeKernel( 
+        WebCLKernel kernel,
+        CLuint workDim,
+        sequence&lt;CLuint&gt;? globalWorkOffset,
+        sequence&lt;CLuint&gt; globalWorkSize,
+        sequence&lt;CLuint&gt;? localWorkSize,
+        optional sequence&lt;WebCLEvent&gt;? eventWaitList = null,
+        optional WebCLEvent? event = null)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.8">OpenCL 1.1 §5.8</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueNDRangeKernel.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `kernel`</li>
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+          <li>`INVALID_KERNEL` -- if `kernel` is not a valid WebCLKernel object</li>
+          <li>`INVALID_PROGRAM_EXECUTABLE` -- if there is no
+            successfully built program executable of `kernel`
+            available for the device associated with this
+            WebCLCommandQueue</li>
+          <li>`INVALID_KERNEL_ARGS` -- if any kernel argument values have not been specified for `kernel`</li>
+          <li>`INVALID_WORK_DIMENSION` -- if `workDim` is not equal to 1, 2, or 3</li>
+          <li>`INVALID_GLOBAL_WORK_SIZE` -- if <code>globalWorkSize.length != workDim</code></li>
+          <li>`INVALID_GLOBAL_WORK_SIZE` -- if <code>globalWorkSize[i] &gt; 2<small><sup>32</sup></small>-1</code> for any `i`</li>
+          <li>`INVALID_GLOBAL_OFFSET` -- if <code>globalWorkOffset.length != workDim</code></li>
+          <li>`INVALID_GLOBAL_OFFSET` -- if <code>globalWorkSize[i] + globalWorkOffset[i] &gt; 2<small><sup>32</sup></small>-1</code> for any `i`</li>
+          <li>`INVALID_WORK_GROUP_SIZE` -- if <code>localWorkSize.length != workDim</code></li>
+          <li>`INVALID_WORK_GROUP_SIZE` -- if <code>globalWorkSize[i] % localWorkSize[i] !== 0</code> for any `i`</li>
+          <li>`INVALID_WORK_GROUP_SIZE` -- if <code>localWorkSize[i] !== requiredSize[i]</code> for any `i`, where
+            `requiredSize` is specified using the `reqd_work_group_size` qualifier in kernel source</li>
+          <li>`INVALID_WORK_GROUP_SIZE` -- if `localWorkSize` is
+            `null` and the `reqd_work_group_size` qualifier is given
+            in kernel source</li>
+          <li>`INVALID_WORK_GROUP_SIZE` -- if the total number of
+            work-items in a work-group (that is, the product of all
+            elements in `localWorkSize`) is greater than the value of
+            `DEVICE_MAX_WORK_GROUP_SIZE` queried from the device
+            associated with this queue</li>
+
+          <li>`INVALID_WORK_ITEM_SIZE` -- if <code>localWorkSize[i] &gt; DEVICE_MAX_WORK_ITEM_SIZES[i]</code> for any `i`</li>
+          <li>`INVALID_IMAGE_SIZE` -- if an image object is specified as an argument to `kernel`, and the image dimensions
+            (width, height, pitch) are not supported by the device associated with this queue</li>
+          <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure to allocate memory for data store associated with
+            image or buffer objects specified as arguments to `kernel`</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void enqueueMarker(WebCLEvent event)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueMarker.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `event` is not a valid WebCLEvent object</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void enqueueBarrier()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueBarrier.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
+
+      <dt class="idl-code">void enqueueWaitForEvents (sequence&lt;WebCLEvent&gt; eventWaitList);
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.10">OpenCL 1.1 §5.10</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clEnqueueWaitForEvents.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if `eventWaitList` is empty or contains any invalid events</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void finish(optional WebCLCallback whenFinished)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFinish.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Invokes the given callback when all commands in this queue have completed.  If a callback is
+        not provided, the JavaScript main thread will be blocked until the commands have completed.
+        Applications are strongly advised to provide a callback; the blocking mode mainly exists to
+        ease the porting of existing OpenCL code.
+      </dd>
+
+      <dt class="idl-code">void flush()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.13">OpenCL 1.1 §5.13</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clFlush.html">man page</a>)</span>
+      </dt>
+      <dd>
+      </dd>
+
+      <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.1">OpenCL 1.1 §5.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetCommandQueueInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>QUEUE_CONTEXT</td><td>WebCLContext</td></tr>
+          <tr><td>QUEUE_DEVICE</td><td>WebCLDevice</td></tr>
+          <tr><td>QUEUE_PROPERTIES</td><td>CLenum</td></tr>
+        </table>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void release()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=53">OpenCL 1.1 §5.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseCommandQueue.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Releases the resources held up by this object.
+      </dd>
+
+    </dl>
+
+<pre class="example">
+// This example shows how to wait for two kernels to complete before a
+// third kernel executes
+
+var eventWaitList = [ new WebCLEvent(), new WebCLEvent() ];
+queue.enqueueNDRangeKernel(kernel1, dim, null, globals, null, null, eventWaitList[0]);
+queue.enqueueNDRangeKernel(kernel2, dim, null, globals, null, null, eventWaitList[1]);
+queue.enqueueNDRangeKernel(kernel3, dim, null, globals, null, eventWaitList);
+</pre>
+
+<pre class="example">
+// This example reads the entire contents of a WebCL buffer object
+// into a newly created Uint8Array in host memory.
+
+function readBufferToHost(srcBuffer) {
+
+ // Query the number of bytes in the source buffer, create a new
+ // Uint8Array of that size, then fill it with a blocking read.
+
+ var numBytes = srcBuffer.getInfo(WebCL.MEM_SIZE);
+ var dstArray = new Uint8Array(numBytes);
+ queue.enqueueReadBuffer(srcBuffer, true, 0, numBytes, dstArray);
+
+ return dstArray;
+};
+</pre>
+
+<pre class="example">
+// This example fills a WebCL image with pixels from a WebCL buffer.
+
+function copyBufferToImage(srcBuffer, dstImage) {
+
+  // Extract the dimensions of the image.
+
+  var imgWidth = dstImage.getInfo(WebCL.IMAGE_WIDTH);
+  var imgHeight = dstImage.getInfo(WebCL.IMAGE_HEIGHT);
+  queue.enqueueCopyBufferToImage(srcBuffer, dstImage, 0, [0,0], [imgWidth, imgHeight]);
+};
+</pre>
+
+<pre class="example">
+// This example copies a rectangular region of memory from a
+// buffer object to another.  The buffer objects are assumed
+// to be the same size. The origin, width, height, and pitch
+// (a.k.a. row stride) are given in bytes (not pixels, because
+// these are buffers rather than images).
+
+function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitch) {
+
+  // The row pitch could be different for source and destination,
+  // but is assumed to be the same in this example.
+
+  queue.enqueueCopyBufferRect(srcBuffer, dstBuffer, [srcX, srcY], [dstX, dstY], 
+                              [w, h], pitch, 0, pitch, 0);
+};
+</pre>
+
+
+<!-- ======================================================================================================= -->
+
+    <h3><a id="WEBCLMEMORYOBJECT">WebCLMemoryObject</a></h3>
+
+<pre class="idl">interface <dfn>WebCLMemoryObject</dfn> {
+  any getInfo(CLenum name);
+  void release();
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=103">OpenCL 1.1 §5.4.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetMemObjectInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th><th>return value</th></tr>
+          <tr><td>`MEM_TYPE`</td><td>`CLenum`</td><td>`MEM_OBJECT_BUFFER` or `MEM_OBJECT_IMAGE2D`</td></tr>
+          <tr><td>`MEM_FLAGS`</td><td>`CLenum`</td><td>The `memFlags` as specified at construction time</td></tr>
+          <tr><td>`MEM_SIZE`</td><td>`CLuint`</td><td>The size of this memory object in bytes</td></tr>
+          <tr><td>`MEM_CONTEXT`</td><td>`WebCLContext`</td><td>the WebCL context of this memory object</td></tr>
+          <tr><td>`MEM_ASSOCIATED_MEMOBJECT`</td><td>`WebCLBuffer`</td><td>The buffer
+              object that this buffer was created from, or `null`
+              if this buffer was not created using `createSubBuffer`</td></tr>
+          <tr><td>`MEM_OFFSET`</td><td>`CLuint`</td><td>The offset given to `createSubBuffer`,
+              or zero if this buffer was not created using `createSubBuffer`</td></tr>
+        </table>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void release()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=99">OpenCL 1.1 §5.4.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseMemObject.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Releases the resources held up by this object.
+      </dd>
+
+    </dl>
+
+<!-- ======================================================================================================= -->
+
+    <h4><a id="WEBCLBUFFER">WebCLBuffer</a></h4>
+
+     <p>
+     </p>
+
+<pre class="idl">interface <dfn>WebCLBuffer</dfn> : WebCLMemoryObject {
+  WebCLBuffer createSubBuffer(CLenum memFlags, CLuint origin, CLuint sizeInBytes);
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">WebCLBuffer createSubBuffer(CLenum memFlags, CLuint origin, CLuint sizeInBytes)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.2.1">OpenCL 1.1 §5.2.1</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateSubBuffer.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Creates a new WebCLBuffer that represents a sub-region of this
+        WebCLBuffer. The two buffers reference the same area of global
+        memory, so changes made into one are immediately reflected in
+        the other.
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_MEM_OBJECT` -- if this WebCLBuffer is already a sub-buffer object</li>
+          <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+          <li>`INVALID_VALUE` -- if the region specified by (`origin`, `sizeInBytes`) is out of bounds in this WebCLBuffer</li>
+          <li>`MISALIGNED_SUB_BUFFER_OFFSET` -- if there is any
+            WebCLDevice in the WebCLContext associated with this
+            WebCLBuffer for which the given `origin` value would
+            result in an improperly aligned sub-buffer</li>
+        </ul>
+
+      </dd>
+    </dl>
+
+ <!-- ======================================================================================================= -->
+
+    <h4><a id="WEBCLIMAGE">WebCLImage</a></h4>
+
+    <p>
+    </p>
+
+<pre class="idl">interface <dfn>WebCLImage</dfn> : WebCLMemoryObject {
+  WebCLImageDescriptor getInfo();
+};
+</pre>
+
+   <dl class="methods">
+     <dt class="idl-code">WebCLImageDescriptor getInfo()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=97">OpenCL 1.1 §5.3.6</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetImageInfo.html">man page</a>)</span>
+      </dt>
+     <dd>
+       Returns a new WebCLImageDescriptor containing information about
+       the pixel format and dimensions of this WebCLImage.
+     </dd>
+
+   </dl>
+
+
+<!-- ======================================================================================================= -->
+
+    <h3><a id="WEBCLSAMPLER">WebCLSampler</a></h3>
+
+    <p>
+    </p>
+    <pre class="idl">
+interface <dfn>WebCLSampler</dfn> {
+  any getInfo(CLenum name);
+  void release();
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=108">OpenCL 1.1 §5.5.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetSamplerInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>SAMPLER_CONTEXT</td><td>WebCLContext</td></tr>
+          <tr><td>SAMPLER_NORMALIZED_COORDS</td><td>CLboolean</td></tr>
+          <tr><td>SAMPLER_ADDRESSING_MODE</td><td>CLenum</td></tr>
+          <tr><td>SAMPLER_FILTER_MODE</td><td>CLenum</td></tr>
+        </table>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void release()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=107">OpenCL 1.1 §5.5.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseSampler.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Releases the resources held up by this object.
+      </dd>
+    </dl>
+
+<!-- ======================================================================================================= -->
+    <h3><a id="WEBCLPROGRAM">WebCLProgram</a></h3>
+
+    <p>
+    </p>
+    <pre class="idl">
+interface <dfn>WebCLProgram</dfn> {
+  any getInfo(CLenum name);
+
+  any getBuildInfo(WebCLDevice device, CLenum name);
+
+  void build(optional sequence&lt;WebCLDevice&gt;? devices,
+             optional DOMString? options,
+             optional WebCLCallback whenFinished);
+
+  WebCLKernel createKernel(DOMString kernelName);
+
+  sequence&lt;WebCLKernel&gt; createKernelsInProgram();
+
+  void release();
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=119">OpenCL 1.1 §5.6.5</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetProgramInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>PROGRAM_CONTEXT</td><td>WebCLContext</td></tr>
+          <tr><td>PROGRAM_NUM_DEVICES</td><td>CLuint</td></tr>
+          <tr><td>PROGRAM_DEVICES</td><td>sequence&lt;WebCLDevice&gt;</td></tr>
+          <tr><td>PROGRAM_SOURCE</td><td>DOMString</td></tr>
+        </table>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">any getBuildInfo(WebCLDevice device, CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=122">OpenCL 1.1 §5.6.5</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetProgramBuildInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>PROGRAM_BUILD_STATUS</td><td>CLint</td></tr>
+          <tr><td>PROGRAM_BUILD_OPTIONS</td><td>DOMString</td></tr>
+          <tr><td>PROGRAM_BUILD_LOG</td><td>DOMString</td></tr>
+        </table>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_DEVICE` -- if `device` is not associated with this WebCLProgram</li>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void build(optional sequence&lt;WebCLDevice&gt;? devices,
+                                      optional DOMString? options,
+                                      optional WebCLCallback whenFinished)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=114">OpenCL 1.1 §5.6.2</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clBuildProgram.html">man page</a>)</span>
+      </dt>
+
+      <dd>
+        <p>
+          Compiles this WebCLProgram for the given list of devices, or in absence of the list, for
+          all devices associated with the WebCLContext that this WebCLProgram was created from.  A
+          string of compiler options and an asynchronous callback function to invoke when the build
+          is completed can also be provided.  Applications are strongly advised to provide a
+          callback, to avoid blocking the JavaScript main thread.  The available compiler options
+          are listed in the table below; any other option is considered invalid.
+        </p>
+
+        <table class="enumtable">
+          <tr><th>Build option</th><th>Description</th></tr>
+          <tr><td><i>-D name</i></td><td>Equivalent to <i>#define name</i> in OpenCL C.</td></tr>
+          <tr><td><i>-D name=definition</i></td><td>Equivalent to <i>#define name definition</i> in OpenCL C.</td></tr>
+          <tr><td><i>-cl-opt-disable</i></td><td>Disable all optimizations.</td></tr>
+          <tr><td><i>-cl-single-precision-constant</i></td><td>Treat double-precision constants as single-precision.</td></tr>
+          <tr><td><i>-cl-denorms-are-zero</i></td><td>Allow denormalized numbers to be flushed to zero.</td></tr>
+          <tr><td><i>-cl-mad-enable</i></td><td>Allow <i>a*b+c</i> to be computed with potentially reduced accuracy.</td></tr>
+          <tr><td><i>-cl-no-signed-zeros</i></td><td>Allow optimizations that ignore the signedness of zero.</td></tr>
+          <tr><td><i>-cl-unsafe-math-optimizations</i></td><td>Allow
+              optimizations that may violate IEEE 754 and OpenCL
+              numerical compliance requirements. This option
+              includes <i>-cl-no-signed-zeros</i>
+              and <i>cl-mad-enable</i>.</td></tr>
+          <tr><td><i>-cl-finite-math-only</i></td><td>Allow
+              optimizations that ignore NaNs and infinities.</td></tr>
+          <tr><td><i>-cl-fast-relaxed-math</i></td><td>Equivalent
+              to <i>-cl-finite-math-only</i>
+              and <i>-cl-unsafe-math-optimizations</i>.</td></tr>
+          <tr><td><i>-W</i></td><td>Inhibit all warning messages.</td></tr>
+          <tr><td><i>-Werror</i></td><td>Make all warnings into errors.</td></tr>
+        </table>
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_DEVICE` -- if any element in `devices` is not a valid WebCLDevice</li>
+          <li>`INVALID_DEVICE` -- if any device in `devices` is not associated with the WebCLContext of this WebCLProgram</li>
+          <li>`INVALID_BUILD_OPTIONS` -- if the build options specified by `options` are invalid</li>
+          <li>`INVALID_OPERATION` -- if a previous build of this
+            WebCLProgram for any of the devices listed in `devices`
+            has not completed</li>
+          <li>`BUILD_PROGRAM_FAILURE` -- if there is a failure to build the program executable</li>
+          <li>`INVALID_OPERATION` -- if there are WebCLKernel objects
+            already attached to this WebCLProgram</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">WebCLKernel createKernel(DOMString name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=124">OpenCL 1.1 §5.7.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateKernel.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_PROGRAM_EXECUTABLE` -- if there is no successfully built executable for any device in this WebCLProgram</li>
+          <li>`INVALID_KERNEL_NAME` -- if a kernel by the given `name` is not found in this WebCLProgram</li>
+          <li>`INVALID_KERNEL_DEFINITION` -- if the function
+            definition of the given kernel function (`name`), such as
+            the number of arguments and the argument types, are not
+            the same for all devices for which the program executable
+            has been built</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">sequence&lt;WebCLKernel&gt; createKernelsInProgram()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=125">OpenCL 1.1 §5.7.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateKernelsInProgram.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_PROGRAM_EXECUTABLE` -- if there is no successfully built executable for any device in this WebCLProgram</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void release()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=113">OpenCL 1.1 §5.6.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseProgram.html">man page</a>)</span>
+      </dt>
+      <dd>
+      <dd>
+        Releases the resources held up by this object.
+      </dd>
+
+    </dl>
+
+<!-- ======================================================================================================= -->
+
+    <h3><a id="WEBCLKERNEL">WebCLKernel</a></h3>
+
+    <p>
+      The following methods are available for setting kernel arguments
+      and querying kernel-specific information.
+    </p>
+
+<pre class="idl">
+interface <dfn>WebCLKernel</dfn> {
+  any getInfo(CLenum name);
+  any getWorkGroupInfo(WebCLDevice device, CLenum name);
+  WebCLKernelArgInfo? getArgInfo(CLuint index);
+  void setArg(CLuint index, WebCLMemoryObject value);
+  void setArg(CLuint index, WebCLSampler value);
+  void setArg(CLuint index, ArrayBufferView value);
+  void release();
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=129">OpenCL 1.1 §5.7.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetKernelInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>KERNEL_FUNCTION_NAME</td><td>DOMString</td></tr>
+          <tr><td>KERNEL_NUM_ARGS</td><td>CLuint</td></tr>
+          <tr><td>KERNEL_CONTEXT</td><td>WebCLContext</td></tr>
+          <tr><td>KERNEL_PROGRAM</td><td>WebCLProgram</td></tr>
+        </table>
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">any getWorkGroupInfo(WebCLDevice device, CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=130">OpenCL 1.1 §5.7.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetKernelWorkGroupInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <p>
+          Returns the value corresponding to the given `device` and `name`.
+        </p>
+
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>KERNEL_WORK_GROUP_SIZE</td><td>CLuint</td></tr>
+          <tr><td>KERNEL_COMPILE_WORK_GROUP_SIZE</td><td>sequence&lt;CLuint&gt;</td></tr>
+          <tr><td>KERNEL_LOCAL_MEM_SIZE</td><td>CLuint</td></tr>
+          <tr><td>KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE</td><td>CLuint</td></tr>
+          <tr><td>KERNEL_PRIVATE_MEM_SIZE</td><td>CLuint</td></tr>
+        </table>
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_DEVICE` -- if `device` is not associated with this WebCLKernel</li>
+          <li>`INVALID_DEVICE` -- if `device` is `null` but there is more than one WebCLDevice associated with this WebCLKernel</li>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </ul>
+      </dd>
+
+
+      <dt class="idl-code">WebCLKernelArgInfo? getArgInfo(CLuint index)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.2.pdf#page=167">OpenCL 1.2 §5.7.3</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/clGetKernelArgInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Returns `null` if `index` is not a valid argument index for
+        this WebCLKernel.  Legal values for `index` range from zero to
+        `N-1`, where `N` is the total number of arguments declared by
+        the kernel.
+      </dd>
+
+      <dt class="idl-code">void setArg(CLuint index, WebCLMemoryObject memObject)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.7.2">OpenCL 1.1 §5.7.2</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <p>
+          Sets the given `memObject` to the kernel argument at the
+          given `index`.  Legal values for `index` range from zero to
+          `N-1`, where `N` is the total number of arguments declared
+          by the kernel.
+        </p>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
+          <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a memory object</li>
+          <li>`INVALID_MEM_OBJECT` -- if `memObject` is not a valid WebCLMemoryObject</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void setArg(CLuint index, WebCLSampler sampler)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.7.2">OpenCL 1.1 §5.7.2</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <p>
+          Sets the given `sampler` to the kernel argument at the given
+          `index`.  Legal values for `index` range from zero to `N-1`,
+          where `N` is the total number of arguments declared by the
+          kernel.
+        </p>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
+          <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a sampler</li>
+          <li>`INVALID_SAMPLER` -- if `sampler` is not a valid WebCLSampler</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void setArg(CLuint index, ArrayBufferView value)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.7.2">OpenCL 1.1 §5.7.2</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <p>
+          Sets the given `value` to the kernel argument at the given
+          `index`.  Legal values for `index` range from zero to `N-1`,
+          where `N` is the total number of arguments declared by the
+          kernel.
+        </p>
+        <p>
+          The type and length of `value` must match the base type and
+          vector width of the target kernel argument. For example, if
+          the kernel argument is of type `float4`, then `value` must
+          be a Float32Array of length 4.  Arguments with the `local`
+          address space qualifier must be set using a Uint32Array of
+          length 1, specifying the number of bytes to be allocated.
+        </p>
+        <p>
+          Since there is no 64-bit integer variant of ArrayBufferView,
+          64-bit integers must be represented as pairs of 32-bit
+          unsigned integers. The low-order 32 bits are stored in the
+          first element of each pair, and the high-order 32 bits in
+          the second element.
+        </p>
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
+          <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a scalar, vector, or local memory size</li>
+          <li>`INVALID_ARG_VALUE` -- if `value.length` is not 1, 2, 3, 4, 8, 16, or 32</li>
+          <li>`INVALID_ARG_VALUE` -- if `value.length` is not equal to the vector width of the kernel argument at `index`,
+                                     or twice the vector width in case of a 64-bit integer argument</li>
+          <li>`INVALID_ARG_VALUE` -- if the kernel argument at `index`
+            has the `local` address space qualifier, and `value` is
+            not a Uint32Array of length 1</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void release()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=126">OpenCL 1.1 §5.7.1</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseKernel.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Releases the resources held up by this object.
+      </dd>
+
+    </dl>
+
+<pre class="example">
+myKernel.setArg(0, 3.14159);                                  // ERROR: Passing in a Number is not allowed
+myKernel.setArg(0, new Float32Array([3.14159]));              // cast 3.14159 to `float`, then pass to kernel as arg #0
+myKernel.setArg(1, new Uint32Array([1.23, 2.34]));            // cast the numbers to `uint2`, then pass to kernel as arg #1
+myKernel.setArg(2, new Uint32Array([512]));                   // reserve 512 bytes of local memory for arg #2
+myKernel.setArg(3, myImage);                                  // pass `myImage` to kernel as arg #3
+</pre>
+
+<!-- ======================================================================================================= -->
+
+    <h4><a id="WEBCLKERNELARGINFO">WebCLKernelArgInfo</a></h4>
+
+    <p>
+    </p>
+
+<pre class="idl">
+dictionary <dfn>WebCLKernelArgInfo</dfn> {
+  DOMString name;
+  DOMString typeName;         // 'char', 'float', 'uint4', 'image2d', 'sampler', etc.
+  DOMString addressQualifier; // 'global', 'local', 'constant', or 'private'
+  DOMString accessQualifier;  // 'read_only', 'write_only', or 'none'
+};
+</pre>
+
+<!-- ======================================================================================================= -->
+
+    <h3><a id="WEBCLEVENT">WebCLEvent</a></h3>
+
+    <p>
+    </p>
+
+<pre class="idl">
+[Constructor]
+interface <dfn>WebCLEvent</dfn> {
+  any   getInfo(CLenum name);
+  any   getProfilingInfo(CLenum name);
+  void  setCallback(CLenum commandExecCallbackType, WebCLCallback notify);
+  void  release();
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">WebCLEvent()
+      </dt>
+      <dd>
+        <p>
+          Creates a new WebCLEvent instance, to be filled in by one of
+          the `enqueue` methods.  The properties are initially set as
+          specified in the table below.
+        </p>
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>EVENT_COMMAND_QUEUE</td><td>undefined</td></tr>
+          <tr><td>EVENT_CONTEXT</td><td>undefined</td></tr>
+          <tr><td>EVENT_COMMAND_TYPE</td><td>undefined</td></tr>
+          <tr><td>EVENT_COMMAND_EXECUTION_STATUS</td><td>-1</td></tr>
+        </table>
+      </dd>
+
+      <dt class="idl-code">any getInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>EVENT_COMMAND_QUEUE</td><td>WebCLCommandQueue</td></tr>
+          <tr><td>EVENT_CONTEXT</td><td>WebCLContext</td></tr>
+          <tr><td>EVENT_COMMAND_TYPE</td><td>CLenum</td></tr>
+          <tr><td>EVENT_COMMAND_EXECUTION_STATUS</td><td>CLint</td></tr>
+        </table>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">any getProfilingInfo(CLenum name)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.12">OpenCL 1.1 §5.12</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetEventProfilingInfo.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <table class="enumtable">
+          <tr><th>name</th><th>return type</th></tr>
+          <tr><td>PROFILING_COMMAND_QUEUED</td><td>CLuint</td></tr>
+          <tr><td>PROFILING_COMMAND_SUBMIT</td><td>CLuint</td></tr>
+          <tr><td>PROFILING_COMMAND_START</td><td>CLuint</td></tr>
+          <tr><td>PROFILING_COMMAND_END</td><td>CLuint</td></tr>
+        </table>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`PROFILING_INFO_NOT_AVAILABLE` -- if the `QUEUE_PROFILING_ENABLE` flag is not set for this WebCLCommandQueue</li>
+          <li>`PROFILING_INFO_NOT_AVAILABLE` -- if the execution status of this WebCLEvent is not `COMPLETE`</li>
+          <li>`PROFILING_INFO_NOT_AVAILABLE` -- if this WebCLEvent is a user event object</li>
+          <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void setCallback(CLenum commandExecCallbackType, WebCLCallback notify)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetEventCallback.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Sets a WebCLCallback function `notify` to be called when this
+        WebCLEvent reaches the given `commandExecCallbackType` status
+        (`COMPLETE`, `RUNNING`, `SUBMITTED`, or `QUEUED`). In this
+        version of WebCL, only the `COMPLETE` status is supported.
+
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `commandExecCallbackType` is not `COMPLETE`</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void release()
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=149">OpenCL 1.1 §5.9</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clReleaseEvent.html">man page</a>)</span>
+      </dt>
+      <dd>
+        Releases the resources held up by this object.
+      </dd>
+
+    </dl>
+
+<!-- ======================================================================================================= -->
+
+    <h4><a id="WEBCLUSEREVENT">WebCLUserEvent</a></h4>
+
+    <p>
+    </p>
+
+<pre class="idl">
+interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
+  void  setStatus(CLint executionStatus);
+};
+</pre>
+
+    <dl class="methods">
+      <dt class="idl-code">void setStatus(CLint executionStatus)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.9">OpenCL 1.1 §5.9</a>,
+          <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetUserEventStatus.html">man page</a>)</span>
+      </dt>
+      <dd>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_VALUE` -- if `executionStatus` is not `COMPLETE` or a negative integer value</li>
+          <li>`INVALID_OPERATION` -- if the execution status of this
+            event has already been changed by a previous call to
+            `setStatus`</li>
+        </ul>
+      </dd>
+    </dl>
+
+<!-- ======================================================================================================= -->
+
+    <h2>Extensions</h2>
+
+    <p>
+      WebCL implementations may expose a number of extensions to the core functionality.  The
+      extensions are listed and documented in
+      the <a href="http://www.khronos.org/registry/webcl/extensions/">WebCL Extension Registry</a>.
+      Each extension, regardless of its standardization status, must be explicitly enabled by the
+      application before it can be used.  This policy is aimed to minimize inadvertant usage of
+      features that are not universally available.
+    </p>
+    
+    <p>
+      The set of available extensions may vary from one WebCLDevice to
+      another, and one WebCLPlatform to another, even within the same
+      system.  For example, the WebGL Resource Sharing extension may
+      be supported by the GPU but not the CPU.  The names of
+      extensions that are supported system-wide can be queried via
+      `WebCL.getSupportedExtensions()`.  Similarly, calling
+      `getSupportedExtensions` on a particular WebCLPlatform returns
+      the set of extensions that are supported by all devices on that
+      platform.  Finally, `getSupportedExtensions()` on an individual
+      WebCLDevice returns the set of extensions that are supported by
+      that device.
+    </p>
+
+    <p>
+      WebCL extensions can be enabled by calling `enableExtension`
+      with the name of the desired extension as a string parameter.
+      This returns `true` if the extension is successfully enabled,
+      and `false` if not.  This is illustrated in the following
+      examples.
+    </p>
+
+<pre class="example">
+// Iterates over all WebCL devices and returns the ones that
+// support the given extension, with that extension enabled.
+//
+function getDevicesWithExtensionEnabled(extensionName) {
+  var devices = [];
+  WebCL.getPlatforms().forEach(function(platform) {
+    platform.getDevices().forEach(function(device) {
+      var isSupported = device.enableExtension(extensionName);
+      if (isSupported) devices.push(device);
+    });
+  });
+  return devices;
+}
+</pre>
+
+<pre class="example">
+// Use the above function find the set of devices
+// that support both KHR_fp64 and KHR_gl_sharing.
+//
+var withFP64 = getDevicesWithExtensionEnabled("KHR_fp64");
+var withGL = getDevicesWithExtensionEnabled("KHR_gl_sharing");
+var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) });
+</pre>
+
+<!-- ======================================================================================================= -->
+
+    <h2>Security and Robustness</h2>
+
+    <p>
+      WebCL has been designed with security as a primary concern.  This section defines the main
+      security requirements that a conformant WebCL implementation must fulfill.
+
+    <h3>Out-of-Bounds Memory Access</h3>
+
+    <p>
+      WebCL kernels must not be able to access unauthorized areas of memory, regardless of address
+      space (private, local, global, or constant).  If detected during compilation, out-of-bounds
+      (OOB) accesses must generate a compiler error.  At runtime, OOB reads must return zero and
+      writes must be discarded.  Alternatively, the kernel may be terminated and an exception be
+      thrown.
+    </p>
+
+    <p>
+      For purposes of bounds checking, the implementation may treat all `private` variables as one
+      contiguous block of memory, and similarly for `local` variables, instead of enforcing the
+      bounds of each variable separately.  For example, in a kernel program containing two `private`
+      arrays, an OOB read from the first array is allowed to return any value from either the first
+      or the second array, rather than zero.
+    </p>
+
+    <p>
+      The WebCL Validator open source project was initiated by the WebCL working group for
+      prevention of out-of-bounds memory accesses through instrumentation, analysis and validation
+      of WebCL kernels.  The Validator also enforces initialization of local and private memory
+      <span class="cl-spec">(<a href="https://github.com/KhronosGroup/webcl-validator">Khronos WebCL
+      Validator Project</a>)</span>.
+    </p>
+
+    <h3>Memory Initialization</h3>
+
+    <p>
+      To ensure that applications cannot inspect data left behind by previous applications, the
+      WebCL implementation must initialize all buffers and variables to zero before giving the
+      application read access to them.  This requirement applies regardless of address space
+      (private, local, global, or constant), and regardless of whether the allocation is made in
+      kernel code or host code.
+    </p>
+
+    <p>
+      Where available, the OpenCL 1.2 extension `cl_khr_initialize_memory` allows WebCL
+      implementations to automatically and efficiently initialize local and private memory before a
+      kernel begins execution
+      <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.2-extensions.pdf">OpenCL
+      1.2 Extensions Specification</a>)</span>.
+    </p>
+
+    <h3>Denial of Service</h3>
+
+    <p>
+      Long-running and/or computationally intensive kernels (or other commands in a command queue)
+      may cause the system to become unresponsive by disproportionately consuming device resources.
+      It is generally not possible to guard against this problem at the browser/WebCL level; the
+      necessary mechanisms, such as watchdog timers and pre-emptive multitasking, must be provided
+      by the OpenCL driver and the operating system.  On systems where the necessary facilities are
+      in place, WebCL implementations are strongly encouraged to make use of them in order to:
+
+    <ol>
+      <li>Detect offending kernels and other commands.  A command is considered offending if it runs
+        for an excessively long time, or disproportionately consumes system resources.</li>
+      <li>Terminate the contexts associated with the offending commands, before they render the
+        OpenCL device unresponsive, and result in potential device reset.</li>
+    </ol>
+   
+    <p>
+      Where available, the OpenCL 1.2 extension `cl_khr_terminate_context` can be used for fast
+      termination of a context, if, for example, one or more of the kernels associated with the
+      context has been running too long, or if the program terminates due to an exception
+      <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.2-extensions.pdf">OpenCL
+      1.2 Extensions Specification</a>)</span>.
+    </p>
+<!-- ======================================================================================================= -->
+
+    <h2>Implementation notes</h2>
+
+    <p>
+      Although WebCL is based on OpenCL 1.1 (Embedded Profile), it can also be implemented on top of
+      OpenCL 1.2, or any future version that remains backwards compatible with OpenCL 1.1.  However,
+      an implementation running on top of OpenCL 1.2 or later must make sure to not allow
+      applications to use any features that are not supported in WebCL.  This implies, in
+      particular, that implementations must not pass kernel code to the underlying OpenCL compiler
+      without first checking that the kernel code is valid according to WebCL.  For example, usage
+      of `printf()` must be treated as a compilation error, because `printf` is not supported in
+      WebCL.
+    </p>
+
+    <p>
+      The WebCL specification and conformance tests are written with
+      the assumption that implementations will be based on conformant
+      OpenCL drivers.  Implementations are strongly recommended to
+      support dynamic black-listing of malfunctioning or vulnerable
+      OpenCL drivers in order to quickly eliminate any security or
+      stability issues.
+    </p>
+
+    <h2><a id="WEBCL_OPENCL_DIFF">Differences between WebCL and OpenCL 1.1</a></h2>
+
+    <p>
+      This section describes changes made to the WebCL API and the
+      kernel programming language, relative to OpenCL 1.1 Embedded
+      Profile.  The main differences are as follows:
+    </p>
+
+    <ul>
+      <li>2D image support is required</li>
+      <li>3D images are not supported</li>
+      <li>The `ADDRESS_NONE` sampler addressing mode is not supported</li>
+      <li>Mapping of CL memory objects into host memory space is not supported</li>
+      <li>Program binaries are not supported</li>
+      <li>Structures are not supported as kernel arguments</li>
+      <li>Identifiers in WebCL C must be less than 256 characters</li>
+      <li>The following OpenCL API functions are not supported:
+        <ul>
+          <li>`clEnqueueTask`</li>
+          <li>`clEnqueueNativeKernel`</li>
+          <li>`clCreateImage3D`</li>
+          <li>`clCreateProgramWithBinary`</li>
+          <li>`clEnqueueMapBuffer`</li>
+          <li>`clEnqueueMapImage`</li>
+          <li>`clEnqueueUnmapMemObject`</li>
+          <li>`clSetMemObjectDestructorCallback`</li>
+          <li>`clUnloadCompiler`</li>
+        </ul>
+      </li>
+      <li>The following OpenCL C built-in functions are not supported:
+        <ul>
+          <li>`async_work_group_copy`</li>
+          <li>`async_work_group_strided_copy`</li>
+          <li>`wait_group_events`</li>
+        </ul>
+      </li>
+    </ul>
+    
+<!-- ======================================================================================================= -->
+
+    <h2>References</h2>
+
+    <h3>Normative references</h3>
+
+    <dl>
+      <dt id="refsOPENCL">[OPENCL11]</dt>
+      <dd><cite><a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf">
+            OpenCL 1.1 Specification</a></cite>,
+        A. Munshi.
+      </dd>
+      <dt id="refsWEBIDL">[WEBIDL]</dt>
+      <dd><cite><a href="http://www.w3.org/TR/WebIDL/">
+            Web IDL: W3C Candidate Recommendation</a></cite>,
+        C. McCormack.
+      </dd>
+      <dt id="refsWEBGL">[WEBGL]</dt>
+      <dd><cite><a href="https://www.khronos.org/registry/webgl/specs/1.0/">
+            WebGL 1.0 Specification</a></cite>,
+        C. Marrin.
+      </dd>
+    </dl>
+
+<!-- ======================================================================================================= -->
+
+    <h2>Acknowledgments</h2>
+    <p>This Working Draft is produced by the Khronos WebCL Working Group.</p>
+
+	  <dt>Main Contributors (in alphabetical order):</dt>
+    <dd> Tomi Aarnio (Editor)</dd>
+    <dd> Alex Bourd </dd>
+    <dd>Mika&euml;l Bourges-S&eacute;venier (Editor)</a>
+    <dd> Tasneem Brutch (Working Group Chair)</dd>
+    <dd> Fabien Cellier</dd>
+    <dd> Steven Eliuk</dd>
+    <dd> Simon Gibbs </dd>
+    <dd> Jeff Gilbert </dd>
+    <dd> Antonio Gomes </dd>
+    <dd> Won Jeon </dd>
+    <dd> Tim Johansson </dd>
+    <dd> Sharath Kamath </dd>
+    <dd> David Ligon </dd>
+    <dd> Laurent Morichetti </dd>
+    <dd> Igor Oliveira </dd>
+    <dd> Amit Rao </dd>
+    <dd> Ofer Rosenberg </dd>
+    <dd> Dave Shreiner </dd>
+    <dd> Shilpa Shri </dd>
+    <dd> Neil Trevett </dd>
+
+    <dd> </dd>
+
+	  <dt>Additional Contributors and Participants (in alphabetical order):</dt>
+    <dd> Remi Arnaud </dd>
+    <dd> Andrew Brownsword </dd>
+    <dd> Robert Elliott </dd>
+    <dd> Stephen Frye </dd>
+    <dd> Rick Hudson </dd>
+    <dd> Adam Lake </dd>
+    <dd> Thierry Lepley </dd>
+    <dd> Bill Licea-Kane </dd>
+    <dd> Mikael Lepisto </dd>
+    <dd> Anthony Liot </dd>
+    <dd> Aaftab Munshi </dd>
+    <dd> Jari Nikara </dd>
+    <dd> Andrew Richards </dd>
+    <dd> Kenneth Russell </dd>
+    <dd> Dirk Schulze </dd>
+    <dd> Micah Villmow </dd>
+    <dd> Rami Ylimaki </dd>
+    <dd> Gongyuan Zhuang </dd>
+
+    <dd> </dd>
+
+    
+    <dt>Special thanks to the following participants (in alphabetical order):</dt>
+    <dd> Bastiaan Aarts </dd>
+    <dd> Ben Ashbaugh </dd>
+    <dd> Mark Callow </dd>
+    <dd> Sean Ellis </dd>
+    <dd> Anwar Ghuloum </dd>
+    <dd> Pyry Haulos </dd>
+    <dd> Dean Jackson </dd>
+    <dd> Benoit Jacob </dd>
+    <dd> Seungwon Lee </dd>
+    <dd> Erik Moller </dd>
+    <dd> Matthew Newport </dd>
+    <dd> Eisaku Ohbuchi </dd>
+    <dd> Rob Quill </dd>
+    <dd> Kalle Raita </dd>
+    <dd> Antti Rasmus </dd>
+    <dd> Lars Remes </dd>
+    <dd> Larry Seiler </dd>
+    <dd> Tatiana Shpeisman </dd>
+    <dd> Kevin Smith </dd>
+    <dd> Gowtham Tammana </dd>
+    <dd> Thierry Vuillaume </dd>
+    <dd> Todd Weybrew </dd>
+    <dd> Dong-Hoon Yoo </dd>
+</body>
+</html>
