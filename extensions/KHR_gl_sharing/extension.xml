@@ -128,6 +128,8 @@ dictionary WebCLGLObjectInfo {
       <dl class="exceptions">
         <dt>Exceptions:</dt>
         <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
+        <li>`INVALID_OPERATION` -- if this function is called from a WebCLCallback</li>
+        <li>`INVALID_DEVICE_TYPE` -- if `deviceType` is not a valid `DEVICE_TYPE`</li>
         <li>`DEVICE_NOT_FOUND` -- if there is no device of the given `deviceType` that can interoperate with the given WebGLRenderingContext</li>
         <li>`DEVICE_NOT_AVAILABLE` -- if there is no device of the given `deviceType` currently
         available that can interoperate with the given WebGLRenderingContext</li>
@@ -143,18 +145,55 @@ dictionary WebCLGLObjectInfo {
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=311">OpenCL 1.1 §9.7</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
       </p>
-      Returns a newly created WebCL context that is able to interoperate with the given WebGL
-      context and runs on the given type of device.  If there are multiple devices of the given type
-      that can interoperate with the given GL context, the implementation will choose the device
-      that it deems best suited for interoperating with the given GL context.  The `deviceType`
-      argument can be omitted, which is equivalent to specifying `DEVICE_TYPE_DEFAULT`.
+      TODO
 
       <dl class="exceptions">
         <dt>Exceptions:</dt>
         <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
-        <li>`DEVICE_NOT_FOUND` -- if there is no device of the given `deviceType` that can interoperate with the given WebGLRenderingContext</li>
-        <li>`DEVICE_NOT_AVAILABLE` -- if there is no device of the given `deviceType` currently
-        available that can interoperate with the given WebGLRenderingContext</li>
+        <li>`INVALID_OPERATION` -- if this function is called from a WebCLCallback</li>
+        <li>`INVALID_PLATFORM` -- if `platform` is not a valid WebCLPlatform object</li>
+        <li>`INVALID_DEVICE_TYPE` -- if `deviceType` is not a valid `DEVICE_TYPE`</li>
+        <li>`DEVICE_NOT_FOUND` -- if there is no device of the given `deviceType` on the given
+        `platform` that can interoperate with the given WebGLRenderingContext</li>
+        <li>`DEVICE_NOT_AVAILABLE` -- if there is no device currently available on the given
+        `platform` and of the given `deviceType` that can interoperate with the given
+        WebGLRenderingContext</li>
+        <li>`INVALID_GL_SHAREGROUP_REFERENCE_KHR` -- if `gl` is not a valid WebGLRenderingContext</li>
+      </dl>
+    </function>
+
+    <function name="createContext" type="WebCLContext">
+      <param name="gl" type="WebGLRenderingContext"/>
+      <param name="device" type="WebCLDevice"/>
+      <p>
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=311">OpenCL 1.1 §9.7</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
+      </p>
+      TODO
+
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
+        <li>`INVALID_OPERATION` -- if this function is called from a WebCLCallback</li>
+        <li>`TODO`</li>
+        <li>`INVALID_GL_SHAREGROUP_REFERENCE_KHR` -- if `gl` is not a valid WebGLRenderingContext</li>
+      </dl>
+    </function>
+
+    <function name="createContext" type="WebCLContext">
+      <param name="gl" type="WebGLRenderingContext"/>
+      <param name="devices" type="sequence&lt;WebCLDevice;&gt;"/>
+      <p>
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=311">OpenCL 1.1 §9.7</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
+      </p>
+      TODO
+
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
+        <li>`INVALID_OPERATION` -- if this function is called from a WebCLCallback</li>
+        <li>`TODO`</li>
         <li>`INVALID_GL_SHAREGROUP_REFERENCE_KHR` -- if `gl` is not a valid WebGLRenderingContext</li>
       </dl>
     </function>
