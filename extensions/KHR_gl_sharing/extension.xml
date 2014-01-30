@@ -43,7 +43,13 @@
   <idl xml:space="preserve">
 partial interface WebCL {
 
-  WebCLContext? createContext(<a href="http://www.khronos.org/registry/webgl/specs/latest/1.0/">WebGLRenderingContext</a> gl, optional WebCLContextProperties? properties = null);
+  WebCLContext createContext(<a href="http://www.khronos.org/registry/webgl/specs/latest/1.0/">WebGLRenderingContext</a> gl, optional CLenum deviceType);
+
+  WebCLContext createContext(<a href="http://www.khronos.org/registry/webgl/specs/latest/1.0/">WebGLRenderingContext</a> gl, WebCLPlatform platform, optional CLenum deviceType);
+
+  WebCLContext createContext(<a href="http://www.khronos.org/registry/webgl/specs/latest/1.0/">WebGLRenderingContext</a> gl, WebCLDevice device);
+
+  WebCLContext createContext(<a href="http://www.khronos.org/registry/webgl/specs/latest/1.0/">WebGLRenderingContext</a> gl, sequence&lt;WebCLDevice&gt; devices);
 
   /* Error Codes */
   CLenum INVALID_GL_OBJECT                         = -60;
@@ -106,32 +112,49 @@ dictionary WebCLGLObjectInfo {
   </idl>
 
   <newfun>
-    <function name="createContext" type="WebCLContext?">
+    <function name="createContext" type="WebCLContext">
       <param name="gl" type="WebGLRenderingContext"/>
-      <param name="properties" type="optional WebCLContextProperties?"/>
+      <param name="deviceType" type="optional CLenum"/>
       <p>
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=311">OpenCL 1.1 §9.7</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
       </p>
-      Returns a newly created WebCLContext that is able to
-      interoperate with the given WebGLRenderingContext, or `null`
-      if such a context could not be created.  If there are multiple
-      WebCLDevices that can interoperate with the given GL context
-      and that satisfy the constraints of the given `properties`,
-      the implementation will choose the WebCLDevice that it deems
-      best suited for interoperating with the given GL context.  The
-      `properties` parameter can be omitted, in which case the
-      implementation will decide which platform and device to use.
+      Returns a newly created WebCL context that is able to interoperate with the given WebGL
+      context and runs on the given type of device.  If there are multiple devices of the given type
+      that can interoperate with the given GL context, the implementation will choose the device
+      that it deems best suited for interoperating with the given GL context.  The `deviceType`
+      argument can be omitted, which is equivalent to specifying `DEVICE_TYPE_DEFAULT`.
 
       <dl class="exceptions">
         <dt>Exceptions:</dt>
         <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
-        <li>`INVALID_DEVICE` -- if `properties.devices` is non-`null`, but is not an array of valid device objects</li>
-        <li>`INVALID_DEVICE` -- if any devices in `properties.devices` are on different platforms</li>
-        <li>`INVALID_DEVICE` -- if any device in `properties.devices` is not compatible with `gl`</li>
-        <li>`INVALID_PLATFORM` -- if `properties.platform` is non-`null`, but is not a valid platform object</li>
-        <li>`INVALID_PLATFORM` -- if no device on `properties.platform` is compatible with `gl`</li>
-        <li>`DEVICE_NOT_AVAILABLE` -- if a device in `properties.devices` is currently not available</li>
+        <li>`DEVICE_NOT_FOUND` -- if there is no device of the given `deviceType` that can interoperate with the given WebGLRenderingContext</li>
+        <li>`DEVICE_NOT_AVAILABLE` -- if there is no device of the given `deviceType` currently
+        available that can interoperate with the given WebGLRenderingContext</li>
+        <li>`INVALID_GL_SHAREGROUP_REFERENCE_KHR` -- if `gl` is not a valid WebGLRenderingContext</li>
+      </dl>
+    </function>
+
+    <function name="createContext" type="WebCLContext">
+      <param name="gl" type="WebGLRenderingContext"/>
+      <param name="platform" type="WebCLPlatform"/>
+      <param name="deviceType" type="optional CLenum"/>
+      <p>
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=311">OpenCL 1.1 §9.7</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
+      </p>
+      Returns a newly created WebCL context that is able to interoperate with the given WebGL
+      context and runs on the given type of device.  If there are multiple devices of the given type
+      that can interoperate with the given GL context, the implementation will choose the device
+      that it deems best suited for interoperating with the given GL context.  The `deviceType`
+      argument can be omitted, which is equivalent to specifying `DEVICE_TYPE_DEFAULT`.
+
+      <dl class="exceptions">
+        <dt>Exceptions:</dt>
+        <li>`WEBCL_EXTENSION_NOT_ENABLED` -- if the `KHR_gl_sharing` extension has not been enabled</li>
+        <li>`DEVICE_NOT_FOUND` -- if there is no device of the given `deviceType` that can interoperate with the given WebGLRenderingContext</li>
+        <li>`DEVICE_NOT_AVAILABLE` -- if there is no device of the given `deviceType` currently
+        available that can interoperate with the given WebGLRenderingContext</li>
         <li>`INVALID_GL_SHAREGROUP_REFERENCE_KHR` -- if `gl` is not a valid WebGLRenderingContext</li>
       </dl>
     </function>
