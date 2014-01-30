@@ -182,7 +182,7 @@ dictionary WebCLGLObjectInfo {
 
     <function name="createContext" type="WebCLContext">
       <param name="gl" type="WebGLRenderingContext"/>
-      <param name="devices" type="sequence&lt;WebCLDevice;&gt;"/>
+      <param name="devices" type="sequence&lt;WebCLDevice&gt;"/>
       <p>
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=311">OpenCL 1.1 §9.7</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContext.html">man page</a>)</span>
@@ -375,6 +375,9 @@ dictionary WebCLGLObjectInfo {
   </samplecode>
 
   <history>
+    <revision date="2014/01/31">
+      <change>Updated createContext to match the core spec (work-in-progress).</change>
+    </revision>
     <revision date="2013/11/19">
       <change>Migrated from the WebCL Working Draft.</change>
     </revision>
