@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">January 31, 2014</h2>
+    <h2 class="no-toc">February 12, 2014</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -2493,8 +2493,8 @@ interface <dfn>WebCLKernel</dfn> {
           <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
           <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a scalar, vector, or local memory size</li>
           <li>`INVALID_ARG_VALUE` -- if `value.length` is not 1, 2, 3, 4, 8, 16, or 32</li>
-          <li>`INVALID_ARG_VALUE` -- if `value.length` is not equal to the vector width of the kernel argument at `index`,
-                                     or twice the vector width in case of a 64-bit integer argument</li>
+          <li>`INVALID_ARG_SIZE` -- if `value.length` is not equal to the vector width of the kernel argument at `index`,
+                                    or twice the vector width in case of a 64-bit integer argument</li>
           <li>`INVALID_ARG_VALUE` -- if the kernel argument at `index`
             has the `local` address space qualifier, and `value` is
             not a Uint32Array of length 1</li>
