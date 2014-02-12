@@ -2354,7 +2354,8 @@ interface <dfn>WebCLKernel</dfn> {
   any getInfo(CLenum name);
   any getWorkGroupInfo(WebCLDevice device, CLenum name);
   WebCLKernelArgInfo getArgInfo(CLuint index);
-  void setArg(CLuint index, WebCLMemoryObject value);
+  void setArg(CLuint index, WebCLBuffer buffer);
+  void setArg(CLuint index, WebCLImage image);
   void setArg(CLuint index, WebCLSampler value);
   void setArg(CLuint index, ArrayBufferView value);
   void release();
@@ -2423,22 +2424,39 @@ interface <dfn>WebCLKernel</dfn> {
         </ul>
       </dd>
 
-      <dt class="idl-code">void setArg(CLuint index, WebCLMemoryObject memObject)
+      <dt class="idl-code">void setArg(CLuint index, WebCLBuffer buffer)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.7.2">OpenCL 1.1 §5.7.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">clSetKernelArg</a>)</span>
       </dt>
       <dd>
         <p>
-          Sets the given `memObject` to the kernel argument at the
-          given `index`.  Legal values for `index` range from zero to
-          `N-1`, where `N` is the total number of arguments declared
-          by the kernel.
+          Sets the given `buffer` to the kernel argument at the given `index`.  Legal values for
+          `index` range from zero to `N-1`, where `N` is the total number of arguments declared by
+          the kernel.
         </p>
         <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
           <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
-          <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a memory object</li>
-          <li>`INVALID_MEM_OBJECT` -- if `memObject` is not a valid WebCLMemoryObject</li>
+          <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a WebCLBuffer</li>
+          <li>`INVALID_MEM_OBJECT` -- if `buffer` is not a valid WebCLBuffer</li>
+        </ul>
+      </dd>
+
+      <dt class="idl-code">void setArg(CLuint index, WebCLImage image)
+        <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#nameddest=section-5.7.2">OpenCL 1.1 §5.7.2</a>,
+        <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clSetKernelArg.html">clSetKernelArg</a>)</span>
+      </dt>
+      <dd>
+        <p>
+          Sets the given `image` to the kernel argument at the given `index`.  Legal values for
+          `index` range from zero to `N-1`, where `N` is the total number of arguments declared by
+          the kernel.
+        </p>
+        <h5 class="exceptions">Exceptions:</h5>
+        <ul class="exceptions">
+          <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
+          <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a WebCLImage</li>
+          <li>`INVALID_MEM_OBJECT` -- if `image` is not a valid WebCLImage</li>
         </ul>
       </dd>
 
@@ -2448,15 +2466,14 @@ interface <dfn>WebCLKernel</dfn> {
       </dt>
       <dd>
         <p>
-          Sets the given `sampler` to the kernel argument at the given
-          `index`.  Legal values for `index` range from zero to `N-1`,
-          where `N` is the total number of arguments declared by the
-          kernel.
+          Sets the given `sampler` to the kernel argument at the given `index`.  Legal values for
+          `index` range from zero to `N-1`, where `N` is the total number of arguments declared by
+          the kernel.
         </p>
         <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
           <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
-          <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a sampler</li>
+          <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a WebCLSampler</li>
           <li>`INVALID_SAMPLER` -- if `sampler` is not a valid WebCLSampler</li>
         </ul>
       </dd>
@@ -2492,9 +2509,8 @@ interface <dfn>WebCLKernel</dfn> {
         <ul class="exceptions">
           <li>`INVALID_ARG_INDEX` -- if `index` is not a valid argument index for this WebCLKernel</li>
           <li>`INVALID_ARG_VALUE` -- if the expected kernel argument at `index` is not a scalar, vector, or local memory size</li>
-          <li>`INVALID_ARG_VALUE` -- if the kernel argument at `index`
-            has the `local` address space qualifier, and `value` is
-            not a Uint32Array of length 1</li>
+          <li>`INVALID_ARG_VALUE` -- if the kernel argument at `index` has the `local` address space
+            qualifier, and `value` is not a Uint32Array of length 1</li>
           <li>`INVALID_ARG_VALUE` -- if the type of `value` does not match the base type of the kernel argument at `index`</li>
           <li>`INVALID_ARG_SIZE` -- if `value.length` is not 1, 2, 3, 4, 8, 16, or 32</li>
           <li>`INVALID_ARG_SIZE` -- if `value.length` is not equal to the vector width of the kernel argument at `index`,
