@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Working Draft</h1>
-    <h2 class="no-toc">February 12, 2014</h2>
+    <h2 class="no-toc">February 17, 2014</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -949,7 +949,7 @@ interface <dfn>WebCLDevice</dfn> {
           <tr><td>DEVICE_IMAGE2D_MAX_HEIGHT</td><td>CLuint</td><td>&gt;= 2048</td></tr>
           <tr><td>DEVICE_IMAGE3D_MAX_WIDTH</td><td>CLuint</td><td>&gt;= 0</td></tr>
           <tr><td>DEVICE_IMAGE3D_MAX_HEIGHT</td><td>CLuint</td><td>&gt;= 0</td></tr>
-          <tr><td>DEVICE_IMAGE3D_MAX_WIDTH</td><td>CLuint</td><td>&gt;= 0</td></tr>
+          <tr><td>DEVICE_IMAGE3D_MAX_DEPTH</td><td>CLuint</td><td>&gt;= 0</td></tr>
           <tr><td>DEVICE_MAX_SAMPLERS</td><td>CLuint</td><td>&gt;= 8</td></tr>
           <tr><td>DEVICE_MAX_PARAMETER_SIZE</td><td>CLuint</td><td>&gt;= 256 bytes</td></tr>
           <tr><td>DEVICE_MEM_BASE_ADDR_ALIGN</td><td>CLuint</td><td>&gt;= numBits(float16) = 16*32 = 512</td></tr>
@@ -1160,7 +1160,7 @@ interface <dfn>WebCLContext</dfn> {
         </ul>
       </dd>
 
-      <dt class="idl-code">sequence&lt;WebCLImageDescriptor&gt;? getSupportedImageFormats(CLenum memFlags)
+      <dt class="idl-code">sequence&lt;WebCLImageDescriptor&gt;? getSupportedImageFormats(optional CLenum memFlags = MEM_READ_WRITE)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=82">OpenCL 1.1 §5.3.2</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetSupportedImageFormats.html">clGetSupportedImageFormats</a>)</span>
       </dt>
