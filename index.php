@@ -1,5 +1,5 @@
 <?php
-$static_title = 'hronos WebCL API Registry';
+$static_title = 'Khronos WebCL API Registry';
 $static_breadcrumb = array(
     '/registry/' => 'Registry',
     'NOLINK' => 'WebCL Registry'
