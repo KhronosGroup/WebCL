@@ -1,36 +1,28 @@
-<!doctype html>
-<html lang="en">
-<head>
-<title>Khronos WebCL API Registry</title>
-<?php include("../../_inc/registry/registry_head.txt"); ?>
-</head>
-<body id="developers" class="registry">
-<?php include("../../_inc/registry/registry_body.txt"); ?>
-<h1 class="pagetitle">Khronos WebCL API Registry</h1> <!--	top left shadow-->
-<div id="mainformat">
-
+<?php
+$static_title = 'hronos WebCL API Registry';
+$static_breadcrumb = array(
+    '/registry/' => 'Registry',
+    'NOLINK' => 'WebCL Registry'
+);
+include_once("../../assets/static_pages/khr_page_top.php");
+?>
 
 <h1 style="text-align:center"> Khronos WebCL API Registry </h1>
 
 <p> The WebCL API registry contains specifications of the core API;
     specifications of Khronos- and vendor-approved WebCL extensions;
     IDL files corresponding to the specifications; and other related
-    documentation.
+    documentation.</p>
 
 <h6> WebCL Core API Specification, IDL, and Documentation </h6>
 
-<ul>
-<li> <a href="specs/latest/1.0">WebCL current draft specification</a>.
-     </li>
-<!-- <li> <a href="specs/latest/1.0/webcl.idl"> webcl.idl </a>
-     WebIDL description of the WebCL API. </li> -->
-</ul>
+<p><a href="specs/latest/1.0">WebCL current draft specification</a>.</p>
+<!-- <p><a href="specs/latest/1.0/webcl.idl"> webcl.idl </a>
+     WebIDL description of the WebCL API. </p> -->
 
-<h6> <a name="otherextspecs"></a>
-     WebCL Extensions</h6>
-<ul>
-<li> <a href="extensions/">WebCL extension registry</a> </li>
-</ul>
-<?php include("../../_inc/registry/registry_footer.txt"); ?>
-</body>  <!-- END pagewrapper -->
+<h6 id="otherextspecs">WebCL Extensions</h6>
+<p><a href="extensions/">WebCL extension registry</a></p>
+
+<?php include_once("../../assets/static_pages/khr_page_bottom.php"); ?>
+</body>
 </html>
