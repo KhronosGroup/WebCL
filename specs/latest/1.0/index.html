@@ -116,7 +116,7 @@ typedef boolean             CLboolean;
 typedef long                CLint;      // 32-bit signed integer
 typedef long long           CLlong;     // 64-bit signed integer
 typedef unsigned long       CLuint;     // 32-bit unsigned integer
-typedef unsigned long long  CLulong;    // 64-bit unsigned integer
+typedef unsigned long long  CLulong;    // 52-bit unsigned integer
 typedef unsigned long       CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
 </pre>
 
@@ -124,7 +124,8 @@ typedef unsigned long       CLenum;     // Used for enumerated types, such as We
       The implementation of any WebCL function that accepts numeric values as input must ensure that
       no undefined behavior will occur if the input value is outside of the specified numeric range.
       Where necessary, the implementation may fit the incoming JavaScript number into the valid
-      range using a clamp or modulo operator, or alternatively throw an exception.
+      range using a clamp or modulo operator, or alternatively throw an exception.  Note that the
+      range of `CLulong` is limited to 52 bits, due to the lack of 64-bit integers in JavaScript.
     </p>
 
     <h3><a id="WEBCLEXCEPTION">Exceptions</a></h3>
@@ -2600,10 +2601,10 @@ dictionary <dfn>WebCLKernelArgInfo</dfn> {
 <pre class="idl">
 [Constructor]
 interface <dfn>WebCLEvent</dfn> {
-  any   getInfo(CLenum name);
-  any   getProfilingInfo(CLenum name);
-  void  setCallback(CLenum commandExecCallbackType, WebCLCallback notify);
-  void  release();
+  any getInfo(CLenum name);
+  CLulong getProfilingInfo(CLenum name);
+  void setCallback(CLenum commandExecCallbackType, WebCLCallback notify);
+  void release();
 };
 </pre>
 
@@ -2645,10 +2646,10 @@ interface <dfn>WebCLEvent</dfn> {
       <dd>
         <table class="enumtable">
           <tr><th>name</th><th>return type</th></tr>
-          <tr><td>PROFILING_COMMAND_QUEUED</td><td>CLuint</td></tr>
-          <tr><td>PROFILING_COMMAND_SUBMIT</td><td>CLuint</td></tr>
-          <tr><td>PROFILING_COMMAND_START</td><td>CLuint</td></tr>
-          <tr><td>PROFILING_COMMAND_END</td><td>CLuint</td></tr>
+          <tr><td>PROFILING_COMMAND_QUEUED</td><td>CLulong</td></tr>
+          <tr><td>PROFILING_COMMAND_SUBMIT</td><td>CLulong</td></tr>
+          <tr><td>PROFILING_COMMAND_START</td><td>CLulong</td></tr>
+          <tr><td>PROFILING_COMMAND_END</td><td>CLulong</td></tr>
         </table>
         <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
