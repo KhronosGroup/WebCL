@@ -2613,18 +2613,10 @@ interface <dfn>WebCLEvent</dfn> {
       <dd>
         <p>
           Creates an empty WebCLEvent instance, to be populated by one of the `enqueue` methods.
-          The properties of a newly created event are set as specified below.  Each WebCLEvent
-          instance can only be used once; the `enqueue` methods will throw an `INVALID_EVENT`
-          exception if a previously populated event is passed in.  User events are considered
-          previously populated, and as such cannot be re-populated.
+          Each WebCLEvent instance can only be used once; the `enqueue` methods will throw an
+          `INVALID_EVENT` exception if a previously populated event is passed in.  User events are
+          considered to be populated by `createUserEvent`, and as such cannot be re-populated.
         </p>
-        <table class="enumtable">
-          <tr><th>name</th><th>return type</th></tr>
-          <tr><td>EVENT_COMMAND_QUEUE</td><td>undefined</td></tr>
-          <tr><td>EVENT_CONTEXT</td><td>undefined</td></tr>
-          <tr><td>EVENT_COMMAND_TYPE</td><td>undefined</td></tr>
-          <tr><td>EVENT_COMMAND_EXECUTION_STATUS</td><td>-1</td></tr>
-        </table>
       </dd>
 
       <dt class="idl-code">any getInfo(CLenum name)
@@ -2642,6 +2634,7 @@ interface <dfn>WebCLEvent</dfn> {
         <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
           <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+          <li>`INVALID_EVENT` -- if this WebCLEvent has not yet been populated</li>
         </ul>
       </dd>
 
@@ -2679,6 +2672,7 @@ interface <dfn>WebCLEvent</dfn> {
         <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
           <li>`INVALID_VALUE` -- if `commandExecCallbackType` is not `COMPLETE`</li>
+          <li>`INVALID_EVENT` -- if this WebCLEvent has not yet been populated</li>
         </ul>
       </dd>
 
