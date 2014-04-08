@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Specification</h1>
-    <h2 class="no-toc">Editor's Draft, 27 March 2014</h2>
+    <h2 class="no-toc">Editor's Draft, 8 April 2014</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -1477,7 +1477,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as `srcBuffer` and `dstBuffer`</li>
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
           <li>`INVALID_MEM_OBJECT` -- if `srcBuffer` and `dstBuffer` are not valid WebCLBuffer objects</li>
-          <li>`INVALID_VALUE` -- if `srcOrigin`, `dstOrigin`, or `region` does not have exactly two elements</li>
+          <li>`INVALID_VALUE` -- if `srcOrigin`, `dstOrigin`, or `region` does not have exactly three elements</li>
           <li>`INVALID_VALUE` -- if the `origin`, `region` and `pitch`
             values would require accessing elements outside the
             `srcBuffer` or `dstBuffer` objects</li>
