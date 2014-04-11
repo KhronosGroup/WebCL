@@ -2602,6 +2602,23 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
 
     <h2>References</h2>
 
+<pre class="idl">
+[ Constructor(unsigned long length) ]
+interface ArrayBuffer {
+    readonly attribute unsigned long byteLength;
+    ArrayBuffer slice(long begin, optional long end);
+    static boolean isView(any value);
+};
+
+[NoInterfaceObject]
+interface ArrayBufferView {
+    readonly attribute ArrayBuffer buffer;
+    readonly attribute unsigned long byteOffset;
+    readonly attribute unsigned long byteLength;
+};
+</pre>
+
+
     <h3>Normative references</h3>
 
     <dl>
