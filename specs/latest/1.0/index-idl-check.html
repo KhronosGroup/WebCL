@@ -695,7 +695,7 @@ interface <dfn>WebCLContext</dfn> {
 
   any getInfo(CLenum name);
 
-  sequence&lt;WebCLImageDescriptor&gt;? getSupportedImageFormats(optional CLenum memFlags = MEM_READ_WRITE);
+  sequence&lt;WebCLImageDescriptor&gt;? getSupportedImageFormats(optional CLenum memFlags = 0x1);
 
   void release();
 
