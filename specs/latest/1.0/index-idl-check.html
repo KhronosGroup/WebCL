@@ -276,6 +276,11 @@ interface <dfn>WebCL</dfn> {
                      optional WebCLCallback whenFinished);
 
   void releaseAll();
+
+  /* cl_mem_flags - bitfield */
+  const CLenum MEM_READ_WRITE                            = 0x1;
+  const CLenum MEM_WRITE_ONLY                            = 0x2;
+  const CLenum MEM_READ_ONLY                             = 0x4;
 };
 </pre>
 
