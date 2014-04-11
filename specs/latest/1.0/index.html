@@ -260,9 +260,9 @@ interface <dfn>WebCL</dfn> {
 
   sequence&lt;WebCLPlatform&gt; getPlatforms();
 
-  WebCLContext createContext(optional CLenum deviceType);
+  WebCLContext createContext(optional CLenum deviceType = 0x1);
 
-  WebCLContext createContext(WebCLPlatform platform, optional CLenum deviceType);
+  WebCLContext createContext(WebCLPlatform platform, optional CLenum deviceType = 0x1);
 
   WebCLContext createContext(WebCLDevice device);
 
@@ -796,7 +796,7 @@ ctx = webcl.createContext([aDeviceOnPlatformA, aDeviceOnPlatformB]);
 <pre class="idl">
 interface <dfn>WebCLPlatform</dfn> {
   any getInfo(CLenum name);
-  sequence&lt;WebCLDevice&gt; getDevices(optional CLenum deviceType);
+  sequence&lt;WebCLDevice&gt; getDevices(optional CLenum deviceType = 0xFFFFFFFF);
   sequence&lt;DOMString&gt;? getSupportedExtensions();
   CLboolean enableExtension(DOMString extensionName);
 };
@@ -804,7 +804,7 @@ interface <dfn>WebCLPlatform</dfn> {
 
     <dl class="methods">
 
-      <dt class="idl-code">sequence&lt;WebCLDevice&gt; getDevices(optional CLenum deviceType)
+      <dt class="idl-code">sequence&lt;WebCLDevice&gt; getDevices(optional CLenum deviceType = WebCL.DEVICE_TYPE_ALL)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=34">OpenCL 1.1 §4.2</a>,
         <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetDeviceIDs.html">clGetDeviceIDs</a>)</span>
       </dt>
@@ -1073,7 +1073,7 @@ interface <dfn>WebCLContext</dfn> {
           <li>`INVALID_QUEUE_PROPERTIES` -- if values specified in `properties` are valid but not supported by the device</li>
         </ul>
       </dd>
-      <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBufferView hostPtr = null)
+      <dt class="idl-code">WebCLImage createImage(CLenum memFlags, WebCLImageDescriptor descriptor, optional ArrayBufferView hostPtr)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=76">OpenCL 1.1 §5.3.1</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateImage2D.html">clCreateImage2D</a>)</span>
       </dt>
