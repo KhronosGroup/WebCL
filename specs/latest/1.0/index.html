@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Specification</h1>
-    <h2 class="no-toc">Editor's Draft, 11 April 2014</h2>
+    <h2 class="no-toc">Editor's Draft, 16 April 2014</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -1445,11 +1445,6 @@ interface <dfn>WebCLCommandQueue</dfn> {
 	        <li>`MEM_COPY_OVERLAP` -- if `srcBuffer` and `dstBuffer` are
 	          the same WebCLBuffer object and the source and destination
 	          regions overlap</li>
-	        <li>`MISALIGNED_SUB_BUFFER_OFFSET` -- if `srcBuffer` or
-	          `dstBuffer` is a sub-buffer object and the offset
-	          specified when the sub-buffer object was created is not
-	          aligned to the `DEVICE_MEM_BASE_ADDR_ALIGN` value for the
-	          device associated with this WebCLCommandQueue</li>
 	        <li>`MEM_OBJECT_ALLOCATION_FAILURE` -- if there is a failure
 	          to allocate memory for data store associated with
 	          `srcBuffer` or `dstBuffer`</li>
@@ -1487,11 +1482,6 @@ interface <dfn>WebCLCommandQueue</dfn> {
           <li>`MEM_COPY_OVERLAP` -- if `srcBuffer` and `dstBuffer` are
             the same WebCLBuffer object and the source and destination
             regions overlap</li>
-	        <li>`MISALIGNED_SUB_BUFFER_OFFSET` -- if `srcBuffer` or
-	          `dstBuffer` is a sub-buffer object and the offset
-	          specified when the sub-buffer object was created is not
-	          aligned to the `DEVICE_MEM_BASE_ADDR_ALIGN` value for the
-	          device associated with this WebCLCommandQueue</li>
         </ul>
       </dd>
 
