@@ -2098,6 +2098,8 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
         <ul class="exceptions">
           <li>`INVALID_MEM_OBJECT` -- if this WebCLBuffer is already a sub-buffer object</li>
           <li>`INVALID_VALUE` -- if `memFlags` is not `MEM_READ_WRITE`, `MEM_WRITE_ONLY`, or `MEM_READ_ONLY`</li>
+          <li>`INVALID_VALUE` -- if `memFlags` is not compatible with the `memFlags` of this WebCLBuffer</li>
+          <li>`INVALID_VALUE` -- if <code>sizeInBytes == 0</code></li>
           <li>`INVALID_VALUE` -- if the region specified by (`origin`, `sizeInBytes`) is out of bounds in this WebCLBuffer</li>
           <li>`MISALIGNED_SUB_BUFFER_OFFSET` -- if there is any
             WebCLDevice in the WebCLContext associated with this
