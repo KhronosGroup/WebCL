@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Specification</h1>
-    <h2 class="no-toc">Editor's Draft, 16 April 2014</h2>
+    <h2 class="no-toc">Editor's Draft, 6 May 2014</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -2649,6 +2649,7 @@ interface <dfn>WebCLEvent</dfn> {
           <li>`PROFILING_INFO_NOT_AVAILABLE` -- if the execution status of this WebCLEvent is not `COMPLETE`</li>
           <li>`PROFILING_INFO_NOT_AVAILABLE` -- if this WebCLEvent is a user event object</li>
           <li>`INVALID_VALUE` -- if `name` is not one of the valid enumerated values listed in the table above</li>
+          <li>`INVALID_EVENT` -- if this WebCLEvent has not yet been populated</li>
         </ul>
       </dd>
 
