@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Specification</h1>
-    <h2 class="no-toc">Editor's Draft, 6 May 2014</h2>
+    <h2 class="no-toc">Editor's Draft, 9 May 2014</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -628,15 +628,17 @@ interface <dfn>WebCL</dfn> {
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateContextFromType.html">clCreateContextFromType</a>)</span>
       </dt>
       <dd>
-        Returns a newly created WebCL context for the given type of device, if available.  The
-        available values for `deviceType` are listed in the table below.
+        Returns a newly created WebCL context for the given type of device, if available.  If there
+        are multiple devices of the given type, the implementation may select any one of them, a
+        subset of them, or all of them.  The available values for `deviceType` are listed in the
+        table below.
 
         <table class="enumtable">
           <tr><th>deviceType</th><th>Description</th></tr>
           <tr><td>DEVICE_TYPE_CPU</td><td>A single-core or multi-core CPU, typically the host processor.</td></tr>
           <tr><td>DEVICE_TYPE_GPU</td><td>A graphics processing unit, typically also used by WebGL.</td></tr>
           <tr><td>DEVICE_TYPE_ACCELERATOR</td><td>A dedicated OpenCL accelerator.</td></tr>
-          <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device on the system.</td></tr>
+          <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device(s) on the system.</td></tr>
         </table>
       </dd>
 
@@ -655,14 +657,16 @@ interface <dfn>WebCL</dfn> {
       </dt>
       <dd>
         Returns a newly created WebCL context for the given type of device, if available on the
-        given platform.  The available values for `deviceType` are listed in the table below.
+        given platform.  If there are multiple devices of the given type, the implementation may
+        select any one of them.  The available values for `deviceType` are listed in the table
+        below.
 
         <table class="enumtable">
           <tr><th>deviceType</th><th>Description</th></tr>
           <tr><td>DEVICE_TYPE_CPU</td><td>A single-core or multi-core CPU, typically the host processor.</td></tr>
           <tr><td>DEVICE_TYPE_GPU</td><td>A graphics processing unit, typically also used by WebGL.</td></tr>
           <tr><td>DEVICE_TYPE_ACCELERATOR</td><td>A dedicated OpenCL accelerator.</td></tr>
-          <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device on the given platform.</td></tr>
+          <tr><td>DEVICE_TYPE_DEFAULT</td><td>The default device(s) on the given platform.</td></tr>
           <tr><td>DEVICE_TYPE_ALL</td><td>All devices available on the given platform.</td></tr>
         </table>
 
