@@ -2290,12 +2290,11 @@ interface <dfn>WebCLProgram</dfn> {
           <li>`INVALID_DEVICE` -- if any element in `devices` is not a valid WebCLDevice</li>
           <li>`INVALID_DEVICE` -- if any device in `devices` is not associated with the WebCLContext of this WebCLProgram</li>
           <li>`INVALID_BUILD_OPTIONS` -- if the build options specified by `options` are invalid</li>
-          <li>`INVALID_OPERATION` -- if a previous build of this
-            WebCLProgram for any of the devices listed in `devices`
-            has not completed</li>
           <li>`BUILD_PROGRAM_FAILURE` -- if there is a failure to build the program executable</li>
-          <li>`INVALID_OPERATION` -- if there are WebCLKernel objects
-            already attached to this WebCLProgram</li>
+          <li>`INVALID_OPERATION` -- if a previous build of this WebCLProgram for any of the devices
+            listed in `devices` has not completed</li>
+          <li>`INVALID_OPERATION` -- if there are WebCLKernel objects already attached to this
+            WebCLProgram</li>
           <li>`INVALID_OPERATION` -- if the blocking form of this function is called from a WebCLCallback</li>
         </ul>
       </dd>
