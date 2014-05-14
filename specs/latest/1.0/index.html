@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Specification</h1>
-    <h2 class="no-toc">Editor's Draft, 11 May 2014</h2>
+    <h2 class="no-toc">Editor's Draft, 14 May 2014</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -754,7 +754,7 @@ interface <dfn>WebCL</dfn> {
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if a callback is not provided, and any event in
             `eventWaitList` is a WebCLUserEvent or a newly created (non-activated) WebCLEvent</li>
-          <li>`INVALID_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` --
+          <li>`EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST` --
             if the execution status of any of the events in
             `eventWaitList` is a negative integer value</li>
         </ul>
