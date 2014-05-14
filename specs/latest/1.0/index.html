@@ -2299,7 +2299,7 @@ interface <dfn>WebCLProgram</dfn> {
         </ul>
       </dd>
 
-      <dt class="idl-code">WebCLKernel createKernel(DOMString name)
+      <dt class="idl-code">WebCLKernel createKernel(DOMString kernelName)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=124">OpenCL 1.1 §5.7.1</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clCreateKernel.html">clCreateKernel</a>)</span>
       </dt>
@@ -2307,9 +2307,9 @@ interface <dfn>WebCLProgram</dfn> {
         <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
           <li>`INVALID_PROGRAM_EXECUTABLE` -- if there is no successfully built executable for any device in this WebCLProgram</li>
-          <li>`INVALID_KERNEL_NAME` -- if a kernel by the given `name` is not found in this WebCLProgram</li>
+          <li>`INVALID_KERNEL_NAME` -- if a kernel by the given `kernelName` is not found in this WebCLProgram</li>
           <li>`INVALID_KERNEL_DEFINITION` -- if the function
-            definition of the given kernel function (`name`), such as
+            definition of the given kernel function (`kernelName`), such as
             the number of arguments and the argument types, are not
             the same for all devices for which the program executable
             has been built</li>
