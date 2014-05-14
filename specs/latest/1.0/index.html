@@ -2350,7 +2350,7 @@ interface <dfn>WebCLProgram</dfn> {
 <pre class="idl">
 interface <dfn>WebCLKernel</dfn> {
   any getInfo(CLenum name);
-  any getWorkGroupInfo(WebCLDevice device, CLenum name);
+  any getWorkGroupInfo(WebCLDevice? device, CLenum name);
   WebCLKernelArgInfo getArgInfo(CLuint index);
   void setArg(CLuint index, WebCLBuffer buffer);
   void setArg(CLuint index, WebCLImage image);
@@ -2380,13 +2380,14 @@ interface <dfn>WebCLKernel</dfn> {
         </ul>
       </dd>
 
-      <dt class="idl-code">any getWorkGroupInfo(WebCLDevice device, CLenum name)
+      <dt class="idl-code">any getWorkGroupInfo(WebCLDevice? device, CLenum name)
         <span class="cl-spec">(<a href="http://www.khronos.org/registry/cl/specs/opencl-1.1.pdf#page=130">OpenCL 1.1 §5.7.3</a>,
           <a class="nonnormative" href="http://www.khronos.org/registry/cl/sdk/1.1/docs/man/xhtml/clGetKernelWorkGroupInfo.html">clGetKernelWorkGroupInfo</a>)</span>
       </dt>
       <dd>
         <p>
-          Returns the value corresponding to the given `device` and `name`.
+          Returns the value corresponding to the given `device` and `name`.  If there is only a
+          single WebCLDevice associated with this WebCLKernel, `null` may be passed for `device`.
         </p>
 
         <table class="enumtable">
