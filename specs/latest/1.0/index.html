@@ -748,7 +748,7 @@ interface <dfn>WebCL</dfn> {
         <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
           <li>`INVALID_OPERATION` -- if the blocking form of this function is called from a WebCLCallback</li>
-	        <li>`INVALID_VALUE` -- if `eventWaitList` is `null` or empty</li>
+	        <li>`INVALID_VALUE` -- if `eventWaitList` is empty</li>
 	        <li>`INVALID_CONTEXT` -- if events specified in `eventWaitList` do not belong to the same
 	          context</li>
           <li>`INVALID_EVENT_WAIT_LIST` -- if any event in `eventWaitList` is invalid</li>
@@ -1111,7 +1111,7 @@ interface <dfn>WebCLContext</dfn> {
 
         <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
-          <li>`INVALID_VALUE` -- if `source` is `null` or empty</li>
+          <li>`INVALID_VALUE` -- if `source` is empty</li>
         </ul>
       </dd>
 
