@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Specification</h1>
-    <h2 class="no-toc">Editor's Draft, 14 May 2014</h2>
+    <h2 class="no-toc">Editor's Draft, 19 June 2014</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -1924,7 +1924,8 @@ interface <dfn>WebCLCommandQueue</dfn> {
         <h5 class="exceptions">Exceptions:</h5>
         <ul class="exceptions">
           <li>`INVALID_CONTEXT` -- if this WebCLCommandQueue is not associated with the same WebCLContext as all events in `eventWaitList`</li>
-          <li>`INVALID_EVENT_WAIT_LIST` -- if `eventWaitList` is empty or contains any invalid events</li>
+          <li>`INVALID_VALUE` -- if `eventWaitList` is empty</li>
+          <li>`INVALID_EVENT_WAIT_LIST` -- if `eventWaitList` contains any invalid events</li>
         </ul>
       </dd>
 
