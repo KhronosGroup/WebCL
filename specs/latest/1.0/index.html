@@ -264,9 +264,9 @@ interface <dfn>WebCL</dfn> {
 
   sequence&lt;WebCLPlatform&gt; getPlatforms();
 
-  WebCLContext createContext(optional CLenum deviceType = 0x1);
+  WebCLContext createContext(optional CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT);
 
-  WebCLContext createContext(WebCLPlatform platform, optional CLenum deviceType = 0x1);
+  WebCLContext createContext(WebCLPlatform platform, optional CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT);
 
   WebCLContext createContext(WebCLDevice device);
 
@@ -804,7 +804,7 @@ ctx = webcl.createContext([aDeviceOnPlatformA, aDeviceOnPlatformB]);
 <pre class="idl">
 interface <dfn>WebCLPlatform</dfn> {
   any getInfo(CLenum name);
-  sequence&lt;WebCLDevice&gt; getDevices(optional CLenum deviceType = 0xFFFFFFFF);
+  sequence&lt;WebCLDevice&gt; getDevices(optional CLenum deviceType = WebCL.DEVICE_TYPE_ALL);
   sequence&lt;DOMString&gt;? getSupportedExtensions();
   CLboolean enableExtension(DOMString extensionName);
 };
@@ -1037,7 +1037,7 @@ interface <dfn>WebCLContext</dfn> {
 
   any getInfo(CLenum name);
 
-  sequence&lt;WebCLImageDescriptor&gt;? getSupportedImageFormats(optional CLenum memFlags = 0x1);
+  sequence&lt;WebCLImageDescriptor&gt;? getSupportedImageFormats(optional CLenum memFlags = WebCL.MEM_READ_WRITE);
 
   void release();
 
@@ -1233,8 +1233,8 @@ interface <dfn>WebCLContext</dfn> {
 
 <pre class="idl">
 dictionary <dfn>WebCLImageDescriptor</dfn> {
-  CLenum channelOrder = 0x10B5;            // 0x10B5 == WebCL.RGBA
-  CLenum channelType = 0x10D2;             // 0x10D2 == WebCL.UNORM_INT8, 8-bit colors normalized to [0, 1]
+  CLenum channelOrder = WebCL.RGBA;            
+  CLenum channelType = WebCL.UNORM_INT8;
   CLuint width = 0;
   CLuint height = 0;
   CLuint rowPitch = 0;
