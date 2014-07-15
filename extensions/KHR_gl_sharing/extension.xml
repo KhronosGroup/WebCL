@@ -9,6 +9,7 @@
   <contributors>
     <contributor>Tomi Aarnio, Nokia Research</contributor>
     <contributor>Steven Eliuk, Samsung Electronics</contributor>
+    <contributor>Mikael Bourges-Sevenier, Advanced Micro Devices</contributor>
     <contributor>Members of the WebCL working group</contributor>
   </contributors>
 
@@ -54,7 +55,7 @@ partial interface WebCL {
   /* Error Codes */
   CLenum INVALID_GL_OBJECT                         = -60;
   CLenum INVALID_MIP_LEVEL                         = -62;
-  CLenum INVALID_GL_SHAREGROUP_REFERENCE_KHR       = TODO;
+  CLenum INVALID_GL_SHAREGROUP_REFERENCE_KHR       = -1000;
 
   /* cl_command_type */
   CLenum COMMAND_ACQUIRE_GL_OBJECTS                = 0x11FF;
