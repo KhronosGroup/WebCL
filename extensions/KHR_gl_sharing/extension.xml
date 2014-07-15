@@ -44,9 +44,9 @@
   <idl xml:space="preserve">
 partial interface WebCL {
 
-  WebCLContext createContext(<a href="http://www.khronos.org/registry/webgl/specs/latest/1.0/">WebGLRenderingContext</a> gl, optional CLenum deviceType);
+  WebCLContext createContext(<a href="http://www.khronos.org/registry/webgl/specs/latest/1.0/">WebGLRenderingContext</a> gl, optional CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT);
 
-  WebCLContext createContext(<a href="http://www.khronos.org/registry/webgl/specs/latest/1.0/">WebGLRenderingContext</a> gl, WebCLPlatform platform, optional CLenum deviceType);
+  WebCLContext createContext(<a href="http://www.khronos.org/registry/webgl/specs/latest/1.0/">WebGLRenderingContext</a> gl, WebCLPlatform platform, optional CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT);
 
   WebCLContext createContext(<a href="http://www.khronos.org/registry/webgl/specs/latest/1.0/">WebGLRenderingContext</a> gl, WebCLDevice device);
 
