@@ -8,12 +8,12 @@
 
   <contributors>
     <contributor>Tomi Aarnio, Nokia Research</contributor>
-    <contributor>Steven Eliuk, Samsung Electronics</contributor>
     <contributor>Mikael Bourges-Sevenier, Advanced Micro Devices</contributor>
+    <contributor>Steven Eliuk, Samsung Electronics</contributor>
     <contributor>Members of the WebCL working group</contributor>
   </contributors>
 
-  <number>3</number>
+  <number>4</number>
 
   <depends>
     <api version="1.0"/>
@@ -375,7 +375,90 @@ dictionary WebCLGLObjectInfo {
     </pre>
   </samplecode>
 
+<!-- ======================================================================================================= -->
+    <h2>Acknowledgments</h2>
+    <p>This specification is produced by the Khronos WebCL Working Group.</p>
+
+	  <dt>Main Contributors (in alphabetical order):</dt>
+    <dd> Tomi Aarnio (Editor)</dd>
+    <dd> Alex Bourd </dd>
+    <dd>Mika&euml;l Bourges-S&eacute;venier (Editor)</a>
+    <dd> Tasneem Brutch (Working Group Chair)</dd>
+    <dd> Fabien Cellier</dd>
+    <dd> Steven Eliuk</dd>
+    <dd> Simon Gibbs </dd>
+    <dd> Jeff Gilbert </dd>
+    <dd> Antonio Gomes </dd>
+    <dd> Won Jeon </dd>
+    <dd> Tim Johansson </dd>
+    <dd> Sharath Kamath </dd>
+    <dd> David Ligon </dd>
+    <dd> Laurent Morichetti </dd>
+    <dd> Igor Oliveira </dd>
+    <dd> Amit Rao </dd>
+    <dd> Ofer Rosenberg </dd>
+    <dd> Dave Shreiner </dd>
+    <dd> Shilpa Shri </dd>
+    <dd> Neil Trevett </dd>
+
+    <dd> </dd>
+
+	  <dt>Additional Contributors and Participants (in alphabetical order):</dt>
+    <dd> Remi Arnaud </dd>
+    <dd> Andrew Brownsword </dd>
+    <dd> Robert Elliott </dd>
+    <dd> Stephen Frye </dd>
+    <dd> Rick Hudson </dd>
+    <dd> Adam Lake </dd>
+    <dd> Thierry Lepley </dd>
+    <dd> Bill Licea-Kane </dd>
+    <dd> Mikael Lepisto </dd>
+    <dd> Anthony Liot </dd>
+    <dd> Aaftab Munshi </dd>
+    <dd> Jari Nikara </dd>
+    <dd> Janne Pietiäinen </dd>
+    <dd> Andrew Richards </dd>
+    <dd> Kenneth Russell </dd>
+    <dd> Dirk Schulze </dd>
+    <dd> Micah Villmow </dd>
+    <dd> Rami Ylimaki </dd>
+    <dd> Gongyuan Zhuang </dd>
+
+    <dd> </dd>
+
+    
+    <dt>Special thanks to the following participants (in alphabetical order):</dt>
+    <dd> Bastiaan Aarts </dd>
+    <dd> Ben Ashbaugh </dd>
+    <dd> Mark Callow </dd>
+    <dd> Sean Ellis </dd>
+    <dd> Anwar Ghuloum </dd>
+    <dd> Pyry Haulos </dd>
+    <dd> Dean Jackson </dd>
+    <dd> Benoit Jacob </dd>
+    <dd> Seungwon Lee </dd>
+    <dd> Erik Moller </dd>
+    <dd> Matthew Newport </dd>
+    <dd> Eisaku Ohbuchi </dd>
+    <dd> Rob Quill </dd>
+    <dd> Kalle Raita </dd>
+    <dd> Antti Rasmus </dd>
+    <dd> Lars Remes </dd>
+    <dd> Larry Seiler </dd>
+    <dd> Tatiana Shpeisman </dd>
+    <dd> Kevin Smith </dd>
+    <dd> Gowtham Tammana </dd>
+    <dd> Thierry Vuillaume </dd>
+    <dd> Todd Weybrew </dd>
+    <dd> Dong-Hoon Yoo </dd>
+
+<!-- ======================================================================================================= -->
   <history>
+    <revision date="2014/08/13">
+      <change>Added contributors</change>
+      <change>Updated TODOs</change>
+      <change>Updated sample</change>
+    </revision>
     <revision date="2014/01/31">
       <change>Updated createContext to match the core spec (work-in-progress).</change>
     </revision>
