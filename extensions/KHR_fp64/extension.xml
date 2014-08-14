@@ -54,7 +54,7 @@ partial interface WebCL {
 
 function getFP64Devices() {
   var devices = [];
-  WebCL.getPlatforms().forEach(function(plat) {
+  webcl.getPlatforms().forEach(function(plat) {
     plat.getDevices().forEach(function(dev) {
       var isSupported = dev.enableExtension("KHR_fp64");
       if (isSupported) devices.push(dev);

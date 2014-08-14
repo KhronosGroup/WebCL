@@ -52,7 +52,7 @@ partial interface WebCL {
 
 function getFP16Devices() {
   var devices = [];
-  WebCL.getPlatforms().forEach(function(plat) {
+  webcl.getPlatforms().forEach(function(plat) {
     plat.getDevices().forEach(function(dev) {
       var isSupported = dev.enableExtension("KHR_fp16");
       if (isSupported) devices.push(dev);
