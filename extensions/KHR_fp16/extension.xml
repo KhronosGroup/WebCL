@@ -8,7 +8,9 @@
 
   <contributors>
     <contributor>Tomi Aarnio, Nokia Research</contributor>
+    <contributor>Mikael Bourges-Sevenier, Advanced Micro Devices</contributor>
     <contributor>Steven Eliuk, Samsung Electronics</contributor>
+    <contributor>Tasneem Brutch, Samsung Electronics</contributor>
     <contributor>Members of the WebCL working group</contributor>
   </contributors>
 
@@ -33,6 +35,10 @@
         The `build` member function in WebCLProgram will
         accept programs containing <code>#pragma OPENCL EXTENSION
         cl_khr_fp16 : enable</code>.
+      </feature>
+      <feature>
+      The <code>half<i>N</i></code> datatypes can be used in WebCL
+      kernel code.
       </feature>
     </features>
   </overview>
@@ -71,6 +77,9 @@ function getFP16Devices() {
   </samplecode>
 
   <history>
+    <revision date="2014/08/14">
+      <change>Updated list of contributors.</change>
+    </revision>
     <revision date="2013/11/19">
       <change>Migrated from the WebCL Working Draft.</change>
     </revision>

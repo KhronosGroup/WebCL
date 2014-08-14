@@ -8,11 +8,13 @@
 
   <contributors>
     <contributor>Tomi Aarnio, Nokia Research</contributor>
+    <contributor>Mikael Bourges-Sevenier, Advanced Micro Devices</contributor>
     <contributor>Steven Eliuk, Samsung Electronics</contributor>
+    <contributor>Tasneem Brutch, Samsung Electronics</contributor>
     <contributor>Members of the WebCL working group</contributor>
   </contributors>
 
-  <number>1</number>
+  <number>2</number>
 
   <depends>
     <api version="1.0"/>
@@ -34,8 +36,10 @@
         accept programs containing <code>#pragma OPENCL EXTENSION
         cl_khr_fp64 : enable</code>.
       </feature>
+        <feature>
       The <code>double<i>N</i></code> datatypes can be used in WebCL
       kernel code.
+      </feature>
     </features>
   </overview>
   
@@ -73,6 +77,9 @@ function getFP64Devices() {
   </samplecode>
 
   <history>
+    <revision date="2014/08/14">
+      <change>Updated list of contributors.</change>
+    </revision>
     <revision date="2013/11/19">
       <change>Migrated from the WebCL Working Draft.</change>
     </revision>
