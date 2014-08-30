@@ -1,8 +1,9 @@
 typedef boolean       CLboolean;
-typedef long          CLint;
-typedef unsigned long CLuint;
+typedef long          CLint;      // 32-bit signed integer
+typedef unsigned long CLuint;     // 32-bit unsigned integer
+typedef long long     CLlong;     // 64-bit signed integer
+typedef unsigned long long CLulong; // 64-bit unsigned integer
 typedef unsigned long CLenum;     // Used for enumerated types, such as WebCL.DEVICE_TYPE_GPU
-typedef unsigned long CLtype;     // Used in WebCLKernelArgumentTypes
 
 
 callback WebCLCallback = void (CLenum status, any userdata);
@@ -13,536 +14,578 @@ exception WebCLException : DOMException {
   DOMString? message;          // An implementation-specific description of what caused the exception
 };
 
+callback WebCLCallback = void (optional WebCLEvent event);
+
+partial interface Window {
+  readonly attribute WebCL webcl;
+};
+
 
 interface WebCL {
 
   // Functions
 
-  WebCLPlatform[] getPlatforms();
+  sequence<WebCLPlatform> getPlatforms();
 
-  WebCLContext? createContext(optional WebCLContextProperties properties);
+  WebCLContext createContext(optional CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT);
 
-  DOMString[] getSupportedExtensions();
+  WebCLContext createContext(WebCLPlatform platform, optional CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT);
 
-  void waitForEvents(WebCLEvent[] eventWaitList);
+  WebCLContext createContext(WebCLDevice device);
 
-  void unloadCompiler();
+  WebCLContext createContext(sequence<WebCLDevice> devices);
 
-  // Enums
+  sequence<DOMString>? getSupportedExtensions();
+
+  CLboolean enableExtension(DOMString extensionName);
+
+  void waitForEvents(sequence<WebCLEvent> eventWaitList,
+                     optional WebCLCallback whenFinished);
+
+  void releaseAll();
 
   /* Error Codes */
-  const unsigned short /*CLenum*/ SUCCESS                                  =0;
-  const unsigned short /*CLenum*/ DEVICE_NOT_FOUND                         =-1;
-  const unsigned short /*CLenum*/ DEVICE_NOT_AVAILABLE                     =-2;
-  const unsigned short /*CLenum*/ COMPILER_NOT_AVAILABLE                   =-3;
-  const unsigned short /*CLenum*/ MEM_OBJECT_ALLOCATION_FAILURE            =-4;
-  const unsigned short /*CLenum*/ OUT_OF_RESOURCES                         =-5;
-  const unsigned short /*CLenum*/ OUT_OF_HOST_MEMORY                       =-6;
-  const unsigned short /*CLenum*/ PROFILING_INFO_NOT_AVAILABLE             =-7;
-  const unsigned short /*CLenum*/ MEM_COPY_OVERLAP                         =-8;
-  const unsigned short /*CLenum*/ IMAGE_FORMAT_MISMATCH                    =-9;
-  const unsigned short /*CLenum*/ IMAGE_FORMAT_NOT_SUPPORTED               =-10;
-  const unsigned short /*CLenum*/ BUILD_PROGRAM_FAILURE                    =-11;
-  const unsigned short /*CLenum*/ MAP_FAILURE                              =-12;
-  const unsigned short /*CLenum*/ MISALIGNED_SUB_BUFFER_OFFSET             =-13;
-  const unsigned short /*CLenum*/ EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST =-14;
-  const unsigned short /*CLenum*/ INVALID_VALUE                            =-30;
-  const unsigned short /*CLenum*/ INVALID_DEVICE_TYPE                      =-31;
-  const unsigned short /*CLenum*/ INVALID_PLATFORM                         =-32;
-  const unsigned short /*CLenum*/ INVALID_DEVICE                           =-33;
-  const unsigned short /*CLenum*/ INVALID_CONTEXT                          =-34;
-  const unsigned short /*CLenum*/ INVALID_QUEUE_PROPERTIES                 =-35;
-  const unsigned short /*CLenum*/ INVALID_COMMAND_QUEUE                    =-36;
-  const unsigned short /*CLenum*/ INVALID_HOST_PTR                         =-37;
-  const unsigned short /*CLenum*/ INVALID_MEM_OBJECT                       =-38;
-  const unsigned short /*CLenum*/ INVALID_IMAGE_FORMAT_DESCRIPTOR          =-39;
-  const unsigned short /*CLenum*/ INVALID_IMAGE_SIZE                       =-40;
-  const unsigned short /*CLenum*/ INVALID_SAMPLER                          =-41;
-  const unsigned short /*CLenum*/ INVALID_BINARY                           =-42;
-  const unsigned short /*CLenum*/ INVALID_BUILD_OPTIONS                    =-43;
-  const unsigned short /*CLenum*/ INVALID_PROGRAM                          =-44;
-  const unsigned short /*CLenum*/ INVALID_PROGRAM_EXECUTABLE               =-45;
-  const unsigned short /*CLenum*/ INVALID_KERNEL_NAME                      =-46;
-  const unsigned short /*CLenum*/ INVALID_KERNEL_DEFINITION                =-47;
-  const unsigned short /*CLenum*/ INVALID_KERNEL                           =-48;
-  const unsigned short /*CLenum*/ INVALID_ARG_INDEX                        =-49;
-  const unsigned short /*CLenum*/ INVALID_ARG_VALUE                        =-50;
-  const unsigned short /*CLenum*/ INVALID_ARG_SIZE                         =-51;
-  const unsigned short /*CLenum*/ INVALID_KERNEL_ARGS                      =-52;
-  const unsigned short /*CLenum*/ INVALID_WORK_DIMENSION                   =-53;
-  const unsigned short /*CLenum*/ INVALID_WORK_GROUP_SIZE                  =-54;
-  const unsigned short /*CLenum*/ INVALID_WORK_ITEM_SIZE                   =-55;
-  const unsigned short /*CLenum*/ INVALID_GLOBAL_OFFSET                    =-56;
-  const unsigned short /*CLenum*/ INVALID_EVENT_WAIT_LIST                  =-57;
-  const unsigned short /*CLenum*/ INVALID_EVENT                            =-58;
-  const unsigned short /*CLenum*/ INVALID_OPERATION                        =-59;
-  const unsigned short /*CLenum*/ INVALID_GL_OBJECT                        =-60;
-  const unsigned short /*CLenum*/ INVALID_BUFFER_SIZE                      =-61;
-  const unsigned short /*CLenum*/ INVALID_MIP_LEVEL                        =-62;
-  const unsigned short /*CLenum*/ INVALID_GLOBAL_WORK_SIZE                 =-63;
-  const unsigned short /*CLenum*/ INVALID_PROPERTY                         =-64;
-
-  /* OpenCL Version */
-  const unsigned short /*CLenum*/ VERSION_1_0                              =1;
-  const unsigned short /*CLenum*/ VERSION_1_1                              =1;
+  const CLint SUCCESS                                   = 0;
+  const CLint DEVICE_NOT_FOUND                          = -1;
+  const CLint DEVICE_NOT_AVAILABLE                      = -2;
+  const CLint COMPILER_NOT_AVAILABLE                    = -3;
+  const CLint MEM_OBJECT_ALLOCATION_FAILURE             = -4;
+  const CLint OUT_OF_RESOURCES                          = -5;
+  const CLint OUT_OF_HOST_MEMORY                        = -6;
+  const CLint PROFILING_INFO_NOT_AVAILABLE              = -7;
+  const CLint MEM_COPY_OVERLAP                          = -8;
+  const CLint IMAGE_FORMAT_MISMATCH                     = -9;
+  const CLint IMAGE_FORMAT_NOT_SUPPORTED                = -10;
+  const CLint BUILD_PROGRAM_FAILURE                     = -11;
+  const CLint MAP_FAILURE                               = -12;
+  const CLint MISALIGNED_SUB_BUFFER_OFFSET              = -13;
+  const CLint EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST = -14;
+  const CLint INVALID_VALUE                             = -30;
+  const CLint INVALID_DEVICE_TYPE                       = -31;
+  const CLint INVALID_PLATFORM                          = -32;
+  const CLint INVALID_DEVICE                            = -33;
+  const CLint INVALID_CONTEXT                           = -34;
+  const CLint INVALID_QUEUE_PROPERTIES                  = -35;
+  const CLint INVALID_COMMAND_QUEUE                     = -36;
+  const CLint INVALID_HOST_PTR                          = -37;
+  const CLint INVALID_MEM_OBJECT                        = -38;
+  const CLint INVALID_IMAGE_FORMAT_DESCRIPTOR           = -39;
+  const CLint INVALID_IMAGE_SIZE                        = -40;
+  const CLint INVALID_SAMPLER                           = -41;
+  const CLint INVALID_BINARY                            = -42;
+  const CLint INVALID_BUILD_OPTIONS                     = -43;
+  const CLint INVALID_PROGRAM                           = -44;
+  const CLint INVALID_PROGRAM_EXECUTABLE                = -45;
+  const CLint INVALID_KERNEL_NAME                       = -46;
+  const CLint INVALID_KERNEL_DEFINITION                 = -47;
+  const CLint INVALID_KERNEL                            = -48;
+  const CLint INVALID_ARG_INDEX                         = -49;
+  const CLint INVALID_ARG_VALUE                         = -50;
+  const CLint INVALID_ARG_SIZE                          = -51;
+  const CLint INVALID_KERNEL_ARGS                       = -52;
+  const CLint INVALID_WORK_DIMENSION                    = -53;
+  const CLint INVALID_WORK_GROUP_SIZE                   = -54;
+  const CLint INVALID_WORK_ITEM_SIZE                    = -55;
+  const CLint INVALID_GLOBAL_OFFSET                     = -56;
+  const CLint INVALID_EVENT_WAIT_LIST                   = -57;
+  const CLint INVALID_EVENT                             = -58;
+  const CLint INVALID_OPERATION                         = -59;
+  //const CLint INVALID_GL_OBJECT                         = -60; // moved to extension
+  const CLint INVALID_BUFFER_SIZE                       = -61;
+  //const CLint INVALID_MIP_LEVEL                         = -62; // moved to extension
+  const CLint INVALID_GLOBAL_WORK_SIZE                  = -63;
+  const CLint INVALID_PROPERTY                          = -64;
 
   /* cl_bool */
-  const unsigned short /*CLenum*/ FALSE                                    =0;
-  const unsigned short /*CLenum*/ TRUE                                     =1;
+  const CLenum FALSE                                     = 0;
+  const CLenum TRUE                                      = 1;
 
   /* cl_platform_info */
-  const unsigned short /*CLenum*/ PLATFORM_PROFILE                         =0x0900;
-  const unsigned short /*CLenum*/ PLATFORM_VERSION                         =0x0901;
-  const unsigned short /*CLenum*/ PLATFORM_NAME                            =0x0902;
-  const unsigned short /*CLenum*/ PLATFORM_VENDOR                          =0x0903;
-  const unsigned short /*CLenum*/ PLATFORM_EXTENSIONS                      =0x0904;
+  const CLenum PLATFORM_PROFILE                          = 0x0900;
+  const CLenum PLATFORM_VERSION                          = 0x0901;
+  const CLenum PLATFORM_NAME                             = 0x0902;
+  const CLenum PLATFORM_VENDOR                           = 0x0903;
+  const CLenum PLATFORM_EXTENSIONS                       = 0x0904;
 
   /* cl_device_type - bitfield */
-  const unsigned short /*CLenum*/ DEVICE_TYPE_DEFAULT                      =0x1;
-  const unsigned short /*CLenum*/ DEVICE_TYPE_CPU                          =0x2;
-  const unsigned short /*CLenum*/ DEVICE_TYPE_GPU                          =0x4;
-  const unsigned short /*CLenum*/ DEVICE_TYPE_ACCELERATOR                  =0x8;
-  const unsigned short /*CLenum*/ DEVICE_TYPE_ALL                          =0xFFFFFFFF;
+  const CLenum DEVICE_TYPE_DEFAULT                       = 0x1;
+  const CLenum DEVICE_TYPE_CPU                           = 0x2;
+  const CLenum DEVICE_TYPE_GPU                           = 0x4;
+  const CLenum DEVICE_TYPE_ACCELERATOR                   = 0x8;
+  const CLenum DEVICE_TYPE_ALL                           = 0xFFFFFFFF;
 
   /* cl_device_info */
-  const unsigned short /*CLenum*/ DEVICE_TYPE                              =0x1000;
-  const unsigned short /*CLenum*/ DEVICE_VENDOR_ID                         =0x1001;
-  const unsigned short /*CLenum*/ DEVICE_MAX_COMPUTE_UNITS                 =0x1002;
-  const unsigned short /*CLenum*/ DEVICE_MAX_WORK_ITEM_DIMENSIONS          =0x1003;
-  const unsigned short /*CLenum*/ DEVICE_MAX_WORK_GROUP_SIZE               =0x1004;
-  const unsigned short /*CLenum*/ DEVICE_MAX_WORK_ITEM_SIZES               =0x1005;
-  const unsigned short /*CLenum*/ DEVICE_PREFERRED_VECTOR_WIDTH_CHAR       =0x1006;
-  const unsigned short /*CLenum*/ DEVICE_PREFERRED_VECTOR_WIDTH_SHORT      =0x1007;
-  const unsigned short /*CLenum*/ DEVICE_PREFERRED_VECTOR_WIDTH_INT        =0x1008;
-  const unsigned short /*CLenum*/ DEVICE_PREFERRED_VECTOR_WIDTH_LONG       =0x1009;
-  const unsigned short /*CLenum*/ DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT      =0x100A;
-  const unsigned short /*CLenum*/ DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE     =0x100B;
-  const unsigned short /*CLenum*/ DEVICE_MAX_CLOCK_FREQUENCY               =0x100C;
-  const unsigned short /*CLenum*/ DEVICE_ADDRESS_BITS                      =0x100D;
-  const unsigned short /*CLenum*/ DEVICE_MAX_READ_IMAGE_ARGS               =0x100E;
-  const unsigned short /*CLenum*/ DEVICE_MAX_WRITE_IMAGE_ARGS              =0x100F;
-  const unsigned short /*CLenum*/ DEVICE_MAX_MEM_ALLOC_SIZE                =0x1010;
-  const unsigned short /*CLenum*/ DEVICE_IMAGE2D_MAX_WIDTH                 =0x1011;
-  const unsigned short /*CLenum*/ DEVICE_IMAGE2D_MAX_HEIGHT                =0x1012;
-  const unsigned short /*CLenum*/ DEVICE_IMAGE_SUPPORT                     =0x1016;
-  const unsigned short /*CLenum*/ DEVICE_MAX_PARAMETER_SIZE                =0x1017;
-  const unsigned short /*CLenum*/ DEVICE_MAX_SAMPLERS                      =0x1018;
-  const unsigned short /*CLenum*/ DEVICE_MEM_BASE_ADDR_ALIGN               =0x1019;
-  const unsigned short /*CLenum*/ DEVICE_MIN_DATA_TYPE_ALIGN_SIZE          =0x101A;
-  const unsigned short /*CLenum*/ DEVICE_SINGLE_FP_CONFIG                  =0x101B;
-  const unsigned short /*CLenum*/ DEVICE_GLOBAL_MEM_CACHE_TYPE             =0x101C;
-  const unsigned short /*CLenum*/ DEVICE_GLOBAL_MEM_CACHELINE_SIZE         =0x101D;
-  const unsigned short /*CLenum*/ DEVICE_GLOBAL_MEM_CACHE_SIZE             =0x101E;
-  const unsigned short /*CLenum*/ DEVICE_GLOBAL_MEM_SIZE                   =0x101F;
-  const unsigned short /*CLenum*/ DEVICE_MAX_CONSTANT_BUFFER_SIZE          =0x1020;
-  const unsigned short /*CLenum*/ DEVICE_MAX_CONSTANT_ARGS                 =0x1021;
-  const unsigned short /*CLenum*/ DEVICE_LOCAL_MEM_TYPE                    =0x1022;
-  const unsigned short /*CLenum*/ DEVICE_LOCAL_MEM_SIZE                    =0x1023;
-  const unsigned short /*CLenum*/ DEVICE_ERROR_CORRECTION_SUPPORT          =0x1024;
-  const unsigned short /*CLenum*/ DEVICE_PROFILING_TIMER_RESOLUTION        =0x1025;
-  const unsigned short /*CLenum*/ DEVICE_ENDIAN_LITTLE                     =0x1026;
-  const unsigned short /*CLenum*/ DEVICE_AVAILABLE                         =0x1027;
-  const unsigned short /*CLenum*/ DEVICE_COMPILER_AVAILABLE                =0x1028;
-  const unsigned short /*CLenum*/ DEVICE_EXECUTION_CAPABILITIES            =0x1029;
-  const unsigned short /*CLenum*/ DEVICE_QUEUE_PROPERTIES                  =0x102A;
-  const unsigned short /*CLenum*/ DEVICE_NAME                              =0x102B;
-  const unsigned short /*CLenum*/ DEVICE_VENDOR                            =0x102C;
-  const unsigned short /*CLenum*/ DRIVER_VERSION                           =0x102D;
-  const unsigned short /*CLenum*/ DEVICE_PROFILE                           =0x102E;
-  const unsigned short /*CLenum*/ DEVICE_VERSION                           =0x102F;
-  const unsigned short /*CLenum*/ DEVICE_EXTENSIONS                        =0x1030;
-  const unsigned short /*CLenum*/ DEVICE_PLATFORM                          =0x1031;
-  const unsigned short /*CLenum*/ DEVICE_DOUBLE_FP_CONFIG                  =0x1032;
-  const unsigned short /*CLenum*/ DEVICE_HALF_FP_CONFIG                    =0x1033;
-  const unsigned short /*CLenum*/ DEVICE_PREFERRED_VECTOR_WIDTH_HALF       =0x1034;
-  const unsigned short /*CLenum*/ DEVICE_HOST_UNIFIED_MEMORY               =0x1035;
-  const unsigned short /*CLenum*/ DEVICE_NATIVE_VECTOR_WIDTH_CHAR          =0x1036;
-  const unsigned short /*CLenum*/ DEVICE_NATIVE_VECTOR_WIDTH_SHORT         =0x1037;
-  const unsigned short /*CLenum*/ DEVICE_NATIVE_VECTOR_WIDTH_INT           =0x1038;
-  const unsigned short /*CLenum*/ DEVICE_NATIVE_VECTOR_WIDTH_LONG          =0x1039;
-  const unsigned short /*CLenum*/ DEVICE_NATIVE_VECTOR_WIDTH_FLOAT         =0x103A;
-  const unsigned short /*CLenum*/ DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE        =0x103B;
-  const unsigned short /*CLenum*/ DEVICE_NATIVE_VECTOR_WIDTH_HALF          =0x103C;
-  const unsigned short /*CLenum*/ DEVICE_OPENCL_C_VERSION                  =0x103D;
+  const CLenum DEVICE_TYPE                               = 0x1000;
+  const CLenum DEVICE_VENDOR_ID                          = 0x1001;
+  const CLenum DEVICE_MAX_COMPUTE_UNITS                  = 0x1002;
+  const CLenum DEVICE_MAX_WORK_ITEM_DIMENSIONS           = 0x1003;
+  const CLenum DEVICE_MAX_WORK_GROUP_SIZE                = 0x1004;
+  const CLenum DEVICE_MAX_WORK_ITEM_SIZES                = 0x1005;
+  const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_CHAR        = 0x1006;
+  const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_SHORT       = 0x1007;
+  const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_INT         = 0x1008;
+  const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_LONG        = 0x1009;
+  const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT       = 0x100A;
+  //const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE      = 0x100B; // moved to extension
+  const CLenum DEVICE_MAX_CLOCK_FREQUENCY                = 0x100C;
+  const CLenum DEVICE_ADDRESS_BITS                       = 0x100D;
+  const CLenum DEVICE_MAX_READ_IMAGE_ARGS                = 0x100E;
+  const CLenum DEVICE_MAX_WRITE_IMAGE_ARGS               = 0x100F;
+  const CLenum DEVICE_MAX_MEM_ALLOC_SIZE                 = 0x1010;
+  const CLenum DEVICE_IMAGE2D_MAX_WIDTH                  = 0x1011;
+  const CLenum DEVICE_IMAGE2D_MAX_HEIGHT                 = 0x1012;
+  const CLenum DEVICE_IMAGE3D_MAX_WIDTH                  = 0x1013;
+  const CLenum DEVICE_IMAGE3D_MAX_HEIGHT                 = 0x1014;
+  const CLenum DEVICE_IMAGE3D_MAX_DEPTH                  = 0x1015;
+  const CLenum DEVICE_IMAGE_SUPPORT                      = 0x1016;
+  const CLenum DEVICE_MAX_PARAMETER_SIZE                 = 0x1017;
+  const CLenum DEVICE_MAX_SAMPLERS                       = 0x1018;
+  const CLenum DEVICE_MEM_BASE_ADDR_ALIGN                = 0x1019;
+  //const CLenum DEVICE_MIN_DATA_TYPE_ALIGN_SIZE           = 0x101A; // removed; deprecated in OpenCL 1.2
+  const CLenum DEVICE_SINGLE_FP_CONFIG                   = 0x101B;
+  const CLenum DEVICE_GLOBAL_MEM_CACHE_TYPE              = 0x101C;
+  const CLenum DEVICE_GLOBAL_MEM_CACHELINE_SIZE          = 0x101D;
+  const CLenum DEVICE_GLOBAL_MEM_CACHE_SIZE              = 0x101E;
+  const CLenum DEVICE_GLOBAL_MEM_SIZE                    = 0x101F;
+  const CLenum DEVICE_MAX_CONSTANT_BUFFER_SIZE           = 0x1020;
+  const CLenum DEVICE_MAX_CONSTANT_ARGS                  = 0x1021;
+  const CLenum DEVICE_LOCAL_MEM_TYPE                     = 0x1022;
+  const CLenum DEVICE_LOCAL_MEM_SIZE                     = 0x1023;
+  const CLenum DEVICE_ERROR_CORRECTION_SUPPORT           = 0x1024;
+  const CLenum DEVICE_PROFILING_TIMER_RESOLUTION         = 0x1025;
+  const CLenum DEVICE_ENDIAN_LITTLE                      = 0x1026;
+  const CLenum DEVICE_AVAILABLE                          = 0x1027;
+  const CLenum DEVICE_COMPILER_AVAILABLE                 = 0x1028;
+  const CLenum DEVICE_EXECUTION_CAPABILITIES             = 0x1029;
+  const CLenum DEVICE_QUEUE_PROPERTIES                   = 0x102A;
+  const CLenum DEVICE_NAME                               = 0x102B;
+  const CLenum DEVICE_VENDOR                             = 0x102C;
+  const CLenum DRIVER_VERSION                            = 0x102D;
+  const CLenum DEVICE_PROFILE                            = 0x102E;
+  const CLenum DEVICE_VERSION                            = 0x102F;
+  const CLenum DEVICE_EXTENSIONS                         = 0x1030;
+  const CLenum DEVICE_PLATFORM                           = 0x1031;
+  //const CLenum DEVICE_DOUBLE_FP_CONFIG                   = 0x1032; // moved to extension
+  //const CLenum DEVICE_HALF_FP_CONFIG                     = 0x1033; // moved to extension
+  //const CLenum DEVICE_PREFERRED_VECTOR_WIDTH_HALF        = 0x1034; // moved to extension
+  const CLenum DEVICE_HOST_UNIFIED_MEMORY                = 0x1035;
+  const CLenum DEVICE_NATIVE_VECTOR_WIDTH_CHAR           = 0x1036;
+  const CLenum DEVICE_NATIVE_VECTOR_WIDTH_SHORT          = 0x1037;
+  const CLenum DEVICE_NATIVE_VECTOR_WIDTH_INT            = 0x1038;
+  const CLenum DEVICE_NATIVE_VECTOR_WIDTH_LONG           = 0x1039;
+  const CLenum DEVICE_NATIVE_VECTOR_WIDTH_FLOAT          = 0x103A;
+  //const CLenum DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE         = 0x103B; // moved to extension
+  //const CLenum DEVICE_NATIVE_VECTOR_WIDTH_HALF           = 0x103C; // moved to extension
+  const CLenum DEVICE_OPENCL_C_VERSION                   = 0x103D;
 
   /* cl_device_fp_config - bitfield */
-  const unsigned short /*CLenum*/ FP_DENORM                                = 0x1;
-  const unsigned short /*CLenum*/ FP_INF_NAN                               = 0x2;
-  const unsigned short /*CLenum*/ FP_ROUND_TO_NEAREST                      = 0x4;
-  const unsigned short /*CLenum*/ FP_ROUND_TO_ZERO                         = 0x8;
-  const unsigned short /*CLenum*/ FP_ROUND_TO_INF                          = 0x10;
-  const unsigned short /*CLenum*/ FP_FMA                                   = 0x20;
-  const unsigned short /*CLenum*/ FP_SOFT_FLOAT                            = 0x40;
+  const CLenum FP_DENORM                                 = 0x1;
+  const CLenum FP_INF_NAN                                = 0x2;
+  const CLenum FP_ROUND_TO_NEAREST                       = 0x4;
+  const CLenum FP_ROUND_TO_ZERO                          = 0x8;
+  const CLenum FP_ROUND_TO_INF                           = 0x10;
+  const CLenum FP_FMA                                    = 0x20;
+  const CLenum FP_SOFT_FLOAT                             = 0x40;
 
   /* cl_device_mem_cache_type */
-  const unsigned short /*CLenum*/ NONE                                     =0x0;
-  const unsigned short /*CLenum*/ READ_ONLY_CACHE                          =0x1;
-  const unsigned short /*CLenum*/ READ_WRITE_CACHE                         =0x2;
+  const CLenum NONE                                      = 0x0;
+  const CLenum READ_ONLY_CACHE                           = 0x1;
+  const CLenum READ_WRITE_CACHE                          = 0x2;
 
   /* cl_device_local_mem_type */
-  const unsigned short /*CLenum*/ LOCAL                                    =0x1;
-  const unsigned short /*CLenum*/ GLOBAL                                   =0x2;
+  const CLenum LOCAL                                     = 0x1;
+  const CLenum GLOBAL                                    = 0x2;
 
   /* cl_device_exec_capabilities - bitfield */
-  const unsigned short /*CLenum*/ EXEC_KERNEL                              =0x1;
-  const unsigned short /*CLenum*/ EXEC_NATIVE_KERNEL                       =0x2;
+  const CLenum EXEC_KERNEL                               = 0x1;
+  //const CLenum EXEC_NATIVE_KERNEL                        = 0x2; // disallowed
 
   /* cl_command_queue_properties - bitfield */
-  const unsigned short /*CLenum*/ QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE      =0x1;
-  const unsigned short /*CLenum*/ QUEUE_PROFILING_ENABLE                   =0x2;
+  const CLenum QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE       = 0x1;
+  const CLenum QUEUE_PROFILING_ENABLE                    = 0x2;
 
   /* cl_context_info  */
-  const unsigned short /*CLenum*/ CONTEXT_REFERENCE_COUNT                  =0x1080;
-  const unsigned short /*CLenum*/ CONTEXT_DEVICES                          =0x1081;
-  const unsigned short /*CLenum*/ CONTEXT_PROPERTIES                       =0x1082;
-  const unsigned short /*CLenum*/ CONTEXT_NUM_DEVICES                      =0x1083;
+  //const CLenum CONTEXT_REFERENCE_COUNT                   = 0x1080; // disallowed
+  const CLenum CONTEXT_DEVICES                           = 0x1081;
+  //const CLenum CONTEXT_PROPERTIES                        = 0x1082; // disallowed; no context properties in WebCL
+  const CLenum CONTEXT_NUM_DEVICES                       = 0x1083;
 
-  /* cl_context_info + cl_context_properties */
-  const unsigned short /*CLenum*/ CONTEXT_PLATFORM                         =0x1084;
+  /* cl_context_properties */
+  //const CLenum CONTEXT_PLATFORM                          = 0x1084; // disallowed; no context properties in WebCL
 
   /* cl_command_queue_info */
-  const unsigned short /*CLenum*/ QUEUE_CONTEXT                            =0x1090;
-  const unsigned short /*CLenum*/ QUEUE_DEVICE                             =0x1091;
-  const unsigned short /*CLenum*/ QUEUE_REFERENCE_COUNT                    =0x1092;
-  const unsigned short /*CLenum*/ QUEUE_PROPERTIES                         =0x1093;
+  const CLenum QUEUE_CONTEXT                             = 0x1090;
+  const CLenum QUEUE_DEVICE                              = 0x1091;
+  //const CLenum QUEUE_REFERENCE_COUNT                     = 0x1092; // disallowed
+  const CLenum QUEUE_PROPERTIES                          = 0x1093;
 
   /* cl_mem_flags - bitfield */
-  const unsigned short /*CLenum*/ MEM_READ_WRITE                           =0x1;
-  const unsigned short /*CLenum*/ MEM_WRITE_ONLY                           =0x2;
-  const unsigned short /*CLenum*/ MEM_READ_ONLY                            =0x4;
+  const CLenum MEM_READ_WRITE                            = 0x1;
+  const CLenum MEM_WRITE_ONLY                            = 0x2;
+  const CLenum MEM_READ_ONLY                             = 0x4;
 
   /* cl_channel_order */
-  const unsigned short /*CLenum*/ R                                        =0x10B0;
-  const unsigned short /*CLenum*/ A                                        =0x10B1;
-  const unsigned short /*CLenum*/ RG                                       =0x10B2;
-  const unsigned short /*CLenum*/ RA                                       =0x10B3;
-  const unsigned short /*CLenum*/ RGB                                      =0x10B4;
-  const unsigned short /*CLenum*/ RGBA                                     =0x10B5;
-  const unsigned short /*CLenum*/ BGRA                                     =0x10B6;
-  const unsigned short /*CLenum*/ ARGB                                     =0x10B7;
-  const unsigned short /*CLenum*/ INTENSITY                                =0x10B8;
-  const unsigned short /*CLenum*/ LUMINANCE                                =0x10B9;
-  const unsigned short /*CLenum*/ Rx                                       =0x10BA;
-  const unsigned short /*CLenum*/ RGx                                      =0x10BB;
-  const unsigned short /*CLenum*/ RGBx                                     =0x10BC;
+  const CLenum R                                         = 0x10B0;
+  const CLenum A                                         = 0x10B1;
+  const CLenum RG                                        = 0x10B2;
+  const CLenum RA                                        = 0x10B3;
+  const CLenum RGB                                       = 0x10B4;
+  const CLenum RGBA                                      = 0x10B5;
+  const CLenum BGRA                                      = 0x10B6;
+  const CLenum ARGB                                      = 0x10B7;
+  const CLenum INTENSITY                                 = 0x10B8;
+  const CLenum LUMINANCE                                 = 0x10B9;
+  const CLenum Rx                                        = 0x10BA;
+  const CLenum RGx                                       = 0x10BB;
+  const CLenum RGBx                                      = 0x10BC;
 
   /* cl_channel_type */
-  const unsigned short /*CLenum*/ SNORM_INT8                               =0x10D0;
-  const unsigned short /*CLenum*/ SNORM_INT16                              =0x10D1;
-  const unsigned short /*CLenum*/ UNORM_INT8                               =0x10D2;
-  const unsigned short /*CLenum*/ UNORM_INT16                              =0x10D3;
-  const unsigned short /*CLenum*/ UNORM_SHORT_565                          =0x10D4;
-  const unsigned short /*CLenum*/ UNORM_SHORT_555                          =0x10D5;
-  const unsigned short /*CLenum*/ UNORM_INT_101010                         =0x10D6;
-  const unsigned short /*CLenum*/ SIGNED_INT8                              =0x10D7;
-  const unsigned short /*CLenum*/ SIGNED_INT16                             =0x10D8;
-  const unsigned short /*CLenum*/ SIGNED_INT32                             =0x10D9;
-  const unsigned short /*CLenum*/ UNSIGNED_INT8                            =0x10DA;
-  const unsigned short /*CLenum*/ UNSIGNED_INT16                           =0x10DB;
-  const unsigned short /*CLenum*/ UNSIGNED_INT32                           =0x10DC;
-  const unsigned short /*CLenum*/ HALF_FLOAT                               =0x10DD;
-  const unsigned short /*CLenum*/ FLOAT                                    =0x10DE;
+  const CLenum SNORM_INT8                                = 0x10D0;
+  const CLenum SNORM_INT16                               = 0x10D1;
+  const CLenum UNORM_INT8                                = 0x10D2;
+  const CLenum UNORM_INT16                               = 0x10D3;
+  const CLenum UNORM_SHORT_565                           = 0x10D4;
+  const CLenum UNORM_SHORT_555                           = 0x10D5;
+  const CLenum UNORM_INT_101010                          = 0x10D6;
+  const CLenum SIGNED_INT8                               = 0x10D7;
+  const CLenum SIGNED_INT16                              = 0x10D8;
+  const CLenum SIGNED_INT32                              = 0x10D9;
+  const CLenum UNSIGNED_INT8                             = 0x10DA;
+  const CLenum UNSIGNED_INT16                            = 0x10DB;
+  const CLenum UNSIGNED_INT32                            = 0x10DC;
+  const CLenum HALF_FLOAT                                = 0x10DD;
+  const CLenum FLOAT                                     = 0x10DE;
 
   /* cl_mem_object_type */
-  const unsigned short /*CLenum*/ MEM_OBJECT_BUFFER                        =0x10F0;
-  const unsigned short /*CLenum*/ MEM_OBJECT_IMAGE2D                       =0x10F1;
+  const CLenum MEM_OBJECT_BUFFER                         = 0x10F0;
+  const CLenum MEM_OBJECT_IMAGE2D                        = 0x10F1;
+  //const CLenum MEM_OBJECT_IMAGE3D                        = 0x10F2; // moved to extension (TBD)
 
   /* cl_mem_info */
-  const unsigned short /*CLenum*/ MEM_TYPE                                 =0x1100;
-  const unsigned short /*CLenum*/ MEM_FLAGS                                =0x1101;
-  const unsigned short /*CLenum*/ MEM_SIZE                                 =0x1102;
-  const unsigned short /*CLenum*/ MEM_HOST_PTR                             =0x1103;
-  const unsigned short /*CLenum*/ MEM_MAP_COUNT                            =0x1104;
-  const unsigned short /*CLenum*/ MEM_REFERENCE_COUNT                      =0x1105;
-  const unsigned short /*CLenum*/ MEM_CONTEXT                              =0x1106;
-  const unsigned short /*CLenum*/ MEM_ASSOCIATED_MEMOBJECT                 =0x1107;
-  const unsigned short /*CLenum*/ MEM_OFFSET                               =0x1108;
+  const CLenum MEM_TYPE                                  = 0x1100;
+  const CLenum MEM_FLAGS                                 = 0x1101;
+  const CLenum MEM_SIZE                                  = 0x1102;
+  //const CLenum MEM_HOST_PTR                              = 0x1103; // disallowed
+  //const CLenum MEM_MAP_COUNT                             = 0x1104; // disallowed
+  //const CLenum MEM_REFERENCE_COUNT                       = 0x1105; // disallowed
+  const CLenum MEM_CONTEXT                               = 0x1106;
+  const CLenum MEM_ASSOCIATED_MEMOBJECT                  = 0x1107;
+  const CLenum MEM_OFFSET                                = 0x1108;
 
   /* cl_image_info */
-  const unsigned short /*CLenum*/ IMAGE_FORMAT                             =0x1110;
-  const unsigned short /*CLenum*/ IMAGE_ELEMENT_SIZE                       =0x1111;
-  const unsigned short /*CLenum*/ IMAGE_ROW_PITCH                          =0x1112;
-  const unsigned short /*CLenum*/ IMAGE_WIDTH                              =0x1114;
-  const unsigned short /*CLenum*/ IMAGE_HEIGHT                             =0x1115;
+  const CLenum IMAGE_FORMAT                              = 0x1110;
+  const CLenum IMAGE_ELEMENT_SIZE                        = 0x1111;
+  const CLenum IMAGE_ROW_PITCH                           = 0x1112;
+  const CLenum IMAGE_WIDTH                               = 0x1114;
+  const CLenum IMAGE_HEIGHT                              = 0x1115;
 
   /* cl_addressing_mode */
-  const unsigned short /*CLenum*/ ADDRESS_NONE                             =0x1130;
-  const unsigned short /*CLenum*/ ADDRESS_CLAMP_TO_EDGE                    =0x1131;
-  const unsigned short /*CLenum*/ ADDRESS_CLAMP                            =0x1132;
-  const unsigned short /*CLenum*/ ADDRESS_REPEAT                           =0x1133;
-  const unsigned short /*CLenum*/ ADDRESS_MIRRORED_REPEAT                  =0x1134;
+  //const CLenum ADDRESS_NONE                              = 0x1130; // disallowed
+  const CLenum ADDRESS_CLAMP_TO_EDGE                     = 0x1131;
+  const CLenum ADDRESS_CLAMP                             = 0x1132;
+  const CLenum ADDRESS_REPEAT                            = 0x1133;
+  const CLenum ADDRESS_MIRRORED_REPEAT                   = 0x1134;
 
   /* cl_filter_mode */
-  const unsigned short /*CLenum*/ FILTER_NEAREST                           =0x1140;
-  const unsigned short /*CLenum*/ FILTER_LINEAR                            =0x1141;
+  const CLenum FILTER_NEAREST                            = 0x1140;
+  const CLenum FILTER_LINEAR                             = 0x1141;
 
   /* cl_sampler_info */
-  const unsigned short /*CLenum*/ SAMPLER_REFERENCE_COUNT                  =0x1150;
-  const unsigned short /*CLenum*/ SAMPLER_CONTEXT                          =0x1151;
-  const unsigned short /*CLenum*/ SAMPLER_NORMALIZED_COORDS                =0x1152;
-  const unsigned short /*CLenum*/ SAMPLER_ADDRESSING_MODE                  =0x1153;
-  const unsigned short /*CLenum*/ SAMPLER_FILTER_MODE                      =0x1154;
+  //const CLenum SAMPLER_REFERENCE_COUNT                   = 0x1150; // disallowed
+  const CLenum SAMPLER_CONTEXT                           = 0x1151;
+  const CLenum SAMPLER_NORMALIZED_COORDS                 = 0x1152;
+  const CLenum SAMPLER_ADDRESSING_MODE                   = 0x1153;
+  const CLenum SAMPLER_FILTER_MODE                       = 0x1154;
 
   /* cl_map_flags - bitfield */
-  const unsigned short /*CLenum*/ MAP_READ                                 =0x1;
-  const unsigned short /*CLenum*/ MAP_WRITE                                =0x2;
+  //const CLenum MAP_READ                                  = 0x1; // disallowed
+  //const CLenum MAP_WRITE                                 = 0x2; // disallowed
 
   /* cl_program_info */
-  const unsigned short /*CLenum*/ PROGRAM_REFERENCE_COUNT                  =0x1160;
-  const unsigned short /*CLenum*/ PROGRAM_CONTEXT                          =0x1161;
-  const unsigned short /*CLenum*/ PROGRAM_NUM_DEVICES                      =0x1162;
-  const unsigned short /*CLenum*/ PROGRAM_DEVICES                          =0x1163;
-  const unsigned short /*CLenum*/ PROGRAM_SOURCE                           =0x1164;
-  const unsigned short /*CLenum*/ PROGRAM_BINARY_SIZES                     =0x1165;
-  const unsigned short /*CLenum*/ PROGRAM_BINARIES                         =0x1166;
+  //const CLenum PROGRAM_REFERENCE_COUNT                   = 0x1160; // disallowed
+  const CLenum PROGRAM_CONTEXT                           = 0x1161;
+  const CLenum PROGRAM_NUM_DEVICES                       = 0x1162;
+  const CLenum PROGRAM_DEVICES                           = 0x1163;
+  const CLenum PROGRAM_SOURCE                            = 0x1164;
+  //const CLenum PROGRAM_BINARY_SIZES                      = 0x1165; // disallowed
+  //const CLenum PROGRAM_BINARIES                          = 0x1166; // disallowed
 
   /* cl_program_build_info */
-  const unsigned short /*CLenum*/ PROGRAM_BUILD_STATUS                     =0x1181;
-  const unsigned short /*CLenum*/ PROGRAM_BUILD_OPTIONS                    =0x1182;
-  const unsigned short /*CLenum*/ PROGRAM_BUILD_LOG                        =0x1183;
+  const CLenum PROGRAM_BUILD_STATUS                      = 0x1181;
+  const CLenum PROGRAM_BUILD_OPTIONS                     = 0x1182;
+  const CLenum PROGRAM_BUILD_LOG                         = 0x1183;
 
   /* cl_build_status */
-  const unsigned short /*CLenum*/ BUILD_SUCCESS                             =0;
-  const unsigned short /*CLenum*/ BUILD_NONE                                =1;
-  const unsigned short /*CLenum*/ BUILD_ERROR                              =-2;
-  const unsigned short /*CLenum*/ BUILD_IN_PROGRESS                        =-3;
+  const CLint BUILD_SUCCESS                             = 0;
+  const CLint BUILD_NONE                                = -1;
+  const CLint BUILD_ERROR                               = -2;
+  const CLint BUILD_IN_PROGRESS                         = -3;
 
   /* cl_kernel_info */
-  const unsigned short /*CLenum*/ KERNEL_FUNCTION_NAME                     =0x1190;
-  const unsigned short /*CLenum*/ KERNEL_NUM_ARGS                          =0x1191;
-  const unsigned short /*CLenum*/ KERNEL_REFERENCE_COUNT                   =0x1192;
-  const unsigned short /*CLenum*/ KERNEL_CONTEXT                           =0x1193;
-  const unsigned short /*CLenum*/ KERNEL_PROGRAM                           =0x1194;
+  const CLenum KERNEL_FUNCTION_NAME                      = 0x1190;
+  const CLenum KERNEL_NUM_ARGS                           = 0x1191;
+  //const CLenum KERNEL_REFERENCE_COUNT                    = 0x1192; // disallowed
+  const CLenum KERNEL_CONTEXT                            = 0x1193;
+  const CLenum KERNEL_PROGRAM                            = 0x1194;
 
   /* cl_kernel_work_group_info */
-  const unsigned short /*CLenum*/ KERNEL_WORK_GROUP_SIZE                   =0x11B0;
-  const unsigned short /*CLenum*/ KERNEL_COMPILE_WORK_GROUP_SIZE           =0x11B1;
-  const unsigned short /*CLenum*/ KERNEL_LOCAL_MEM_SIZE                    =0x11B2;
-  const unsigned short /*CLenum*/ KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE =0x11B3;
-  const unsigned short /*CLenum*/ KERNEL_PRIVATE_MEM_SIZE                  =0x11B4;
+  const CLenum KERNEL_WORK_GROUP_SIZE                    = 0x11B0;
+  const CLenum KERNEL_COMPILE_WORK_GROUP_SIZE            = 0x11B1;
+  const CLenum KERNEL_LOCAL_MEM_SIZE                     = 0x11B2;
+  const CLenum KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE = 0x11B3;
+  const CLenum KERNEL_PRIVATE_MEM_SIZE                   = 0x11B4;
 
   /* cl_event_info  */
-  const unsigned short /*CLenum*/ EVENT_COMMAND_QUEUE                      =0x11D0;
-  const unsigned short /*CLenum*/ EVENT_COMMAND_TYPE                       =0x11D1;
-  const unsigned short /*CLenum*/ EVENT_REFERENCE_COUNT                    =0x11D2;
-  const unsigned short /*CLenum*/ EVENT_COMMAND_EXECUTION_STATUS           =0x11D3;
-  const unsigned short /*CLenum*/ EVENT_CONTEXT                            =0x11D4;
+  const CLenum EVENT_COMMAND_QUEUE                       = 0x11D0;
+  const CLenum EVENT_COMMAND_TYPE                        = 0x11D1;
+  //const CLenum EVENT_REFERENCE_COUNT                     = 0x11D2; // disallowed
+  const CLenum EVENT_COMMAND_EXECUTION_STATUS            = 0x11D3;
+  const CLenum EVENT_CONTEXT                             = 0x11D4;
 
   /* cl_command_type */
-  const unsigned short /*CLenum*/ COMMAND_NDRANGE_KERNEL                   =0x11F0;
-  const unsigned short /*CLenum*/ COMMAND_TASK                             =0x11F1;
-  const unsigned short /*CLenum*/ COMMAND_NATIVE_KERNEL                    =0x11F2;
-  const unsigned short /*CLenum*/ COMMAND_READ_BUFFER                      =0x11F3;
-  const unsigned short /*CLenum*/ COMMAND_WRITE_BUFFER                     =0x11F4;
-  const unsigned short /*CLenum*/ COMMAND_COPY_BUFFER                      =0x11F5;
-  const unsigned short /*CLenum*/ COMMAND_READ_IMAGE                       =0x11F6;
-  const unsigned short /*CLenum*/ COMMAND_WRITE_IMAGE                      =0x11F7;
-  const unsigned short /*CLenum*/ COMMAND_COPY_IMAGE                       =0x11F8;
-  const unsigned short /*CLenum*/ COMMAND_COPY_IMAGE_TO_BUFFER             =0x11F9;
-  const unsigned short /*CLenum*/ COMMAND_COPY_BUFFER_TO_IMAGE             =0x11FA;
-  const unsigned short /*CLenum*/ COMMAND_MAP_BUFFER                       =0x11FB;
-  const unsigned short /*CLenum*/ COMMAND_MAP_IMAGE                        =0x11FC;
-  const unsigned short /*CLenum*/ COMMAND_UNMAP_MEM_OBJECT                 =0x11FD;
-  const unsigned short /*CLenum*/ COMMAND_MARKER                           =0x11FE;
-  const unsigned short /*CLenum*/ COMMAND_ACQUIRE_GL_OBJECTS               =0x11FF;
-  const unsigned short /*CLenum*/ COMMAND_RELEASE_GL_OBJECTS               =0x1200;
-  const unsigned short /*CLenum*/ COMMAND_READ_BUFFER_RECT                 =0x1201;
-  const unsigned short /*CLenum*/ COMMAND_WRITE_BUFFER_RECT                =0x1202;
-  const unsigned short /*CLenum*/ COMMAND_COPY_BUFFER_RECT                 =0x1203;
-  const unsigned short /*CLenum*/ COMMAND_USER                             =0x1204;
+  const CLenum COMMAND_NDRANGE_KERNEL                    = 0x11F0;
+  const CLenum COMMAND_TASK                              = 0x11F1;
+  //const CLenum COMMAND_NATIVE_KERNEL                     = 0x11F2; // disallowed
+  const CLenum COMMAND_READ_BUFFER                       = 0x11F3;
+  const CLenum COMMAND_WRITE_BUFFER                      = 0x11F4;
+  const CLenum COMMAND_COPY_BUFFER                       = 0x11F5;
+  const CLenum COMMAND_READ_IMAGE                        = 0x11F6;
+  const CLenum COMMAND_WRITE_IMAGE                       = 0x11F7;
+  const CLenum COMMAND_COPY_IMAGE                        = 0x11F8;
+  const CLenum COMMAND_COPY_IMAGE_TO_BUFFER              = 0x11F9;
+  const CLenum COMMAND_COPY_BUFFER_TO_IMAGE              = 0x11FA;
+  //const CLenum COMMAND_MAP_BUFFER                        = 0x11FB; // disallowed
+  //const CLenum COMMAND_MAP_IMAGE                         = 0x11FC; // disallowed
+  //const CLenum COMMAND_UNMAP_MEM_OBJECT                  = 0x11FD; // disallowed
+  const CLenum COMMAND_MARKER                            = 0x11FE;
+  //const CLenum COMMAND_ACQUIRE_GL_OBJECTS                = 0x11FF; // moved to extension
+  //const CLenum COMMAND_RELEASE_GL_OBJECTS                = 0x1200; // moved to extension
+  const CLenum COMMAND_READ_BUFFER_RECT                  = 0x1201;
+  const CLenum COMMAND_WRITE_BUFFER_RECT                 = 0x1202;
+  const CLenum COMMAND_COPY_BUFFER_RECT                  = 0x1203;
+  const CLenum COMMAND_USER                              = 0x1204;
 
   /* command execution status */
-  const unsigned short /*CLenum*/ COMPLETE                                 =0x0;
-  const unsigned short /*CLenum*/ RUNNING                                  =0x1;
-  const unsigned short /*CLenum*/ SUBMITTED                                =0x2;
-  const unsigned short /*CLenum*/ QUEUED                                   =0x3;
-  
-  /* cl_buffer_create_type  */
-  const unsigned short /*CLenum*/ BUFFER_CREATE_TYPE_REGION                =0x1220;
+  const CLenum COMPLETE                                  = 0x0;
+  const CLenum RUNNING                                   = 0x1;
+  const CLenum SUBMITTED                                 = 0x2;
+  const CLenum QUEUED                                    = 0x3;
 
   /* cl_profiling_info  */
-  const unsigned short /*CLenum*/ PROFILING_COMMAND_QUEUED                 =0x1280;
-  const unsigned short /*CLenum*/ PROFILING_COMMAND_SUBMIT                 =0x1281;
-  const unsigned short /*CLenum*/ PROFILING_COMMAND_START                  =0x1282;
-  const unsigned short /*CLenum*/ PROFILING_COMMAND_END                    =0x1283;
+  const CLenum PROFILING_COMMAND_QUEUED                  = 0x1280;
+  const CLenum PROFILING_COMMAND_SUBMIT                  = 0x1281;
+  const CLenum PROFILING_COMMAND_START                   = 0x1282;
+  const CLenum PROFILING_COMMAND_END                     = 0x1283;
 };
-
-
-dictionary WebCLContextProperties {
-  WebCLPlatform? platform = null;                  // Default: let the implementation decide
-  WebCLDevice[]? devices = null;                   // Default: let the implementation decide
-  CLenum deviceType = 0x1;                         // 0x1 == WebCL.DEVICE_TYPE_DEFAULT
-  any shareGroup = null;
-};
-
 
 interface WebCLPlatform {
-  object getInfo(CLenum name);
-  WebCLDevice[] getDevices(CLenum deviceType);
-  DOMString[] getSupportedExtensions();  
+  any getInfo(CLenum name);
+  sequence<WebCLDevice> getDevices(optional CLenum deviceType = WebCL.DEVICE_TYPE_ALL);
+  sequence<DOMString>? getSupportedExtensions();
+  CLboolean enableExtension(DOMString extensionName);
 };
-
 
 interface WebCLDevice {
-    any getInfo(CLenum name);
-    object getExtension(DOMString extensionName);
-    DOMString[] getSupportedExtensions();
+  any getInfo(CLenum name);
+  sequence<DOMString>? getSupportedExtensions();
+  CLboolean enableExtension(DOMString extensionName);
 };
-
 
 interface WebCLContext {
 
-    WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBuffer srcBuffer);
+  WebCLBuffer createBuffer(CLenum memFlags, CLuint sizeInBytes, optional ArrayBufferView hostPtr);
 
-    WebCLCommandQueue createCommandQueue(optional WebCLDevice? device /* = null */, optional CLenum properties /* = 0 */);
+  WebCLCommandQueue createCommandQueue(optional WebCLDevice? device = null, optional CLenum properties = 0);
 
-    WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
+  WebCLImage createImage(CLenum memFlags,
+                         WebCLImageDescriptor descriptor,
+                         optional ArrayBufferView hostPtr);
 
-    WebCLImage createFromGLRenderBuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer);
+  WebCLProgram createProgram(DOMString source);
 
-    WebCLImage createFromGLTexture2D(CLenum memFlags, GLenum textureTarget, 
-                                      GLint miplevel, WebGLTexture texture);
+  WebCLSampler createSampler(CLboolean normalizedCoords,
+                             CLenum addressingMode,
+                             CLenum filterMode);
 
-    WebCLImage createImage(CLenum memFlags, 
-                           WebCLImageDescriptor descriptor,
-                           optional ArrayBuffer srcBuffer);
+  WebCLUserEvent createUserEvent();
 
-    WebCLProgram createProgram(DOMString source);
+  any getInfo(CLenum name);
 
-    WebCLSampler createSampler(CLboolean normalizedCoords,
-                               CLenum addressingMode,
-                               CLenum filterMode);
+  sequence<WebCLImageDescriptor>? getSupportedImageFormats(optional CLenum memFlags = WebCL.MEM_READ_WRITE);
 
-    WebCLEvent createUserEvent();
+  void release();
 
-    any getInfo(CLenum name);
-
-    WebCLImageDescriptor[] getSupportedImageFormats(CLenum memFlags,
-                                                    CLenum imageType);
+  void releaseAll();
 };
 
 
 dictionary WebCLImageDescriptor {
-  CLenum channelOrder = 0x10B5;            // 0x10B5 == WebCL.RGBA
-  CLenum channelType = 0x10D2;             // 0x10D2 == WebCL.UNORM_INT8, 8-bit colors normalized to [0, 1]
-  CLuint[] size /* = [ 1, 1 ] */;
-  CLuint pitch = 0;
+  CLenum channelOrder = WebCL.RGBA;            
+  CLenum channelType = WebCL.UNORM_INT8;
+  CLuint width = 0;
+  CLuint height = 0;
+  CLuint rowPitch = 0;
 };
-
 
 interface WebCLCommandQueue {
 
-  ////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
   //
   // Copying: Buffer <-> Buffer, Image <-> Image, Buffer <-> Image
   //
 
-  void enqueueCopyBuffer(WebCLRegion srcBuffer,
-                         WebCLRegion dstBuffer,
-                         optional WebCLEvent[]? eventWaitList,
-                         optional WebCLEvent? event);
+  void enqueueCopyBuffer(
+                    WebCLBuffer                           srcBuffer,
+                    WebCLBuffer                           dstBuffer,
+                    CLuint                                srcOffset,
+                    CLuint                                dstOffset,
+                    CLuint                                numBytes,
+                    optional sequence<WebCLEvent>?        eventWaitList = null,
+                    optional WebCLEvent?                  event = null);
 
-  void enqueueCopyImage(WebCLRegion srcImage,
-                        WebCLRegion dstImage, 
-                        optional WebCLEvent[]? eventWaitList,
-                        optional WebCLEvent? event);
-  
-  void enqueueCopyBufferToImage(WebCLRegion srcBuffer,
-                                WebCLRegion dstImage, 
-                                optional WebCLEvent[]? eventWaitList,
-                                optional WebCLEvent? event);
-  
-  void enqueueCopyImageToBuffer(WebCLRegion srcImage,
-                                WebCLRegion dstBuffer, 
-                                optional WebCLEvent[]? eventWaitList,
-                                optional WebCLEvent? event);
+  void enqueueCopyBufferRect(
+                    WebCLBuffer                           srcBuffer,
+                    WebCLBuffer                           dstBuffer,
+                    sequence<CLuint>                      srcOrigin,
+                    sequence<CLuint>                      dstOrigin,
+                    sequence<CLuint>                      region,
+                    CLuint                                srcRowPitch,
+                    CLuint                                srcSlicePitch,
+                    CLuint                                dstRowPitch,
+                    CLuint                                dstSlicePitch,
+                    optional sequence<WebCLEvent>?        eventWaitList = null,
+                    optional WebCLEvent?                  event = null);
+
+  void enqueueCopyImage(
+                    WebCLImage                            srcImage,
+                    WebCLImage                            dstImage,
+                    sequence<CLuint>                      srcOrigin,
+                    sequence<CLuint>                      dstOrigin,
+                    sequence<CLuint>                      region,
+                    optional sequence<WebCLEvent>?        eventWaitList = null,
+                    optional WebCLEvent?                  event = null);
+
+  void enqueueCopyImageToBuffer(
+                    WebCLImage                            srcImage,
+                    WebCLBuffer                           dstBuffer,
+                    sequence<CLuint>                      srcOrigin,
+                    sequence<CLuint>                      srcRegion,
+                    CLuint                                dstOffset,
+                    optional sequence<WebCLEvent>?        eventWaitList = null,
+                    optional WebCLEvent?                  event = null);
+
+  void enqueueCopyBufferToImage(
+                    WebCLBuffer                           srcBuffer,
+                    WebCLImage                            dstImage,
+                    CLuint                                srcOffset,
+                    sequence<CLuint>                      dstOrigin,
+                    sequence<CLuint>                      dstRegion,
+                    optional sequence<WebCLEvent>?        eventWaitList = null,
+                    optional WebCLEvent?                  event = null);
 
   ////////////////////////////////////////////////////////////////////////////
   //
   // Reading: Buffer -> Host, Image -> Host
   //
 
-  void enqueueReadBuffer(WebCLRegion srcBuffer, 
-                         ArrayBuffer dstArray,
-                         CLboolean blockingRead, 
-                         optional WebCLEvent[]? eventWaitList,
-                         optional WebCLEvent? event);
- 
-  void enqueueReadImage(WebCLRegion srcImage,
-                        ArrayBuffer dstArray,
-                        CLboolean blockingRead,
-                        optional WebCLEvent[]? eventWaitList,
-                        optional WebCLEvent? event);
-  
-  void enqueueReadBufferRect(WebCLRegion srcBuffer,
-                             ArrayBuffer dstArray,
-                             WebCLRegion dstArrayRegion,
-                             CLboolean blockingRead,
-                             optional WebCLEvent[]? eventWaitList,
-                             optional WebCLEvent? event);
-  
+  void enqueueReadBuffer(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingRead,
+                    CLuint                                bufferOffset,
+                    CLuint                                numBytes,
+                    ArrayBufferView                       hostPtr,
+                    optional sequence<WebCLEvent>?        eventWaitList = null,
+                    optional WebCLEvent?                  event = null);
+
+  void enqueueReadBufferRect(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingRead,
+                    sequence<CLuint>                      bufferOrigin,
+                    sequence<CLuint>                      hostOrigin,
+                    sequence<CLuint>                      region,
+                    CLuint                                bufferRowPitch,
+                    CLuint                                bufferSlicePitch,
+                    CLuint                                hostRowPitch,
+                    CLuint                                hostSlicePitch,
+                    ArrayBufferView                       hostPtr,
+                    optional sequence<WebCLEvent>?        eventWaitList = null,
+                    optional WebCLEvent?                  event = null);
+
+  void enqueueReadImage(
+                    WebCLImage                            image,
+                    CLboolean                             blockingRead,
+                    sequence<CLuint>                      origin,
+                    sequence<CLuint>                      region,
+                    CLuint                                hostRowPitch,
+                    ArrayBufferView                       hostPtr,
+                    optional sequence<WebCLEvent>?        eventWaitList = null,
+                    optional WebCLEvent?                  event = null);
+
   ////////////////////////////////////////////////////////////////////////////
   //
   // Writing: Host -> Buffer, Host -> Image
   //
 
-  void enqueueWriteBuffer(WebCLRegion dstBuffer,
-                          ArrayBuffer srcArray,
-                          CLboolean blockingWrite, 
-                          optional WebCLEvent[]? eventWaitList, 
-                          optional WebCLEvent? event);
+  void enqueueWriteBuffer(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingWrite,
+                    CLuint                                bufferOffset,
+                    CLuint                                numBytes,
+                    ArrayBufferView                       hostPtr,
+                    optional sequence<WebCLEvent>?        eventWaitList = null,
+                    optional WebCLEvent?                  event = null);
 
-  void enqueueWriteImage(WebCLRegion dstImage,
-                         ArrayBuffer srcArray, 
-                         CLboolean blockingWrite, 
-                         optional WebCLEvent[]? eventWaitList, 
-                         optional WebCLEvent? event);
+  void enqueueWriteBufferRect(
+                    WebCLBuffer                           buffer,
+                    CLboolean                             blockingWrite,
+                    sequence<CLuint>                      bufferOrigin,
+                    sequence<CLuint>                      hostOrigin,
+                    sequence<CLuint>                      region,
+                    CLuint                                bufferRowPitch,
+                    CLuint                                bufferSlicePitch,
+                    CLuint                                hostRowPitch,
+                    CLuint                                hostSlicePitch,
+                    ArrayBufferView                       hostPtr,
+                    optional sequence<WebCLEvent>?        eventWaitList = null,
+                    optional WebCLEvent?                  event = null);
 
-  void enqueueWriteBufferRect(WebCLRegion dstBuffer, 
-                              ArrayBuffer srcArray,
-                              WebCLRegion srcArrayRegion,
-                              CLboolean blockingWrite, 
-                              optional WebCLEvent[]? eventWaitList,
-                              optional WebCLEvent? event);
-  
-  ////////////////////////////////////////////////////////////////////////////
-  //
-  // Acquiring and releasing WebGL objects
-  //
+  void enqueueWriteImage(
+                    WebCLImage                            image,
+                    CLboolean                             blockingWrite,
+                    sequence<CLuint>                      origin,
+                    sequence<CLuint>                      region,
+                    CLuint                                hostRowPitch,
+                    ArrayBufferView                       hostPtr,
+                    optional sequence<WebCLEvent>?        eventWaitList = null,
+                    optional WebCLEvent?                  event = null);
 
-  void enqueueAcquireGLObjects(WebCLMemoryObject[] memObjects,
-                               optional WebCLEvent[]? eventWaitList,
-                               optional WebCLEvent? event);
- 
-  void enqueueReleaseGLObjects(WebCLMemoryObject[] memObjects,
-                               optional WebCLEvent[]? eventWaitList,
-                               optional WebCLEvent? event);
-  
   ////////////////////////////////////////////////////////////////////////////
   //
   // Executing kernels
   //
 
-  void enqueueNDRangeKernel(WebCLKernel kernel, 
-                            CLuint[]? offsets, CLuint[]? globals, CLuint[]? locals, 
-                            optional WebCLEvent[]? eventWaitList,
-                            optional WebCLEvent? event);
-  
-  void enqueueTask(WebCLKernel kernel, 
-                   optional WebCLEvent[]? eventWaitList,
-                   optional WebCLEvent? event);
-  
+  void enqueueNDRangeKernel(
+                    WebCLKernel                           kernel,
+                    CLuint                                workDim,
+                    sequence<CLuint>?                     globalWorkOffset = null, 
+                    sequence<CLuint>                      globalWorkSize,
+                    optional sequence<CLuint>?            localWorkSize = null,
+                    optional sequence<WebCLEvent>?        eventWaitList = null,
+                    optional WebCLEvent?                  event = null);
+
   ////////////////////////////////////////////////////////////////////////////
   //
   // Synchronization
   //
 
-  void enqueueMarker(optional WebCLEvent[]? eventWaitList, optional WebCLEvent? event);
+  void enqueueMarker(WebCLEvent event);
 
-  void enqueueBarrier(optional WebCLEvent[]? eventWaitList, optional WebCLEvent? event);
+  void enqueueBarrier();
+
+  void enqueueWaitForEvents (sequence<WebCLEvent> eventWaitList);
   
-  void finish();
-  
+  void finish(optional WebCLCallback whenFinished);
+
   void flush();
 
   ////////////////////////////////////////////////////////////////////////////
@@ -551,225 +594,163 @@ interface WebCLCommandQueue {
   //
 
   any getInfo(CLenum name);
-};
 
-
-dictionary WebCLRegion {
-  WebCLMemoryObject? buffer = null;
-  CLuint[] origin /* = [0, 0, 0] */;       // 3rd element applies to 3D buffers only
-  CLuint[] size /* = [1, 1, 1] */;         // 3rd element applies to 3D buffers only
-  CLuint[] pitch /* = [0, 0] */;           // 2nd element applies to 3D buffers only
+  void release();
 };
 
 
 interface WebCLMemoryObject {
   any getInfo(CLenum name);
-  WebCLGLObjectInfo getGLObjectInfo();
+  void release();
 };
-
-
-dictionary WebCLGLObjectInfo {
-  CLenum type;   // type of GL object attached to this memory object
-  any glObject;  // The GL object used to create this memory object
-};
-
 
 interface WebCLBuffer : WebCLMemoryObject {
-  WebCLBuffer createSubBuffer(CLenum flags, CLuint origin, CLuint size);
+  WebCLBuffer createSubBuffer(CLenum memFlags, CLuint origin, CLuint sizeInBytes);
 };
-
 
 interface WebCLImage : WebCLMemoryObject {
   WebCLImageDescriptor getInfo();
-  GLint getGLtextureInfo(CLenum paramName);
 };
 
 
 interface WebCLSampler {
-    any getInfo(CLenum name);
+  any getInfo(CLenum name);
+  void release();
 };
-
 
 interface WebCLProgram {
-    any getInfo(CLenum name);
+  any getInfo(CLenum name);
 
-    any getBuildInfo(WebCLDevice device, CLenum name);
+  any getBuildInfo(WebCLDevice device, CLenum name);
 
-    void build(WebCLDevice[] devices, 
-               DOMString? options, 
-               optional WebCLCallback whenFinished,
-               optional any userdata);
+  void build(optional sequence<WebCLDevice>? devices = null,
+             optional DOMString? options = null,
+             optional WebCLCallback whenFinished);
 
-    WebCLKernel createKernel(DOMString kernelName);
+  WebCLKernel createKernel(DOMString kernelName);
 
-    WebCLKernel[] createKernelsInProgram();
+  sequence<WebCLKernel> createKernelsInProgram();
+
+  void release();
 };
-
 
 interface WebCLKernel {
-    any getInfo(CLenum name);
-    any getWorkGroupInfo(WebCLDevice device, CLenum name);
-    void setArg(CLuint index, any value, optional CLtype type);
+  any getInfo(CLenum name);
+  any getWorkGroupInfo(WebCLDevice? device, CLenum name);
+  WebCLKernelArgInfo getArgInfo(CLuint index);
+  void setArg(CLuint index, WebCLBuffer buffer);
+  void setArg(CLuint index, WebCLImage image);
+  void setArg(CLuint index, WebCLSampler value);
+  void setArg(CLuint index, ArrayBufferView value);
+  void release();
 };
 
-
-interface WebCLKernelArgumentTypes {
-
-  // Scalar types; may be bitwise-OR'ed with a vector type
-
-  const unsigned long /*CLtype*/ CHAR   = 0;
-  const unsigned long /*CLtype*/ UCHAR  = 1;
-  const unsigned long /*CLtype*/ SHORT  = 2;
-  const unsigned long /*CLtype*/ USHORT = 3;
-  const unsigned long /*CLtype*/ INT    = 4;
-  const unsigned long /*CLtype*/ UINT   = 5;
-  const unsigned long /*CLtype*/ LONG   = 6;
-  const unsigned long /*CLtype*/ ULONG  = 7;
-  const unsigned long /*CLtype*/ FLOAT  = 8;
-  const unsigned long /*CLtype*/ HALF   = 9;    // not supported in all implementations
-  const unsigned long /*CLtype*/ DOUBLE = 10;   // not supported in all implementations
-
-  // Vector types; must be bitwise-OR'ed with a scalar type
-
-  const unsigned long /*CLtype*/ VEC2  = 0x0100;
-  const unsigned long /*CLtype*/ VEC3  = 0x0200;
-  const unsigned long /*CLtype*/ VEC4  = 0x0400;
-  const unsigned long /*CLtype*/ VEC8  = 0x0800;
-  const unsigned long /*CLtype*/ VEC16 = 0x1000;
-
-  // Special types; must not be bitwise-OR'ed with any other type
-
-  const unsigned long /*CLtype*/ LOCAL_MEMORY_SIZE = 255;
+dictionary WebCLKernelArgInfo {
+  DOMString name;
+  DOMString typeName;         // 'char', 'float', 'float*', 'uint*', 'uint4', 'image2d_t', 'sampler_t', etc.
+  DOMString addressQualifier; // 'global', 'local', 'constant', or 'private'
+  DOMString accessQualifier;  // 'read_only', 'write_only', or 'none'
 };
 
-
+[Constructor]
 interface WebCLEvent {
-    any getInfo(CLenum name);
-    any getProfilingInfo(CLenum name);
-    void setUserEventStatus(CLenum executionStatus);
-    void setCallback(CLenum executionStatus, WebCLCallback notify, optional any userdata);
+  any getInfo(CLenum name);
+  CLulong getProfilingInfo(CLenum name);
+  void setCallback(CLenum commandExecCallbackType, WebCLCallback notify);
+  void release();
+};
+
+interface WebCLUserEvent : WebCLEvent {
+  void  setStatus(CLint executionStatus);
+};
+
+
+//////////////////////////////////////////////////
+//
+//                Extensions
+//
+//////////////////////////////////////////////////
+
+/* KHR_fp16 */
+partial interface WebCL {
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_HALF = 0x1034;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_HALF    = 0x103C;
+};
+
+/* KHR_fp64 */
+partial interface WebCL {
+  CLenum DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE = 0x100B;
+  CLenum DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE    = 0x103B;
+};
+
+/* KHR_gl_sharing */
+
+partial interface WebCL {
+
+  WebCLContext createContext(WebGLRenderingContext gl, optional CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT);
+
+  WebCLContext createContext(WebGLRenderingContext gl, WebCLPlatform platform, optional CLenum deviceType = WebCL.DEVICE_TYPE_DEFAULT);
+
+  WebCLContext createContext(WebGLRenderingContext gl, WebCLDevice device);
+
+  WebCLContext createContext(WebGLRenderingContext gl, sequence<WebCLDevice> devices);
+
+  /* Error Codes */
+  CLenum INVALID_GL_OBJECT                         = -60;
+  CLenum INVALID_MIP_LEVEL                         = -62;
+  CLenum INVALID_GL_SHAREGROUP_REFERENCE_KHR       = -1000;
+
+  /* cl_command_type */
+  CLenum COMMAND_ACQUIRE_GL_OBJECTS                = 0x11FF;
+  CLenum COMMAND_RELEASE_GL_OBJECTS                = 0x1200;
+
+  /* cl_gl_object_type */
+  CLenum GL_OBJECT_BUFFER                          = 0x2000;
+  CLenum GL_OBJECT_TEXTURE2D                       = 0x2001;
+  CLenum GL_OBJECT_RENDERBUFFER                    = 0x2003;
+	
+  /* cl_gl_texture_info */
+  CLenum GL_TEXTURE_TARGET                         = 0x2004;
+  CLenum GL_MIPMAP_LEVEL                           = 0x2005;
 };
 
 
 partial interface WebCLContext {
-  WebCLBuffer createBuffer(CLenum memFlags, ImageData srcPixels);
-  WebCLBuffer createBuffer(CLenum memFlags, HTMLCanvasElement srcCanvas);
-  WebCLBuffer createImage(CLenum memFlags, HTMLImageElement srcImage);
-  WebCLImage createImage(CLenum memFlags, ImageData srcPixels);
-  WebCLImage createImage(CLenum memFlags, HTMLCanvasElement srcCanvas);
-  WebCLImage createImage(CLenum memFlags, HTMLImageElement srcImage);
-};
 
+  WebGLRenderingContext getGLContext();
 
-partial interface WebCLContext {
-  WebCLImage createImage(CLenum memFlags, HTMLVideoElement srcVideo);
-};
+  WebCLBuffer createFromGLBuffer(CLenum memFlags, WebGLBuffer buffer);
 
+  WebCLImage createFromGLRenderbuffer(CLenum memFlags, WebGLRenderbuffer renderbuffer);
 
-dictionary WebCLVideoDescriptor : WebCLImageDescriptor {
-  CLint framesPerSecond = -1;         // video frame rate, -1 if unknown
-  CLint currentEnqueuedFrame = -1;    // -1, 0 to totalFrames-1
-  CLint totalFrames = -1;             // -1 if unknown or "live" / streaming	
+  WebCLImage createFromGLTexture(CLenum memFlags, 
+                                 GLenum textureTarget,
+                                 CLint miplevel,
+                                 WebGLTexture texture);
 };
 
 
 partial interface WebCLCommandQueue {
 
-  //////////////////////////////////////////////////////////////////////
-  //
-  // Writing to WebCLBuffer
-  //
-
-  void enqueueWriteBuffer(WebCLRegion dstBuffer,
-                          ImageData srcPixels,
-                          CLboolean blockingWrite,
-                          optional WebCLEvent[]? eventWaitList, 
-                          optional WebCLEvent? event);
-
-  void enqueueWriteBuffer(WebCLRegion dstBuffer,
-                          HTMLCanvasElement srcCanvas,
-                          CLboolean blockingWrite,
-                          optional WebCLEvent[]? eventWaitList, 
-                          optional WebCLEvent? event);
-
-  void enqueueWriteBuffer(WebCLRegion dstBuffer,
-                          HTMLImageElement srcImage,
-                          CLboolean blockingWrite,
-                          optional WebCLEvent[]? eventWaitList, 
-                          optional WebCLEvent? event);
-
-  void enqueueWriteBufferRect(WebCLRegion dstBuffer, 
-                              ImageData srcPixels,
-                              WebCLRegion srcRegion,
-                              CLboolean blockingWrite, 
-                              optional WebCLEvent[]? eventWaitList,
-                              optional WebCLEvent? event);
-
-  void enqueueWriteBufferRect(WebCLRegion dstBuffer, 
-                              HTMLCanvasElement srcCanvas,
-                              WebCLRegion srcRegion,
-                              CLboolean blockingWrite, 
-                              optional WebCLEvent[]? eventWaitList,
-                              optional WebCLEvent? event);
-
-  void enqueueWriteBufferRect(WebCLRegion dstBuffer, 
-                              HTMLImageElement srcCanvas,
-                              WebCLRegion srcRegion,
-                              CLboolean blockingWrite, 
-                              optional WebCLEvent[]? eventWaitList,
-                              optional WebCLEvent? event);
-
-  //////////////////////////////////////////////////////////////////////
-  //
-  // Writing to WebCLImage
-  //
-
-  void enqueueWriteImage(WebCLRegion dstImage,
-                         ImageData srcPixels,
-                         CLboolean blockingWrite, 
-                         optional WebCLEvent[]? eventWaitList, 
-                         optional WebCLEvent? event);
-
-  void enqueueWriteImage(WebCLRegion dstImage,
-                         HTMLCanvasElement srcCanvas,
-                         CLboolean blockingWrite, 
-                         optional WebCLEvent[]? eventWaitList, 
-                         optional WebCLEvent? event);
-
-  void enqueueWriteImage(WebCLRegion dstImage,
-                         HTMLImageElement srcImage,
-                         CLboolean blockingWrite, 
-                         optional WebCLEvent[]? eventWaitList, 
-                         optional WebCLEvent? event);
-
-  void enqueueWriteImage(WebCLRegion dstImage,
-                         HTMLVideoElement srcVideo,
-                         CLboolean blockingWrite, 
-                         optional WebCLEvent[]? eventWaitList, 
-                         optional WebCLEvent? event);
-
-  //////////////////////////////////////////////////////////////////////
-  //
-  // Reading from WebCL
-  //
-
-  void enqueueReadBuffer(WebCLRegion srcBuffer,
-                         HTMLCanvasElement dstCanvas,
-                         CLboolean blockingRead,
-                         optional WebCLEvent[]? eventWaitList,
-                         optional WebCLEvent? event);
-
-  void enqueueReadBufferRect(WebCLRegion srcBuffer,
-                             HTMLCanvasElement dstCanvas,
-                             WebCLRegion dstCanvasRegion,
-                             CLboolean blockingRead, 
-                             optional WebCLEvent[]? eventWaitList,
-                             optional WebCLEvent? event);
-
-  void enqueueReadImage(WebCLRegion srcImage,
-                        HTMLCanvasElement dstCanvas,
-                        CLboolean blockingRead,
-                        optional WebCLEvent[]? eventWaitList,
-                        optional WebCLEvent? event);
+  void enqueueAcquireGLObjects(sequence<WebCLMemoryObject> memObjects,
+                               optional sequence<WebCLEvent>? eventWaitList,
+                               optional WebCLEvent? event = null);
+	
+  void enqueueReleaseGLObjects(sequence<WebCLMemoryObject> memObjects,
+                               optional sequence<WebCLEvent>? eventWaitList,
+                               optional WebCLEvent? event = null);
 };
 
+
+partial interface WebCLMemoryObject {
+  WebCLGLObjectInfo getGLObjectInfo();
+};
+
+
+dictionary WebCLGLObjectInfo {
+  any glObject;          // the GL object used to create this memory object, 'undefined' if none
+  CLenum type;           // the type of GL object attached to this memory object, 'undefined' if none
+  GLenum textureTarget;  // 'undefined' if there is no texture associated
+  CLint mipmapLevel;     // 'undefined' if there is no texture associated
+};
+  
