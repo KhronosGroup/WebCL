@@ -29,7 +29,7 @@
     <!--end-logo-->
 
     <h1>WebCL Specification</h1>
-    <h2 class="no-toc">Editor's Draft, 11 September 2014</h2>
+    <h2 class="no-toc">Editor's Draft, 17 September 2014</h2>
     <dl>
       <dt>This version:
       </dt><dd>
@@ -2818,6 +2818,21 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
       of WebCL kernels.  The Validator also enforces initialization of local and private memory
       <span class="cl-spec">(<a href="https://github.com/KhronosGroup/webcl-validator">Khronos WebCL
       Validator Project</a>)</span>.
+    </p>
+
+    <h3>Kernel Argument Type Checking</h3>
+
+    <p>
+      WebCL implementations must ensure that kernel arguments provided by the application match the
+      argument types declared by the kernel.  For example, trying to pass in an arbitrary integer in
+      place of a WebCLBuffer object must cause an exception in `setArg`.
+    </p>
+
+    <p>
+      Implementations may use different means to extract the necessary kernel argument information
+      from the source code.  Implementations based on OpenCL 1.2 may use the `-cl-kernel-arg-info`
+      build option and the corresponding API functions; implementations running on OpenCL 1.1 must
+      use some alternative means, such as the Khronos WebCL Validator (see above).
     </p>
 
     <h3>Memory Initialization</h3>
