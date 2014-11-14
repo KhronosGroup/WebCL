@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>WebCL Specification</title>
-  <link rel="stylesheet" type="text/css" href="http://www.khronos.org/registry/webcl/resources/Khronos-Final.css">
-  <script src="http://www.khronos.org/registry/webcl/resources/jquery-1.3.2.min.js" type="text/javascript"></script>
-  <script src="http://www.khronos.org/registry/webcl/resources/generateTOC.js" type="text/javascript"></script>
-  <script src="http://www.khronos.org/registry/webcl/resources/preprocessHTML.js" type="text/javascript"></script>
+  <link rel="stylesheet" type="text/css" href="https://www.khronos.org/registry/webcl/resources/Khronos-Final.css">
+  <script src="https://www.khronos.org/registry/webcl/resources/jquery-1.3.2.min.js" type="text/javascript"></script>
+  <script src="https://www.khronos.org/registry/webcl/resources/generateTOC.js" type="text/javascript"></script>
+  <script src="https://www.khronos.org/registry/webcl/resources/preprocessHTML.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -181,7 +181,7 @@ exception <dfn>WebCLException</dfn> : DOMException {
   var B = ctx2.createBuffer(...);
   ctx1.release();                    // releases ctx1, but not buffer A
   ctx2.releaseAll();                 // releases ctx2 and buffer B
-  A.release();                       // releases buffer A 
+  A.release();                       // releases buffer A
   B.release();                       // does nothing: B is already released
   var C = ctx1.createBuffer(...);    // EXCEPTION: ctx1 is no longer valid
   webcl.releaseAll();                // releases ctx3
@@ -1377,7 +1377,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
   void enqueueNDRangeKernel(
                     WebCLKernel                           kernel,
                     CLuint                                workDim,
-                    sequence&lt;CLuint&gt;?                     globalWorkOffset, 
+                    sequence&lt;CLuint&gt;?                     globalWorkOffset,
                     sequence&lt;CLuint&gt;                      globalWorkSize,
                     optional sequence&lt;CLuint&gt;?            localWorkSize,
                     optional sequence&lt;WebCLEvent&gt;?        eventWaitList,
@@ -1393,7 +1393,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
   void enqueueBarrier();
 
   void enqueueWaitForEvents (sequence&lt;WebCLEvent&gt; eventWaitList);
-  
+
   void finish(optional WebCLCallback whenFinished);
 
   void flush();
@@ -1851,7 +1851,7 @@ interface <dfn>WebCLCommandQueue</dfn> {
         </ul>
       </dd>
 
-      <dt class="idl-code">void enqueueNDRangeKernel( 
+      <dt class="idl-code">void enqueueNDRangeKernel(
         WebCLKernel kernel,
         CLuint workDim,
         sequence&lt;CLuint&gt;? globalWorkOffset,
@@ -2031,7 +2031,7 @@ function copyBufferRect(srcBuffer, dstBuffer, srcX, srcY, dstX, dstY, w, h, pitc
   // The row pitch could be different for source and destination,
   // but is assumed to be the same in this example.
 
-  queue.enqueueCopyBufferRect(srcBuffer, dstBuffer, [srcX, srcY], [dstX, dstY], 
+  queue.enqueueCopyBufferRect(srcBuffer, dstBuffer, [srcX, srcY], [dstX, dstY],
                               [w, h], pitch, 0, pitch, 0);
 };
 </pre>
@@ -2714,7 +2714,7 @@ interface <dfn>WebCLUserEvent</dfn> : WebCLEvent {
       application before it can be used.  This policy is aimed to minimize inadvertant usage of
       features that are not universally available.
     </p>
-    
+
     <p>
       The set of available extensions may vary from one WebCLDevice to
       another, and one WebCLPlatform to another, even within the same
@@ -2830,7 +2830,7 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
       <li>Terminate the contexts associated with the offending commands, before they render the
         OpenCL device unresponsive, and result in potential device reset.</li>
     </ol>
-   
+
     <p>
       Where available, the OpenCL 1.2 extension `cl_khr_terminate_context` can be used for fast
       termination of a context, if, for example, one or more of the kernels associated with the
@@ -2917,7 +2917,7 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
         </ul>
       </li>
     </ul>
-    
+
 <!-- ======================================================================================================= -->
 
     <h2>References</h2>
@@ -2994,7 +2994,7 @@ var withBoth = withGL.filter(function(v) { return (withFP64.indexOf(v) !== -1) }
 
     <dd> </dd>
 
-    
+
     <dt>Special thanks to the following participants (in alphabetical order):</dt>
     <dd> Bastiaan Aarts </dd>
     <dd> Ben Ashbaugh </dd>
