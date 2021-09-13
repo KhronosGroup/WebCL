@@ -5,6 +5,7 @@ This is the official Khronos repository for the WebCL specifications,
 extensions, and conformance test suites.  This repository is mirrored
 as a web page at http://www.khronos.org/registry/webcl/.
 
+On 2021-09-13, the default branch of the repository was changed from 'master' to 'main' to follow current Khronos conventions. Since the repository is archived and inactive, this should have no effect on anyone.
 
 FAQ
 ---
